@@ -1,0 +1,306 @@
+/* Zimbo's Cyber-Barbarian Theme CSS */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Status Effect Overlays */
+.poisoned-overlay {
+  position: relative;
+}
+
+.poisoned-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.burning-overlay {
+  position: relative;
+}
+
+.burning-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: pulse 2s infinite;
+}
+
+.shocked-overlay {
+  position: relative;
+}
+
+.shocked-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, rgba(234, 179, 8, 0.1) 50%, rgba(59, 130, 246, 0.1) 100%);
+  background-size: 200% 200%;
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.frozen-overlay {
+  position: relative;
+}
+
+.frozen-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.blessed-overlay {
+  position: relative;
+}
+
+.blessed-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: glow 3s infinite;
+}
+
+/* Button Hover Effects */
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+}
+
+button:active {
+  transform: translateY(0px);
+}
+
+button:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Scroll Bars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ff88, #00cc6a);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00cc6a, #009955);
+}
+
+/* Input Focus Effects */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #00ff88 !important;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+/* Modal Backdrop Blur */
+.modal-backdrop {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .panel {
+    padding: 15px !important;
+  }
+}
+
+/* Utility Classes */
+.cyber-glow {
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.cyber-border {
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.cyber-text {
+  color: #00ff88;
+  text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+/* Loading Animation */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 136, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Success/Warning/Error States */
+.success-glow {
+  border-color: #10b981;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.warning-glow {
+  border-color: #f59e0b;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.error-glow {
+  border-color: #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+/* Character Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.status-healthy {
+  background: linear-gradient(45deg, #10b981, #059669);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.status-injured {
+  background: linear-gradient(45deg, #f59e0b, #d97706);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.status-critical {
+  background: linear-gradient(45deg, #ef4444, #dc2626);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+  animation: pulse 1s infinite;
+}
+
+/* Equipment State Indicators */
+.equipped-item {
+  border-left: 3px solid #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.unequipped-item {
+  border-left: 3px solid #6b7280 !important;
+}
+
+/* Level Up Special Effects */
+.level-up-celebration {
+  animation: glow 0.5s ease-in-out 3;
+}
+
+/* Dice Rolling Effects */
+.dice-rolling {
+  animation: pulse 0.3s ease-in-out;
+}
+
+/* Critical Hit Effect */
+.critical-hit {
+  background: linear-gradient(45deg, #fbbf24, #f59e0b) !important;
+  animation: glow 1s ease-in-out 2;
+}
+
+/* Critical Failure Effect */
+.critical-failure {
+  background: linear-gradient(45deg, #ef4444, #dc2626) !important;
+  animation: pulse 0.5s ease-in-out 3;
+}

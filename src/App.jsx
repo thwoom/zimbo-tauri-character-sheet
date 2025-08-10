@@ -5,6 +5,7 @@ import InventoryModal from './components/InventoryModal';
 import StatusModal from './components/StatusModal';
 import RollModal from './components/RollModal';
 import BondsModal from './components/BondsModal';
+import DamageModal from './components/DamageModal';
 import { useCharacter } from './state/CharacterContext';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import useModal from './hooks/useModal';
@@ -29,7 +30,6 @@ function App() {
   const [showExportModal, setShowExportModal] = useState(false);
   
   // Additional UI State
-  const [damageInput, setDamageInput] = useState('');
   const [compactMode, setCompactMode] = useState(false);
 
   // Level Up State
@@ -960,32 +960,7 @@ function App() {
         />
       )}
 
-      {showDamageModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>💔 Damage Calculator</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowDamageModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
-      )}
+      <DamageModal isOpen={showDamageModal} onClose={() => setShowDamageModal(false)} />
 
       {showInventoryModal && (
         <InventoryModal

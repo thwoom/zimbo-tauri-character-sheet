@@ -10,7 +10,7 @@ const buttonStyle = {
   cursor: 'pointer',
   fontWeight: 'bold',
   transition: 'all 0.3s ease',
-  margin: '5px'
+  margin: '5px',
 };
 
 const inputStyle = {
@@ -19,7 +19,7 @@ const inputStyle = {
   borderRadius: '6px',
   color: 'white',
   padding: '8px',
-  width: '100%'
+  width: '100%',
 };
 
 export default function DamageModal({ isOpen, onClose }) {
@@ -31,7 +31,7 @@ export default function DamageModal({ isOpen, onClose }) {
   const getTotalArmor = () => {
     const baseArmor = character.armor || 0;
     const equippedArmor = character.inventory
-      .filter(item => item.equipped && item.armor)
+      .filter((item) => item.equipped && item.armor)
       .reduce((total, item) => total + (item.armor || 0), 0);
     return baseArmor + equippedArmor;
   };
@@ -44,10 +44,10 @@ export default function DamageModal({ isOpen, onClose }) {
   const applyDamage = () => {
     const dmg = parseInt(damage, 10);
     if (isNaN(dmg)) return;
-    setCharacter(prev => {
+    setCharacter((prev) => {
       const armor = prev.armor || 0;
       const equippedArmor = prev.inventory
-        .filter(item => item.equipped && item.armor)
+        .filter((item) => item.equipped && item.armor)
         .reduce((total, item) => total + (item.armor || 0), 0);
       const totalArmor = armor + equippedArmor;
       const finalDamage = Math.max(0, dmg - totalArmor);
@@ -55,9 +55,9 @@ export default function DamageModal({ isOpen, onClose }) {
         ...prev,
         actionHistory: [
           { action: 'HP Change', state: prev, timestamp: Date.now() },
-          ...prev.actionHistory.slice(0, 4)
+          ...prev.actionHistory.slice(0, 4),
         ],
-        hp: Math.max(0, prev.hp - finalDamage)
+        hp: Math.max(0, prev.hp - finalDamage),
       };
     });
     setDamage('');
@@ -76,7 +76,7 @@ export default function DamageModal({ isOpen, onClose }) {
         zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <div
@@ -86,7 +86,7 @@ export default function DamageModal({ isOpen, onClose }) {
           borderRadius: '15px',
           padding: '30px',
           textAlign: 'center',
-          width: '300px'
+          width: '300px',
         }}
       >
         <h2 style={{ color: '#00ff88' }}>💔 Damage Calculator</h2>
@@ -95,18 +95,16 @@ export default function DamageModal({ isOpen, onClose }) {
           type="number"
           placeholder="Incoming damage"
           value={damage}
-          onChange={e => setDamage(e.target.value)}
+          onChange={(e) => setDamage(e.target.value)}
           style={{ ...inputStyle, marginBottom: '10px' }}
         />
-        <div style={{ color: '#aaa', marginBottom: '20px' }}>
-          After armor: {effectiveDamage()}
-        </div>
+        <div style={{ color: '#aaa', marginBottom: '20px' }}>After armor: {effectiveDamage()}</div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <button
             onClick={applyDamage}
             style={{
               ...buttonStyle,
-              background: 'linear-gradient(45deg, #ef4444, #dc2626)'
+              background: 'linear-gradient(45deg, #ef4444, #dc2626)',
             }}
           >
             Apply

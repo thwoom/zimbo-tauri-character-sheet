@@ -11,10 +11,16 @@ const MoveList = ({ character, rollDice, getEquippedWeaponDamage, rollResult, ro
             <button
               key={stat}
               className={styles.button}
-              style={{ background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', padding: '8px 6px', margin: '2px', fontSize: '11px' }}
+              style={{
+                background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
+                padding: '8px 6px',
+                margin: '2px',
+                fontSize: '11px',
+              }}
               onClick={() => rollDice(`2d6+${data.mod}`, `${stat} Check`)}
             >
-              {stat} ({data.mod >= 0 ? '+' : ''}{data.mod})
+              {stat} ({data.mod >= 0 ? '+' : ''}
+              {data.mod})
             </button>
           ))}
         </div>
@@ -24,28 +30,44 @@ const MoveList = ({ character, rollDice, getEquippedWeaponDamage, rollResult, ro
         <div className={styles.grid2}>
           <button
             className={styles.button}
-            style={{ background: 'linear-gradient(45deg, #ef4444, #dc2626)', margin: '2px', fontSize: '11px' }}
+            style={{
+              background: 'linear-gradient(45deg, #ef4444, #dc2626)',
+              margin: '2px',
+              fontSize: '11px',
+            }}
             onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
           >
             Weapon ({getEquippedWeaponDamage()})
           </button>
           <button
             className={styles.button}
-            style={{ background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', margin: '2px', fontSize: '11px' }}
+            style={{
+              background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
+              margin: '2px',
+              fontSize: '11px',
+            }}
             onClick={() => rollDice('2d6+3', 'Hack & Slash')}
           >
             Hack & Slash
           </button>
           <button
             className={styles.button}
-            style={{ background: 'linear-gradient(45deg, #f97316, #ea580c)', margin: '2px', fontSize: '11px' }}
+            style={{
+              background: 'linear-gradient(45deg, #f97316, #ea580c)',
+              margin: '2px',
+              fontSize: '11px',
+            }}
             onClick={() => rollDice('d4', 'Upper Hand')}
           >
             Upper Hand d4
           </button>
           <button
             className={styles.button}
-            style={{ background: 'linear-gradient(45deg, #eab308, #d97706)', margin: '2px', fontSize: '11px' }}
+            style={{
+              background: 'linear-gradient(45deg, #eab308, #d97706)',
+              margin: '2px',
+              fontSize: '11px',
+            }}
             onClick={() => rollDice('2d6-1', 'Taunt')}
           >
             Taunt Enemy
@@ -55,11 +77,16 @@ const MoveList = ({ character, rollDice, getEquippedWeaponDamage, rollResult, ro
       <div className={styles.section}>
         <h4 className={styles.sectionTitle}>Basic Dice</h4>
         <div className={styles.grid6}>
-          {[4, 6, 8, 10, 12, 20].map(sides => (
+          {[4, 6, 8, 10, 12, 20].map((sides) => (
             <button
               key={sides}
               className={styles.button}
-              style={{ background: 'linear-gradient(45deg, #06b6d4, #0891b2)', padding: '8px 4px', margin: '2px', fontSize: '11px' }}
+              style={{
+                background: 'linear-gradient(45deg, #06b6d4, #0891b2)',
+                padding: '8px 4px',
+                margin: '2px',
+                fontSize: '11px',
+              }}
               onClick={() => rollDice(`d${sides}`)}
             >
               d{sides}

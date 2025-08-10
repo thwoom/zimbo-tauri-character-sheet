@@ -10,7 +10,7 @@ const buttonStyle = {
   cursor: 'pointer',
   fontWeight: 'bold',
   transition: 'all 0.3s ease',
-  margin: '5px'
+  margin: '5px',
 };
 
 const inputStyle = {
@@ -19,7 +19,7 @@ const inputStyle = {
   borderRadius: '6px',
   color: 'white',
   padding: '8px',
-  width: '100%'
+  width: '100%',
 };
 
 export default function BondsModal({ isOpen, onClose }) {
@@ -31,31 +31,31 @@ export default function BondsModal({ isOpen, onClose }) {
 
   const addBond = () => {
     if (name.trim() && relationship.trim()) {
-      setCharacter(prev => ({
+      setCharacter((prev) => ({
         ...prev,
         bonds: [
           ...prev.bonds,
-          { name: name.trim(), relationship: relationship.trim(), resolved: false }
-        ]
+          { name: name.trim(), relationship: relationship.trim(), resolved: false },
+        ],
       }));
       setName('');
       setRelationship('');
     }
   };
 
-  const removeBond = index => {
-    setCharacter(prev => ({
+  const removeBond = (index) => {
+    setCharacter((prev) => ({
       ...prev,
-      bonds: prev.bonds.filter((_, i) => i !== index)
+      bonds: prev.bonds.filter((_, i) => i !== index),
     }));
   };
 
-  const toggleResolved = index => {
-    setCharacter(prev => ({
+  const toggleResolved = (index) => {
+    setCharacter((prev) => ({
       ...prev,
       bonds: prev.bonds.map((bond, i) =>
-        i === index ? { ...bond, resolved: !bond.resolved } : bond
-      )
+        i === index ? { ...bond, resolved: !bond.resolved } : bond,
+      ),
     }));
   };
 
@@ -71,7 +71,7 @@ export default function BondsModal({ isOpen, onClose }) {
         zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <div
@@ -83,7 +83,7 @@ export default function BondsModal({ isOpen, onClose }) {
           textAlign: 'center',
           width: '400px',
           maxHeight: '80%',
-          overflowY: 'auto'
+          overflowY: 'auto',
         }}
       >
         <h2 style={{ color: '#00ff88' }}>👥 Character Bonds</h2>
@@ -93,10 +93,12 @@ export default function BondsModal({ isOpen, onClose }) {
           <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0' }}>
             {character.bonds.map((bond, index) => (
               <li key={index} style={{ marginBottom: '15px', textAlign: 'left' }}>
-                <div style={{
-                  textDecoration: bond.resolved ? 'line-through' : 'none',
-                  color: '#fff'
-                }}>
+                <div
+                  style={{
+                    textDecoration: bond.resolved ? 'line-through' : 'none',
+                    color: '#fff',
+                  }}
+                >
                   <strong>{bond.name}</strong>: {bond.relationship}
                 </div>
                 <div style={{ marginTop: '5px' }}>
@@ -106,7 +108,7 @@ export default function BondsModal({ isOpen, onClose }) {
                       ...buttonStyle,
                       background: bond.resolved
                         ? 'linear-gradient(45deg, #6366f1, #4f46e5)'
-                        : 'linear-gradient(45deg, #10b981, #059669)'
+                        : 'linear-gradient(45deg, #10b981, #059669)',
                     }}
                   >
                     {bond.resolved ? 'Unresolve' : 'Resolve'}
@@ -115,7 +117,7 @@ export default function BondsModal({ isOpen, onClose }) {
                     onClick={() => removeBond(index)}
                     style={{
                       ...buttonStyle,
-                      background: 'linear-gradient(45deg, #ef4444, #dc2626)'
+                      background: 'linear-gradient(45deg, #ef4444, #dc2626)',
                     }}
                   >
                     Remove
@@ -131,14 +133,14 @@ export default function BondsModal({ isOpen, onClose }) {
             type="text"
             placeholder="Name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             style={{ ...inputStyle, marginBottom: '10px' }}
           />
           <input
             type="text"
             placeholder="Relationship"
             value={relationship}
-            onChange={e => setRelationship(e.target.value)}
+            onChange={(e) => setRelationship(e.target.value)}
             style={{ ...inputStyle, marginBottom: '10px' }}
           />
           <button onClick={addBond} style={buttonStyle}>

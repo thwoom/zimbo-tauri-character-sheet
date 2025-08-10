@@ -19,6 +19,16 @@ function renderWithCharacter(ui) {
 }
 
 describe('BondsModal', () => {
+  it('toggles visibility with isOpen prop', () => {
+    const onClose = vi.fn();
+    const { rerender } = renderWithCharacter(
+      <BondsModal isOpen={false} onClose={onClose} />, // initially closed
+    );
+    expect(screen.queryByText(/Character Bonds/i)).not.toBeInTheDocument();
+    rerender(<BondsModal isOpen onClose={onClose} />);
+    expect(screen.getByText(/Character Bonds/i)).toBeInTheDocument();
+  });
+
   it('adds, resolves, and removes bonds', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

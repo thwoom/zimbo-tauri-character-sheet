@@ -20,6 +20,17 @@ function renderWithCharacter(ui, { character }) {
 }
 
 describe('DamageModal', () => {
+  it('toggles visibility with isOpen prop', () => {
+    const onClose = vi.fn();
+    const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
+    const { rerender } = renderWithCharacter(<DamageModal isOpen={false} onClose={onClose} />, {
+      character: initial,
+    });
+    expect(screen.queryByText(/Damage Calculator/i)).not.toBeInTheDocument();
+    rerender(<DamageModal isOpen onClose={onClose} />);
+    expect(screen.getByText(/Damage Calculator/i)).toBeInTheDocument();
+  });
+
   it('applies damage accounting for armor', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

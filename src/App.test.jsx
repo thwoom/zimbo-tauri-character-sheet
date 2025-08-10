@@ -1,6 +1,6 @@
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
@@ -100,6 +100,85 @@ describe('XP gain on miss', () => {
 
     expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
 
+    Math.random.mockRestore();
+  });
+});
+
+describe('localStorage persistence', () => {
+  const Wrapper = ({ children }) => {
+    const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
+    return (
+      <CharacterContext.Provider value={{ character, setCharacter }}>
+        {children}
+      </CharacterContext.Provider>
+    );
+  };
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('persists session notes and roll history across remounts', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const { unmount } = render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    fireEvent.change(screen.getByPlaceholderText(/Track important events/i), {
+      target: { value: 'My session note' },
+    });
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'INT (+0)' }));
+    });
+
+    expect(localStorage.getItem('sessionNotes')).toBe('My session note');
+    expect(JSON.parse(localStorage.getItem('rollHistory')).length).toBe(1);
+
+    unmount();
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.getByPlaceholderText(/Track important events/i).value).toBe('My session note');
+    expect(screen.getByText(/Recent Rolls:/i)).toBeInTheDocument();
+
+    Math.random.mockRestore();
+  });
+
+  it('reset clears session notes and roll history from localStorage', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    fireEvent.change(screen.getByPlaceholderText(/Track important events/i), {
+      target: { value: 'My session note' },
+    });
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'INT (+0)' }));
+    });
+
+    const resetButton = screen.getAllByRole('button', { name: /Reset/i }).pop();
+    fireEvent.click(resetButton);
+
+    expect(localStorage.getItem('sessionNotes')).toBeNull();
+    expect(localStorage.getItem('rollHistory')).toBeNull();
+    expect(screen.queryByText(/Recent Rolls:/i)).toBeNull();
+    expect(screen.getByPlaceholderText(/Track important events/i).value).toBe('');
+
+    window.confirm.mockRestore();
     Math.random.mockRestore();
   });
 });

@@ -21,6 +21,18 @@ function renderWithCharacter(ui, initialCharacter) {
 }
 
 describe('EndSessionModal', () => {
+  it('toggles visibility with isOpen prop', () => {
+    const onClose = vi.fn();
+    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const { rerender } = renderWithCharacter(
+      <EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />,
+      initial,
+    );
+    expect(screen.queryByText(/End of Session/i)).not.toBeInTheDocument();
+    rerender(<EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />);
+    expect(screen.getByText(/End of Session/i)).toBeInTheDocument();
+  });
+
   it('adds XP for positive answers', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

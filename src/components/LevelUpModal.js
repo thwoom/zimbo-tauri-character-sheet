@@ -260,12 +260,11 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
         {/* Header */}
         <div style={headerStyle}>
           <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'white' }}>
-  LEVEL UP!
-</h2>
+            LEVEL UP!
+          </h2>
           <p style={{ margin: '5px 0 0', color: '#e0f2fe' }}>
-<p style={{ margin: '5px 0 0', color: '#e0f2fe' }}>
-  Zimbo advances to Level {levelUpState.newLevel}
-</p>          </p>
+            Zimbo advances to Level {levelUpState.newLevel}
+          </p>
           <button
             onClick={onClose}
             style={{

@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   color: #e0e0e0;
   overflow-x: hidden;
@@ -16,7 +16,8 @@ body {
 
 /* Animations */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -25,7 +26,8 @@ body {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
   }
   50% {
@@ -48,13 +50,17 @@ body {
 }
 
 .poisoned-overlay::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(34, 197, 94, 0.1) 0%,
+    transparent 70%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -64,13 +70,17 @@ body {
 }
 
 .burning-overlay::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(239, 68, 68, 0.15) 0%,
+    transparent 70%
+  );
   pointer-events: none;
   z-index: 1;
   animation: pulse 2s infinite;
@@ -81,13 +91,18 @@ body {
 }
 
 .shocked-overlay::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, rgba(234, 179, 8, 0.1) 50%, rgba(59, 130, 246, 0.1) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(234, 179, 8, 0.1) 50%,
+    rgba(59, 130, 246, 0.1) 100%
+  );
   background-size: 200% 200%;
   animation: shimmer 3s infinite;
   pointer-events: none;
@@ -99,13 +114,17 @@ body {
 }
 
 .frozen-overlay::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(6, 182, 212, 0.1) 0%,
+    transparent 70%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -115,13 +134,17 @@ body {
 }
 
 .blessed-overlay::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(251, 191, 36, 0.1) 0%,
+    transparent 70%
+  );
   pointer-events: none;
   z-index: 1;
   animation: glow 3s infinite;
@@ -189,11 +212,11 @@ select:focus {
   .grid {
     grid-template-columns: 1fr !important;
   }
-  
+
   .header h1 {
     font-size: 1.8rem !important;
   }
-  
+
   .panel {
     padding: 15px !important;
   }

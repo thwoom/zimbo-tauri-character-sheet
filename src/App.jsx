@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import LevelUpModal from './components/LevelUpModal';
-import InventoryModal from './components/InventoryModal';
-import StatusModal from './components/StatusModal';
-import RollModal from './components/RollModal';
-import BondsModal from './components/BondsModal';
-import DamageModal from './components/DamageModal';
-import { useCharacter } from './state/CharacterContext';
-import { statusEffectTypes, debilityTypes } from './state/character';
+import BondsModal from './components/BondsModal.jsx';
+import DamageModal from './components/DamageModal.jsx';
+import InventoryModal from './components/InventoryModal.jsx';
+import LevelUpModal from './components/LevelUpModal.jsx';
+import RollModal from './components/RollModal.jsx';
+import StatusModal from './components/StatusModal.jsx';
 import useModal from './hooks/useModal';
+import { statusEffectTypes, debilityTypes } from './state/character';
+import { useCharacter } from './state/CharacterContext.jsx';
 
 function App() {
   const { character, setCharacter } = useCharacter();
 
   // UI State Management
-  const [expandedMoves, setExpandedMoves] = useState({});
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const rollModal = useModal();
   const bondsModal = useModal();
@@ -27,7 +26,6 @@ function App() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
   
   // Additional UI State
   const [compactMode, setCompactMode] = useState(false);
@@ -37,7 +35,7 @@ function App() {
     selectedStats: [],
     selectedMove: '',
     hpIncrease: 0,
-    newLevel: 5,
+    newLevel: character.level + 1,
     expandedMove: ''
   });
 

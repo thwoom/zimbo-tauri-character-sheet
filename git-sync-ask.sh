@@ -39,9 +39,24 @@ if [ -z "$MSG" ]; then
 fi
 
 # Stash uncommitted changes and pull latest
-git stash -q --include-untracked || true
-git pull --rebase origin "$BRANCH" || { echo "Pull/rebase failed. Resolve conflicts and re-run."; exit 1; }
-git stash pop -q || true
+STASH_REF=$(git stash -q --include-untracked | cut -d: -f1)
+
+if ! git pull --rebase origin "$BRANCH"; then
+  echo "Pull/rebase failed. Restoring stashed changes..."
+  if [ -n "$STASH_REF" ]; then
+    if ! git stash pop "$STASH_REF"; then
+      echo "Failed to restore stashed changes cleanly. Resolve conflicts manually."
+    fi
+  fi
+  exit 1
+fi
+
+if [ -n "$STASH_REF" ]; then
+  if ! git stash pop "$STASH_REF"; then
+    echo "Stash pop resulted in conflicts. Resolve them and re-run."
+    exit 1
+  fi
+fi
 
 # Stage and commit changes if any
 if ! git diff --quiet || ! git diff --cached --quiet; then

@@ -1,46 +1,45 @@
 import React from 'react';
+import './InventoryModal.css';
 
-const overlayStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'rgba(0, 0, 0, 0.8)',
-  zIndex: 1000,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const modalStyle = {
-  background: '#1a1a2e',
-  border: '2px solid #00ff88',
-  borderRadius: '15px',
-  padding: '30px',
-  textAlign: 'center',
-};
-
-const buttonStyle = {
-  background: 'linear-gradient(45deg, #00ff88, #00cc6a)',
-  border: 'none',
-  borderRadius: '6px',
-  color: 'white',
-  padding: '8px 15px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  transition: 'all 0.3s ease',
-  margin: '5px',
-};
-
-const InventoryModal = ({ onClose }) => (
-  <div style={overlayStyle}>
-    <div style={modalStyle}>
-      <h2 style={{ color: '#00ff88' }}>🎒 Inventory Management</h2>
-      <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-      <button onClick={onClose} style={buttonStyle}>Close</button>
+const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
+  return (
+    <div className="inventory-overlay">
+      <div className="inventory-modal">
+        <h2 className="inventory-title">🎒 Inventory</h2>
+        {inventory.length === 0 ? (
+          <p className="inventory-empty">No items</p>
+        ) : (
+          <ul className="inventory-list">
+            {inventory.map(item => (
+              <li key={item.id} className="inventory-item">
+                <div className="inventory-item-name">
+                  {item.name}{item.quantity ? ` x${item.quantity}` : ''}
+                </div>
+                <div className="inventory-item-actions">
+                  {'equipped' in item && (
+                    <button className="inventory-button" onClick={() => onEquip(item.id)}>
+                      {item.equipped ? 'Unequip' : 'Equip'}
+                    </button>
+                  )}
+                  {item.type === 'consumable' && (
+                    <button className="inventory-button" onClick={() => onConsume(item.id)}>
+                      Consume
+                    </button>
+                  )}
+                  <button className="inventory-button" onClick={() => onDrop(item.id)}>
+                    Drop
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="inventory-close">
+          <button className="inventory-button" onClick={onClose}>Close</button>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default InventoryModal;

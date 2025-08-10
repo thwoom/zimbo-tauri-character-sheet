@@ -1,46 +1,59 @@
 import React from 'react';
+import './StatusModal.css';
 
-const overlayStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'rgba(0, 0, 0, 0.8)',
-  zIndex: 1000,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const modalStyle = {
-  background: '#1a1a2e',
-  border: '2px solid #00ff88',
-  borderRadius: '15px',
-  padding: '30px',
-  textAlign: 'center',
-};
-
-const buttonStyle = {
-  background: 'linear-gradient(45deg, #00ff88, #00cc6a)',
-  border: 'none',
-  borderRadius: '6px',
-  color: 'white',
-  padding: '8px 15px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  transition: 'all 0.3s ease',
-  margin: '5px',
-};
-
-const StatusModal = ({ onClose }) => (
-  <div style={overlayStyle}>
-    <div style={modalStyle}>
-      <h2 style={{ color: '#00ff88' }}>💀 Status Effects & Debilities</h2>
-      <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-      <button onClick={onClose} style={buttonStyle}>Close</button>
+const StatusModal = ({
+  statusEffects,
+  debilities,
+  statusEffectTypes,
+  debilityTypes,
+  onToggleStatusEffect,
+  onToggleDebility,
+  onClose
+}) => {
+  return (
+    <div className="status-overlay">
+      <div className="status-modal">
+        <h2 className="status-title">💀 Status & Debilities</h2>
+        <div>
+          <h3 className="status-subtitle">Status Effects</h3>
+          <ul className="status-list">
+            {Object.keys(statusEffectTypes).map(key => (
+              <li key={key} className="status-item">
+                <label className="status-label">
+                  <input
+                    type="checkbox"
+                    checked={statusEffects.includes(key)}
+                    onChange={() => onToggleStatusEffect(key)}
+                  />{' '}
+                  {statusEffectTypes[key].name}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 className="status-subtitle">Debilities</h3>
+          <ul className="status-list">
+            {Object.keys(debilityTypes).map(key => (
+              <li key={key} className="status-item">
+                <label className="status-label">
+                  <input
+                    type="checkbox"
+                    checked={debilities.includes(key)}
+                    onChange={() => onToggleDebility(key)}
+                  />{' '}
+                  {debilityTypes[key].name}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="status-footer">
+          <button className="status-button" onClick={onClose}>Close</button>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default StatusModal;

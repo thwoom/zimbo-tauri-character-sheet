@@ -1,151 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import LevelUpModal from './components/LevelUpModal.jsx';
 import LevelUpModal from './components/LevelUpModal';
-import StatusModal from './components/StatusModal';
 import InventoryModal from './components/InventoryModal';
-import { rollDie, rollDice } from './utils/dice';
-
-// Initial character data based on Zimbo's character sheet
-const INITIAL_CHARACTER_DATA = {
-  // Basic Info
-  level: 4,
-  hp: 15,
-  maxHp: 25,
-  xp: 4,
-  xpNeeded: 12, // Formula: (level + 1) * 7
-  armor: 0,
-  
-  // Attributes
-  stats: {
-    STR: { score: 18, mod: 3 },  // mod = Math.floor((score - 10) / 2)
-    DEX: { score: 15, mod: 1 },
-    CON: { score: 16, mod: 2 },
-    INT: { score: 9, mod: 0 },
-    WIS: { score: 13, mod: 1 },
-    CHA: { score: 8, mod: -1 }
-  },
-  
-  // Resources & Abilities
-  resources: {
-    chronoUses: 2,        // Ring of Smooshed Chronologies
-    paradoxPoints: 0,     // 0-3, 3 = reality unstable
-    bandages: 3,          // Heal 4 HP slowly
-    rations: 5,           // Satisfy hunger at camp
-    advGear: 5            // Rope, torches, chalk, etc.
-  },
-  
-  // Character Relationships
-  bonds: [
-    { name: "Sar", relationship: "I will teach Sar about the future", resolved: false },
-    { name: "Kael", relationship: "Kael reminds me of someone I lost", resolved: false }
-  ],
-  
-  // Status Conditions
-  statusEffects: [], // Keys: poisoned, shocked, burning, frozen, confused, weakened, blessed, invisible
-  debilities: [],    // Keys: weak, shaky, sick, stunned, confused, scarred
-  
-  // Equipment & Items
-  inventory: [
-    { id: 1, name: "Entropic Cyber-Warhammer", type: "weapon", damage: "d10+3", equipped: true, 
-      description: "Phases through time occasionally", tags: ["melee", "forceful", "messy"] },
-    { id: 2, name: "Ring of Smooshed Chronologies", type: "magic", equipped: true, 
-      description: "Grants Chrono-Retcon ability" },
-    { id: 3, name: "Gravity Beetle Shell", type: "material", quantity: 1, 
-      description: "Crafting material for Sar's companion Kumquat" },
-    { id: 4, name: "Healing Potion", type: "consumable", quantity: 2, 
-      description: "Restore 1d8 HP" },
-    { id: 5, name: "Cyber-Plated Vest", type: "armor", armor: 1, equipped: false, 
-      description: "Light armor with energy dispersal" }
-  ],
-  
-  // Character Progression
-  selectedMoves: [],     // Advanced moves acquired through leveling
-  actionHistory: [],     // For undo functionality (last 5 actions)
-  
-  // Session Data
-  sessionNotes: "",      // Campaign notes and events
-  rollHistory: []        // Recent dice rolls (last 10)
-};
-
-// Status Effects and Debilities Definitions
-const statusEffectTypes = {
-  poisoned: { name: "Poisoned", description: "-1 to all rolls", color: "green", icon: "🤢" },
-  shocked: { name: "Shocked", description: "-2 to DEX rolls", color: "blue-yellow", icon: "⚡" },
-  burning: { name: "Burning", description: "Fire damage each turn", color: "red-orange", icon: "🔥" },
-  frozen: { name: "Frozen", description: "-1 to physical actions", color: "cyan-blue", icon: "🧊" },
-  confused: { name: "Confused", description: "GM controls one action", color: "purple", icon: "😵" },
-  weakened: { name: "Weakened", description: "-1 to damage rolls", color: "gray", icon: "💔" },
-  blessed: { name: "Blessed", description: "+1 to all rolls", color: "yellow", icon: "✨" },
-  invisible: { name: "Invisible", description: "Cannot be targeted", color: "transparent", icon: "👻" }
-};
-
-const debilityTypes = {
-  weak: { name: "Weak", description: "-1 to STR rolls", icon: "💪" },
-  shaky: { name: "Shaky", description: "-1 to DEX rolls", icon: "🫨" },
-  sick: { name: "Sick", description: "-1 to CON rolls", icon: "🤒" },
-  stunned: { name: "Stunned", description: "-1 to INT rolls", icon: "😵‍💫" },
-  confused: { name: "Confused", description: "-1 to WIS rolls", icon: "🤯" },
-  scarred: { name: "Scarred", description: "-1 to CHA rolls", icon: "😰" }
-};
-
-// Advanced Moves Definition
-const advancedMoves = {
-  appetite: { 
-    name: "Appetite for Destruction", 
-    desc: "Take +1d4 damage ongoing to all enemies near something you destroy utterly.",
-    expanded: "When you completely obliterate something impressive - a door, statue, or magical barrier - all enemies within near range take +1d4 ongoing damage from the flying debris and your terrifying display.",
-    examples: "• Smash through a blast door to shower security drones with metal • Destroy a quantum pillar, causing energy arcs to damage nearby cyber-cultists"
-  },
-  khan: { 
-    name: "Khan of Khans", 
-    desc: "Your hirelings always accept the gratuitous fulfillment of one of your appetites as payment.",
-    expanded: "Instead of paying hirelings with coin, you can satisfy them by indulging your appetites (Destruction & Arcane Secrets) in a dramatic way.",
-    examples: "• Hire a tech-scavenger by promising to break ancient AI seals • Pay mercenaries by letting them watch you decode alien technology"
-  },
-  thick_skin: { 
-    name: "Thick Skin", 
-    desc: "You gain +1 armor or replace this move with getting +1 armor and +1 HP.",
-    expanded: "Your cybernetic enhancements and harsh experiences have toughened you. Choose either +1 armor permanently, OR replace this move to get both +1 armor and +1 HP.",
-    examples: "• Cyber-skin hardens against plasma weapons • Subdermal plating deflects energy blasts • Enhanced healing factors close laser wounds faster"
-  },
-  berserker: { 
-    name: "Berserker", 
-    desc: "When you deal damage while in combat, take +1 forward to your next move.",
-    expanded: "Every successful hit fuels your combat fury, making your next action more effective. This creates escalating momentum in fights.",
-    examples: "• Cyber-hammer strike energizes your dodge protocols • Successful intimidation improves your next plasma shot • Landing damage makes your temporal shift more effective"
-  },
-  eye_for_weakness: {
-    name: "Eye for Weakness",
-    desc: "When you discern realities in combat, you take +1 forward to deal damage.",
-    expanded: "Your combat experience lets you spot vulnerabilities in enemies. Studying them in battle reveals openings for devastating attacks.",
-    examples: "• Notice weak points in power armor • Spot timing gaps in android defenses • Identify quantum field vulnerabilities"
-  },
-  multiclass_dabbler: {
-    name: "Multiclass Dabbler",
-    desc: "Get one move from another class. Treat your level as one lower for choosing the move.",
-    expanded: "Your varied experiences allow you to pick up techniques from other adventuring traditions. Choose any move from Fighter, Thief, Wizard, etc.",
-    examples: "• Fighter moves for plasma weapon mastery • Wizard quantum-spells for temporal power • Thief skills for hacking and infiltration"
-  }
-};
+import StatusModal from './components/StatusModal';
+import RollModal from './components/RollModal';
+import BondsModal from './components/BondsModal';
+import { useCharacter } from './state/CharacterContext';
+import { statusEffectTypes, debilityTypes } from './state/character';
+import useModal from './hooks/useModal';
 
 function App() {
-  // Main Character State
-  const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
-  
+  const { character, setCharacter } = useCharacter();
+
   // UI State Management
   const [expandedMoves, setExpandedMoves] = useState({});
   const [rollResult, setRollResult] = useState('Ready to roll!');
-  const [showRollModal, setShowRollModal] = useState(false);
+  const rollModal = useModal();
+  const bondsModal = useModal();
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState([]);
   const [sessionNotes, setSessionNotes] = useState('');
-  
+
   // Modal States
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
-  const [showBondsModal, setShowBondsModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   
   // Additional UI State
@@ -168,6 +49,9 @@ function App() {
       setLevelUpState(prev => ({ ...prev, newLevel: character.level + 1 }));
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
+
+  // Utility Functions
+  const rollDie = (sides) => Math.floor(Math.random() * sides) + 1;
 
   const getTotalArmor = () => {
     const baseArmor = character.armor || 0;
@@ -224,11 +108,129 @@ function App() {
     return { modifier, notes };
   };
 
-  const handleRollDice = (formula, description = '') => {
-    const rollData = rollDice(formula, description, getStatusModifiers);
-    setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
-    setRollModalData(rollData);
-    setShowRollModal(true);
+  // Core Dice Rolling System
+  const rollDice = (formula, description = '') => {
+    let result = '';
+    let total = 0;
+    let interpretation = '';
+    let context = '';
+
+    if (formula.includes('2d6')) {
+      const die1 = rollDie(6);
+      const die2 = rollDie(6);
+      const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
+      
+      // Determine roll type for status effects
+      let rollType = 'general';
+      if (description.includes('STR') || description.includes('Hack')) rollType = 'str';
+      else if (description.includes('DEX')) rollType = 'dex';
+      else if (description.includes('CON')) rollType = 'con';
+      else if (description.includes('INT')) rollType = 'int';
+      else if (description.includes('WIS')) rollType = 'wis';
+      else if (description.includes('CHA')) rollType = 'cha';
+      else if (description.includes('damage') || description.includes('Damage') || description.includes('Upper Hand') || description.includes('Bonus Damage')) rollType = 'damage';
+      
+      const statusMods = getStatusModifiers(rollType);
+      const totalModifier = baseModifier + statusMods.modifier;
+      total = die1 + die2 + totalModifier;
+      
+      result = `2d6: [${die1}, ${die2}]`;
+      if (baseModifier !== 0) {
+        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
+      }
+      if (statusMods.modifier !== 0) {
+        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+      }
+      result += ` = ${total}`;
+
+      if (statusMods.notes.length > 0) {
+        result += ` (${statusMods.notes.join(', ')})`;
+      }
+
+      // Dungeon World success thresholds
+      if (total >= 10) {
+        interpretation = ' ✅ Success!';
+        context = getSuccessContext(description);
+      } else if (total >= 7) {
+        interpretation = ' ⚠️ Partial Success';
+        context = getPartialContext(description);
+      } else {
+        interpretation = ' ❌ Failure';
+        context = getFailureContext(description);
+      }
+    } else if (formula.startsWith('d')) {
+      const sides = parseInt(formula.replace('d', '').split('+')[0]);
+      const baseModifier = parseInt(formula.split('+')[1] || '0');
+      const roll = rollDie(sides);
+      
+      const rollType = description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
+      const statusMods = getStatusModifiers(rollType);
+      const totalModifier = baseModifier + statusMods.modifier;
+      total = roll + totalModifier;
+      
+      result = `d${sides}: ${roll}`;
+      if (baseModifier !== 0) {
+        result += ` +${baseModifier}`;
+      }
+      if (statusMods.modifier !== 0) {
+        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+      }
+      result += ` = ${total}`;
+
+      if (statusMods.notes.length > 0) {
+        result += ` (${statusMods.notes.join(', ')})`;
+      }
+    }
+
+    const rollData = {
+      result: result + interpretation,
+      description,
+      context,
+      total,
+      timestamp: new Date().toLocaleTimeString()
+    };
+
+    // Add to roll history (keep last 10)
+      setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
+      setRollModalData(rollData);
+      rollModal.open();
+  };
+
+  // Context helpers for roll results
+  const getSuccessContext = (description) => {
+    if (description.includes('STR')) return "Power through with overwhelming force!";
+    if (description.includes('DEX')) return "Graceful and precise execution!";
+    if (description.includes('CON')) return "Tough as cybernetic nails!";
+    if (description.includes('INT')) return "Brilliant tactical insight!";
+    if (description.includes('WIS')) return "Crystal clear perception!";
+    if (description.includes('CHA')) return "Surprisingly charming for a cyber-barbarian!";
+    if (description.includes('Hack')) return "Clean hit, enemy can't counter!";
+    if (description.includes('Taunt')) return "They're completely focused on you now!";
+    return "Perfect execution!";
+  };
+
+  const getPartialContext = (description) => {
+    if (description.includes('STR')) return "Success, but strain yourself or equipment";
+    if (description.includes('DEX')) return "Stumble slightly, awkward position";
+    if (description.includes('CON')) return "Feel the strain, maybe take harm";
+    if (description.includes('INT')) return "Confusing situation, partial info";
+    if (description.includes('WIS')) return "Something seems off, can't quite tell what";
+    if (description.includes('CHA')) return "Awkward interaction, mixed signals";
+    if (description.includes('Hack')) return "Hit them, but they hit you back!";
+    if (description.includes('Taunt')) return "They attack you but with +1 ongoing damage!";
+    return "Success with complications";
+  };
+
+  const getFailureContext = (description) => {
+    if (description.includes('STR')) return "Too heavy, equipment fails, or overpower backfires";
+    if (description.includes('DEX')) return "Trip, fumble, or end up in worse position";
+    if (description.includes('CON')) return "Exhausted, hurt, or overcome by conditions";
+    if (description.includes('INT')) return "No clue, wrong conclusion, or miss key detail";
+    if (description.includes('WIS')) return "Completely missed the signs";
+    if (description.includes('CHA')) return "Offensive, rude, or make things worse";
+    if (description.includes('Hack')) return "Miss entirely, terrible position";
+    if (description.includes('Taunt')) return "They ignore you completely";
+    return "Things go badly";
   };
 
   // Undo System
@@ -259,6 +261,56 @@ function App() {
     if (character.statusEffects.includes('frozen')) return 'frozen-overlay';
     if (character.statusEffects.includes('blessed')) return 'blessed-overlay';
     return '';
+  };
+
+  const handleEquipItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.map(item =>
+        item.id === id ? { ...item, equipped: !item.equipped } : item
+      )
+    }));
+  };
+
+  const handleConsumeItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.reduce((acc, item) => {
+        if (item.id === id) {
+          if (item.quantity && item.quantity > 1) {
+            acc.push({ ...item, quantity: item.quantity - 1 });
+          }
+        } else {
+          acc.push(item);
+        }
+        return acc;
+      }, [])
+    }));
+  };
+
+  const handleDropItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.filter(item => item.id !== id)
+    }));
+  };
+
+  const handleToggleStatusEffect = (effect) => {
+    setCharacter(prev => ({
+      ...prev,
+      statusEffects: prev.statusEffects.includes(effect)
+        ? prev.statusEffects.filter(e => e !== effect)
+        : [...prev.statusEffects, effect]
+    }));
+  };
+
+  const handleToggleDebility = (debility) => {
+    setCharacter(prev => ({
+      ...prev,
+      debilities: prev.debilities.includes(debility)
+        ? prev.debilities.filter(d => d !== debility)
+        : [...prev.debilities, debility]
+    }));
   };
 
   const getHeaderColor = () => {
@@ -379,12 +431,12 @@ function App() {
               >
                 🎒 Inventory
               </button>
-              <button
-                onClick={() => setShowBondsModal(true)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
-              >
-                👥 Bonds ({character.bonds.filter(b => !b.resolved).length})
-              </button>
+                <button
+                  onClick={bondsModal.open}
+                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
+                >
+                  👥 Bonds ({character.bonds.filter(b => !b.resolved).length})
+                </button>
             </div>
           </div>
         </div>
@@ -647,7 +699,7 @@ function App() {
                 {Object.entries(character.stats).map(([stat, data]) => (
                   <button
                     key={stat}
-                  onClick={() => handleRollDice(`2d6+${data.mod}`, `${stat} Check`)}
+                    onClick={() => rollDice(`2d6+${data.mod}`, `${stat} Check`)}
                     style={{
                       ...buttonStyle,
                       background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
@@ -667,25 +719,25 @@ function App() {
               <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Combat Rolls</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px' }}>
                 <button
-                  onClick={() => handleRollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
+                  onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)', margin: '2px', fontSize: '11px' }}
                 >
                   Weapon ({getEquippedWeaponDamage()})
                 </button>
                 <button
-                  onClick={() => handleRollDice('2d6+3', 'Hack & Slash')}
+                  onClick={() => rollDice('2d6+3', 'Hack & Slash')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', margin: '2px', fontSize: '11px' }}
                 >
                   Hack & Slash
                 </button>
                 <button
-                  onClick={() => handleRollDice('d4', 'Upper Hand')}
+                  onClick={() => rollDice('d4', 'Upper Hand')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)', margin: '2px', fontSize: '11px' }}
                 >
                   Upper Hand d4
                 </button>
                 <button
-                  onClick={() => handleRollDice('2d6-1', 'Taunt')}
+                  onClick={() => rollDice('2d6-1', 'Taunt')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #eab308, #d97706)', margin: '2px', fontSize: '11px' }}
                 >
                   Taunt Enemy
@@ -700,7 +752,7 @@ function App() {
                 {[4, 6, 8, 10, 12, 20].map(sides => (
                   <button
                     key={sides}
-                    onClick={() => handleRollDice(`d${sides}`)}
+                    onClick={() => rollDice(`d${sides}`)}
                     style={{
                       ...buttonStyle,
                       background: 'linear-gradient(45deg, #06b6d4, #0891b2)',
@@ -883,78 +935,7 @@ function App() {
         </div>
       </div>
 
-      {/* Roll Result Modal */}
-      {showRollModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(5px)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            maxWidth: '500px',
-            width: '100%',
-            boxShadow: '0 0 30px rgba(0, 255, 136, 0.5)'
-          }}>
-            <div style={{
-              textAlign: 'center',
-              padding: '20px',
-              background: 'linear-gradient(45deg, #0f3460, #533483)',
-              borderRadius: '13px 13px 0 0'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '1.5rem', color: '#00ff88', margin: 0 }}>🎲 Roll Result</h2>
-                <button
-                  onClick={() => setShowRollModal(false)}
-                  style={{
-                    background: 'rgba(239, 68, 68, 0.8)',
-                    border: '2px solid #ef4444',
-                    color: 'white',
-                    fontSize: '1.2rem',
-                    cursor: 'pointer',
-                    padding: '5px 10px',
-                    borderRadius: '8px'
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-            <div style={{ padding: '30px', textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#00ff88', marginBottom: '15px' }}>
-                {rollModalData.result}
-              </div>
-              {rollModalData.description && (
-                <div style={{ color: '#e0e0e0', marginBottom: '15px' }}>
-                  {rollModalData.description}
-                </div>
-              )}
-              {rollModalData.context && (
-                <div style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '20px' }}>
-                  {rollModalData.context}
-                </div>
-              )}
-              <button
-                onClick={() => setShowRollModal(false)}
-                style={buttonStyle}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
 
       {showLevelUpModal && (
   <LevelUpModal 
@@ -968,9 +949,16 @@ function App() {
   />
 )}
 
-      {/* Other Modal Placeholders */}
       {showStatusModal && (
-        <StatusModal onClose={() => setShowStatusModal(false)} />
+        <StatusModal
+          statusEffects={character.statusEffects}
+          debilities={character.debilities}
+          statusEffectTypes={statusEffectTypes}
+          debilityTypes={debilityTypes}
+          onToggleStatusEffect={handleToggleStatusEffect}
+          onToggleDebility={handleToggleDebility}
+          onClose={() => setShowStatusModal(false)}
+        />
       )}
 
       {showDamageModal && (
@@ -1001,35 +989,16 @@ function App() {
       )}
 
       {showInventoryModal && (
-        <InventoryModal onClose={() => setShowInventoryModal(false)} />
+        <InventoryModal
+          inventory={character.inventory}
+          onEquip={handleEquipItem}
+          onConsume={handleConsumeItem}
+          onDrop={handleDropItem}
+          onClose={() => setShowInventoryModal(false)}
+        />
       )}
 
-      {showBondsModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>👥 Character Bonds</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowBondsModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
-      )}
+        <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
     </div>
   );
 }

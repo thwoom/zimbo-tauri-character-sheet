@@ -33,4 +33,19 @@ describe('rollDice', () => {
   it('throws on unsupported formulas', () => {
     expect(() => rollDice('2d')).toThrow('Unsupported formula');
   });
+
+  it('supports uppercase D and whitespace', () => {
+    const spy = vi.spyOn(Math, 'random');
+    spy.mockReturnValueOnce(0.2).mockReturnValueOnce(0.8);
+    expect(rollDice(' 2D6 + 3 ')).toBe(10);
+    spy.mockRestore();
+  });
+
+  it('throws on non-positive counts', () => {
+    expect(() => rollDice('0d6')).toThrow('count must be a positive integer');
+  });
+
+  it('throws on non-positive sides', () => {
+    expect(() => rollDice('2d0')).toThrow('sides must be a positive integer');
+  });
 });

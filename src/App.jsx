@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LevelUpModal from './components/LevelUpModal';
+import { advancedMoves } from './data/advancedMoves';
 
 // Initial character data based on Zimbo's character sheet
 const INITIAL_CHARACTER_DATA = {
@@ -85,45 +86,6 @@ const debilityTypes = {
   scarred: { name: "Scarred", description: "-1 to CHA rolls", icon: "😰" }
 };
 
-// Advanced Moves Definition
-const advancedMoves = {
-  appetite: { 
-    name: "Appetite for Destruction", 
-    desc: "Take +1d4 damage ongoing to all enemies near something you destroy utterly.",
-    expanded: "When you completely obliterate something impressive - a door, statue, or magical barrier - all enemies within near range take +1d4 ongoing damage from the flying debris and your terrifying display.",
-    examples: "• Smash through a blast door to shower security drones with metal • Destroy a quantum pillar, causing energy arcs to damage nearby cyber-cultists"
-  },
-  khan: { 
-    name: "Khan of Khans", 
-    desc: "Your hirelings always accept the gratuitous fulfillment of one of your appetites as payment.",
-    expanded: "Instead of paying hirelings with coin, you can satisfy them by indulging your appetites (Destruction & Arcane Secrets) in a dramatic way.",
-    examples: "• Hire a tech-scavenger by promising to break ancient AI seals • Pay mercenaries by letting them watch you decode alien technology"
-  },
-  thick_skin: { 
-    name: "Thick Skin", 
-    desc: "You gain +1 armor or replace this move with getting +1 armor and +1 HP.",
-    expanded: "Your cybernetic enhancements and harsh experiences have toughened you. Choose either +1 armor permanently, OR replace this move to get both +1 armor and +1 HP.",
-    examples: "• Cyber-skin hardens against plasma weapons • Subdermal plating deflects energy blasts • Enhanced healing factors close laser wounds faster"
-  },
-  berserker: { 
-    name: "Berserker", 
-    desc: "When you deal damage while in combat, take +1 forward to your next move.",
-    expanded: "Every successful hit fuels your combat fury, making your next action more effective. This creates escalating momentum in fights.",
-    examples: "• Cyber-hammer strike energizes your dodge protocols • Successful intimidation improves your next plasma shot • Landing damage makes your temporal shift more effective"
-  },
-  eye_for_weakness: {
-    name: "Eye for Weakness",
-    desc: "When you discern realities in combat, you take +1 forward to deal damage.",
-    expanded: "Your combat experience lets you spot vulnerabilities in enemies. Studying them in battle reveals openings for devastating attacks.",
-    examples: "• Notice weak points in power armor • Spot timing gaps in android defenses • Identify quantum field vulnerabilities"
-  },
-  multiclass_dabbler: {
-    name: "Multiclass Dabbler",
-    desc: "Get one move from another class. Treat your level as one lower for choosing the move.",
-    expanded: "Your varied experiences allow you to pick up techniques from other adventuring traditions. Choose any move from Fighter, Thief, Wizard, etc.",
-    examples: "• Fighter moves for plasma weapon mastery • Wizard quantum-spells for temporal power • Thief skills for hacking and infiltration"
-  }
-};
 
 function App() {
   // Main Character State

@@ -12,4 +12,3 @@ src/App.jsx
 src/components/InventoryModal.jsx
 src/components/StatusModal.jsx
 src/main.jsx
-src/components/LevelUpModal.jsx

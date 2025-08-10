@@ -51,3 +51,6 @@ npm run tauri build
 ### v0.1.0
 
 - Initial release.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

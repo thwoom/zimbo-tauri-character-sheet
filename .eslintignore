@@ -5,4 +5,3 @@ coverage
 .next
 .out
 storybook-static
-src/components/LevelUpModal.jsx

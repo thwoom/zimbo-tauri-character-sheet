@@ -154,6 +154,7 @@ function App() {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(description);
+        setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }));
       }
     } else if (formula.startsWith('d')) {
       const sides = parseInt(formula.replace('d', '').split('+')[0]);

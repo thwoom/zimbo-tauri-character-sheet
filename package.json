@@ -10,7 +10,8 @@
     "tauri": "tauri",
     "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier -w ."
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -18,11 +19,22 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,html,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
     "@vitejs/plugin-react": "^4.6.0",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
     "vite": "^7.0.4",
     "vitest": "^3.2.4"

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './LevelUpModal.css';
 import { advancedMoves } from '../data/advancedMoves.js';
+import { scoreToMod } from '../utils/score.js';
 import Message from './Message.jsx';
 
 const LevelUpModal = ({
@@ -18,8 +19,8 @@ const LevelUpModal = ({
   // Helper functions
   const canIncreaseTwo = () => {
     const validStats = Object.entries(character.stats)
-      .filter(([_, data]) => data.score < 16)
-      .map(([stat, _]) => stat);
+      .filter(([, data]) => data.score < 16)
+      .map(([stat]) => stat);
     return validStats.length >= 2;
   };
 
@@ -91,7 +92,7 @@ const LevelUpModal = ({
     levelUpState.selectedStats.forEach((stat) => {
       newStats[stat] = {
         score: newStats[stat].score + 1,
-        mod: Math.floor((newStats[stat].score + 1 - 10) / 2),
+        mod: scoreToMod(newStats[stat].score + 1),
       };
     });
 
@@ -172,7 +173,13 @@ const LevelUpModal = ({
   };
 
   return (
-    <div className="levelup-overlay" onClick={handleOverlayClick}>
+    <div
+      className="levelup-overlay"
+      onClick={handleOverlayClick}
+      onKeyDown={(e) => e.key === 'Escape' && onClose()}
+      role="button"
+      tabIndex={0}
+    >
       <div className="levelup-modal">
         {/* Header */}
         <div className="levelup-header">
@@ -236,9 +243,8 @@ const LevelUpModal = ({
                   </div>
                   <div className="levelup-stat-mod">
                     ({data.mod >= 0 ? '+' : ''}
-                    {data.mod} →{' '}
-                    {Math.floor((Math.min(18, data.score + 1) - 10) / 2) >= 0 ? '+' : ''}
-                    {Math.floor((Math.min(18, data.score + 1) - 10) / 2)})
+                    {data.mod} → {scoreToMod(Math.min(18, data.score + 1)) >= 0 ? '+' : ''}
+                    {scoreToMod(Math.min(18, data.score + 1))})
                   </div>
                 </button>
               ))}
@@ -256,12 +262,18 @@ const LevelUpModal = ({
             <h3 className="levelup-step-title">⚔️ Step 2: Choose Advanced Move</h3>
             <div className="levelup-move-list">
               {Object.entries(advancedMoves)
-                .filter(([id, move]) => !character.selectedMoves.includes(id))
+                .filter(([id]) => !character.selectedMoves.includes(id))
                 .map(([id, move]) => (
                   <div key={id} className="levelup-move-wrapper">
                     <div
                       onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
+                      onKeyDown={(e) =>
+                        e.key === 'Enter' &&
+                        setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
+                      }
                       className={moveButtonClass(id)}
+                      role="button"
+                      tabIndex={0}
                     >
                       <div className="levelup-move-header">
                         <div className="levelup-move-text">
@@ -274,6 +286,7 @@ const LevelUpModal = ({
                             setShowMoveDetails(showMoveDetails === id ? '' : id);
                           }}
                           className="levelup-details-button"
+                          type="button"
                         >
                           {showMoveDetails === id ? '▲' : '▼'}
                         </button>

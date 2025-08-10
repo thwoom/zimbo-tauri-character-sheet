@@ -10,10 +10,10 @@ describe('rollDie', () => {
 });
 
 describe('rollDice', () => {
-  it('handles 2d6 formulas', () => {
+  it('handles multi-die formulas', () => {
     const spy = vi.spyOn(Math, 'random');
-    spy.mockReturnValueOnce(0.1).mockReturnValueOnce(0.6);
-    expect(rollDice('2d6+1')).toBe(6);
+    spy.mockReturnValueOnce(0.2).mockReturnValueOnce(0.8).mockReturnValueOnce(0.4);
+    expect(rollDice('3d6+2')).toBe(12);
     spy.mockRestore();
   });
 
@@ -23,7 +23,14 @@ describe('rollDice', () => {
     spy.mockRestore();
   });
 
+  it('handles negative modifiers', () => {
+    const spy = vi.spyOn(Math, 'random');
+    spy.mockReturnValueOnce(0.75).mockReturnValueOnce(0.25);
+    expect(rollDice('2d4-3')).toBe(3);
+    spy.mockRestore();
+  });
+
   it('throws on unsupported formulas', () => {
-    expect(() => rollDice('3d6')).toThrow('Unsupported formula');
+    expect(() => rollDice('2d')).toThrow('Unsupported formula');
   });
 });

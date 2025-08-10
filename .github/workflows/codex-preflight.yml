@@ -1,0 +1,36 @@
+﻿name: codex-preflight
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install (best-effort)
+        run: npm ci || npm i --prefer-offline
+      - name: Preflight (auto-fix for codex/*)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          if [[ "${{ github.head_ref }}" == codex/* ]]; then
+            git config user.name "codex-bot"
+            git config user.email "codex-bot@users.noreply.github.com"
+            node .github/tools/codex-preflight.mjs --base "${{ github.base_ref || 'main' }}" --fix || true
+            if [ -n "$(git status --porcelain)" ]; then
+              git commit -am "chore: preflight autofix (format/lockfile)"
+              git push
+            fi
+          fi
+          node .github/tools/codex-preflight.mjs --base "${{ github.base_ref || 'main' }}"

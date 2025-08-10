@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LevelUpModal from './components/LevelUpModal';
+import StatusModal from './components/StatusModal';
+import InventoryModal from './components/InventoryModal';
+import { rollDie, rollDice } from './utils/dice';
 
 // Initial character data based on Zimbo's character sheet
 const INITIAL_CHARACTER_DATA = {
@@ -166,9 +169,6 @@ function App() {
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
 
-  // Utility Functions
-  const rollDie = (sides) => Math.floor(Math.random() * sides) + 1;
-
   const getTotalArmor = () => {
     const baseArmor = character.armor || 0;
     const equippedArmor = character.inventory
@@ -224,129 +224,11 @@ function App() {
     return { modifier, notes };
   };
 
-  // Core Dice Rolling System
-  const rollDice = (formula, description = '') => {
-    let result = '';
-    let total = 0;
-    let interpretation = '';
-    let context = '';
-
-    if (formula.includes('2d6')) {
-      const die1 = rollDie(6);
-      const die2 = rollDie(6);
-      const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
-      
-      // Determine roll type for status effects
-      let rollType = 'general';
-      if (description.includes('STR') || description.includes('Hack')) rollType = 'str';
-      else if (description.includes('DEX')) rollType = 'dex';
-      else if (description.includes('CON')) rollType = 'con';
-      else if (description.includes('INT')) rollType = 'int';
-      else if (description.includes('WIS')) rollType = 'wis';
-      else if (description.includes('CHA')) rollType = 'cha';
-      else if (description.includes('damage') || description.includes('Damage') || description.includes('Upper Hand') || description.includes('Bonus Damage')) rollType = 'damage';
-      
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = die1 + die2 + totalModifier;
-      
-      result = `2d6: [${die1}, ${die2}]`;
-      if (baseModifier !== 0) {
-        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
-
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
-      }
-
-      // Dungeon World success thresholds
-      if (total >= 10) {
-        interpretation = ' ✅ Success!';
-        context = getSuccessContext(description);
-      } else if (total >= 7) {
-        interpretation = ' ⚠️ Partial Success';
-        context = getPartialContext(description);
-      } else {
-        interpretation = ' ❌ Failure';
-        context = getFailureContext(description);
-      }
-    } else if (formula.startsWith('d')) {
-      const sides = parseInt(formula.replace('d', '').split('+')[0]);
-      const baseModifier = parseInt(formula.split('+')[1] || '0');
-      const roll = rollDie(sides);
-      
-      const rollType = description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = roll + totalModifier;
-      
-      result = `d${sides}: ${roll}`;
-      if (baseModifier !== 0) {
-        result += ` +${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
-
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
-      }
-    }
-
-    const rollData = {
-      result: result + interpretation,
-      description,
-      context,
-      total,
-      timestamp: new Date().toLocaleTimeString()
-    };
-
-    // Add to roll history (keep last 10)
+  const handleRollDice = (formula, description = '') => {
+    const rollData = rollDice(formula, description, getStatusModifiers);
     setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
     setRollModalData(rollData);
     setShowRollModal(true);
-  };
-
-  // Context helpers for roll results
-  const getSuccessContext = (description) => {
-    if (description.includes('STR')) return "Power through with overwhelming force!";
-    if (description.includes('DEX')) return "Graceful and precise execution!";
-    if (description.includes('CON')) return "Tough as cybernetic nails!";
-    if (description.includes('INT')) return "Brilliant tactical insight!";
-    if (description.includes('WIS')) return "Crystal clear perception!";
-    if (description.includes('CHA')) return "Surprisingly charming for a cyber-barbarian!";
-    if (description.includes('Hack')) return "Clean hit, enemy can't counter!";
-    if (description.includes('Taunt')) return "They're completely focused on you now!";
-    return "Perfect execution!";
-  };
-
-  const getPartialContext = (description) => {
-    if (description.includes('STR')) return "Success, but strain yourself or equipment";
-    if (description.includes('DEX')) return "Stumble slightly, awkward position";
-    if (description.includes('CON')) return "Feel the strain, maybe take harm";
-    if (description.includes('INT')) return "Confusing situation, partial info";
-    if (description.includes('WIS')) return "Something seems off, can't quite tell what";
-    if (description.includes('CHA')) return "Awkward interaction, mixed signals";
-    if (description.includes('Hack')) return "Hit them, but they hit you back!";
-    if (description.includes('Taunt')) return "They attack you but with +1 ongoing damage!";
-    return "Success with complications";
-  };
-
-  const getFailureContext = (description) => {
-    if (description.includes('STR')) return "Too heavy, equipment fails, or overpower backfires";
-    if (description.includes('DEX')) return "Trip, fumble, or end up in worse position";
-    if (description.includes('CON')) return "Exhausted, hurt, or overcome by conditions";
-    if (description.includes('INT')) return "No clue, wrong conclusion, or miss key detail";
-    if (description.includes('WIS')) return "Completely missed the signs";
-    if (description.includes('CHA')) return "Offensive, rude, or make things worse";
-    if (description.includes('Hack')) return "Miss entirely, terrible position";
-    if (description.includes('Taunt')) return "They ignore you completely";
-    return "Things go badly";
   };
 
   // Undo System
@@ -765,7 +647,7 @@ function App() {
                 {Object.entries(character.stats).map(([stat, data]) => (
                   <button
                     key={stat}
-                    onClick={() => rollDice(`2d6+${data.mod}`, `${stat} Check`)}
+                  onClick={() => handleRollDice(`2d6+${data.mod}`, `${stat} Check`)}
                     style={{
                       ...buttonStyle,
                       background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
@@ -785,25 +667,25 @@ function App() {
               <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Combat Rolls</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px' }}>
                 <button
-                  onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
+                  onClick={() => handleRollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)', margin: '2px', fontSize: '11px' }}
                 >
                   Weapon ({getEquippedWeaponDamage()})
                 </button>
                 <button
-                  onClick={() => rollDice('2d6+3', 'Hack & Slash')}
+                  onClick={() => handleRollDice('2d6+3', 'Hack & Slash')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', margin: '2px', fontSize: '11px' }}
                 >
                   Hack & Slash
                 </button>
                 <button
-                  onClick={() => rollDice('d4', 'Upper Hand')}
+                  onClick={() => handleRollDice('d4', 'Upper Hand')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)', margin: '2px', fontSize: '11px' }}
                 >
                   Upper Hand d4
                 </button>
                 <button
-                  onClick={() => rollDice('2d6-1', 'Taunt')}
+                  onClick={() => handleRollDice('2d6-1', 'Taunt')}
                   style={{ ...buttonStyle, background: 'linear-gradient(45deg, #eab308, #d97706)', margin: '2px', fontSize: '11px' }}
                 >
                   Taunt Enemy
@@ -818,7 +700,7 @@ function App() {
                 {[4, 6, 8, 10, 12, 20].map(sides => (
                   <button
                     key={sides}
-                    onClick={() => rollDice(`d${sides}`)}
+                    onClick={() => handleRollDice(`d${sides}`)}
                     style={{
                       ...buttonStyle,
                       background: 'linear-gradient(45deg, #06b6d4, #0891b2)',
@@ -1088,30 +970,7 @@ function App() {
 
       {/* Other Modal Placeholders */}
       {showStatusModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>💀 Status Effects & Debilities</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowStatusModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <StatusModal onClose={() => setShowStatusModal(false)} />
       )}
 
       {showDamageModal && (
@@ -1142,30 +1001,7 @@ function App() {
       )}
 
       {showInventoryModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>🎒 Inventory Management</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowInventoryModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <InventoryModal onClose={() => setShowInventoryModal(false)} />
       )}
 
       {showBondsModal && (

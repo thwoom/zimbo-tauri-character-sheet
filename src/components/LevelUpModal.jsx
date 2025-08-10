@@ -18,8 +18,8 @@ const LevelUpModal = ({
   // Helper functions
   const canIncreaseTwo = () => {
     const validStats = Object.entries(character.stats)
-      .filter(([_, data]) => data.score < 16)
-      .map(([stat, _]) => stat);
+      .filter(([, data]) => data.score < 16)
+      .map(([stat]) => stat);
     return validStats.length >= 2;
   };
 
@@ -103,7 +103,7 @@ const LevelUpModal = ({
       maxHp: prev.maxHp + levelUpState.hpIncrease,
       hp: prev.maxHp + levelUpState.hpIncrease, // Heal to full when leveling
       xp: prev.xp - prev.xpNeeded,
-      xpNeeded: (levelUpState.newLevel + 1) * 7,
+      xpNeeded: levelUpState.newLevel + 7,
       selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
       actionHistory: [
         ...prev.actionHistory.slice(-4), // Keep last 4 actions
@@ -172,7 +172,14 @@ const LevelUpModal = ({
   };
 
   return (
-    <div className="levelup-overlay" onClick={handleOverlayClick}>
+    <div
+      className="levelup-overlay"
+      onClick={handleOverlayClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Close"
+      onKeyDown={(e) => e.key === 'Enter' && handleOverlayClick(e)}
+    >
       <div className="levelup-modal">
         {/* Header */}
         <div className="levelup-header">
@@ -256,12 +263,18 @@ const LevelUpModal = ({
             <h3 className="levelup-step-title">⚔️ Step 2: Choose Advanced Move</h3>
             <div className="levelup-move-list">
               {Object.entries(advancedMoves)
-                .filter(([id, move]) => !character.selectedMoves.includes(id))
+                .filter(([id]) => !character.selectedMoves.includes(id))
                 .map(([id, move]) => (
                   <div key={id} className="levelup-move-wrapper">
                     <div
                       onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
                       className={moveButtonClass(id)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) =>
+                        e.key === 'Enter' &&
+                        setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
+                      }
                     >
                       <div className="levelup-move-header">
                         <div className="levelup-move-text">
@@ -269,6 +282,7 @@ const LevelUpModal = ({
                           <p className="levelup-move-desc">{move.desc}</p>
                         </div>
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             setShowMoveDetails(showMoveDetails === id ? '' : id);

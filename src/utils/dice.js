@@ -2,7 +2,15 @@ export const rollDie = (sides) => {
   if (!Number.isInteger(sides) || sides <= 0) {
     throw new Error('sides must be a positive integer');
   }
-  return Math.floor(Math.random() * sides) + 1;
+  if (typeof crypto?.randomInt === 'function') {
+    return crypto.randomInt(1, sides + 1);
+  }
+  if (typeof crypto?.getRandomValues === 'function') {
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    return (array[0] % sides) + 1;
+  }
+  throw new Error('Secure random number generation is not supported');
 };
 
 export const rollDice = (formula) => {

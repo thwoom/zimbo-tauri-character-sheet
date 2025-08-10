@@ -1,3 +1,4 @@
+// Advanced moves available for selection
 export const advancedMoves = {
   appetite: {
     name: 'Appetite for Destruction',

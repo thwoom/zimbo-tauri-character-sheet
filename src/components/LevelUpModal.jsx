@@ -172,8 +172,14 @@ const LevelUpModal = ({
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-    <div className="levelup-overlay" onClick={handleOverlayClick}>
+    <div
+      className="levelup-overlay"
+      onClick={handleOverlayClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Close"
+      onKeyDown={(e) => e.key === 'Enter' && handleOverlayClick(e)}
+    >
       <div className="levelup-modal">
         {/* Header */}
         <div className="levelup-header">
@@ -265,11 +271,10 @@ const LevelUpModal = ({
                       className={moveButtonClass(id)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          setLevelUpState((prev) => ({ ...prev, selectedMove: id }));
-                        }
-                      }}
+                      onKeyDown={(e) =>
+                        e.key === 'Enter' &&
+                        setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
+                      }
                     >
                       <div className="levelup-move-header">
                         <div className="levelup-move-text">
@@ -277,6 +282,7 @@ const LevelUpModal = ({
                           <p className="levelup-move-desc">{move.desc}</p>
                         </div>
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             setShowMoveDetails(showMoveDetails === id ? '' : id);

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './LevelUpModal.css';
 import { advancedMoves } from '../data/advancedMoves.js';
-import { scoreToMod } from '../utils/score.js';
 import Message from './Message.jsx';
 
 const LevelUpModal = ({
@@ -92,7 +91,7 @@ const LevelUpModal = ({
     levelUpState.selectedStats.forEach((stat) => {
       newStats[stat] = {
         score: newStats[stat].score + 1,
-        mod: scoreToMod(newStats[stat].score + 1),
+        mod: Math.floor((newStats[stat].score + 1 - 10) / 2),
       };
     });
 
@@ -104,7 +103,7 @@ const LevelUpModal = ({
       maxHp: prev.maxHp + levelUpState.hpIncrease,
       hp: prev.maxHp + levelUpState.hpIncrease, // Heal to full when leveling
       xp: prev.xp - prev.xpNeeded,
-      xpNeeded: (levelUpState.newLevel + 1) * 7,
+      xpNeeded: levelUpState.newLevel + 7,
       selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
       actionHistory: [
         ...prev.actionHistory.slice(-4), // Keep last 4 actions
@@ -173,13 +172,8 @@ const LevelUpModal = ({
   };
 
   return (
-    <div
-      className="levelup-overlay"
-      onClick={handleOverlayClick}
-      onKeyDown={(e) => e.key === 'Escape' && onClose()}
-      role="button"
-      tabIndex={0}
-    >
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+    <div className="levelup-overlay" onClick={handleOverlayClick}>
       <div className="levelup-modal">
         {/* Header */}
         <div className="levelup-header">
@@ -243,8 +237,9 @@ const LevelUpModal = ({
                   </div>
                   <div className="levelup-stat-mod">
                     ({data.mod >= 0 ? '+' : ''}
-                    {data.mod} → {scoreToMod(Math.min(18, data.score + 1)) >= 0 ? '+' : ''}
-                    {scoreToMod(Math.min(18, data.score + 1))})
+                    {data.mod} →{' '}
+                    {Math.floor((Math.min(18, data.score + 1) - 10) / 2) >= 0 ? '+' : ''}
+                    {Math.floor((Math.min(18, data.score + 1) - 10) / 2)})
                   </div>
                 </button>
               ))}
@@ -267,13 +262,14 @@ const LevelUpModal = ({
                   <div key={id} className="levelup-move-wrapper">
                     <div
                       onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
-                      onKeyDown={(e) =>
-                        e.key === 'Enter' &&
-                        setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
-                      }
                       className={moveButtonClass(id)}
                       role="button"
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setLevelUpState((prev) => ({ ...prev, selectedMove: id }));
+                        }
+                      }}
                     >
                       <div className="levelup-move-header">
                         <div className="levelup-move-text">
@@ -286,7 +282,6 @@ const LevelUpModal = ({
                             setShowMoveDetails(showMoveDetails === id ? '' : id);
                           }}
                           className="levelup-details-button"
-                          type="button"
                         >
                           {showMoveDetails === id ? '▲' : '▼'}
                         </button>

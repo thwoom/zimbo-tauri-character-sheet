@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import LevelUpModal from './components/LevelUpModal.jsx';
 import LevelUpModal from './components/LevelUpModal';
 import InventoryModal from './components/InventoryModal';
 import StatusModal from './components/StatusModal';

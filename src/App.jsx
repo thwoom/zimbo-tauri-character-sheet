@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import BondsModal from './components/BondsModal.jsx';
 import DamageModal from './components/DamageModal.jsx';
+import EndSessionModal from './components/EndSessionModal.jsx';
 import InventoryModal from './components/InventoryModal.jsx';
 import LevelUpModal from './components/LevelUpModal.jsx';
 import RollModal from './components/RollModal.jsx';
@@ -26,6 +27,7 @@ function App() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   
   // Additional UI State
   const [compactMode, setCompactMode] = useState(false);
@@ -927,6 +929,12 @@ function App() {
               >
                 {compactMode ? '🖥️' : '📱'} {compactMode ? 'Expand' : 'Compact'}
               </button>
+              <button
+                onClick={() => setShowEndSessionModal(true)}
+                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f59e0b, #d97706)' }}
+              >
+                🏁 End Session
+              </button>
             </div>
           </div>
         </div>
@@ -934,8 +942,16 @@ function App() {
 
         <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
 
+      {showEndSessionModal && (
+        <EndSessionModal
+          isOpen={showEndSessionModal}
+          onClose={() => setShowEndSessionModal(false)}
+          onLevelUp={() => setShowLevelUpModal(true)}
+        />
+      )}
+
       {showLevelUpModal && (
-  <LevelUpModal 
+  <LevelUpModal
     character={character}
     setCharacter={setCharacter}
     levelUpState={levelUpState}

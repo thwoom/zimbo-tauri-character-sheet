@@ -1,0 +1,17 @@
+.message {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.message-error {
+  color: #ff5555;
+}
+
+.message-warning {
+  color: #ffaa44;
+}
+
+.message-success {
+  color: #00ff88;
+}

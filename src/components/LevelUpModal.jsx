@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import './LevelUpModal.css';
 import { advancedMoves } from '../data/advancedMoves.js';
+import Message from './Message.jsx';
 
 const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, onClose, rollDie, setRollResult }) => {
   const [showMoveDetails, setShowMoveDetails] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
 
   // Helper functions
   const canIncreaseTwo = () => {
@@ -20,6 +22,7 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
     setLevelUpState(prev => {
       const alreadySelected = prev.selectedStats.includes(stat);
       if (alreadySelected) {
+        setValidationMessage('');
         return { ...prev, selectedStats: prev.selectedStats.filter(s => s !== stat) };
       }
 
@@ -29,12 +32,13 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
       // If selecting a second stat, ensure its current score is below 16
       if (prev.selectedStats.length === 1) {
         if (currentScore >= 16) {
-          alert('Cannot select a second stat with a score of 16 or higher.');
+          setValidationMessage('Cannot select a second stat with a score of 16 or higher.');
           return prev;
         }
         if (!canIncreaseTwo()) return prev;
       }
 
+      setValidationMessage('');
       return { ...prev, selectedStats: [...prev.selectedStats, stat] };
     });
   };
@@ -62,9 +66,11 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
 
   const completeLevelUp = () => {
     if (levelUpState.selectedStats.length === 0 || !levelUpState.selectedMove || levelUpState.hpIncrease === 0) {
-      alert('Please complete all level up steps: select stats, choose a move, and roll for HP!');
+      setValidationMessage('Please complete all level up steps: select stats, choose a move, and roll for HP!');
       return;
     }
+
+    setValidationMessage('');
 
     // Update character stats
     const newStats = { ...character.stats };
@@ -330,10 +336,12 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
               </button>
             </div>
 
-            {!isComplete && (
-              <p className="levelup-warning">
-                Complete all steps to finish leveling up
-              </p>
+            {validationMessage ? (
+              <Message type="error">{validationMessage}</Message>
+            ) : (
+              !isComplete && (
+                <Message type="warning">Complete all steps to finish leveling up</Message>
+              )
             )}
           </div>
         </div>

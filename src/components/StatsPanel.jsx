@@ -1,6 +1,12 @@
 import styles from './StatsPanel.module.css';
 
-const StatsPanel = ({ character, setCharacter, saveToHistory, getTotalArmor, setShowLevelUpModal }) => {
+const StatsPanel = ({
+  character,
+  setCharacter,
+  saveToHistory,
+  getTotalArmor,
+  setShowLevelUpModal,
+}) => {
   return (
     <div className={styles.panel}>
       <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
@@ -9,7 +15,8 @@ const StatsPanel = ({ character, setCharacter, saveToHistory, getTotalArmor, set
           <div key={stat} className={styles.statItem}>
             <div className={styles.statName}>{stat}</div>
             <div className={styles.statValue}>
-              {data.score} ({data.mod >= 0 ? '+' : ''}{data.mod})
+              {data.score} ({data.mod >= 0 ? '+' : ''}
+              {data.mod})
             </div>
           </div>
         ))}
@@ -31,7 +38,7 @@ const StatsPanel = ({ character, setCharacter, saveToHistory, getTotalArmor, set
           className={styles.button}
           onClick={() => {
             saveToHistory('HP Change');
-            setCharacter(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + 1) }));
+            setCharacter((prev) => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + 1) }));
           }}
         >
           +1 HP
@@ -40,7 +47,7 @@ const StatsPanel = ({ character, setCharacter, saveToHistory, getTotalArmor, set
           className={`${styles.button} ${styles.danger}`}
           onClick={() => {
             saveToHistory('HP Change');
-            setCharacter(prev => ({ ...prev, hp: Math.max(0, prev.hp - 1) }));
+            setCharacter((prev) => ({ ...prev, hp: Math.max(0, prev.hp - 1) }));
           }}
         >
           -1 HP
@@ -61,13 +68,13 @@ const StatsPanel = ({ character, setCharacter, saveToHistory, getTotalArmor, set
       <div className={styles.controls}>
         <button
           className={styles.button}
-          onClick={() => setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }))}
+          onClick={() => setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }))}
         >
           +1 XP
         </button>
         <button
           className={`${styles.button} ${styles.danger}`}
-          onClick={() => setCharacter(prev => ({ ...prev, xp: Math.max(0, prev.xp - 1) }))}
+          onClick={() => setCharacter((prev) => ({ ...prev, xp: Math.max(0, prev.xp - 1) }))}
         >
           -1 XP
         </button>

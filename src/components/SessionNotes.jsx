@@ -7,7 +7,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
       <textarea
         className={styles.textarea}
         value={sessionNotes}
-        onChange={e => setSessionNotes(e.target.value)}
+        onChange={(e) => setSessionNotes(e.target.value)}
         placeholder="Track important events, NPCs, plot threads, and campaign notes here..."
       />
       <div className={styles.buttons}>
@@ -15,7 +15,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
           className={styles.button}
           onClick={() => {
             const timestamp = new Date().toLocaleString();
-            setSessionNotes(prev => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
+            setSessionNotes((prev) => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
           }}
         >
           📅 Timestamp

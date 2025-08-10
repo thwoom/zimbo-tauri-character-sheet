@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './LevelUpModal.css';
 import { advancedMoves } from '../data/advancedMoves.js';
+import Message from './Message.jsx';
 
 const LevelUpModal = ({
   character,
@@ -12,12 +13,13 @@ const LevelUpModal = ({
   setRollResult,
 }) => {
   const [showMoveDetails, setShowMoveDetails] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
 
   // Helper functions
   const canIncreaseTwo = () => {
     const validStats = Object.entries(character.stats)
-      .filter(([, data]) => data.score < 16)
-      .map(([stat]) => stat);
+      .filter(([_, data]) => data.score < 16)
+      .map(([stat, _]) => stat);
     return validStats.length >= 2;
   };
 
@@ -28,6 +30,7 @@ const LevelUpModal = ({
     setLevelUpState((prev) => {
       const alreadySelected = prev.selectedStats.includes(stat);
       if (alreadySelected) {
+        setValidationMessage('');
         return { ...prev, selectedStats: prev.selectedStats.filter((s) => s !== stat) };
       }
 
@@ -37,12 +40,13 @@ const LevelUpModal = ({
       // If selecting a second stat, ensure its current score is below 16
       if (prev.selectedStats.length === 1) {
         if (currentScore >= 16) {
-          alert('Cannot select a second stat with a score of 16 or higher.');
+          setValidationMessage('Cannot select a second stat with a score of 16 or higher.');
           return prev;
         }
         if (!canIncreaseTwo()) return prev;
       }
 
+      setValidationMessage('');
       return { ...prev, selectedStats: [...prev.selectedStats, stat] };
     });
   };
@@ -74,9 +78,13 @@ const LevelUpModal = ({
       !levelUpState.selectedMove ||
       levelUpState.hpIncrease === 0
     ) {
-      alert('Please complete all level up steps: select stats, choose a move, and roll for HP!');
+      setValidationMessage(
+        'Please complete all level up steps: select stats, choose a move, and roll for HP!',
+      );
       return;
     }
+
+    setValidationMessage('');
 
     // Update character stats
     const newStats = { ...character.stats };
@@ -162,20 +170,9 @@ const LevelUpModal = ({
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
-  const handleOverlayKeyDown = (e) => {
-    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
-      onClose();
-    }
-  };
 
   return (
-    <div
-      className="levelup-overlay"
-      onClick={handleOverlayClick}
-      onKeyDown={handleOverlayKeyDown}
-      role="button"
-      tabIndex={0}
-    >
+    <div className="levelup-overlay" onClick={handleOverlayClick}>
       <div className="levelup-modal">
         {/* Header */}
         <div className="levelup-header">
@@ -259,19 +256,12 @@ const LevelUpModal = ({
             <h3 className="levelup-step-title">⚔️ Step 2: Choose Advanced Move</h3>
             <div className="levelup-move-list">
               {Object.entries(advancedMoves)
-                .filter(([id]) => !character.selectedMoves.includes(id))
+                .filter(([id, move]) => !character.selectedMoves.includes(id))
                 .map(([id, move]) => (
                   <div key={id} className="levelup-move-wrapper">
                     <div
                       onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setLevelUpState((prev) => ({ ...prev, selectedMove: id }));
-                        }
-                      }}
                       className={moveButtonClass(id)}
-                      role="button"
-                      tabIndex={0}
                     >
                       <div className="levelup-move-header">
                         <div className="levelup-move-text">
@@ -372,8 +362,12 @@ const LevelUpModal = ({
               </button>
             </div>
 
-            {!isComplete && (
-              <p className="levelup-warning">Complete all steps to finish leveling up</p>
+            {validationMessage ? (
+              <Message type="error">{validationMessage}</Message>
+            ) : (
+              !isComplete && (
+                <Message type="warning">Complete all steps to finish leveling up</Message>
+              )
             )}
           </div>
         </div>

@@ -138,7 +138,7 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
       level: levelUpState.newLevel,
       stats: newStats,
       maxHp: prev.maxHp + levelUpState.hpIncrease,
-      hp: prev.hp + levelUpState.hpIncrease, // Heal to full when leveling
+      hp: prev.maxHp + levelUpState.hpIncrease, // Heal to full when leveling
       xp: prev.xp - prev.xpNeeded,
       xpNeeded: (levelUpState.newLevel + 1) * 7,
       selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],

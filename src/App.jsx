@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LevelUpModal from './components/LevelUpModal.jsx';
+import LevelUpModal from './components/LevelUpModal';
+import InventoryModal from './components/InventoryModal';
+import StatusModal from './components/StatusModal';
 
 // Initial character data based on Zimbo's character sheet
 const INITIAL_CHARACTER_DATA = {
@@ -377,6 +380,56 @@ function App() {
     if (character.statusEffects.includes('frozen')) return 'frozen-overlay';
     if (character.statusEffects.includes('blessed')) return 'blessed-overlay';
     return '';
+  };
+
+  const handleEquipItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.map(item =>
+        item.id === id ? { ...item, equipped: !item.equipped } : item
+      )
+    }));
+  };
+
+  const handleConsumeItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.reduce((acc, item) => {
+        if (item.id === id) {
+          if (item.quantity && item.quantity > 1) {
+            acc.push({ ...item, quantity: item.quantity - 1 });
+          }
+        } else {
+          acc.push(item);
+        }
+        return acc;
+      }, [])
+    }));
+  };
+
+  const handleDropItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.filter(item => item.id !== id)
+    }));
+  };
+
+  const handleToggleStatusEffect = (effect) => {
+    setCharacter(prev => ({
+      ...prev,
+      statusEffects: prev.statusEffects.includes(effect)
+        ? prev.statusEffects.filter(e => e !== effect)
+        : [...prev.statusEffects, effect]
+    }));
+  };
+
+  const handleToggleDebility = (debility) => {
+    setCharacter(prev => ({
+      ...prev,
+      debilities: prev.debilities.includes(debility)
+        ? prev.debilities.filter(d => d !== debility)
+        : [...prev.debilities, debility]
+    }));
   };
 
   const getHeaderColor = () => {
@@ -1086,32 +1139,16 @@ function App() {
   />
 )}
 
-      {/* Other Modal Placeholders */}
       {showStatusModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>💀 Status Effects & Debilities</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowStatusModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <StatusModal
+          statusEffects={character.statusEffects}
+          debilities={character.debilities}
+          statusEffectTypes={statusEffectTypes}
+          debilityTypes={debilityTypes}
+          onToggleStatusEffect={handleToggleStatusEffect}
+          onToggleDebility={handleToggleDebility}
+          onClose={() => setShowStatusModal(false)}
+        />
       )}
 
       {showDamageModal && (
@@ -1142,30 +1179,13 @@ function App() {
       )}
 
       {showInventoryModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>🎒 Inventory Management</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowInventoryModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <InventoryModal
+          inventory={character.inventory}
+          onEquip={handleEquipItem}
+          onConsume={handleConsumeItem}
+          onDrop={handleDropItem}
+          onClose={() => setShowInventoryModal(false)}
+        />
       )}
 
       {showBondsModal && (

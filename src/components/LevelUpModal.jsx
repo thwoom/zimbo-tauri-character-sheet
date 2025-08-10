@@ -260,12 +260,11 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
         {/* Header */}
         <div style={headerStyle}>
           <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'white' }}>
-  LEVEL UP!
-</h2>
+            LEVEL UP!
+          </h2>
           <p style={{ margin: '5px 0 0', color: '#e0f2fe' }}>
-<p style={{ margin: '5px 0 0', color: '#e0f2fe' }}>
-  Zimbo advances to Level {levelUpState.newLevel}
-</p>          </p>
+            {character.name} advances to Level {levelUpState.newLevel}
+          </p>
           <button
             onClick={onClose}
             style={{
@@ -492,7 +491,7 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
           <div style={{
             padding: '15px',
             background: isComplete ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 170, 68, 0.1)',
-            border: `1px solid ${isComplete ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 170, 68, 0.3)'}`,
+            border: `1px solid ${isComplete ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 170, 68, 0.3)}`,
             borderRadius: '8px',
             textAlign: 'center'
           }}>

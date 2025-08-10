@@ -1,4 +1,5 @@
 import React from 'react';
+import './StatusModal.css';
 
 const StatusModal = ({
   statusEffects,
@@ -9,52 +10,16 @@ const StatusModal = ({
   onToggleDebility,
   onClose
 }) => {
-  const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(0, 0, 0, 0.8)',
-    zIndex: 1000,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  };
-
-  const modalStyle = {
-    background: '#1a1a2e',
-    border: '2px solid #00ff88',
-    borderRadius: '15px',
-    padding: '20px',
-    maxWidth: '500px',
-    width: '100%',
-    maxHeight: '80vh',
-    overflowY: 'auto'
-  };
-
-  const listStyle = { listStyle: 'none', padding: 0 };
-  const itemStyle = { marginBottom: '8px' };
-  const buttonStyle = {
-    background: 'linear-gradient(45deg, #f97316, #ea580c)',
-    border: 'none',
-    borderRadius: '6px',
-    color: 'white',
-    padding: '5px 10px',
-    cursor: 'pointer',
-    marginTop: '10px'
-  };
-
   return (
-    <div style={overlayStyle}>
-      <div style={modalStyle}>
-        <h2 style={{ color: '#00ff88', textAlign: 'center' }}>💀 Status & Debilities</h2>
+    <div className="status-overlay">
+      <div className="status-modal">
+        <h2 className="status-title">💀 Status & Debilities</h2>
         <div>
-          <h3 style={{ color: '#00ff88' }}>Status Effects</h3>
-          <ul style={listStyle}>
+          <h3 className="status-subtitle">Status Effects</h3>
+          <ul className="status-list">
             {Object.keys(statusEffectTypes).map(key => (
-              <li key={key} style={itemStyle}>
-                <label style={{ color: '#fff' }}>
+              <li key={key} className="status-item">
+                <label className="status-label">
                   <input
                     type="checkbox"
                     checked={statusEffects.includes(key)}
@@ -67,11 +32,11 @@ const StatusModal = ({
           </ul>
         </div>
         <div>
-          <h3 style={{ color: '#00ff88' }}>Debilities</h3>
-          <ul style={listStyle}>
+          <h3 className="status-subtitle">Debilities</h3>
+          <ul className="status-list">
             {Object.keys(debilityTypes).map(key => (
-              <li key={key} style={itemStyle}>
-                <label style={{ color: '#fff' }}>
+              <li key={key} className="status-item">
+                <label className="status-label">
                   <input
                     type="checkbox"
                     checked={debilities.includes(key)}
@@ -83,8 +48,8 @@ const StatusModal = ({
             ))}
           </ul>
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <button style={buttonStyle} onClick={onClose}>Close</button>
+        <div className="status-footer">
+          <button className="status-button" onClick={onClose}>Close</button>
         </div>
       </div>
     </div>

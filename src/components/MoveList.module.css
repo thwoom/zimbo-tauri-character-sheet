@@ -1,0 +1,84 @@
+.panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  color: #00ff88;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+.sectionTitle {
+  color: #00ff88;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+.grid6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+
+.button {
+  background: linear-gradient(45deg, #00ff88, #00cc6a);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.rollResult {
+  background: rgba(0, 255, 136, 0.2);
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: bold;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history {
+  margin-top: 10px;
+  font-size: 0.8rem;
+}
+
+.historyTitle {
+  color: #00ff88;
+  margin-bottom: 5px;
+}
+
+.historyItem {
+  color: #aaa;
+  margin-bottom: 2px;
+}
+
+.historyTimestamp {
+  color: #00ff88;
+}

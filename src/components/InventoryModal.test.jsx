@@ -5,7 +5,25 @@ import React from 'react';
 import { vi } from 'vitest';
 import InventoryModal from './InventoryModal.jsx';
 
+function InventoryWrapper({ isOpen, ...props }) {
+  return isOpen ? <InventoryModal {...props} /> : null;
+}
+
 describe('InventoryModal', () => {
+  it('toggles visibility via conditional rendering', () => {
+    const props = {
+      inventory: [],
+      onEquip: () => {},
+      onConsume: () => {},
+      onDrop: () => {},
+      onClose: () => {},
+    };
+    const { rerender } = render(<InventoryWrapper isOpen={false} {...props} />);
+    expect(screen.queryByText(/Inventory/)).not.toBeInTheDocument();
+    rerender(<InventoryWrapper isOpen {...props} />);
+    expect(screen.getByText(/Inventory/)).toBeInTheDocument();
+  });
+
   it('shows message when inventory is empty', () => {
     render(
       <InventoryModal

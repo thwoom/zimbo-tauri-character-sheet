@@ -6,6 +6,14 @@ import { vi } from 'vitest';
 import RollModal from './RollModal.jsx';
 
 describe('RollModal', () => {
+  it('toggles visibility with isOpen prop', () => {
+    const data = { result: '7' };
+    const { rerender } = render(<RollModal isOpen={false} data={data} onClose={() => {}} />);
+    expect(screen.queryByText('7')).not.toBeInTheDocument();
+    rerender(<RollModal isOpen data={data} onClose={() => {}} />);
+    expect(screen.getByText('7')).toBeInTheDocument();
+  });
+
   it('shows roll data and handles closing', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

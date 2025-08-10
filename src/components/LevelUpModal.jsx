@@ -491,7 +491,7 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
           <div style={{
             padding: '15px',
             background: isComplete ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 170, 68, 0.1)',
-            border: `1px solid ${isComplete ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 170, 68, 0.3)}`,
+            border: `1px solid ${isComplete ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 170, 68, 0.3)'}`,
             borderRadius: '8px',
             textAlign: 'center'
           }}>

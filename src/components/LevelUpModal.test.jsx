@@ -1,9 +1,14 @@
 import { render, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { advancedMoves } from '../data/advancedMoves.js';
 import LevelUpModal from './LevelUpModal.jsx';
+
+function LevelUpWrapper({ isOpen, ...props }) {
+  return isOpen ? <LevelUpModal {...props} /> : null;
+}
 
 describe('LevelUpModal advanced moves', () => {
   it('renders moves from data file', () => {
@@ -94,5 +99,52 @@ describe('LevelUpModal XP calculation', () => {
     fireEvent.click(completeButton);
 
     expect(character.xpNeeded).toBe(levelUpState.newLevel + 7);
+  });
+});
+
+describe('LevelUpModal visibility and closing', () => {
+  const character = {
+    name: 'Test',
+    level: 1,
+    stats: {
+      STR: { score: 10, mod: 0 },
+      DEX: { score: 10, mod: 0 },
+      CON: { score: 10, mod: 0 },
+      INT: { score: 10, mod: 0 },
+      WIS: { score: 10, mod: 0 },
+      CHA: { score: 10, mod: 0 },
+    },
+    selectedMoves: [],
+  };
+  const levelUpState = {
+    selectedStats: [],
+    selectedMove: '',
+    hpIncrease: 0,
+    newLevel: 2,
+    expandedMove: '',
+  };
+  const baseProps = {
+    character,
+    setCharacter: () => {},
+    levelUpState,
+    setLevelUpState: () => {},
+    rollDie: () => 1,
+    setRollResult: () => {},
+  };
+
+  it('toggles visibility via conditional rendering', () => {
+    const onClose = vi.fn();
+    const { rerender } = render(<LevelUpWrapper isOpen={false} {...baseProps} onClose={onClose} />);
+    expect(screen.queryByRole('heading', { name: /LEVEL UP!/i })).not.toBeInTheDocument();
+    rerender(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
+    expect(screen.getByRole('heading', { name: /LEVEL UP!/i })).toBeInTheDocument();
+  });
+
+  it('closes when clicking the overlay', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
+    await user.click(screen.getByLabelText('Close'));
+    expect(onClose).toHaveBeenCalled();
   });
 });

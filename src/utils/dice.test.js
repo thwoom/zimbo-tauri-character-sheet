@@ -63,8 +63,16 @@ describe('rollDice', () => {
   });
 
   it('supports uppercase D and whitespace', () => {
-    const spy = vi.spyOn(Math, 'random');
-    spy.mockReturnValueOnce(0.2).mockReturnValueOnce(0.8);
+    const spy = vi.spyOn(crypto, 'getRandomValues');
+    spy
+      .mockImplementationOnce((arr) => {
+        arr[0] = 1; // -> 2
+        return arr;
+      })
+      .mockImplementationOnce((arr) => {
+        arr[0] = 4; // -> 5
+        return arr;
+      });
     expect(rollDice(' 2D6 + 3 ')).toBe(10);
     spy.mockRestore();
   });

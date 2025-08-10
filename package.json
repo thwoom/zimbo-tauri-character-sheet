@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "zimbo-panel",
   "private": true,
   "version": "0.1.0",
@@ -10,7 +10,9 @@
     "tauri": "tauri",
     "test": "vitest run",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky"
   },
   "dependencies": {
@@ -18,6 +20,22 @@
     "@tauri-apps/plugin-opener": "^2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "vite": "^7.0.4",
+    "vitest": "^3.2.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -27,16 +45,5 @@
     "*.{json,md,css,scss,html,yml,yaml}": [
       "prettier --write"
     ]
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^2",
-    "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^8.57.1",
-    "eslint-config-react-app": "^7.0.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.5",
-    "prettier": "^3.6.2",
-    "vite": "^7.0.4",
-    "vitest": "^3.2.4"
   }
 }

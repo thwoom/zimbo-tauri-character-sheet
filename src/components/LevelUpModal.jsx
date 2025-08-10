@@ -79,13 +79,19 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
       if (alreadySelected) {
         return { ...prev, selectedStats: prev.selectedStats.filter(s => s !== stat) };
       }
-      
+
       // Can't select more than 2 stats
       if (prev.selectedStats.length >= 2) return prev;
-      
-      // If already selected 1 stat, can only select another if both would be under 16
-      if (prev.selectedStats.length === 1 && !canIncreaseTwo()) return prev;
-      
+
+      // If selecting a second stat, ensure its current score is below 16
+      if (prev.selectedStats.length === 1) {
+        if (currentScore >= 16) {
+          alert('Cannot select a second stat with a score of 16 or higher.');
+          return prev;
+        }
+        if (!canIncreaseTwo()) return prev;
+      }
+
       return { ...prev, selectedStats: [...prev.selectedStats, stat] };
     });
   };
@@ -127,33 +133,30 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
     });
 
     // Apply level up changes
-    setCharacter(prev => {
-      const newMaxHp = prev.maxHp + levelUpState.hpIncrease;
-      return {
-        ...prev,
-        level: levelUpState.newLevel,
-        stats: newStats,
-        maxHp: newMaxHp,
-        hp: newMaxHp, // Heal to full when leveling
-        xp: prev.xp - prev.xpNeeded,
-        xpNeeded: (levelUpState.newLevel + 1) * 7,
-        selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
-        actionHistory: [
-          ...prev.actionHistory.slice(-4), // Keep last 4 actions
-          {
-            type: 'level_up',
-            data: {
-              oldLevel: prev.level,
-              newLevel: levelUpState.newLevel,
-              statsIncreased: levelUpState.selectedStats,
-              moveGained: levelUpState.selectedMove,
-              hpGained: levelUpState.hpIncrease
-            },
-            timestamp: new Date().toISOString()
-          }
-        ]
-      };
-    });
+    setCharacter(prev => ({
+      ...prev,
+      level: levelUpState.newLevel,
+      stats: newStats,
+      maxHp: prev.maxHp + levelUpState.hpIncrease,
+      hp: prev.maxHp + levelUpState.hpIncrease, // Heal to full when leveling
+      xp: prev.xp - prev.xpNeeded,
+      xpNeeded: (levelUpState.newLevel + 1) * 7,
+      selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
+      actionHistory: [
+        ...prev.actionHistory.slice(-4), // Keep last 4 actions
+        {
+          type: 'level_up',
+          data: {
+            oldLevel: prev.level,
+            newLevel: levelUpState.newLevel,
+            statsIncreased: levelUpState.selectedStats,
+            moveGained: levelUpState.selectedMove,
+            hpGained: levelUpState.hpIncrease
+          },
+          timestamp: new Date().toISOString()
+        }
+      ]
+    }));
 
     // Reset level up state
     setLevelUpState({ 

@@ -78,13 +78,19 @@ const LevelUpModal = ({ character, setCharacter, levelUpState, setLevelUpState, 
       if (alreadySelected) {
         return { ...prev, selectedStats: prev.selectedStats.filter(s => s !== stat) };
       }
-      
+
       // Can't select more than 2 stats
       if (prev.selectedStats.length >= 2) return prev;
-      
-      // If already selected 1 stat, can only select another if both would be under 16
-      if (prev.selectedStats.length === 1 && !canIncreaseTwo()) return prev;
-      
+
+      // If selecting a second stat, ensure its current score is below 16
+      if (prev.selectedStats.length === 1) {
+        if (currentScore >= 16) {
+          alert('Cannot select a second stat with a score of 16 or higher.');
+          return prev;
+        }
+        if (!canIncreaseTwo()) return prev;
+      }
+
       return { ...prev, selectedStats: [...prev.selectedStats, stat] };
     });
   };

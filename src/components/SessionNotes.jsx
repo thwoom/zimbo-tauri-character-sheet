@@ -2,7 +2,7 @@ import styles from './SessionNotes.module.css';
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
   return (
-    <div className={styles.panel} style={{ gridColumn: compactMode ? 'auto' : '1 / -1' }}>
+    <div className={`${styles.panel} ${compactMode ? '' : styles.fullWidth}`}>
       <h3 className={styles.title}>📝 Session Notes</h3>
       <textarea
         className={styles.textarea}

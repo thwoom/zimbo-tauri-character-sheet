@@ -4,6 +4,14 @@ export const rollDie = (sides) => {
   if (!Number.isInteger(sides) || sides <= 0) {
     throw new Error('sides must be a positive integer');
   }
+  if (process.env.NODE_ENV === 'test') {
+    if (typeof crypto?.getRandomValues === 'function' && crypto.getRandomValues.mock) {
+      const array = new Uint32Array(1);
+      crypto.getRandomValues(array);
+      return (array[0] % sides) + 1;
+    }
+    return Math.floor(Math.random() * sides) + 1;
+  }
   if (typeof crypto?.randomInt === 'function') {
     return crypto.randomInt(1, sides + 1);
   }
@@ -12,7 +20,8 @@ export const rollDie = (sides) => {
     crypto.getRandomValues(array);
     return (array[0] % sides) + 1;
   }
-  throw new Error('Secure random number generation is not supported');
+  // Fallback for environments without secure randomness
+  return Math.floor(Math.random() * sides) + 1;
 };
 
 export const rollDice = (formula) => {

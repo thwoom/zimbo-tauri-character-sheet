@@ -50,3 +50,7 @@
 .compact {
   background: linear-gradient(45deg, #6366f1, #4f46e5);
 }
+
+.fullWidth {
+  grid-column: 1 / -1;
+}

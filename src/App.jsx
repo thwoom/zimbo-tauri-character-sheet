@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import BondsModal from './components/BondsModal.jsx';
+import CharacterStats from './components/CharacterStats.jsx';
 import DamageModal from './components/DamageModal.jsx';
 import InventoryModal from './components/InventoryModal.jsx';
+import InventoryPanel from './components/InventoryPanel.jsx';
 import LevelUpModal from './components/LevelUpModal.jsx';
 import RollModal from './components/RollModal.jsx';
+import SessionNotes from './components/SessionNotes.jsx';
 import StatusModal from './components/StatusModal.jsx';
+import { panelStyle, buttonStyle } from './components/styles.js';
 import useModal from './hooks/useModal';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
@@ -350,26 +354,7 @@ function App() {
     marginBottom: '20px'
   };
 
-  const panelStyle = {
-    background: 'rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '12px',
-    padding: '20px',
-    border: '1px solid rgba(0, 255, 136, 0.3)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-  };
-
-  const buttonStyle = {
-    background: 'linear-gradient(45deg, #00ff88, #00cc6a)',
-    border: 'none',
-    borderRadius: '6px',
-    color: 'white',
-    padding: '8px 15px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    transition: 'all 0.3s ease',
-    margin: '5px'
-  };
+  // Styles moved to shared style objects
 
   return (
     <div style={containerStyle} className={getActiveVisualEffects()}>
@@ -445,259 +430,16 @@ function App() {
         {/* Main Grid Layout */}
         <div style={gridStyle}>
           {/* Stats Panel */}
-          <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>⚡ Stats & Health</h3>
-            
-            {/* Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '15px' }}>
-              {Object.entries(character.stats).map(([stat, data]) => (
-                <div key={stat} style={{
-                  textAlign: 'center',
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  padding: '10px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(0, 255, 136, 0.3)'
-                }}>
-                  <div style={{ fontSize: '0.8rem', color: '#aaa' }}>{stat}</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#00ff88' }}>
-                    {data.score} ({data.mod >= 0 ? '+' : ''}{data.mod})
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* HP Bar */}
-            <div style={{
-              width: '100%',
-              height: '25px',
-              background: '#333',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              border: '2px solid #555',
-              margin: '10px 0'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, #ff4444, #ffaa44)',
-                width: `${(character.hp / character.maxHp) * 100}%`,
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-              HP: {character.hp}/{character.maxHp} | Armor: {getTotalArmor()}
-            </div>
-
-            {/* HP Controls */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-              <button
-                onClick={() => {
-                  saveToHistory('HP Change');
-                  setCharacter(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + 1) }));
-                }}
-                style={buttonStyle}
-              >
-                +1 HP
-              </button>
-              <button
-                onClick={() => {
-                  saveToHistory('HP Change');
-                  setCharacter(prev => ({ ...prev, hp: Math.max(0, prev.hp - 1) }));
-                }}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                -1 HP
-              </button>
-            </div>
-
-            {/* XP Bar */}
-            <div style={{
-              width: '100%',
-              height: '20px',
-              background: '#333',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              margin: '15px 0 10px 0'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, #4a90ff, #00ff88)',
-                width: `${(character.xp / character.xpNeeded) * 100}%`,
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-              XP: {character.xp}/{character.xpNeeded} (Level {character.level})
-            </div>
-
-            {/* XP Controls */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-              <button
-                onClick={() => setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }))}
-                style={buttonStyle}
-              >
-                +1 XP
-              </button>
-              <button
-                onClick={() => setCharacter(prev => ({ ...prev, xp: Math.max(0, prev.xp - 1) }))}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                -1 XP
-              </button>
-            </div>
-
-            {/* Auto XP Toggle */}
-            <label style={{ display: 'block', textAlign: 'center', marginTop: '10px' }}>
-              <input
-                type="checkbox"
-                checked={autoXpOnMiss}
-                onChange={() => setAutoXpOnMiss(prev => !prev)}
-              />{' '}
-              Auto XP on Miss
-            </label>
-
-            {/* Level Up Alert */}
-            {character.xp >= character.xpNeeded && (
-              <button
-                onClick={() => setShowLevelUpModal(true)}
-                style={{
-                  ...buttonStyle,
-                  background: 'linear-gradient(45deg, #fbbf24, #f59e0b)',
-                  width: '100%',
-                  marginTop: '15px',
-                  padding: '15px',
-                  fontSize: '16px',
-                  animation: 'pulse 2s infinite'
-                }}
-              >
-                🎉 LEVEL UP AVAILABLE!
-              </button>
-            )}
-          </div>
-
-          {/* Resources Panel */}
-          <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>🔋 Resources</h3>
-            
-            {/* Chrono-Retcon */}
-            <div style={{ marginBottom: '15px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                <span style={{ fontWeight: 'bold' }}>Chrono-Retcon Uses:</span>
-                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>{character.resources.chronoUses}/2</span>
-              </div>
-              <button
-                onClick={() => {
-                  if (character.resources.chronoUses > 0) {
-                    setCharacter(prev => ({ 
-                      ...prev, 
-                      resources: { ...prev.resources, chronoUses: prev.resources.chronoUses - 1 }
-                    }));
-                    setRollResult('⏰ Chrono-Retcon activated - rewrite any recent action!');
-                    setTimeout(() => setRollResult('Ready to roll!'), 3000);
-                  } else {
-                    setRollResult('❌ No uses remaining!');
-                    setTimeout(() => setRollResult('Ready to roll!'), 2000);
-                  }
-                }}
-                disabled={character.resources.chronoUses === 0}
-                style={{
-                  ...buttonStyle,
-                  width: '100%',
-                  background: character.resources.chronoUses > 0 
-                    ? 'linear-gradient(45deg, #10b981, #059669)' 
-                    : 'linear-gradient(45deg, #6b7280, #374151)',
-                  opacity: character.resources.chronoUses > 0 ? 1 : 0.5,
-                  cursor: character.resources.chronoUses > 0 ? 'pointer' : 'not-allowed'
-                }}
-                title="Rewrite any recent action retroactively. Examples: 'Actually, I dodged that attack' or 'I already searched this room'"
-              >
-                ⏰ Use Chrono-Retcon
-              </button>
-            </div>
-
-            {/* Other Resources */}
-            {[
-              { key: 'paradoxPoints', label: 'Paradox Points', max: 3, color: '#fbbf24' },
-              { key: 'bandages', label: 'Bandages', max: 3, color: '#8b5cf6' },
-              { key: 'rations', label: 'Rations', max: 5, color: '#f97316' },
-              { key: 'advGear', label: 'Adventuring Gear', max: 5, color: '#06b6d4' }
-            ].map(({ key, label, max, color }) => (
-              <div key={key} style={{ marginBottom: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                  <span style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{label}:</span>
-                  <span style={{ color, fontWeight: 'bold' }}>{character.resources[key]}/{max}</span>
-                </div>
-                <div style={{ display: 'flex', gap: '5px' }}>
-                  <button
-                    onClick={() => setCharacter(prev => ({ 
-                      ...prev, 
-                      resources: { ...prev.resources, [key]: Math.max(0, prev.resources[key] - 1) }
-                    }))}
-                    style={{
-                      ...buttonStyle,
-                      background: 'linear-gradient(45deg, #ef4444, #dc2626)',
-                      padding: '5px 10px',
-                      margin: '0',
-                      fontSize: '12px',
-                      flex: '1'
-                    }}
-                  >
-                    -1
-                  </button>
-                  <button
-                    onClick={() => setCharacter(prev => ({ 
-                      ...prev, 
-                      resources: { ...prev.resources, [key]: Math.min(max, prev.resources[key] + 1) }
-                    }))}
-                    style={{
-                      ...buttonStyle,
-                      padding: '5px 10px',
-                      margin: '0',
-                      fontSize: '12px',
-                      flex: '1'
-                    }}
-                  >
-                    +1
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {/* Paradox Warning */}
-            {character.resources.paradoxPoints >= 3 && (
-              <div style={{
-                background: 'rgba(251, 191, 36, 0.2)',
-                border: '1px solid #fbbf24',
-                borderRadius: '6px',
-                padding: '10px',
-                textAlign: 'center',
-                marginTop: '10px'
-              }}>
-                <div style={{ color: '#fbbf24', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  ⚠️ REALITY UNSTABLE! ⚠️
-                </div>
-              </div>
-            )}
-
-            {/* Reset All Button */}
-            <button
-              onClick={() => {
-                setCharacter(prev => ({
-                  ...prev,
-                  resources: { chronoUses: 2, paradoxPoints: 0, bandages: 3, rations: 5, advGear: 5 }
-                }));
-                setRollResult('🔄 All resources restored!');
-              }}
-              style={{
-                ...buttonStyle,
-                width: '100%',
-                marginTop: '15px',
-                background: 'linear-gradient(45deg, #4a90ff, #00ff88)',
-                padding: '10px 20px'
-              }}
-            >
-              🔄 Reset All Resources
-            </button>
-          </div>
+          <CharacterStats
+            character={character}
+            setCharacter={setCharacter}
+            saveToHistory={saveToHistory}
+            getTotalArmor={getTotalArmor}
+            setShowLevelUpModal={setShowLevelUpModal}
+            autoXpOnMiss={autoXpOnMiss}
+            setAutoXpOnMiss={setAutoXpOnMiss}
+            setRollResult={setRollResult}
+          />
 
           {/* Dice Roller Panel */}
           <div style={panelStyle}>
@@ -806,143 +548,22 @@ function App() {
             )}
           </div>
 
-          {/* Quick Inventory Panel */}
-          <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>🎒 Equipment</h3>
-            
-            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-              {character.inventory.slice(0, 5).map(item => (
-                <div key={item.id} style={{
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  padding: '8px 12px',
-                  margin: '5px 0',
-                  borderRadius: '6px',
-                  borderLeft: item.equipped ? '3px solid #10b981' : '3px solid #00ff88'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        {item.type === 'weapon' && '⚔️'}
-                        {item.type === 'magic' && '💍'}
-                        {item.type === 'consumable' && '🧪'}
-                        {item.type === 'armor' && '🛡️'}
-                        {item.type === 'material' && '📦'}
-                        {(!item.type || item.type === 'gear') && '🎒'}
-                        {item.name}
-                        {item.equipped && <span style={{ color: '#10b981', fontSize: '0.7rem' }}>✓</span>}
-                      </div>
-                      <div style={{ fontSize: '0.7rem', color: '#aaa' }}>
-                        {item.damage && `${item.damage} damage`}
-                        {item.armor && `+${item.armor} armor`}
-                        {item.quantity > 1 && ` x${item.quantity}`}
-                      </div>
-                    </div>
-                    {item.type === 'consumable' && item.quantity > 0 && (
-                      <button
-                        onClick={() => {
-                          if (item.name === 'Healing Potion') {
-                            const healing = rollDie(8);
-                            const newHP = Math.min(character.maxHp, character.hp + healing);
-                            setCharacter(prev => ({
-                              ...prev,
-                              hp: newHP,
-                              inventory: prev.inventory.map(invItem => 
-                                invItem.id === item.id 
-                                  ? { ...invItem, quantity: invItem.quantity - 1 }
-                                  : invItem
-                              ).filter(invItem => invItem.type !== 'consumable' || invItem.quantity > 0)
-                            }));
-                            setRollResult(`Used ${item.name}: healed ${healing} HP!`);
-                          }
-                        }}
-                        style={{
-                          background: 'linear-gradient(45deg, #10b981, #059669)',
-                          border: 'none',
-                          color: 'white',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '10px'
-                        }}
-                      >
-                        Use
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Active Debilities Display */}
-            {character.debilities.length > 0 && (
-              <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1px solid rgba(0, 255, 136, 0.3)' }}>
-                <div style={{ fontSize: '0.8rem', color: '#ef4444', marginBottom: '5px' }}>Active Debilities:</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                  {character.debilities.map(debility => (
-                    <span key={debility} style={{
-                      background: 'rgba(239, 68, 68, 0.2)',
-                      border: '1px solid #ef4444',
-                      color: '#fca5a5',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      fontSize: '0.7rem'
-                    }}>
-                      {debilityTypes[debility].icon} {debilityTypes[debility].name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Session Notes Panel */}
-          <div style={{ ...panelStyle, gridColumn: compactMode ? 'auto' : '1 / -1' }}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>📝 Session Notes</h3>
-            <textarea
-              value={sessionNotes}
-              onChange={(e) => setSessionNotes(e.target.value)}
-              placeholder="Track important events, NPCs, plot threads, and campaign notes here..."
-              style={{
-                width: '100%',
-                height: '120px',
-                background: 'rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(0, 255, 136, 0.3)',
-                borderRadius: '6px',
-                color: '#e0e0e0',
-                padding: '10px',
-                resize: 'vertical',
-                fontFamily: 'inherit',
-                fontSize: '0.9rem'
-              }}
+            {/* Quick Inventory Panel */}
+            <InventoryPanel
+              character={character}
+              setCharacter={setCharacter}
+              rollDie={rollDie}
+              setRollResult={setRollResult}
             />
-            <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => {
-                  const timestamp = new Date().toLocaleString();
-                  setSessionNotes(prev => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
-                }}
-                style={buttonStyle}
-              >
-                📅 Timestamp
-              </button>
-              <button
-                onClick={() => {
-                  if (confirm('Clear all notes?')) {
-                    setSessionNotes('');
-                  }
-                }}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                🗑️ Clear
-              </button>
-              <button
-                onClick={() => setCompactMode(!compactMode)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #6366f1, #4f46e5)' }}
-              >
-                {compactMode ? '🖥️' : '📱'} {compactMode ? 'Expand' : 'Compact'}
-              </button>
-            </div>
-          </div>
+
+            {/* Session Notes Panel */}
+
+            <SessionNotes
+              sessionNotes={sessionNotes}
+              setSessionNotes={setSessionNotes}
+              compactMode={compactMode}
+              setCompactMode={setCompactMode}
+            />
         </div>
       </div>
 

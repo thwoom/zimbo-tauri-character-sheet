@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import LevelUpModal from './components/LevelUpModal.jsx';
 import LevelUpModal from './components/LevelUpModal';
 import InventoryModal from './components/InventoryModal';
 import StatusModal from './components/StatusModal';
 import RollModal from './components/RollModal';
 import BondsModal from './components/BondsModal';
+import StatsPanel from './components/StatsPanel';
+import MoveList from './components/MoveList';
+import SessionNotes from './components/SessionNotes';
 import { useCharacter } from './state/CharacterContext';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import useModal from './hooks/useModal';
@@ -14,7 +16,6 @@ function App() {
   const { character, setCharacter } = useCharacter();
 
   // UI State Management
-  const [expandedMoves, setExpandedMoves] = useState({});
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const rollModal = useModal();
   const bondsModal = useModal();
@@ -443,125 +444,13 @@ function App() {
 
         {/* Main Grid Layout */}
         <div style={gridStyle}>
-          {/* Stats Panel */}
-          <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>⚡ Stats & Health</h3>
-            
-            {/* Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '15px' }}>
-              {Object.entries(character.stats).map(([stat, data]) => (
-                <div key={stat} style={{
-                  textAlign: 'center',
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  padding: '10px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(0, 255, 136, 0.3)'
-                }}>
-                  <div style={{ fontSize: '0.8rem', color: '#aaa' }}>{stat}</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#00ff88' }}>
-                    {data.score} ({data.mod >= 0 ? '+' : ''}{data.mod})
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* HP Bar */}
-            <div style={{
-              width: '100%',
-              height: '25px',
-              background: '#333',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              border: '2px solid #555',
-              margin: '10px 0'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, #ff4444, #ffaa44)',
-                width: `${(character.hp / character.maxHp) * 100}%`,
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-              HP: {character.hp}/{character.maxHp} | Armor: {getTotalArmor()}
-            </div>
-
-            {/* HP Controls */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-              <button
-                onClick={() => {
-                  saveToHistory('HP Change');
-                  setCharacter(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + 1) }));
-                }}
-                style={buttonStyle}
-              >
-                +1 HP
-              </button>
-              <button
-                onClick={() => {
-                  saveToHistory('HP Change');
-                  setCharacter(prev => ({ ...prev, hp: Math.max(0, prev.hp - 1) }));
-                }}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                -1 HP
-              </button>
-            </div>
-
-            {/* XP Bar */}
-            <div style={{
-              width: '100%',
-              height: '20px',
-              background: '#333',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              margin: '15px 0 10px 0'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, #4a90ff, #00ff88)',
-                width: `${(character.xp / character.xpNeeded) * 100}%`,
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-              XP: {character.xp}/{character.xpNeeded} (Level {character.level})
-            </div>
-
-            {/* XP Controls */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-              <button
-                onClick={() => setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }))}
-                style={buttonStyle}
-              >
-                +1 XP
-              </button>
-              <button
-                onClick={() => setCharacter(prev => ({ ...prev, xp: Math.max(0, prev.xp - 1) }))}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                -1 XP
-              </button>
-            </div>
-
-            {/* Level Up Alert */}
-            {character.xp >= character.xpNeeded && (
-              <button
-                onClick={() => setShowLevelUpModal(true)}
-                style={{
-                  ...buttonStyle,
-                  background: 'linear-gradient(45deg, #fbbf24, #f59e0b)',
-                  width: '100%',
-                  marginTop: '15px',
-                  padding: '15px',
-                  fontSize: '16px',
-                  animation: 'pulse 2s infinite'
-                }}
-              >
-                🎉 LEVEL UP AVAILABLE!
-              </button>
-            )}
-          </div>
+          <StatsPanel
+            character={character}
+            setCharacter={setCharacter}
+            saveToHistory={saveToHistory}
+            getTotalArmor={getTotalArmor}
+            setShowLevelUpModal={setShowLevelUpModal}
+          />
 
           {/* Resources Panel */}
           <div style={panelStyle}>
@@ -688,112 +577,13 @@ function App() {
             </button>
           </div>
 
-          {/* Dice Roller Panel */}
-          <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>🎲 Dice Roller</h3>
-            
-            {/* Stat Check Buttons */}
-            <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Stat Checks</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '5px' }}>
-                {Object.entries(character.stats).map(([stat, data]) => (
-                  <button
-                    key={stat}
-                    onClick={() => rollDice(`2d6+${data.mod}`, `${stat} Check`)}
-                    style={{
-                      ...buttonStyle,
-                      background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
-                      padding: '8px 6px',
-                      margin: '2px',
-                      fontSize: '11px'
-                    }}
-                  >
-                    {stat} ({data.mod >= 0 ? '+' : ''}{data.mod})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Combat Rolls */}
-            <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Combat Rolls</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px' }}>
-                <button
-                  onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)', margin: '2px', fontSize: '11px' }}
-                >
-                  Weapon ({getEquippedWeaponDamage()})
-                </button>
-                <button
-                  onClick={() => rollDice('2d6+3', 'Hack & Slash')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', margin: '2px', fontSize: '11px' }}
-                >
-                  Hack & Slash
-                </button>
-                <button
-                  onClick={() => rollDice('d4', 'Upper Hand')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)', margin: '2px', fontSize: '11px' }}
-                >
-                  Upper Hand d4
-                </button>
-                <button
-                  onClick={() => rollDice('2d6-1', 'Taunt')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #eab308, #d97706)', margin: '2px', fontSize: '11px' }}
-                >
-                  Taunt Enemy
-                </button>
-              </div>
-            </div>
-
-            {/* Basic Dice */}
-            <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Basic Dice</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '5px' }}>
-                {[4, 6, 8, 10, 12, 20].map(sides => (
-                  <button
-                    key={sides}
-                    onClick={() => rollDice(`d${sides}`)}
-                    style={{
-                      ...buttonStyle,
-                      background: 'linear-gradient(45deg, #06b6d4, #0891b2)',
-                      padding: '8px 4px',
-                      margin: '2px',
-                      fontSize: '11px'
-                    }}
-                  >
-                    d{sides}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Roll Result Display */}
-            <div style={{
-              background: 'rgba(0, 255, 136, 0.2)',
-              padding: '10px',
-              borderRadius: '6px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              minHeight: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {rollResult}
-            </div>
-
-            {/* Roll History */}
-            {rollHistory.length > 0 && (
-              <div style={{ marginTop: '10px', fontSize: '0.8rem' }}>
-                <div style={{ color: '#00ff88', marginBottom: '5px' }}>Recent Rolls:</div>
-                {rollHistory.slice(0, 3).map((roll, index) => (
-                  <div key={index} style={{ color: '#aaa', marginBottom: '2px' }}>
-                    <span style={{ color: '#00ff88' }}>{roll.timestamp}</span> - {roll.result}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <MoveList
+            character={character}
+            rollDice={rollDice}
+            getEquippedWeaponDamage={getEquippedWeaponDamage}
+            rollResult={rollResult}
+            rollHistory={rollHistory}
+          />
 
           {/* Quick Inventory Panel */}
           <div style={panelStyle}>
@@ -884,54 +674,12 @@ function App() {
             )}
           </div>
 
-          {/* Session Notes Panel */}
-          <div style={{ ...panelStyle, gridColumn: compactMode ? 'auto' : '1 / -1' }}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>📝 Session Notes</h3>
-            <textarea
-              value={sessionNotes}
-              onChange={(e) => setSessionNotes(e.target.value)}
-              placeholder="Track important events, NPCs, plot threads, and campaign notes here..."
-              style={{
-                width: '100%',
-                height: '120px',
-                background: 'rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(0, 255, 136, 0.3)',
-                borderRadius: '6px',
-                color: '#e0e0e0',
-                padding: '10px',
-                resize: 'vertical',
-                fontFamily: 'inherit',
-                fontSize: '0.9rem'
-              }}
-            />
-            <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => {
-                  const timestamp = new Date().toLocaleString();
-                  setSessionNotes(prev => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
-                }}
-                style={buttonStyle}
-              >
-                📅 Timestamp
-              </button>
-              <button
-                onClick={() => {
-                  if (confirm('Clear all notes?')) {
-                    setSessionNotes('');
-                  }
-                }}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
-              >
-                🗑️ Clear
-              </button>
-              <button
-                onClick={() => setCompactMode(!compactMode)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #6366f1, #4f46e5)' }}
-              >
-                {compactMode ? '🖥️' : '📱'} {compactMode ? 'Expand' : 'Compact'}
-              </button>
-            </div>
-          </div>
+          <SessionNotes
+            sessionNotes={sessionNotes}
+            setSessionNotes={setSessionNotes}
+            compactMode={compactMode}
+            setCompactMode={setCompactMode}
+          />
         </div>
       </div>
 

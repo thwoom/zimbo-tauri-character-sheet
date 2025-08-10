@@ -13,12 +13,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-
-- name: Clean install (avoid Rollup optional-deps bug on Linux)
-  shell: bash
-  run: rm -rf node_modules package-lock.json && npm install
-
-
+      - name: Clean install (avoid Rollup optional-deps bug on Linux)
+        run: rm -rf node_modules package-lock.json && npm install
       - run: npm run lint
       - run: npx prettier --check .
       - run: npm test

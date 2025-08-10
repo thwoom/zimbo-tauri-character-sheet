@@ -1,15 +1,21 @@
-export function parseDiceNotation(formula, rollDie) {
-  const match = formula.trim().match(/^(\d*)d(\d+)([+-]\d+)?$/i);
+export const rollDie = (sides) => {
+  if (!Number.isInteger(sides) || sides <= 0) {
+    throw new Error('sides must be a positive integer');
+  }
+  return Math.floor(Math.random() * sides) + 1;
+};
+
+export const rollDice = (formula) => {
+  const match = formula.match(/^(\d*)d(\d+)([+-]\d+)?$/);
   if (!match) {
-    return { error: `Cannot parse dice formula: ${formula}` };
+    throw new Error('Unsupported formula');
   }
   const count = parseInt(match[1] || '1', 10);
   const sides = parseInt(match[2], 10);
-  const modifier = match[3] ? parseInt(match[3], 10) : 0;
-  if (count <= 0 || sides <= 0) {
-    return { error: `Invalid dice formula: ${formula}` };
+  const modifier = parseInt(match[3] || '0', 10);
+  let total = 0;
+  for (let i = 0; i < count; i += 1) {
+    total += rollDie(sides);
   }
-  const rolls = Array.from({ length: count }, () => rollDie(sides));
-  const total = rolls.reduce((sum, val) => sum + val, 0) + modifier;
-  return { rolls, sides, modifier, total };
-}
+  return total + modifier;
+};

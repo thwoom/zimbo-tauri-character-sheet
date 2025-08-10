@@ -1,0 +1,59 @@
+.status-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-modal {
+  background: #1a1a2e;
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.status-title {
+  color: #00ff88;
+  text-align: center;
+}
+
+.status-subtitle {
+  color: #00ff88;
+}
+
+.status-list {
+  list-style: none;
+  padding: 0;
+}
+
+.status-item {
+  margin-bottom: 8px;
+}
+
+.status-label {
+  color: #fff;
+}
+
+.status-button {
+  background: linear-gradient(45deg, #f97316, #ea580c);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.status-footer {
+  text-align: center;
+}

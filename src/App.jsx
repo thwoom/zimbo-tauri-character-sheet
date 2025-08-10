@@ -1,110 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import LevelUpModal from './components/LevelUpModal.jsx';
 import LevelUpModal from './components/LevelUpModal';
-import { advancedMoves } from './data/advancedMoves';
-
-// Initial character data based on Zimbo's character sheet
-const INITIAL_CHARACTER_DATA = {
-  // Basic Info
-  level: 4,
-  hp: 15,
-  maxHp: 25,
-  xp: 4,
-  xpNeeded: 12, // Formula: (level + 1) * 7
-  armor: 0,
-  
-  // Attributes
-  stats: {
-    STR: { score: 18, mod: 3 },  // mod = Math.floor((score - 10) / 2)
-    DEX: { score: 15, mod: 1 },
-    CON: { score: 16, mod: 2 },
-    INT: { score: 9, mod: 0 },
-    WIS: { score: 13, mod: 1 },
-    CHA: { score: 8, mod: -1 }
-  },
-  
-  // Resources & Abilities
-  resources: {
-    chronoUses: 2,        // Ring of Smooshed Chronologies
-    paradoxPoints: 0,     // 0-3, 3 = reality unstable
-    bandages: 3,          // Heal 4 HP slowly
-    rations: 5,           // Satisfy hunger at camp
-    advGear: 5            // Rope, torches, chalk, etc.
-  },
-  
-  // Character Relationships
-  bonds: [
-    { name: "Sar", relationship: "I will teach Sar about the future", resolved: false },
-    { name: "Kael", relationship: "Kael reminds me of someone I lost", resolved: false }
-  ],
-  
-  // Status Conditions
-  statusEffects: [], // Keys: poisoned, shocked, burning, frozen, confused, weakened, blessed, invisible
-  debilities: [],    // Keys: weak, shaky, sick, stunned, confused, scarred
-  
-  // Equipment & Items
-  inventory: [
-    { id: 1, name: "Entropic Cyber-Warhammer", type: "weapon", damage: "d10+3", equipped: true, 
-      description: "Phases through time occasionally", tags: ["melee", "forceful", "messy"] },
-    { id: 2, name: "Ring of Smooshed Chronologies", type: "magic", equipped: true, 
-      description: "Grants Chrono-Retcon ability" },
-    { id: 3, name: "Gravity Beetle Shell", type: "material", quantity: 1, 
-      description: "Crafting material for Sar's companion Kumquat" },
-    { id: 4, name: "Healing Potion", type: "consumable", quantity: 2, 
-      description: "Restore 1d8 HP" },
-    { id: 5, name: "Cyber-Plated Vest", type: "armor", armor: 1, equipped: false, 
-      description: "Light armor with energy dispersal" }
-  ],
-  
-  // Character Progression
-  selectedMoves: [],     // Advanced moves acquired through leveling
-  actionHistory: [],     // For undo functionality (last 5 actions)
-  
-  // Session Data
-  sessionNotes: "",      // Campaign notes and events
-  rollHistory: []        // Recent dice rolls (last 10)
-};
-
-// Status Effects and Debilities Definitions
-const statusEffectTypes = {
-  poisoned: { name: "Poisoned", description: "-1 to all rolls", color: "green", icon: "🤢" },
-  shocked: { name: "Shocked", description: "-2 to DEX rolls", color: "blue-yellow", icon: "⚡" },
-  burning: { name: "Burning", description: "Fire damage each turn", color: "red-orange", icon: "🔥" },
-  frozen: { name: "Frozen", description: "-1 to physical actions", color: "cyan-blue", icon: "🧊" },
-  confused: { name: "Confused", description: "GM controls one action", color: "purple", icon: "😵" },
-  weakened: { name: "Weakened", description: "-1 to damage rolls", color: "gray", icon: "💔" },
-  blessed: { name: "Blessed", description: "+1 to all rolls", color: "yellow", icon: "✨" },
-  invisible: { name: "Invisible", description: "Cannot be targeted", color: "transparent", icon: "👻" }
-};
-
-const debilityTypes = {
-  weak: { name: "Weak", description: "-1 to STR rolls", icon: "💪" },
-  shaky: { name: "Shaky", description: "-1 to DEX rolls", icon: "🫨" },
-  sick: { name: "Sick", description: "-1 to CON rolls", icon: "🤒" },
-  stunned: { name: "Stunned", description: "-1 to INT rolls", icon: "😵‍💫" },
-  confused: { name: "Confused", description: "-1 to WIS rolls", icon: "🤯" },
-  scarred: { name: "Scarred", description: "-1 to CHA rolls", icon: "😰" }
-};
-
+import InventoryModal from './components/InventoryModal';
+import StatusModal from './components/StatusModal';
+import RollModal from './components/RollModal';
+import BondsModal from './components/BondsModal';
+import { useCharacter } from './state/CharacterContext';
+import { statusEffectTypes, debilityTypes } from './state/character';
+import useModal from './hooks/useModal';
 
 function App() {
-  // Main Character State
-  const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
-  
+  const { character, setCharacter } = useCharacter();
+
   // UI State Management
   const [expandedMoves, setExpandedMoves] = useState({});
   const [rollResult, setRollResult] = useState('Ready to roll!');
-  const [showRollModal, setShowRollModal] = useState(false);
+  const rollModal = useModal();
+  const bondsModal = useModal();
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState([]);
   const [sessionNotes, setSessionNotes] = useState('');
-  
+
   // Modal States
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
-  const [showBondsModal, setShowBondsModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   
   // Additional UI State
@@ -269,9 +191,9 @@ function App() {
     };
 
     // Add to roll history (keep last 10)
-    setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
-    setRollModalData(rollData);
-    setShowRollModal(true);
+      setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
+      setRollModalData(rollData);
+      rollModal.open();
   };
 
   // Context helpers for roll results
@@ -339,6 +261,56 @@ function App() {
     if (character.statusEffects.includes('frozen')) return 'frozen-overlay';
     if (character.statusEffects.includes('blessed')) return 'blessed-overlay';
     return '';
+  };
+
+  const handleEquipItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.map(item =>
+        item.id === id ? { ...item, equipped: !item.equipped } : item
+      )
+    }));
+  };
+
+  const handleConsumeItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.reduce((acc, item) => {
+        if (item.id === id) {
+          if (item.quantity && item.quantity > 1) {
+            acc.push({ ...item, quantity: item.quantity - 1 });
+          }
+        } else {
+          acc.push(item);
+        }
+        return acc;
+      }, [])
+    }));
+  };
+
+  const handleDropItem = (id) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: prev.inventory.filter(item => item.id !== id)
+    }));
+  };
+
+  const handleToggleStatusEffect = (effect) => {
+    setCharacter(prev => ({
+      ...prev,
+      statusEffects: prev.statusEffects.includes(effect)
+        ? prev.statusEffects.filter(e => e !== effect)
+        : [...prev.statusEffects, effect]
+    }));
+  };
+
+  const handleToggleDebility = (debility) => {
+    setCharacter(prev => ({
+      ...prev,
+      debilities: prev.debilities.includes(debility)
+        ? prev.debilities.filter(d => d !== debility)
+        : [...prev.debilities, debility]
+    }));
   };
 
   const getHeaderColor = () => {
@@ -459,12 +431,12 @@ function App() {
               >
                 🎒 Inventory
               </button>
-              <button
-                onClick={() => setShowBondsModal(true)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
-              >
-                👥 Bonds ({character.bonds.filter(b => !b.resolved).length})
-              </button>
+                <button
+                  onClick={bondsModal.open}
+                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
+                >
+                  👥 Bonds ({character.bonds.filter(b => !b.resolved).length})
+                </button>
             </div>
           </div>
         </div>
@@ -963,78 +935,7 @@ function App() {
         </div>
       </div>
 
-      {/* Roll Result Modal */}
-      {showRollModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(5px)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            maxWidth: '500px',
-            width: '100%',
-            boxShadow: '0 0 30px rgba(0, 255, 136, 0.5)'
-          }}>
-            <div style={{
-              textAlign: 'center',
-              padding: '20px',
-              background: 'linear-gradient(45deg, #0f3460, #533483)',
-              borderRadius: '13px 13px 0 0'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '1.5rem', color: '#00ff88', margin: 0 }}>🎲 Roll Result</h2>
-                <button
-                  onClick={() => setShowRollModal(false)}
-                  style={{
-                    background: 'rgba(239, 68, 68, 0.8)',
-                    border: '2px solid #ef4444',
-                    color: 'white',
-                    fontSize: '1.2rem',
-                    cursor: 'pointer',
-                    padding: '5px 10px',
-                    borderRadius: '8px'
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-            <div style={{ padding: '30px', textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#00ff88', marginBottom: '15px' }}>
-                {rollModalData.result}
-              </div>
-              {rollModalData.description && (
-                <div style={{ color: '#e0e0e0', marginBottom: '15px' }}>
-                  {rollModalData.description}
-                </div>
-              )}
-              {rollModalData.context && (
-                <div style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '20px' }}>
-                  {rollModalData.context}
-                </div>
-              )}
-              <button
-                onClick={() => setShowRollModal(false)}
-                style={buttonStyle}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
 
       {showLevelUpModal && (
   <LevelUpModal 
@@ -1048,32 +949,16 @@ function App() {
   />
 )}
 
-      {/* Other Modal Placeholders */}
       {showStatusModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>💀 Status Effects & Debilities</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowStatusModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <StatusModal
+          statusEffects={character.statusEffects}
+          debilities={character.debilities}
+          statusEffectTypes={statusEffectTypes}
+          debilityTypes={debilityTypes}
+          onToggleStatusEffect={handleToggleStatusEffect}
+          onToggleDebility={handleToggleDebility}
+          onClose={() => setShowStatusModal(false)}
+        />
       )}
 
       {showDamageModal && (
@@ -1104,58 +989,16 @@ function App() {
       )}
 
       {showInventoryModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>🎒 Inventory Management</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowInventoryModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
+        <InventoryModal
+          inventory={character.inventory}
+          onEquip={handleEquipItem}
+          onConsume={handleConsumeItem}
+          onDrop={handleDropItem}
+          onClose={() => setShowInventoryModal(false)}
+        />
       )}
 
-      {showBondsModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.8)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            background: '#1a1a2e',
-            border: '2px solid #00ff88',
-            borderRadius: '15px',
-            padding: '30px',
-            textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#00ff88' }}>👥 Character Bonds</h2>
-            <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-            <button onClick={() => setShowBondsModal(false)} style={buttonStyle}>Close</button>
-          </div>
-        </div>
-      )}
+        <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
     </div>
   );
 }

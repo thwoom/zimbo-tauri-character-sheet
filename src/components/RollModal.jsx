@@ -9,7 +9,7 @@ const buttonStyle = {
   cursor: 'pointer',
   fontWeight: 'bold',
   transition: 'all 0.3s ease',
-  margin: '5px'
+  margin: '5px',
 };
 
 export default function RollModal({ isOpen, data, onClose }) {
@@ -28,7 +28,7 @@ export default function RollModal({ isOpen, data, onClose }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px'
+        padding: '20px',
       }}
     >
       <div
@@ -38,7 +38,7 @@ export default function RollModal({ isOpen, data, onClose }) {
           borderRadius: '15px',
           maxWidth: '500px',
           width: '100%',
-          boxShadow: '0 0 30px rgba(0, 255, 136, 0.5)'
+          boxShadow: '0 0 30px rgba(0, 255, 136, 0.5)',
         }}
       >
         <div
@@ -46,7 +46,7 @@ export default function RollModal({ isOpen, data, onClose }) {
             textAlign: 'center',
             padding: '20px',
             background: 'linear-gradient(45deg, #0f3460, #533483)',
-            borderRadius: '13px 13px 0 0'
+            borderRadius: '13px 13px 0 0',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -60,7 +60,7 @@ export default function RollModal({ isOpen, data, onClose }) {
                 fontSize: '1.2rem',
                 cursor: 'pointer',
                 padding: '5px 10px',
-                borderRadius: '8px'
+                borderRadius: '8px',
               }}
             >
               ×
@@ -68,20 +68,27 @@ export default function RollModal({ isOpen, data, onClose }) {
           </div>
         </div>
         <div style={{ padding: '30px', textAlign: 'center' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#00ff88', marginBottom: '15px' }}>
+          <div
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              color: '#00ff88',
+              marginBottom: '15px',
+            }}
+          >
             {data.result}
           </div>
           {data.description && (
-            <div style={{ color: '#e0e0e0', marginBottom: '15px' }}>
-              {data.description}
-            </div>
+            <div style={{ color: '#e0e0e0', marginBottom: '15px' }}>{data.description}</div>
           )}
           {data.context && (
             <div style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '20px' }}>
               {data.context}
             </div>
           )}
-          <button onClick={onClose} style={buttonStyle}>Close</button>
+          <button onClick={onClose} style={buttonStyle}>
+            Close
+          </button>
         </div>
       </div>
     </div>

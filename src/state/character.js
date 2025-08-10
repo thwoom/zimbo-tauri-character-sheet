@@ -4,7 +4,7 @@ export const INITIAL_CHARACTER_DATA = {
   hp: 15,
   maxHp: 25,
   xp: 4,
-  xpNeeded: 12, // Formula: (level + 1) * 7
+  xpNeeded: 11, // Formula: level + 7
   armor: 0,
 
   // Attributes

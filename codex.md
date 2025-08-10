@@ -49,7 +49,7 @@ When asking Codex to implement a new feature or component, provide a concise des
 > • Allow the user to increase one or two attribute scores and automatically recalculate their modifiers.  
 > • Present a list of available advanced moves (from `advancedMoves`) and let the user select one.  
 > • Roll new hit points (1d10 + CON modifier); update both `maxHp` and current `hp` accordingly.  
-> • Increment `level`, reset `xp` to 0 and recalc `xpNeeded` using `(level + 1) * 7`.  
+> • Increment `level`, reset `xp` to 0 and recalc `xpNeeded` using `level + 7`.
 > • Include Save and Cancel buttons; update the main character state on save and close the modal on either action.  
 > **Acceptance Criteria:** The modal opens when triggered, performs all calculations correctly, updates the state immutably, provides clear feedback for invalid selections (e.g. no stat chosen), and closes gracefully.
 

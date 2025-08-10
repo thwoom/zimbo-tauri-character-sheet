@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import LevelUpModal from './components/LevelUpModal';
+import LevelUpModal from './components/LevelUpModal.jsx';
 
 // Initial character data based on Zimbo's character sheet
 const INITIAL_CHARACTER_DATA = {

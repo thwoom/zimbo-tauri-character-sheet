@@ -33,4 +33,8 @@ describe('rollDice', () => {
   it('throws on unsupported formulas', () => {
     expect(() => rollDice('2d')).toThrow('Unsupported formula');
   });
+
+  it('throws when count exceeds the limit', () => {
+    expect(() => rollDice('1001d6')).toThrow('count must not exceed 1000');
+  });
 });

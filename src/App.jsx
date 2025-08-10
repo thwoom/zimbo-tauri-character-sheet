@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LevelUpModal from './components/LevelUpModal';
+import { parseDiceNotation } from './utils/dice.js';
 
 // Initial character data based on Zimbo's character sheet
 const INITIAL_CHARACTER_DATA = {
@@ -226,75 +227,69 @@ function App() {
 
   // Core Dice Rolling System
   const rollDice = (formula, description = '') => {
-    let result = '';
-    let total = 0;
     let interpretation = '';
     let context = '';
+    const desc = description.toLowerCase();
 
-    if (formula.includes('2d6')) {
-      const die1 = rollDie(6);
-      const die2 = rollDie(6);
-      const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
-      
-      // Determine roll type for status effects
-      let rollType = 'general';
-      if (description.includes('STR') || description.includes('Hack')) rollType = 'str';
-      else if (description.includes('DEX')) rollType = 'dex';
-      else if (description.includes('CON')) rollType = 'con';
-      else if (description.includes('INT')) rollType = 'int';
-      else if (description.includes('WIS')) rollType = 'wis';
-      else if (description.includes('CHA')) rollType = 'cha';
-      else if (description.includes('damage') || description.includes('Damage') || description.includes('Upper Hand') || description.includes('Bonus Damage')) rollType = 'damage';
-      
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = die1 + die2 + totalModifier;
-      
-      result = `2d6: [${die1}, ${die2}]`;
-      if (baseModifier !== 0) {
-        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
+    const parsed = parseDiceNotation(formula, rollDie);
+    if (parsed.error) {
+      const rollData = {
+        result: parsed.error,
+        description,
+        context: '',
+        total: 0,
+        timestamp: new Date().toLocaleTimeString()
+      };
+      setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
+      setRollModalData(rollData);
+      setShowRollModal(true);
+      return;
+    }
 
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
-      }
+    const { rolls, sides, modifier, total: baseTotal } = parsed;
 
-      // Dungeon World success thresholds
+    // Determine roll type for status effects
+    let rollType = 'general';
+    if (desc.includes('str') || desc.includes('hack')) rollType = 'str';
+    else if (desc.includes('dex')) rollType = 'dex';
+    else if (desc.includes('con')) rollType = 'con';
+    else if (desc.includes('int')) rollType = 'int';
+    else if (desc.includes('wis')) rollType = 'wis';
+    else if (desc.includes('cha')) rollType = 'cha';
+    else if (desc.includes('damage') || desc.includes('upper hand') || desc.includes('bonus damage')) rollType = 'damage';
+
+    const statusMods = getStatusModifiers(rollType);
+    const total = baseTotal + statusMods.modifier;
+
+    let result = '';
+    if (rolls.length === 1) {
+      result = `d${sides}: ${rolls[0]}`;
+    } else {
+      result = `${rolls.length}d${sides}: [${rolls.join(', ')}]`;
+    }
+    if (modifier !== 0) {
+      result += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+    }
+    if (statusMods.modifier !== 0) {
+      result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+    }
+    result += ` = ${total}`;
+
+    if (statusMods.notes.length > 0) {
+      result += ` (${statusMods.notes.join(', ')})`;
+    }
+
+    // Dungeon World success thresholds for 2d6
+    if (rolls.length === 2 && sides === 6) {
       if (total >= 10) {
         interpretation = ' ✅ Success!';
-        context = getSuccessContext(description);
+        context = getSuccessContext(desc);
       } else if (total >= 7) {
         interpretation = ' ⚠️ Partial Success';
-        context = getPartialContext(description);
+        context = getPartialContext(desc);
       } else {
         interpretation = ' ❌ Failure';
-        context = getFailureContext(description);
-      }
-    } else if (formula.startsWith('d')) {
-      const sides = parseInt(formula.replace('d', '').split('+')[0]);
-      const baseModifier = parseInt(formula.split('+')[1] || '0');
-      const roll = rollDie(sides);
-      
-      const rollType = description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = roll + totalModifier;
-      
-      result = `d${sides}: ${roll}`;
-      if (baseModifier !== 0) {
-        result += ` +${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
-
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
+        context = getFailureContext(desc);
       }
     }
 
@@ -314,38 +309,41 @@ function App() {
 
   // Context helpers for roll results
   const getSuccessContext = (description) => {
-    if (description.includes('STR')) return "Power through with overwhelming force!";
-    if (description.includes('DEX')) return "Graceful and precise execution!";
-    if (description.includes('CON')) return "Tough as cybernetic nails!";
-    if (description.includes('INT')) return "Brilliant tactical insight!";
-    if (description.includes('WIS')) return "Crystal clear perception!";
-    if (description.includes('CHA')) return "Surprisingly charming for a cyber-barbarian!";
-    if (description.includes('Hack')) return "Clean hit, enemy can't counter!";
-    if (description.includes('Taunt')) return "They're completely focused on you now!";
+    const desc = description.toLowerCase();
+    if (desc.includes('str')) return "Power through with overwhelming force!";
+    if (desc.includes('dex')) return "Graceful and precise execution!";
+    if (desc.includes('con')) return "Tough as cybernetic nails!";
+    if (desc.includes('int')) return "Brilliant tactical insight!";
+    if (desc.includes('wis')) return "Crystal clear perception!";
+    if (desc.includes('cha')) return "Surprisingly charming for a cyber-barbarian!";
+    if (desc.includes('hack')) return "Clean hit, enemy can't counter!";
+    if (desc.includes('taunt')) return "They're completely focused on you now!";
     return "Perfect execution!";
   };
 
   const getPartialContext = (description) => {
-    if (description.includes('STR')) return "Success, but strain yourself or equipment";
-    if (description.includes('DEX')) return "Stumble slightly, awkward position";
-    if (description.includes('CON')) return "Feel the strain, maybe take harm";
-    if (description.includes('INT')) return "Confusing situation, partial info";
-    if (description.includes('WIS')) return "Something seems off, can't quite tell what";
-    if (description.includes('CHA')) return "Awkward interaction, mixed signals";
-    if (description.includes('Hack')) return "Hit them, but they hit you back!";
-    if (description.includes('Taunt')) return "They attack you but with +1 ongoing damage!";
+    const desc = description.toLowerCase();
+    if (desc.includes('str')) return "Success, but strain yourself or equipment";
+    if (desc.includes('dex')) return "Stumble slightly, awkward position";
+    if (desc.includes('con')) return "Feel the strain, maybe take harm";
+    if (desc.includes('int')) return "Confusing situation, partial info";
+    if (desc.includes('wis')) return "Something seems off, can't quite tell what";
+    if (desc.includes('cha')) return "Awkward interaction, mixed signals";
+    if (desc.includes('hack')) return "Hit them, but they hit you back!";
+    if (desc.includes('taunt')) return "They attack you but with +1 ongoing damage!";
     return "Success with complications";
   };
 
   const getFailureContext = (description) => {
-    if (description.includes('STR')) return "Too heavy, equipment fails, or overpower backfires";
-    if (description.includes('DEX')) return "Trip, fumble, or end up in worse position";
-    if (description.includes('CON')) return "Exhausted, hurt, or overcome by conditions";
-    if (description.includes('INT')) return "No clue, wrong conclusion, or miss key detail";
-    if (description.includes('WIS')) return "Completely missed the signs";
-    if (description.includes('CHA')) return "Offensive, rude, or make things worse";
-    if (description.includes('Hack')) return "Miss entirely, terrible position";
-    if (description.includes('Taunt')) return "They ignore you completely";
+    const desc = description.toLowerCase();
+    if (desc.includes('str')) return "Too heavy, equipment fails, or overpower backfires";
+    if (desc.includes('dex')) return "Trip, fumble, or end up in worse position";
+    if (desc.includes('con')) return "Exhausted, hurt, or overcome by conditions";
+    if (desc.includes('int')) return "No clue, wrong conclusion, or miss key detail";
+    if (desc.includes('wis')) return "Completely missed the signs";
+    if (desc.includes('cha')) return "Offensive, rude, or make things worse";
+    if (desc.includes('hack')) return "Miss entirely, terrible position";
+    if (desc.includes('taunt')) return "They ignore you completely";
     return "Things go badly";
   };
 

@@ -29,6 +29,7 @@ function App() {
   
   // Additional UI State
   const [compactMode, setCompactMode] = useState(false);
+  const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
   // Level Up State
   const [levelUpState, setLevelUpState] = useState({
@@ -154,6 +155,9 @@ function App() {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(description);
+        if (autoXpOnMiss) {
+          setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }));
+        }
       }
     } else if (formula.startsWith('d')) {
       const sides = parseInt(formula.replace('d', '').split('+')[0]);
@@ -540,6 +544,16 @@ function App() {
                 -1 XP
               </button>
             </div>
+
+            {/* Auto XP Toggle */}
+            <label style={{ display: 'block', textAlign: 'center', marginTop: '10px' }}>
+              <input
+                type="checkbox"
+                checked={autoXpOnMiss}
+                onChange={() => setAutoXpOnMiss(prev => !prev)}
+              />{' '}
+              Auto XP on Miss
+            </label>
 
             {/* Level Up Alert */}
             {character.xp >= character.xpNeeded && (

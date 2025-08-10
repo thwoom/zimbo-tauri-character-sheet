@@ -1,6 +1,6 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
@@ -33,5 +33,73 @@ describe('App level up auto-detection', () => {
     });
 
     expect(await screen.findByRole('heading', { name: /LEVEL UP!/i })).toBeInTheDocument();
+  });
+});
+
+describe('XP gain on miss', () => {
+  it('increments XP when roll total is less than 7', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      );
+    };
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const button = screen.getByRole('button', { name: 'INT (+0)' });
+
+    act(() => {
+      fireEvent.click(button);
+    });
+
+    expect(screen.getByText(/XP: 1\/5/i)).toBeInTheDocument();
+
+    Math.random.mockRestore();
+  });
+
+  it('does not increment XP when auto XP toggle is off', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      );
+    };
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const toggle = screen.getByLabelText(/Auto XP on Miss/i);
+    act(() => {
+      fireEvent.click(toggle);
+    });
+
+    const button = screen.getByRole('button', { name: 'INT (+0)' });
+    act(() => {
+      fireEvent.click(button);
+    });
+
+    expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
+
+    Math.random.mockRestore();
   });
 });

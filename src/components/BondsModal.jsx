@@ -9,7 +9,7 @@ const buttonStyle = {
   cursor: 'pointer',
   fontWeight: 'bold',
   transition: 'all 0.3s ease',
-  margin: '5px'
+  margin: '5px',
 };
 
 export default function BondsModal({ isOpen, onClose }) {
@@ -26,7 +26,7 @@ export default function BondsModal({ isOpen, onClose }) {
         zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <div
@@ -35,12 +35,14 @@ export default function BondsModal({ isOpen, onClose }) {
           border: '2px solid #00ff88',
           borderRadius: '15px',
           padding: '30px',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         <h2 style={{ color: '#00ff88' }}>👥 Character Bonds</h2>
         <p style={{ color: '#aaa', margin: '20px 0' }}>Component coming soon...</p>
-        <button onClick={onClose} style={buttonStyle}>Close</button>
+        <button onClick={onClose} style={buttonStyle}>
+          Close
+        </button>
       </div>
     </div>
   );

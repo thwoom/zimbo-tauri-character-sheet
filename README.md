@@ -1,10 +1,34 @@
-# Tauri + React
+# Zimbo Tauri Character Sheet
 
-This template should help get you started developing with Tauri and React in Vite.
+A cross-platform character sheet application built with [Tauri](https://tauri.app/), [React](https://react.dev/), and [Vite](https://vitejs.dev/).
 
-## Recommended IDE Setup
+## Prerequisites
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- [Node.js](https://nodejs.org/) and npm
+- [Rust](https://www.rust-lang.org/tools/install) and Cargo
+- Tauri CLI (installed via `npm install` or `cargo install tauri-cli`)
+
+## Installation
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+## Running
+
+Start in development mode:
+
+```bash
+npm run tauri dev
+```
+
+Build the web assets:
+
+```bash
+npm run build
+```
 
 ## Testing
 
@@ -13,6 +37,20 @@ Run unit tests with:
 ```bash
 npm test
 ```
+
+## Packaging
+
+Create a production package with Tauri:
+
+```bash
+npm run tauri build
+```
+
+## Release Notes
+
+### v0.1.0
+
+- Initial release.
 
 ## License
 

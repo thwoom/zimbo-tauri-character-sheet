@@ -6,18 +6,16 @@ export const rollDie = (sides) => {
 };
 
 export const rollDice = (formula) => {
-  if (formula.includes('2d6')) {
-    const modifier = parseInt(formula.replace('2d6', '').replace('+', ''), 10) || 0;
-    const die1 = rollDie(6);
-    const die2 = rollDie(6);
-    return die1 + die2 + modifier;
+  const match = formula.match(/^(\d*)d(\d+)([+-]\d+)?$/);
+  if (!match) {
+    throw new Error('Unsupported formula');
   }
-  if (formula.startsWith('d')) {
-    const [sidesPart, modPart] = formula.split('+');
-    const sides = parseInt(sidesPart.slice(1), 10);
-    const modifier = parseInt(modPart || '0', 10);
-    const roll = rollDie(sides);
-    return roll + modifier;
+  const count = parseInt(match[1] || '1', 10);
+  const sides = parseInt(match[2], 10);
+  const modifier = parseInt(match[3] || '0', 10);
+  let total = 0;
+  for (let i = 0; i < count; i += 1) {
+    total += rollDie(sides);
   }
-  throw new Error('Unsupported formula');
+  return total + modifier;
 };

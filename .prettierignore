@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+coverage
+.next
+.out
+storybook-static
+codex.md
+src-tauri/capabilities/default.json
+src/App.css
+src/App.jsx
+src/components/InventoryModal.jsx
+src/components/StatusModal.jsx
+src/main.jsx
+src/components/LevelUpModal.jsx

@@ -21,6 +21,46 @@ function App() {
   const [rollHistory, setRollHistory] = useState([]);
   const [sessionNotes, setSessionNotes] = useState('');
 
+  // Persist session notes and roll history
+  useEffect(() => {
+    const storedNotes = localStorage.getItem('sessionNotes');
+    if (storedNotes !== null) {
+      setSessionNotes(storedNotes);
+    }
+
+    const storedHistory = localStorage.getItem('rollHistory');
+    if (storedHistory) {
+      try {
+        setRollHistory(JSON.parse(storedHistory));
+      } catch {
+        setRollHistory([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sessionNotes) {
+      localStorage.setItem('sessionNotes', sessionNotes);
+    } else {
+      localStorage.removeItem('sessionNotes');
+    }
+  }, [sessionNotes]);
+
+  useEffect(() => {
+    if (rollHistory.length) {
+      localStorage.setItem('rollHistory', JSON.stringify(rollHistory));
+    } else {
+      localStorage.removeItem('rollHistory');
+    }
+  }, [rollHistory]);
+
+  const handleReset = () => {
+    if (confirm('Reset session notes and roll history?')) {
+      setSessionNotes('');
+      setRollHistory([]);
+    }
+  };
+
   // Modal States
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -934,6 +974,12 @@ function App() {
                 style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
               >
                 🗑️ Clear
+              </button>
+              <button
+                onClick={handleReset}
+                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)' }}
+              >
+                🔄 Reset
               </button>
               <button
                 onClick={() => setCompactMode(!compactMode)}

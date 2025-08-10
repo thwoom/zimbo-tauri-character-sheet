@@ -1,3 +1,5 @@
+const MAX_COUNT = 1000;
+
 export const rollDie = (sides) => {
   if (!Number.isInteger(sides) || sides <= 0) {
     throw new Error('sides must be a positive integer');
@@ -11,6 +13,9 @@ export const rollDice = (formula) => {
     throw new Error('Unsupported formula');
   }
   const count = parseInt(match[1] || '1', 10);
+  if (count > MAX_COUNT) {
+    throw new Error(`count must not exceed ${MAX_COUNT}`);
+  }
   const sides = parseInt(match[2], 10);
   const modifier = parseInt(match[3] || '0', 10);
   let total = 0;

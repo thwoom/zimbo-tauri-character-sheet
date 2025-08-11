@@ -64,38 +64,41 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
   };
 
   const getSuccessContext = (description) => {
-    if (description.includes('STR')) return 'Power through with overwhelming force!';
-    if (description.includes('DEX')) return 'Graceful and precise execution!';
-    if (description.includes('CON')) return 'Tough as cybernetic nails!';
-    if (description.includes('INT')) return 'Brilliant tactical insight!';
-    if (description.includes('WIS')) return 'Crystal clear perception!';
-    if (description.includes('CHA')) return 'Surprisingly charming for a cyber-barbarian!';
-    if (description.includes('Hack')) return "Clean hit, enemy can't counter!";
-    if (description.includes('Taunt')) return "They're completely focused on you now!";
+    description = description.toLowerCase();
+    if (description.includes('str')) return 'Power through with overwhelming force!';
+    if (description.includes('dex')) return 'Graceful and precise execution!';
+    if (description.includes('con')) return 'Tough as cybernetic nails!';
+    if (description.includes('int')) return 'Brilliant tactical insight!';
+    if (description.includes('wis')) return 'Crystal clear perception!';
+    if (description.includes('cha')) return 'Surprisingly charming for a cyber-barbarian!';
+    if (description.includes('hack')) return "Clean hit, enemy can't counter!";
+    if (description.includes('taunt')) return "They're completely focused on you now!";
     return 'Perfect execution!';
   };
 
   const getPartialContext = (description) => {
-    if (description.includes('STR')) return 'Success, but strain yourself or equipment';
-    if (description.includes('DEX')) return 'Stumble slightly, awkward position';
-    if (description.includes('CON')) return 'Feel the strain, maybe take harm';
-    if (description.includes('INT')) return 'Confusing situation, partial info';
-    if (description.includes('WIS')) return "Something seems off, can't quite tell what";
-    if (description.includes('CHA')) return 'Awkward interaction, mixed signals';
-    if (description.includes('Hack')) return 'Hit them, but they hit you back!';
-    if (description.includes('Taunt')) return 'They attack you but with +1 ongoing damage!';
+    description = description.toLowerCase();
+    if (description.includes('str')) return 'Success, but strain yourself or equipment';
+    if (description.includes('dex')) return 'Stumble slightly, awkward position';
+    if (description.includes('con')) return 'Feel the strain, maybe take harm';
+    if (description.includes('int')) return 'Confusing situation, partial info';
+    if (description.includes('wis')) return "Something seems off, can't quite tell what";
+    if (description.includes('cha')) return 'Awkward interaction, mixed signals';
+    if (description.includes('hack')) return 'Hit them, but they hit you back!';
+    if (description.includes('taunt')) return 'They attack you but with +1 ongoing damage!';
     return 'Success with complications';
   };
 
   const getFailureContext = (description) => {
-    if (description.includes('STR')) return 'Too heavy, equipment fails, or overpower backfires';
-    if (description.includes('DEX')) return 'Trip, fumble, or end up in worse position';
-    if (description.includes('CON')) return 'Exhausted, hurt, or overcome by conditions';
-    if (description.includes('INT')) return 'No clue, wrong conclusion, or miss key detail';
-    if (description.includes('WIS')) return 'Completely missed the signs';
-    if (description.includes('CHA')) return 'Offensive, rude, or make things worse';
-    if (description.includes('Hack')) return 'Miss entirely, terrible position';
-    if (description.includes('Taunt')) return 'They ignore you completely';
+    description = description.toLowerCase();
+    if (description.includes('str')) return 'Too heavy, equipment fails, or overpower backfires';
+    if (description.includes('dex')) return 'Trip, fumble, or end up in worse position';
+    if (description.includes('con')) return 'Exhausted, hurt, or overcome by conditions';
+    if (description.includes('int')) return 'No clue, wrong conclusion, or miss key detail';
+    if (description.includes('wis')) return 'Completely missed the signs';
+    if (description.includes('cha')) return 'Offensive, rude, or make things worse';
+    if (description.includes('hack')) return 'Miss entirely, terrible position';
+    if (description.includes('taunt')) return 'They ignore you completely';
     return 'Things go badly';
   };
 

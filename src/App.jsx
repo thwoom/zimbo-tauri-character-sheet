@@ -8,7 +8,7 @@ import SessionNotes from './components/SessionNotes.jsx';
 import { buttonStyle } from './components/styles.js';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
-import useModal from './hooks/useModal';
+import useModal from './hooks/useModal.js';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 

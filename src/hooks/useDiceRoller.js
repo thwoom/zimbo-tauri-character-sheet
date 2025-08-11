@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { debilityTypes } from '../state/character';
+import { rollDie, rollDice as rollDiceUtil } from '../utils/dice.js';
 import useModal from './useModal';
 
 export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
@@ -10,8 +11,6 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     return saved ? JSON.parse(saved) : [];
   });
   const rollModal = useModal();
-
-  const rollDie = (sides) => Math.floor(Math.random() * sides) + 1;
 
   useEffect(() => {
     if (rollHistory.length > 0) {
@@ -161,7 +160,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     } else if (formula.startsWith('d')) {
       const sides = parseInt(formula.replace('d', '').split('+')[0]);
       const baseModifier = parseInt(formula.split('+')[1] || '0');
-      const roll = rollDie(sides);
+      const roll = rollDiceUtil(`1d${sides}`);
 
       const rollType =
         description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';

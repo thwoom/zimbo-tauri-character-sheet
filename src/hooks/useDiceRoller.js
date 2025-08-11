@@ -159,8 +159,9 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
         }
       }
     } else if (formula.startsWith('d')) {
-      const sides = parseInt(formula.replace('d', '').split('+')[0]);
-      const baseModifier = parseInt(formula.split('+')[1] || '0');
+      const match = formula.match(/^d(\d+)([+-]\d+)?$/);
+      const sides = match ? parseInt(match[1], 10) : 0;
+      const baseModifier = match && match[2] ? parseInt(match[2], 10) : 0;
       const roll = rollDie(sides);
 
       const rollType =
@@ -171,7 +172,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
 
       result = `d${sides}: ${roll}`;
       if (baseModifier !== 0) {
-        result += ` +${baseModifier}`;
+        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
       }
       if (statusMods.modifier !== 0) {
         result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;

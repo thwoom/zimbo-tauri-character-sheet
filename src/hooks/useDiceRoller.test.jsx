@@ -52,3 +52,31 @@ describe('useDiceRoller contexts', () => {
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
   });
 });
+
+describe('useDiceRoller mixed-case status modifiers', () => {
+  const setCharacter = () => {};
+
+  it('applies modifiers regardless of description casing', () => {
+    localStorage.clear();
+    const character = {
+      statusEffects: ['shocked', 'weakened'],
+      debilities: [],
+      xp: 0,
+    };
+    const { result } = renderHook(() => useDiceRoller(character, setCharacter, false));
+    const randomSpy = vi.spyOn(Math, 'random');
+
+    randomSpy.mockReturnValueOnce(0.4).mockReturnValueOnce(0.4);
+    act(() => {
+      result.current.rollDice('2d6', 'dEx test');
+    });
+    expect(result.current.rollModalData.result).toMatch(/Shocked \(-2 DEX\)/);
+
+    randomSpy.mockReturnValueOnce(0.25);
+    act(() => {
+      result.current.rollDice('d4', 'DaMaGe roll');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollModalData.result).toMatch(/Weakened \(-1 damage\)/);
+  });
+});

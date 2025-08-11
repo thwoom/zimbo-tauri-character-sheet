@@ -10,10 +10,11 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
           <p className="inventory-empty">No items</p>
         ) : (
           <ul className="inventory-list">
-            {inventory.map(item => (
+            {inventory.map((item) => (
               <li key={item.id} className="inventory-item">
                 <div className="inventory-item-name">
-                  {item.name}{item.quantity ? ` x${item.quantity}` : ''}
+                  {item.name}
+                  {item.quantity ? ` x${item.quantity}` : ''}
                 </div>
                 <div className="inventory-item-actions">
                   {'equipped' in item && (
@@ -35,7 +36,9 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
           </ul>
         )}
         <div className="inventory-close">
-          <button className="inventory-button" onClick={onClose}>Close</button>
+          <button className="inventory-button" onClick={onClose}>
+            Close
+          </button>
         </div>
       </div>
     </div>

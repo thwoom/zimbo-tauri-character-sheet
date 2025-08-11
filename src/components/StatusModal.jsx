@@ -8,7 +8,7 @@ const StatusModal = ({
   debilityTypes,
   onToggleStatusEffect,
   onToggleDebility,
-  onClose
+  onClose,
 }) => {
   return (
     <div className="status-overlay">
@@ -17,7 +17,7 @@ const StatusModal = ({
         <div>
           <h3 className="status-subtitle">Status Effects</h3>
           <ul className="status-list">
-            {Object.keys(statusEffectTypes).map(key => (
+            {Object.keys(statusEffectTypes).map((key) => (
               <li key={key} className="status-item">
                 <label className="status-label">
                   <input
@@ -34,7 +34,7 @@ const StatusModal = ({
         <div>
           <h3 className="status-subtitle">Debilities</h3>
           <ul className="status-list">
-            {Object.keys(debilityTypes).map(key => (
+            {Object.keys(debilityTypes).map((key) => (
               <li key={key} className="status-item">
                 <label className="status-label">
                   <input
@@ -49,7 +49,9 @@ const StatusModal = ({
           </ul>
         </div>
         <div className="status-footer">
-          <button className="status-button" onClick={onClose}>Close</button>
+          <button className="status-button" onClick={onClose}>
+            Close
+          </button>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-name: codex-preflight
+﻿name: codex-preflight
 on:
   push:
     branches: ['**']
@@ -19,6 +19,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
       - uses: actions/setup-node@v4
+- name: Install deps (lockfile-aware)
+  run: |
+    if [ -f pnpm-lock.yaml ]; then pnpm install;
+    elif [ -f yarn.lock ]; then yarn install --silent;
+    elif [ -f package-lock.json ]; then npm ci;
+    else npm i --no-audit --no-fund; fi
         with:
           node-version: '20'
       - name: Install (best-effort)
@@ -44,3 +50,4 @@ jobs:
 
           # Enforce pass
           node .github/tools/codex-preflight.mjs --base "${{ github.base_ref || 'main' }}"
+

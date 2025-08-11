@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   color: #e0e0e0;
   overflow-x: hidden;
@@ -50,17 +50,13 @@ body {
 }
 
 .poisoned-overlay::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(34, 197, 94, 0.1) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
 }
@@ -70,17 +66,13 @@ body {
 }
 
 .burning-overlay::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(239, 68, 68, 0.15) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
   animation: pulse 2s infinite;
@@ -91,7 +83,7 @@ body {
 }
 
 .shocked-overlay::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -114,17 +106,13 @@ body {
 }
 
 .frozen-overlay::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(6, 182, 212, 0.1) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
 }
@@ -134,17 +122,13 @@ body {
 }
 
 .blessed-overlay::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(251, 191, 36, 0.1) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
   animation: glow 3s infinite;
@@ -245,12 +229,7 @@ select:focus {
 
 /* Loading Animation */
 .loading-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 255, 136, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }

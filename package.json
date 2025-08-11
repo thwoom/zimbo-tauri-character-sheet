@@ -51,5 +51,10 @@
     "*.{json,md,css,scss,html,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/jest.setup.cjs"
+    ]
   }
 }

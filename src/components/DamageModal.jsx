@@ -1,26 +1,6 @@
 import React, { useState } from 'react';
-import { useCharacter } from '../state/CharacterContext';
-
-const buttonStyle = {
-  background: 'linear-gradient(45deg, #00ff88, #00cc6a)',
-  border: 'none',
-  borderRadius: '6px',
-  color: 'white',
-  padding: '8px 15px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  transition: 'all 0.3s ease',
-  margin: '5px',
-};
-
-const inputStyle = {
-  background: '#0f0f1f',
-  border: '1px solid #00ff88',
-  borderRadius: '6px',
-  color: 'white',
-  padding: '8px',
-  width: '100%',
-};
+import { useCharacter } from '../state/CharacterContext.jsx';
+import styles from './DamageModal.module.css';
 
 export default function DamageModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
@@ -65,51 +45,23 @@ export default function DamageModal({ isOpen, onClose }) {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0, 0, 0, 0.8)',
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div
-        style={{
-          background: '#1a1a2e',
-          border: '2px solid #00ff88',
-          borderRadius: '15px',
-          padding: '30px',
-          textAlign: 'center',
-          width: '300px',
-        }}
-      >
-        <h2 style={{ color: '#00ff88' }}>💔 Damage Calculator</h2>
-        <div style={{ margin: '15px 0', color: '#fff' }}>Armor: {getTotalArmor()}</div>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>💔 Damage Calculator</h2>
+        <div className={styles.info}>Armor: {getTotalArmor()}</div>
         <input
           type="number"
           placeholder="Incoming damage"
           value={damage}
           onChange={(e) => setDamage(e.target.value)}
-          style={{ ...inputStyle, marginBottom: '10px' }}
+          className={styles.input}
         />
-        <div style={{ color: '#aaa', marginBottom: '20px' }}>After armor: {effectiveDamage()}</div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button
-            onClick={applyDamage}
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(45deg, #ef4444, #dc2626)',
-            }}
-          >
+        <div className={styles.summary}>After armor: {effectiveDamage()}</div>
+        <div className={styles.buttonGroup}>
+          <button onClick={applyDamage} className={`${styles.button} ${styles.applyButton}`}>
             Apply
           </button>
-          <button onClick={onClose} style={buttonStyle}>
+          <button onClick={onClose} className={styles.button}>
             Cancel
           </button>
         </div>

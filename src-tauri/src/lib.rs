@@ -61,11 +61,15 @@ fn get_os() -> String {
     std::env::consts::OS.to_string()
 }
 
+/// Runs the Tauri application.
+///
+/// Returns `Ok` if the application starts successfully or a
+/// `tauri::Error` if Tauri fails to launch.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
+pub fn run() -> Result<(), tauri::Error> {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![write_file, read_file, get_os])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!())?;
+    Ok(())
 }

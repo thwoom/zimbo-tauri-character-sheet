@@ -106,3 +106,35 @@ describe('useDiceRoller mixed-case status modifiers', () => {
     expect(result.current.rollModalData.result).toMatch(/Weakened \(-1 damage\)/);
   });
 });
+
+describe('useDiceRoller safe localStorage handling', () => {
+  const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
+  const setCharacter = () => {};
+  const original = global.localStorage;
+
+  afterEach(() => {
+    global.localStorage = original;
+  });
+
+  it('initializes with empty history when localStorage is undefined', () => {
+    global.localStorage = undefined;
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    expect(result.current.rollHistory).toEqual([]);
+  });
+
+  it('initializes with empty history when localStorage throws', () => {
+    global.localStorage = {
+      getItem() {
+        throw new Error('fail');
+      },
+      setItem() {
+        throw new Error('fail');
+      },
+      removeItem() {
+        throw new Error('fail');
+      },
+    };
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    expect(result.current.rollHistory).toEqual([]);
+  });
+});

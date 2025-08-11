@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
@@ -65,6 +65,16 @@ function App() {
   }, [sessionNotes]);
 
   // Undo System
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const saveToHistory = (action) => {
     setCharacter((prev) => ({
       ...prev,
@@ -80,7 +90,7 @@ function App() {
       const lastAction = character.actionHistory[0];
       setCharacter(lastAction.state);
       setRollResult(`↶ Undid: ${lastAction.action}`);
-      setTimeout(() => setRollResult('Ready to roll!'), 2000);
+      timeoutRef.current = setTimeout(() => setRollResult('Ready to roll!'), 2000);
     }
   };
 

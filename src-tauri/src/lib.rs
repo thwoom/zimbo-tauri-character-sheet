@@ -69,3 +69,60 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn canonical_base() -> PathBuf {
+        let base = ProjectDirs::from("", "", "zimbo-panel")
+            .expect("failed to resolve application data directory")
+            .data_dir()
+            .to_path_buf();
+        fs::create_dir_all(&base).expect("failed to create data directory");
+        base.canonicalize().expect("failed to canonicalize base path")
+    }
+
+    #[test]
+    fn relative_paths_resolve() {
+        let base = canonical_base();
+        let file = base.join("exists.txt");
+        fs::create_dir_all(file.parent().unwrap()).unwrap();
+        fs::write(&file, "test").unwrap();
+
+        let resolved = resolve_app_path("exists.txt").unwrap();
+        assert_eq!(resolved, file);
+    }
+
+    #[test]
+    fn invalid_paths_error() {
+        assert!(resolve_app_path("/etc/passwd").is_err());
+        assert!(resolve_app_path("foo/../bar.txt").is_err());
+    }
+
+    #[test]
+    fn nonexistent_paths_resolve_parent() {
+        let base = canonical_base();
+        let subdir = base.join("subdir");
+        fs::create_dir_all(&subdir).unwrap();
+
+        let expected = subdir.join("new.txt");
+        let resolved = resolve_app_path("subdir/new.txt").unwrap();
+        assert_eq!(resolved, expected);
+    }
+
+    #[test]
+    fn write_and_read_file_roundtrip() {
+        let base = canonical_base();
+        let target = base.join("integration/test.txt");
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent).unwrap();
+        }
+
+        write_file("integration/test.txt", "hello").unwrap();
+        let contents = read_file("integration/test.txt").unwrap();
+        assert_eq!(contents, "hello");
+
+        fs::remove_file(target).unwrap();
+    }
+}

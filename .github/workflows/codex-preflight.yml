@@ -1,4 +1,4 @@
-﻿name: codex-preflight
+name: codex-preflight
 on:
   push:
     branches: ['**']

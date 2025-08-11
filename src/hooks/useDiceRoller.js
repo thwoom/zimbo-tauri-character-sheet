@@ -7,7 +7,13 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
     const saved = localStorage.getItem('rollHistory');
-    return saved ? JSON.parse(saved) : [];
+    if (!saved) return [];
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error('Error parsing roll history from localStorage', error);
+      return [];
+    }
   });
   const rollModal = useModal();
 

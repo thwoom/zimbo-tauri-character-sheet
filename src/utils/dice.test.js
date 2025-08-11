@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
 import { rollDie, rollDice } from './dice.js';
+const MAX_COUNT = 1000; // should match value in dice.js
 
 describe('rollDie', () => {
   it('returns a value within 1..sides', () => {
@@ -79,6 +80,10 @@ describe('rollDice', () => {
 
   it('throws on non-positive counts', () => {
     expect(() => rollDice('0d6')).toThrow('count must be a positive integer');
+  });
+
+  it('throws when count exceeds MAX_COUNT', () => {
+    expect(() => rollDice(`${MAX_COUNT + 1}d6`)).toThrow(`count must not exceed ${MAX_COUNT}`);
   });
 
   it('throws on non-positive sides', () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
@@ -8,6 +8,7 @@ import SessionNotes from './components/SessionNotes.jsx';
 import { buttonStyle } from './components/styles.js';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
+import useModal from './hooks/useModal';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 
@@ -17,7 +18,7 @@ function App() {
   // UI State
   const bondsModal = useModal();
   const [sessionNotes, setSessionNotes] = useState(
-    () => localStorage.getItem('sessionNotes') ?? 'My session note'
+    () => localStorage.getItem('sessionNotes') ?? 'My session note',
   );
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -64,6 +65,16 @@ function App() {
   }, [sessionNotes]);
 
   // Undo System
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const saveToHistory = (action) => {
     setCharacter((prev) => ({
       ...prev,
@@ -79,7 +90,7 @@ function App() {
       const lastAction = character.actionHistory[0];
       setCharacter(lastAction.state);
       setRollResult(`↶ Undid: ${lastAction.action}`);
-      setTimeout(() => setRollResult('Ready to roll!'), 2000);
+      timeoutRef.current = setTimeout(() => setRollResult('Ready to roll!'), 2000);
     }
   };
 

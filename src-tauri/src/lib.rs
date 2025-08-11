@@ -1,6 +1,6 @@
+use directories::ProjectDirs;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
-use tauri::api::path::app_data_dir;
 
 fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
     let relative = Path::new(path);
@@ -12,10 +12,31 @@ fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
         return Err("invalid path: outside of application data directory".to_string());
     }
 
-    let mut base =
-        app_data_dir().ok_or_else(|| "failed to resolve application data directory".to_string())?;
-    base.push(relative);
-    Ok(base)
+    let base = ProjectDirs::from("", "", "zimbo-panel")
+        .ok_or_else(|| "failed to resolve application data directory".to_string())?
+        .data_dir()
+        .to_path_buf();
+    let joined = base.join(relative);
+    let canonical_base = base.canonicalize().map_err(|e| e.to_string())?;
+    let canonical = match joined.canonicalize() {
+        Ok(p) => p,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+            let parent = joined
+                .parent()
+                .ok_or_else(|| "failed to determine parent directory".to_string())?;
+            let canonical_parent = parent.canonicalize().map_err(|e| e.to_string())?;
+            canonical_parent.join(
+                joined
+                    .file_name()
+                    .ok_or_else(|| "failed to resolve file name".to_string())?,
+            )
+        }
+        Err(e) => return Err(e.to_string()),
+    };
+    if !canonical.starts_with(&canonical_base) {
+        return Err("invalid path: outside of application data directory".to_string());
+    }
+    Ok(canonical)
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

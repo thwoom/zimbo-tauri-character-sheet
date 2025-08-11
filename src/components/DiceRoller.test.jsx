@@ -22,7 +22,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
@@ -43,7 +43,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
@@ -61,7 +61,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
@@ -73,7 +73,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 10"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}

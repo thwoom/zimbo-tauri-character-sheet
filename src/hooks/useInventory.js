@@ -1,18 +1,18 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export default function useInventory(character, setCharacter) {
-  const getTotalArmor = useCallback(() => {
+  const totalArmor = useMemo(() => {
     const baseArmor = character.armor || 0;
     const equippedArmor = character.inventory
       .filter((item) => item.equipped && item.armor)
       .reduce((total, item) => total + (item.armor || 0), 0);
     return baseArmor + equippedArmor;
-  }, [character]);
+  }, [character.inventory, character.armor]);
 
-  const getEquippedWeaponDamage = useCallback(() => {
+  const equippedWeaponDamage = useMemo(() => {
     const weapon = character.inventory.find((item) => item.equipped && item.type === 'weapon');
     return weapon ? weapon.damage || 'd6' : 'd6';
-  }, [character]);
+  }, [character.inventory]);
 
   const handleEquipItem = useCallback(
     (id) => {
@@ -59,8 +59,8 @@ export default function useInventory(character, setCharacter) {
   );
 
   return {
-    getTotalArmor,
-    getEquippedWeaponDamage,
+    totalArmor,
+    equippedWeaponDamage,
     handleEquipItem,
     handleConsumeItem,
     handleDropItem,

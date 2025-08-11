@@ -34,7 +34,7 @@ describe('CharacterStats', () => {
       character: makeCharacter(),
       setCharacter: vi.fn(),
       saveToHistory: vi.fn(),
-      getTotalArmor: vi.fn(() => 0),
+      totalArmor: 0,
       setShowLevelUpModal: vi.fn(),
       autoXpOnMiss: false,
       setAutoXpOnMiss: vi.fn(),

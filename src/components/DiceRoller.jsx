@@ -7,7 +7,7 @@ const DiceRoller = ({
   rollDice,
   rollResult,
   rollHistory,
-  getEquippedWeaponDamage,
+  equippedWeaponDamage,
   rollModal,
   rollModalData,
 }) => (
@@ -43,7 +43,7 @@ const DiceRoller = ({
         <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Combat Rolls</h4>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px' }}>
           <button
-            onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
+            onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
             style={{
               ...buttonStyle,
               background: 'linear-gradient(45deg, #ef4444, #dc2626)',
@@ -51,7 +51,7 @@ const DiceRoller = ({
               fontSize: '11px',
             }}
           >
-            Weapon ({getEquippedWeaponDamage()})
+            Weapon ({equippedWeaponDamage})
           </button>
           <button
             onClick={() => rollDice('2d6+3', 'Hack & Slash')}

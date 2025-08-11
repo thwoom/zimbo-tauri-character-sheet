@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
@@ -66,6 +67,13 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => 
       )}
     </div>
   );
+};
+
+InventoryPanel.propTypes = {
+  character: PropTypes.object.isRequired,
+  setCharacter: PropTypes.func.isRequired,
+  rollDie: PropTypes.func.isRequired,
+  setRollResult: PropTypes.func.isRequired,
 };
 
 export default InventoryPanel;

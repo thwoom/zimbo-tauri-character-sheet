@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import './LevelUpModal.css';
 import { advancedMoves } from '../data/advancedMoves.js';
@@ -388,6 +389,16 @@ const LevelUpModal = ({
       </div>
     </div>
   );
+};
+
+LevelUpModal.propTypes = {
+  character: PropTypes.object.isRequired,
+  setCharacter: PropTypes.func.isRequired,
+  levelUpState: PropTypes.object.isRequired,
+  setLevelUpState: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  rollDie: PropTypes.func.isRequired,
+  setRollResult: PropTypes.func.isRequired,
 };
 
 export default LevelUpModal;

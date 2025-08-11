@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import PropTypes from 'prop-types';
 import styles from './SessionNotes.module.css';
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
@@ -62,6 +63,13 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
       </div>
     </div>
   );
+};
+
+SessionNotes.propTypes = {
+  sessionNotes: PropTypes.string.isRequired,
+  setSessionNotes: PropTypes.func.isRequired,
+  compactMode: PropTypes.bool.isRequired,
+  setCompactMode: PropTypes.func.isRequired,
 };
 
 export default SessionNotes;

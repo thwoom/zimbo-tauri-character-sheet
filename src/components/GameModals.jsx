@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import BondsModal from './BondsModal.jsx';
 import DamageModal from './DamageModal.jsx';
@@ -70,5 +71,34 @@ const GameModals = ({
     <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
   </>
 );
+
+GameModals.propTypes = {
+  character: PropTypes.object.isRequired,
+  setCharacter: PropTypes.func.isRequired,
+  levelUpState: PropTypes.object.isRequired,
+  setLevelUpState: PropTypes.func.isRequired,
+  showLevelUpModal: PropTypes.bool.isRequired,
+  setShowLevelUpModal: PropTypes.func.isRequired,
+  rollDie: PropTypes.func.isRequired,
+  setRollResult: PropTypes.func.isRequired,
+  showStatusModal: PropTypes.bool.isRequired,
+  setShowStatusModal: PropTypes.func.isRequired,
+  statusEffectTypes: PropTypes.object.isRequired,
+  debilityTypes: PropTypes.object.isRequired,
+  handleToggleStatusEffect: PropTypes.func.isRequired,
+  handleToggleDebility: PropTypes.func.isRequired,
+  showDamageModal: PropTypes.bool.isRequired,
+  setShowDamageModal: PropTypes.func.isRequired,
+  showInventoryModal: PropTypes.bool.isRequired,
+  setShowInventoryModal: PropTypes.func.isRequired,
+  inventory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleEquipItem: PropTypes.func.isRequired,
+  handleConsumeItem: PropTypes.func.isRequired,
+  handleDropItem: PropTypes.func.isRequired,
+  bondsModal: PropTypes.shape({
+    isOpen: PropTypes.bool.isRequired,
+    close: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default GameModals;

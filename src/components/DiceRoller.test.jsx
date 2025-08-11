@@ -3,45 +3,79 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import useDiceRoller from '../hooks/useDiceRoller.js';
 import DiceRoller from './DiceRoller.jsx';
 
-const character = {
+const minimalCharacter = {
   stats: {
-    STR: { mod: 0 },
-    DEX: { mod: 0 },
-    CON: { mod: 0 },
-    INT: { mod: 0 },
-    WIS: { mod: 0 },
-    CHA: { mod: 0 },
+    STR: { score: 10, mod: 1 },
+    DEX: { score: 10, mod: 0 },
   },
-  statusEffects: [],
-  debilities: [],
 };
 
-function Wrapper() {
-  const { rollDice, rollResult, rollHistory } = useDiceRoller(character, () => {}, false);
-  return (
-    <DiceRoller
-      character={character}
-      rollDice={rollDice}
-      rollResult={rollResult}
-      rollHistory={rollHistory}
-      getEquippedWeaponDamage={() => 'd4'}
-      rollModal={{ isOpen: false, open: () => {}, close: () => {} }}
-      rollModalData={{}}
-    />
-  );
-}
+const rollHistory = [{ timestamp: '10:00', result: '2d6: 7' }];
 
 describe('DiceRoller', () => {
-  it('displays latest roll result after rolling', async () => {
-    localStorage.clear();
+  it('calls rollDice for stat checks and basic dice', async () => {
     const user = userEvent.setup();
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    render(<Wrapper />);
-    await user.click(screen.getByText('d4'));
-    randomSpy.mockRestore();
-    expect(screen.getByText('d4: 1 = 1')).toBeInTheDocument();
+    const rollDice = vi.fn();
+    render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 9"
+        rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+      />,
+    );
+
+    await user.click(screen.getByText('STR (+1)'));
+    expect(rollDice).toHaveBeenCalledWith('2d6+1', 'STR Check');
+
+    await user.click(screen.getByText('d6'));
+    expect(rollDice).toHaveBeenCalledWith('d6');
+  });
+
+  it('shows roll result and history', () => {
+    const rollDice = vi.fn();
+    render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 9"
+        rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+      />,
+    );
+    expect(screen.getByText('Result: 9')).toBeInTheDocument();
+    expect(screen.getByText('Recent Rolls:')).toBeInTheDocument();
+    expect(screen.getByText(/2d6: 7/)).toBeInTheDocument();
+  });
+
+  it('updates displayed roll result when prop changes', () => {
+    const rollDice = vi.fn();
+    const { rerender } = render(
+      <MoveList
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 9"
+        rollHistory={rollHistory}
+      />,
+    );
+    expect(screen.getByText('Result: 9')).toBeInTheDocument();
+    rerender(
+      <MoveList
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 10"
+        rollHistory={rollHistory}
+      />,
+    );
+    expect(screen.getByText('Result: 10')).toBeInTheDocument();
   });
 });

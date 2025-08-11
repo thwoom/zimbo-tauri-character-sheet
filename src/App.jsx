@@ -5,12 +5,12 @@ import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
 import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
-import { buttonStyle } from './components/styles.js';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
+import styles from './styles/AppStyles.module.css';
 
 function App() {
   const { character, setCharacter } = useCharacter();
@@ -139,61 +139,25 @@ function App() {
     return 'linear-gradient(45deg, #6366f1, #8b5cf6, #00d4aa)';
   };
 
-  const containerStyle = {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-    color: '#e0e0e0',
-    padding: '20px',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  };
-
-  const headerStyle = {
-    textAlign: 'center',
-    marginBottom: '30px',
-    padding: '20px',
-    background: getHeaderColor(),
-    borderRadius: '15px',
-    border: '2px solid #00ff88',
-    boxShadow: '0 0 20px rgba(0, 255, 136, 0.3)',
-    transition: 'all 0.5s ease',
-  };
-
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-    gap: '20px',
-    marginBottom: '20px',
-  };
+  // Styles moved to CSS modules
 
   return (
-    <div style={containerStyle} className={getActiveVisualEffects()}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+    <div className={`${styles.container} ${getActiveVisualEffects()}`}>
+      <div className={styles.innerContainer}>
         {/* Header */}
-        <div style={headerStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className={styles.header} style={{ background: getHeaderColor() }}>
+          <div className={styles.headerTop}>
             <div>
-              <h1
-                style={{ fontSize: '2.5rem', marginBottom: '10px', textShadow: '0 0 10px #00ff88' }}
-              >
-                🧾 ZIMBO – The Time-Bound Juggernaut
-              </h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h1 className={styles.title}>🧾 ZIMBO – The Time-Bound Juggernaut</h1>
+              <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 {character.statusEffects.length > 0 && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '5px',
-                      padding: '5px 10px',
-                      background: 'rgba(0,0,0,0.2)',
-                      borderRadius: '20px',
-                    }}
-                  >
+                  <div className={styles.statusEffectsContainer}>
                     {character.statusEffects.map((effect) => (
                       <span
                         key={effect}
                         title={statusEffectTypes[effect]?.name}
-                        style={{ fontSize: '18px', animation: 'pulse 2s infinite' }}
+                        className={styles.statusEffectIcon}
                       >
                         {statusEffectTypes[effect]?.icon}
                       </span>
@@ -202,44 +166,36 @@ function App() {
                 )}
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className={styles.buttonRow}>
               <button
                 onClick={undoLastAction}
                 disabled={character.actionHistory.length === 0}
-                style={{
-                  ...buttonStyle,
-                  background:
-                    character.actionHistory.length > 0
-                      ? 'linear-gradient(45deg, #6b7280, #4b5563)'
-                      : 'linear-gradient(45deg, #374151, #6b7280)',
-                  opacity: character.actionHistory.length > 0 ? 1 : 0.5,
-                  cursor: character.actionHistory.length > 0 ? 'pointer' : 'not-allowed',
-                }}
+                className={`${styles.button} ${styles.undoButton}`}
                 title="Undo last action"
               >
                 ↶ Undo
               </button>
               <button
                 onClick={() => setShowDamageModal(true)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)' }}
+                className={`${styles.button} ${styles.damageButton}`}
               >
                 💔 Take Damage
               </button>
               <button
                 onClick={() => setShowStatusModal(true)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)' }}
+                className={`${styles.button} ${styles.statusButton}`}
               >
                 💀 Effects ({character.statusEffects.length + character.debilities.length})
               </button>
               <button
                 onClick={() => setShowInventoryModal(true)}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)' }}
+                className={`${styles.button} ${styles.inventoryButton}`}
               >
                 🎒 Inventory
               </button>
               <button
                 onClick={bondsModal.open}
-                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
+                className={`${styles.button} ${styles.bondsButton}`}
               >
                 👥 Bonds ({character.bonds.filter((b) => !b.resolved).length})
               </button>
@@ -248,7 +204,7 @@ function App() {
         </div>
 
         {/* Main Grid Layout */}
-        <div style={gridStyle}>
+        <div className={styles.grid}>
           {/* Stats Panel */}
           <CharacterStats
             character={character}

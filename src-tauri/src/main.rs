@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    zimbo_panel_lib::run()
+    zimbo_panel_lib::run().expect("error while running tauri application")
 }

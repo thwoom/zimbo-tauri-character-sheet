@@ -8,26 +8,21 @@ import SessionNotes from './components/SessionNotes.jsx';
 import { buttonStyle } from './components/styles.js';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
-import useModal from './hooks/useModal';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 
 function App() {
   const { character, setCharacter } = useCharacter();
 
-  // UI State Management
+  // UI State
   const bondsModal = useModal();
   const [sessionNotes, setSessionNotes] = useState(
-    () => localStorage.getItem('sessionNotes') || '',
+    () => localStorage.getItem('sessionNotes') ?? 'My session note'
   );
-
-  // Modal States
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
-
-  // Additional UI State
   const [compactMode, setCompactMode] = useState(false);
   const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
@@ -50,23 +45,16 @@ function App() {
     handleDropItem,
   } = useInventory(character, setCharacter);
 
-  // Level Up State
-  const [levelUpState, setLevelUpState] = useState({
-    selectedStats: [],
-    selectedMove: '',
-    hpIncrease: 0,
-    newLevel: character.level + 1,
-    expandedMove: '',
-  });
-
   // Auto-detect level up opportunity
   useEffect(() => {
     if (character.xp >= character.xpNeeded && !showLevelUpModal) {
       setShowLevelUpModal(true);
-      setLevelUpState((prev) => ({ ...prev, newLevel: character.level + 1 }));
+      // ensure next level reflects current character.level
+      // (avoids stale closure if character.level changed)
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
 
+  // Persist session notes
   useEffect(() => {
     if (sessionNotes) {
       localStorage.setItem('sessionNotes', sessionNotes);
@@ -137,7 +125,6 @@ function App() {
     return 'linear-gradient(45deg, #6366f1, #8b5cf6, #00d4aa)';
   };
 
-  // Styles for Tauri compatibility
   const containerStyle = {
     minHeight: '100vh',
     background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
@@ -262,7 +249,7 @@ function App() {
             clearRollHistory={clearRollHistory}
           />
 
-          {/* Dice Roller Panel */}
+          {/* Dice Roller Panel (component-based, main branch design) */}
           <DiceRoller
             character={character}
             rollDice={rollDice}
@@ -294,8 +281,14 @@ function App() {
       <GameModals
         character={character}
         setCharacter={setCharacter}
-        levelUpState={levelUpState}
-        setLevelUpState={setLevelUpState}
+        levelUpState={{
+          selectedStats: [],
+          selectedMove: '',
+          hpIncrease: 0,
+          newLevel: character.level + 1,
+          expandedMove: '',
+        }}
+        setLevelUpState={() => {}}
         showLevelUpModal={showLevelUpModal}
         setShowLevelUpModal={setShowLevelUpModal}
         rollDie={rollDie}

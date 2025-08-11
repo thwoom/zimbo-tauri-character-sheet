@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { panelStyle, buttonStyle } from './styles.js';
 
 const statsGridStyle = {
@@ -327,6 +328,32 @@ const CharacterStats = ({
       </button>
     </div>
   );
+};
+
+CharacterStats.propTypes = {
+  character: PropTypes.shape({
+    stats: PropTypes.object.isRequired,
+    hp: PropTypes.number.isRequired,
+    maxHp: PropTypes.number.isRequired,
+    xp: PropTypes.number.isRequired,
+    xpNeeded: PropTypes.number.isRequired,
+    level: PropTypes.number.isRequired,
+    resources: PropTypes.object.isRequired,
+  }).isRequired,
+  setCharacter: PropTypes.func.isRequired,
+  saveToHistory: PropTypes.func.isRequired,
+  totalArmor: PropTypes.number.isRequired,
+  setShowLevelUpModal: PropTypes.func.isRequired,
+  autoXpOnMiss: PropTypes.bool.isRequired,
+  setAutoXpOnMiss: PropTypes.func.isRequired,
+  setRollResult: PropTypes.func.isRequired,
+  setSessionNotes: PropTypes.func,
+  clearRollHistory: PropTypes.func,
+};
+
+CharacterStats.defaultProps = {
+  setSessionNotes: () => {},
+  clearRollHistory: () => {},
 };
 
 export default CharacterStats;

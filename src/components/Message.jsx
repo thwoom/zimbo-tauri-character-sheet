@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import './Message.css';
 
 const Message = ({ type = 'error', children }) => {
@@ -5,3 +6,8 @@ const Message = ({ type = 'error', children }) => {
 };
 
 export default Message;
+
+Message.propTypes = {
+  type: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};

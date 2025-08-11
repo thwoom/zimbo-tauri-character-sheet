@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import './StatusModal.css';
 
@@ -56,6 +57,16 @@ const StatusModal = ({
       </div>
     </div>
   );
+};
+
+StatusModal.propTypes = {
+  statusEffects: PropTypes.arrayOf(PropTypes.string).isRequired,
+  debilities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  statusEffectTypes: PropTypes.object.isRequired,
+  debilityTypes: PropTypes.object.isRequired,
+  onToggleStatusEffect: PropTypes.func.isRequired,
+  onToggleDebility: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default StatusModal;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './BondsModal.module.css';
@@ -98,3 +99,8 @@ export default function BondsModal({ isOpen, onClose }) {
     </div>
   );
 }
+
+BondsModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

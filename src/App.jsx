@@ -79,7 +79,7 @@ function App() {
     setCharacter((prev) => ({
       ...prev,
       actionHistory: [
-        { action, state: prev, timestamp: Date.now() },
+        { action, state: structuredClone(prev), timestamp: Date.now() },
         ...prev.actionHistory.slice(0, 4),
       ],
     }));
@@ -88,7 +88,7 @@ function App() {
   const undoLastAction = () => {
     if (character.actionHistory.length > 0) {
       const lastAction = character.actionHistory[0];
-      setCharacter(lastAction.state);
+      setCharacter(structuredClone(lastAction.state));
       setRollResult(`↶ Undid: ${lastAction.action}`);
       timeoutRef.current = setTimeout(() => setRollResult('Ready to roll!'), 2000);
     }

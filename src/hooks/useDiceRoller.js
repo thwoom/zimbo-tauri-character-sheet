@@ -8,7 +8,13 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
     const saved = localStorage.getItem('rollHistory');
-    return saved ? JSON.parse(saved) : [];
+    if (!saved) return [];
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error('Error parsing roll history from localStorage', error);
+      return [];
+    }
   });
   const rollModal = useModal();
 
@@ -162,6 +168,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       const baseModifier = parseInt(formula.split('+')[1] || '0');
       const roll = rollDiceUtil(`1d${sides}`);
 
+
       const rollType =
         description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
       const statusMods = getStatusModifiers(rollType);
@@ -170,7 +177,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
 
       result = `d${sides}: ${roll}`;
       if (baseModifier !== 0) {
-        result += ` +${baseModifier}`;
+        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
       }
       if (statusMods.modifier !== 0) {
         result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;

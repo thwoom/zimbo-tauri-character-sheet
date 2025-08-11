@@ -52,3 +52,18 @@ describe('useDiceRoller contexts', () => {
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
   });
 });
+
+describe('useDiceRoller localStorage', () => {
+  const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
+  const setCharacter = () => {};
+
+  it('falls back to empty history on invalid JSON', () => {
+    localStorage.clear();
+    localStorage.setItem('rollHistory', 'not json');
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    expect(result.current.rollHistory).toEqual([]);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+});

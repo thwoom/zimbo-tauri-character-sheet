@@ -27,20 +27,23 @@ export default function useInventory(character, setCharacter) {
   );
 
   const handleConsumeItem = useCallback(
-    (id) => {
-      setCharacter((prev) => ({
-        ...prev,
-        inventory: prev.inventory.reduce((acc, item) => {
-          if (item.id === id) {
-            if (item.quantity && item.quantity > 1) {
-              acc.push({ ...item, quantity: item.quantity - 1 });
+    (id, effect) => {
+      setCharacter((prev) => {
+        const updated = {
+          ...prev,
+          inventory: prev.inventory.reduce((acc, item) => {
+            if (item.id === id) {
+              if (item.quantity && item.quantity > 1) {
+                acc.push({ ...item, quantity: item.quantity - 1 });
+              }
+            } else {
+              acc.push(item);
             }
-          } else {
-            acc.push(item);
-          }
-          return acc;
-        }, []),
-      }));
+            return acc;
+          }, []),
+        };
+        return typeof effect === 'function' ? effect(updated) : updated;
+      });
     },
     [setCharacter],
   );

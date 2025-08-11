@@ -30,7 +30,7 @@ function App() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
-  
+
   // Additional UI State
   const [compactMode, setCompactMode] = useState(false);
   const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
@@ -41,14 +41,14 @@ function App() {
     selectedMove: '',
     hpIncrease: 0,
     newLevel: character.level + 1,
-    expandedMove: ''
+    expandedMove: '',
   });
 
   // Auto-detect level up opportunity
   useEffect(() => {
     if (character.xp >= character.xpNeeded && !showLevelUpModal) {
       setShowLevelUpModal(true);
-      setLevelUpState(prev => ({ ...prev, newLevel: character.level + 1 }));
+      setLevelUpState((prev) => ({ ...prev, newLevel: character.level + 1 }));
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
 
@@ -58,13 +58,13 @@ function App() {
   const getTotalArmor = () => {
     const baseArmor = character.armor || 0;
     const equippedArmor = character.inventory
-      .filter(item => item.equipped && item.armor)
+      .filter((item) => item.equipped && item.armor)
       .reduce((total, item) => total + (item.armor || 0), 0);
     return baseArmor + equippedArmor;
   };
 
   const getEquippedWeaponDamage = () => {
-    const weapon = character.inventory.find(item => item.equipped && item.type === 'weapon');
+    const weapon = character.inventory.find((item) => item.equipped && item.type === 'weapon');
     return weapon ? weapon.damage || 'd6' : 'd6';
   };
 
@@ -72,7 +72,7 @@ function App() {
   const getStatusModifiers = (rollType = 'general') => {
     let modifier = 0;
     let notes = [];
-    
+
     if (character.statusEffects.includes('poisoned')) {
       modifier -= 1;
       notes.push('Poisoned (-1)');
@@ -93,20 +93,22 @@ function App() {
       modifier += 1;
       notes.push('Blessed (+1)');
     }
-    
+
     // Add debility modifiers
-    character.debilities.forEach(debility => {
-      if ((debility === 'weak' && rollType === 'str') ||
-          (debility === 'shaky' && rollType === 'dex') ||
-          (debility === 'sick' && rollType === 'con') ||
-          (debility === 'stunned' && rollType === 'int') ||
-          (debility === 'confused' && rollType === 'wis') ||
-          (debility === 'scarred' && rollType === 'cha')) {
+    character.debilities.forEach((debility) => {
+      if (
+        (debility === 'weak' && rollType === 'str') ||
+        (debility === 'shaky' && rollType === 'dex') ||
+        (debility === 'sick' && rollType === 'con') ||
+        (debility === 'stunned' && rollType === 'int') ||
+        (debility === 'confused' && rollType === 'wis') ||
+        (debility === 'scarred' && rollType === 'cha')
+      ) {
         modifier -= 1;
         notes.push(`${debilityTypes[debility].name} (-1)`);
       }
     });
-    
+
     return { modifier, notes };
   };
 
@@ -121,7 +123,7 @@ function App() {
       const die1 = rollDie(6);
       const die2 = rollDie(6);
       const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
-      
+
       // Determine roll type for status effects
       let rollType = 'general';
       if (description.includes('STR') || description.includes('Hack')) rollType = 'str';
@@ -130,12 +132,18 @@ function App() {
       else if (description.includes('INT')) rollType = 'int';
       else if (description.includes('WIS')) rollType = 'wis';
       else if (description.includes('CHA')) rollType = 'cha';
-      else if (description.includes('damage') || description.includes('Damage') || description.includes('Upper Hand') || description.includes('Bonus Damage')) rollType = 'damage';
-      
+      else if (
+        description.includes('damage') ||
+        description.includes('Damage') ||
+        description.includes('Upper Hand') ||
+        description.includes('Bonus Damage')
+      )
+        rollType = 'damage';
+
       const statusMods = getStatusModifiers(rollType);
       const totalModifier = baseModifier + statusMods.modifier;
       total = die1 + die2 + totalModifier;
-      
+
       result = `2d6: [${die1}, ${die2}]`;
       if (baseModifier !== 0) {
         result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
@@ -160,19 +168,20 @@ function App() {
         interpretation = ' ❌ Failure';
         context = getFailureContext(description);
         if (autoXpOnMiss) {
-          setCharacter(prev => ({ ...prev, xp: prev.xp + 1 }));
+          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         }
       }
     } else if (formula.startsWith('d')) {
       const sides = parseInt(formula.replace('d', '').split('+')[0]);
       const baseModifier = parseInt(formula.split('+')[1] || '0');
       const roll = rollDie(sides);
-      
-      const rollType = description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
+
+      const rollType =
+        description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
       const statusMods = getStatusModifiers(rollType);
       const totalModifier = baseModifier + statusMods.modifier;
       total = roll + totalModifier;
-      
+
       result = `d${sides}: ${roll}`;
       if (baseModifier !== 0) {
         result += ` +${baseModifier}`;
@@ -192,60 +201,60 @@ function App() {
       description,
       context,
       total,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString(),
     };
 
     // Add to roll history (keep last 10)
-      setRollHistory(prev => [rollData, ...prev.slice(0, 9)]);
-      setRollModalData(rollData);
-      rollModal.open();
+    setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);
+    setRollModalData(rollData);
+    rollModal.open();
   };
 
   // Context helpers for roll results
   const getSuccessContext = (description) => {
-    if (description.includes('STR')) return "Power through with overwhelming force!";
-    if (description.includes('DEX')) return "Graceful and precise execution!";
-    if (description.includes('CON')) return "Tough as cybernetic nails!";
-    if (description.includes('INT')) return "Brilliant tactical insight!";
-    if (description.includes('WIS')) return "Crystal clear perception!";
-    if (description.includes('CHA')) return "Surprisingly charming for a cyber-barbarian!";
+    if (description.includes('STR')) return 'Power through with overwhelming force!';
+    if (description.includes('DEX')) return 'Graceful and precise execution!';
+    if (description.includes('CON')) return 'Tough as cybernetic nails!';
+    if (description.includes('INT')) return 'Brilliant tactical insight!';
+    if (description.includes('WIS')) return 'Crystal clear perception!';
+    if (description.includes('CHA')) return 'Surprisingly charming for a cyber-barbarian!';
     if (description.includes('Hack')) return "Clean hit, enemy can't counter!";
     if (description.includes('Taunt')) return "They're completely focused on you now!";
-    return "Perfect execution!";
+    return 'Perfect execution!';
   };
 
   const getPartialContext = (description) => {
-    if (description.includes('STR')) return "Success, but strain yourself or equipment";
-    if (description.includes('DEX')) return "Stumble slightly, awkward position";
-    if (description.includes('CON')) return "Feel the strain, maybe take harm";
-    if (description.includes('INT')) return "Confusing situation, partial info";
+    if (description.includes('STR')) return 'Success, but strain yourself or equipment';
+    if (description.includes('DEX')) return 'Stumble slightly, awkward position';
+    if (description.includes('CON')) return 'Feel the strain, maybe take harm';
+    if (description.includes('INT')) return 'Confusing situation, partial info';
     if (description.includes('WIS')) return "Something seems off, can't quite tell what";
-    if (description.includes('CHA')) return "Awkward interaction, mixed signals";
-    if (description.includes('Hack')) return "Hit them, but they hit you back!";
-    if (description.includes('Taunt')) return "They attack you but with +1 ongoing damage!";
-    return "Success with complications";
+    if (description.includes('CHA')) return 'Awkward interaction, mixed signals';
+    if (description.includes('Hack')) return 'Hit them, but they hit you back!';
+    if (description.includes('Taunt')) return 'They attack you but with +1 ongoing damage!';
+    return 'Success with complications';
   };
 
   const getFailureContext = (description) => {
-    if (description.includes('STR')) return "Too heavy, equipment fails, or overpower backfires";
-    if (description.includes('DEX')) return "Trip, fumble, or end up in worse position";
-    if (description.includes('CON')) return "Exhausted, hurt, or overcome by conditions";
-    if (description.includes('INT')) return "No clue, wrong conclusion, or miss key detail";
-    if (description.includes('WIS')) return "Completely missed the signs";
-    if (description.includes('CHA')) return "Offensive, rude, or make things worse";
-    if (description.includes('Hack')) return "Miss entirely, terrible position";
-    if (description.includes('Taunt')) return "They ignore you completely";
-    return "Things go badly";
+    if (description.includes('STR')) return 'Too heavy, equipment fails, or overpower backfires';
+    if (description.includes('DEX')) return 'Trip, fumble, or end up in worse position';
+    if (description.includes('CON')) return 'Exhausted, hurt, or overcome by conditions';
+    if (description.includes('INT')) return 'No clue, wrong conclusion, or miss key detail';
+    if (description.includes('WIS')) return 'Completely missed the signs';
+    if (description.includes('CHA')) return 'Offensive, rude, or make things worse';
+    if (description.includes('Hack')) return 'Miss entirely, terrible position';
+    if (description.includes('Taunt')) return 'They ignore you completely';
+    return 'Things go badly';
   };
 
   // Undo System
   const saveToHistory = (action) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
       actionHistory: [
         { action, state: prev, timestamp: Date.now() },
-        ...prev.actionHistory.slice(0, 4) // Keep last 5 actions
-      ]
+        ...prev.actionHistory.slice(0, 4), // Keep last 5 actions
+      ],
     }));
   };
 
@@ -269,16 +278,16 @@ function App() {
   };
 
   const handleEquipItem = (id) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
-      inventory: prev.inventory.map(item =>
-        item.id === id ? { ...item, equipped: !item.equipped } : item
-      )
+      inventory: prev.inventory.map((item) =>
+        item.id === id ? { ...item, equipped: !item.equipped } : item,
+      ),
     }));
   };
 
   const handleConsumeItem = (id) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
       inventory: prev.inventory.reduce((acc, item) => {
         if (item.id === id) {
@@ -289,41 +298,46 @@ function App() {
           acc.push(item);
         }
         return acc;
-      }, [])
+      }, []),
     }));
   };
 
   const handleDropItem = (id) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
-      inventory: prev.inventory.filter(item => item.id !== id)
+      inventory: prev.inventory.filter((item) => item.id !== id),
     }));
   };
 
   const handleToggleStatusEffect = (effect) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
       statusEffects: prev.statusEffects.includes(effect)
-        ? prev.statusEffects.filter(e => e !== effect)
-        : [...prev.statusEffects, effect]
+        ? prev.statusEffects.filter((e) => e !== effect)
+        : [...prev.statusEffects, effect],
     }));
   };
 
   const handleToggleDebility = (debility) => {
-    setCharacter(prev => ({
+    setCharacter((prev) => ({
       ...prev,
       debilities: prev.debilities.includes(debility)
-        ? prev.debilities.filter(d => d !== debility)
-        : [...prev.debilities, debility]
+        ? prev.debilities.filter((d) => d !== debility)
+        : [...prev.debilities, debility],
     }));
   };
 
   const getHeaderColor = () => {
-    if (character.statusEffects.includes('poisoned')) return 'linear-gradient(45deg, #22c55e, #059669, #00d4aa)';
-    if (character.statusEffects.includes('burning')) return 'linear-gradient(45deg, #ef4444, #f97316, #fbbf24)';
-    if (character.statusEffects.includes('shocked')) return 'linear-gradient(45deg, #3b82f6, #eab308, #00d4aa)';
-    if (character.statusEffects.includes('frozen')) return 'linear-gradient(45deg, #06b6d4, #3b82f6, #6366f1)';
-    if (character.statusEffects.includes('blessed')) return 'linear-gradient(45deg, #fbbf24, #f59e0b, #00d4aa)';
+    if (character.statusEffects.includes('poisoned'))
+      return 'linear-gradient(45deg, #22c55e, #059669, #00d4aa)';
+    if (character.statusEffects.includes('burning'))
+      return 'linear-gradient(45deg, #ef4444, #f97316, #fbbf24)';
+    if (character.statusEffects.includes('shocked'))
+      return 'linear-gradient(45deg, #3b82f6, #eab308, #00d4aa)';
+    if (character.statusEffects.includes('frozen'))
+      return 'linear-gradient(45deg, #06b6d4, #3b82f6, #6366f1)';
+    if (character.statusEffects.includes('blessed'))
+      return 'linear-gradient(45deg, #fbbf24, #f59e0b, #00d4aa)';
     return 'linear-gradient(45deg, #6366f1, #8b5cf6, #00d4aa)'; // default
   };
 
@@ -333,7 +347,7 @@ function App() {
     background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
     color: '#e0e0e0',
     padding: '20px',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   };
 
   const headerStyle = {
@@ -344,17 +358,15 @@ function App() {
     borderRadius: '15px',
     border: '2px solid #00ff88',
     boxShadow: '0 0 20px rgba(0, 255, 136, 0.3)',
-    transition: 'all 0.5s ease'
+    transition: 'all 0.5s ease',
   };
 
   const gridStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
     gap: '20px',
-    marginBottom: '20px'
+    marginBottom: '20px',
   };
-
-  // Styles moved to shared style objects
 
   return (
     <div style={containerStyle} className={getActiveVisualEffects()}>
@@ -363,14 +375,24 @@ function App() {
         <div style={headerStyle}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', textShadow: '0 0 10px #00ff88' }}>
+              <h1
+                style={{ fontSize: '2.5rem', marginBottom: '10px', textShadow: '0 0 10px #00ff88' }}
+              >
                 🧾 ZIMBO – The Time-Bound Juggernaut
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 {character.statusEffects.length > 0 && (
-                  <div style={{ display: 'flex', gap: '5px', padding: '5px 10px', background: 'rgba(0,0,0,0.2)', borderRadius: '20px' }}>
-                    {character.statusEffects.map(effect => (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '5px',
+                      padding: '5px 10px',
+                      background: 'rgba(0,0,0,0.2)',
+                      borderRadius: '20px',
+                    }}
+                  >
+                    {character.statusEffects.map((effect) => (
                       <span
                         key={effect}
                         title={statusEffectTypes[effect]?.name}
@@ -389,11 +411,12 @@ function App() {
                 disabled={character.actionHistory.length === 0}
                 style={{
                   ...buttonStyle,
-                  background: character.actionHistory.length > 0 
-                    ? 'linear-gradient(45deg, #6b7280, #4b5563)' 
-                    : 'linear-gradient(45deg, #374151, #6b7280)',
+                  background:
+                    character.actionHistory.length > 0
+                      ? 'linear-gradient(45deg, #6b7280, #4b5563)'
+                      : 'linear-gradient(45deg, #374151, #6b7280)',
                   opacity: character.actionHistory.length > 0 ? 1 : 0.5,
-                  cursor: character.actionHistory.length > 0 ? 'pointer' : 'not-allowed'
+                  cursor: character.actionHistory.length > 0 ? 'pointer' : 'not-allowed',
                 }}
                 title="Undo last action"
               >
@@ -417,12 +440,12 @@ function App() {
               >
                 🎒 Inventory
               </button>
-                <button
-                  onClick={bondsModal.open}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
-                >
-                  👥 Bonds ({character.bonds.filter(b => !b.resolved).length})
-                </button>
+              <button
+                onClick={bondsModal.open}
+                style={{ ...buttonStyle, background: 'linear-gradient(45deg, #3b82f6, #2563eb)' }}
+              >
+                👥 Bonds ({character.bonds.filter((b) => !b.resolved).length})
+              </button>
             </div>
           </div>
         </div>
@@ -443,11 +466,15 @@ function App() {
 
           {/* Dice Roller Panel */}
           <div style={panelStyle}>
-            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>🎲 Dice Roller</h3>
-            
+            <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>
+              🎲 Dice Roller
+            </h3>
+
             {/* Stat Check Buttons */}
             <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Stat Checks</h4>
+              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>
+                Stat Checks
+              </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '5px' }}>
                 {Object.entries(character.stats).map(([stat, data]) => (
                   <button
@@ -458,10 +485,11 @@ function App() {
                       background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
                       padding: '8px 6px',
                       margin: '2px',
-                      fontSize: '11px'
+                      fontSize: '11px',
                     }}
                   >
-                    {stat} ({data.mod >= 0 ? '+' : ''}{data.mod})
+                    {stat} ({data.mod >= 0 ? '+' : ''}
+                    {data.mod})
                   </button>
                 ))}
               </div>
@@ -469,29 +497,51 @@ function App() {
 
             {/* Combat Rolls */}
             <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Combat Rolls</h4>
+              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>
+                Combat Rolls
+              </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px' }}>
                 <button
                   onClick={() => rollDice(getEquippedWeaponDamage(), 'Weapon Damage')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #ef4444, #dc2626)', margin: '2px', fontSize: '11px' }}
+                  style={{
+                    ...buttonStyle,
+                    background: 'linear-gradient(45deg, #ef4444, #dc2626)',
+                    margin: '2px',
+                    fontSize: '11px',
+                  }}
                 >
                   Weapon ({getEquippedWeaponDamage()})
                 </button>
                 <button
                   onClick={() => rollDice('2d6+3', 'Hack & Slash')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)', margin: '2px', fontSize: '11px' }}
+                  style={{
+                    ...buttonStyle,
+                    background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
+                    margin: '2px',
+                    fontSize: '11px',
+                  }}
                 >
                   Hack & Slash
                 </button>
                 <button
                   onClick={() => rollDice('d4', 'Upper Hand')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #f97316, #ea580c)', margin: '2px', fontSize: '11px' }}
+                  style={{
+                    ...buttonStyle,
+                    background: 'linear-gradient(45deg, #f97316, #ea580c)',
+                    margin: '2px',
+                    fontSize: '11px',
+                  }}
                 >
                   Upper Hand d4
                 </button>
                 <button
                   onClick={() => rollDice('2d6-1', 'Taunt')}
-                  style={{ ...buttonStyle, background: 'linear-gradient(45deg, #eab308, #d97706)', margin: '2px', fontSize: '11px' }}
+                  style={{
+                    ...buttonStyle,
+                    background: 'linear-gradient(45deg, #eab308, #d97706)',
+                    margin: '2px',
+                    fontSize: '11px',
+                  }}
                 >
                   Taunt Enemy
                 </button>
@@ -500,9 +550,11 @@ function App() {
 
             {/* Basic Dice */}
             <div style={{ marginBottom: '15px' }}>
-              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>Basic Dice</h4>
+              <h4 style={{ color: '#00ff88', marginBottom: '10px', fontSize: '1rem' }}>
+                Basic Dice
+              </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '5px' }}>
-                {[4, 6, 8, 10, 12, 20].map(sides => (
+                {[4, 6, 8, 10, 12, 20].map((sides) => (
                   <button
                     key={sides}
                     onClick={() => rollDice(`d${sides}`)}
@@ -511,7 +563,7 @@ function App() {
                       background: 'linear-gradient(45deg, #06b6d4, #0891b2)',
                       padding: '8px 4px',
                       margin: '2px',
-                      fontSize: '11px'
+                      fontSize: '11px',
                     }}
                   >
                     d{sides}
@@ -521,17 +573,19 @@ function App() {
             </div>
 
             {/* Roll Result Display */}
-            <div style={{
-              background: 'rgba(0, 255, 136, 0.2)',
-              padding: '10px',
-              borderRadius: '6px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              minHeight: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
+            <div
+              style={{
+                background: 'rgba(0, 255, 136, 0.2)',
+                padding: '10px',
+                borderRadius: '6px',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                minHeight: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               {rollResult}
             </div>
 
@@ -567,19 +621,19 @@ function App() {
         </div>
       </div>
 
-        <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
+      <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
 
       {showLevelUpModal && (
-  <LevelUpModal 
-    character={character}
-    setCharacter={setCharacter}
-    levelUpState={levelUpState}
-    setLevelUpState={setLevelUpState}
-    onClose={() => setShowLevelUpModal(false)}
-    rollDie={rollDie}
-    setRollResult={setRollResult}
-  />
-)}
+        <LevelUpModal
+          character={character}
+          setCharacter={setCharacter}
+          levelUpState={levelUpState}
+          setLevelUpState={setLevelUpState}
+          onClose={() => setShowLevelUpModal(false)}
+          rollDie={rollDie}
+          setRollResult={setRollResult}
+        />
+      )}
 
       {showStatusModal && (
         <StatusModal
@@ -605,7 +659,7 @@ function App() {
         />
       )}
 
-        <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
+      <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
     </div>
   );
 }

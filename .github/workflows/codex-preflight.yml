@@ -1,8 +1,11 @@
 ﻿name: codex-preflight
 on:
+  push:
+    branches:
+      - '**'
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -11,12 +14,14 @@ jobs:
   preflight:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - name: Install (best-effort)
         run: npm ci || npm i --prefer-offline
       - name: Preflight (auto-fix for codex/*)
@@ -24,13 +29,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -e
-          if [[ "${{ github.head_ref }}" == codex/* ]]; then
-            git config user.name "codex-bot"
-            git config user.email "codex-bot@users.noreply.github.com"
+          git config user.name "codex-bot"
+          git config user.email "codex-bot@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+
+          # Auto-fix only for codex/* branches (works for push and PR contexts)
+          if [[ "${{ github.ref_name }}" == codex/* || "${{ github.head_ref }}" == codex/* ]]; then
             node .github/tools/codex-preflight.mjs --base "${{ github.base_ref || 'main' }}" --fix || true
             if [ -n "$(git status --porcelain)" ]; then
               git commit -am "chore: preflight autofix (format/lockfile)"
-              git push
+              git push origin HEAD:${{ github.ref_name || github.head_ref }}
             fi
           fi
+
+          # Enforce pass
           node .github/tools/codex-preflight.mjs --base "${{ github.base_ref || 'main' }}"

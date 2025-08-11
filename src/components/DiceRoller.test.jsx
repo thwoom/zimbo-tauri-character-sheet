@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import MoveList from './MoveList.jsx';
+import DiceRoller from './DiceRoller.jsx';
 
 const minimalCharacter = {
   stats: {
@@ -14,17 +14,19 @@ const minimalCharacter = {
 
 const rollHistory = [{ timestamp: '10:00', result: '2d6: 7' }];
 
-describe('MoveList', () => {
+describe('DiceRoller', () => {
   it('calls rollDice for stat checks and basic dice', async () => {
     const user = userEvent.setup();
     const rollDice = vi.fn();
     render(
-      <MoveList
+      <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
         getEquippedWeaponDamage={() => 'd8'}
         rollResult="Result: 9"
         rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
       />,
     );
 
@@ -38,12 +40,14 @@ describe('MoveList', () => {
   it('shows roll result and history', () => {
     const rollDice = vi.fn();
     render(
-      <MoveList
+      <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
         getEquippedWeaponDamage={() => 'd8'}
         rollResult="Result: 9"
         rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
       />,
     );
     expect(screen.getByText('Result: 9')).toBeInTheDocument();

@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 fix-pr*.ps1
+
+fix-pr*.ps1

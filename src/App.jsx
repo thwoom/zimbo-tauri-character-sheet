@@ -95,12 +95,20 @@ function App() {
   };
 
   // Visual effects based on status
+  const statusEffectClassMap = {
+    poisoned: 'poisoned-overlay',
+    burning: 'burning-overlay',
+    shocked: 'shocked-overlay',
+    frozen: 'frozen-overlay',
+    blessed: 'blessed-overlay',
+  };
+
   const getActiveVisualEffects = () => {
-    if (character.statusEffects.includes('poisoned')) return 'poisoned-overlay';
-    if (character.statusEffects.includes('burning')) return 'burning-overlay';
-    if (character.statusEffects.includes('shocked')) return 'shocked-overlay';
-    if (character.statusEffects.includes('frozen')) return 'frozen-overlay';
-    if (character.statusEffects.includes('blessed')) return 'blessed-overlay';
+    for (const [effect, cssClass] of Object.entries(statusEffectClassMap)) {
+      if (character.statusEffects.includes(effect)) {
+        return cssClass;
+      }
+    }
     return '';
   };
 

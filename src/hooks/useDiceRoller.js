@@ -114,42 +114,48 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     let interpretation = '';
     let context = '';
 
-    if (formula.includes('2d6')) {
-      const die1 = rollDie(6);
-      const die2 = rollDie(6);
-      const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
+    const match = formula.match(/^(\d*)d(\d+)([+-]\d+)?$/i);
+    if (!match) return;
 
-      let rollType = 'general';
-      if (desc.includes('str') || desc.includes('hack')) rollType = 'str';
-      else if (desc.includes('dex')) rollType = 'dex';
-      else if (desc.includes('con')) rollType = 'con';
-      else if (desc.includes('int')) rollType = 'int';
-      else if (desc.includes('wis')) rollType = 'wis';
-      else if (desc.includes('cha')) rollType = 'cha';
-      else if (
-        desc.includes('damage') ||
-        desc.includes('upper hand') ||
-        desc.includes('bonus damage')
-      )
-        rollType = 'damage';
+    const diceCount = match[1];
+    const sides = match[2];
+    const baseModifier = parseInt(match[3] || '0', 10);
+    const dicePart = `${diceCount && diceCount !== '1' ? diceCount : ''}d${sides}`;
 
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = die1 + die2 + totalModifier;
+    let rollType = 'general';
+    if (desc.includes('str') || desc.includes('hack')) rollType = 'str';
+    else if (desc.includes('dex')) rollType = 'dex';
+    else if (desc.includes('con')) rollType = 'con';
+    else if (desc.includes('int')) rollType = 'int';
+    else if (desc.includes('wis')) rollType = 'wis';
+    else if (desc.includes('cha')) rollType = 'cha';
+    else if (
+      desc.includes('damage') ||
+      desc.includes('upper hand') ||
+      desc.includes('bonus damage')
+    )
+      rollType = 'damage';
 
-      result = `2d6: [${die1}, ${die2}]`;
-      if (baseModifier !== 0) {
-        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
+    const statusMods = getStatusModifiers(rollType);
+    const totalModifier = baseModifier + statusMods.modifier;
 
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
-      }
+    const roll = rollDiceUtil(dicePart);
+    total = roll + totalModifier;
 
+    result = `${dicePart}: ${roll}`;
+    if (baseModifier !== 0) {
+      result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
+    }
+    if (statusMods.modifier !== 0) {
+      result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+    }
+    result += ` = ${total}`;
+
+    if (statusMods.notes.length > 0) {
+      result += ` (${statusMods.notes.join(', ')})`;
+    }
+
+    if (dicePart === '2d6') {
       if (total >= 10) {
         interpretation = ' ✅ Success!';
         context = getSuccessContext(desc);
@@ -162,29 +168,6 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
         if (autoXpOnMiss) {
           setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         }
-      }
-    } else if (formula.startsWith('d')) {
-      const sides = parseInt(formula.replace('d', '').split('+')[0]);
-      const baseModifier = parseInt(formula.split('+')[1] || '0');
-      const roll = rollDiceUtil(`1d${sides}`);
-
-
-      const rollType = desc.includes('damage') ? 'damage' : 'general';
-      const statusMods = getStatusModifiers(rollType);
-      const totalModifier = baseModifier + statusMods.modifier;
-      total = roll + totalModifier;
-
-      result = `d${sides}: ${roll}`;
-      if (baseModifier !== 0) {
-        result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-      }
-      if (statusMods.modifier !== 0) {
-        result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-      }
-      result += ` = ${total}`;
-
-      if (statusMods.notes.length > 0) {
-        result += ` (${statusMods.notes.join(', ')})`;
       }
     }
 

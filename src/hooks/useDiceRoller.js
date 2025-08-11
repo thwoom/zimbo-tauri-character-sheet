@@ -108,6 +108,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
   };
 
   const rollDice = (formula, description = '') => {
+    const desc = description.toLowerCase();
     let result = '';
     let total = 0;
     let interpretation = '';
@@ -119,17 +120,16 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       const baseModifier = parseInt(formula.replace('2d6', '').replace('+', '') || '0');
 
       let rollType = 'general';
-      if (description.includes('STR') || description.includes('Hack')) rollType = 'str';
-      else if (description.includes('DEX')) rollType = 'dex';
-      else if (description.includes('CON')) rollType = 'con';
-      else if (description.includes('INT')) rollType = 'int';
-      else if (description.includes('WIS')) rollType = 'wis';
-      else if (description.includes('CHA')) rollType = 'cha';
+      if (desc.includes('str') || desc.includes('hack')) rollType = 'str';
+      else if (desc.includes('dex')) rollType = 'dex';
+      else if (desc.includes('con')) rollType = 'con';
+      else if (desc.includes('int')) rollType = 'int';
+      else if (desc.includes('wis')) rollType = 'wis';
+      else if (desc.includes('cha')) rollType = 'cha';
       else if (
-        description.includes('damage') ||
-        description.includes('Damage') ||
-        description.includes('Upper Hand') ||
-        description.includes('Bonus Damage')
+        desc.includes('damage') ||
+        desc.includes('upper hand') ||
+        desc.includes('bonus damage')
       )
         rollType = 'damage';
 
@@ -152,13 +152,13 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
 
       if (total >= 10) {
         interpretation = ' ✅ Success!';
-        context = getSuccessContext(description);
+        context = getSuccessContext(desc);
       } else if (total >= 7) {
         interpretation = ' ⚠️ Partial Success';
-        context = getPartialContext(description);
+        context = getPartialContext(desc);
       } else {
         interpretation = ' ❌ Failure';
-        context = getFailureContext(description);
+        context = getFailureContext(desc);
         if (autoXpOnMiss) {
           setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         }
@@ -169,8 +169,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       const roll = rollDiceUtil(`1d${sides}`);
 
 
-      const rollType =
-        description.includes('damage') || description.includes('Damage') ? 'damage' : 'general';
+      const rollType = desc.includes('damage') ? 'damage' : 'general';
       const statusMods = getStatusModifiers(rollType);
       const totalModifier = baseModifier + statusMods.modifier;
       total = roll + totalModifier;

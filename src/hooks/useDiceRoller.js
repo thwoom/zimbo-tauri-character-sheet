@@ -199,6 +199,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);
     setRollModalData(rollData);
+    setRollResult(rollData.result);
     rollModal.open();
   };
 

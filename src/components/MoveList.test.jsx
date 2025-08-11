@@ -50,4 +50,28 @@ describe('MoveList', () => {
     expect(screen.getByText('Recent Rolls:')).toBeInTheDocument();
     expect(screen.getByText(/2d6: 7/)).toBeInTheDocument();
   });
+
+  it('updates displayed roll result when prop changes', () => {
+    const rollDice = vi.fn();
+    const { rerender } = render(
+      <MoveList
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 9"
+        rollHistory={rollHistory}
+      />,
+    );
+    expect(screen.getByText('Result: 9')).toBeInTheDocument();
+    rerender(
+      <MoveList
+        character={minimalCharacter}
+        rollDice={rollDice}
+        getEquippedWeaponDamage={() => 'd8'}
+        rollResult="Result: 10"
+        rollHistory={rollHistory}
+      />,
+    );
+    expect(screen.getByText('Result: 10')).toBeInTheDocument();
+  });
 });

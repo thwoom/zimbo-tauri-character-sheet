@@ -51,4 +51,15 @@ describe('useDiceRoller contexts', () => {
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
   });
+
+  it('updates rollResult with latest roll', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    act(() => {
+      result.current.rollDice('d4', 'test');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollResult).toBe('d4: 1 = 1');
+  });
 });

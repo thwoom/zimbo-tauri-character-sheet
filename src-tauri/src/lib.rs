@@ -1,13 +1,33 @@
 use std::fs;
+use std::path::{Component, Path, PathBuf};
+use tauri::api::path::app_data_dir;
+
+fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
+    let relative = Path::new(path);
+    if relative.is_absolute()
+        || relative
+            .components()
+            .any(|c| matches!(c, Component::ParentDir))
+    {
+        return Err("invalid path: outside of application data directory".to_string());
+    }
+
+    let mut base =
+        app_data_dir().ok_or_else(|| "failed to resolve application data directory".to_string())?;
+    base.push(relative);
+    Ok(base)
+}
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn write_file(path: &str, contents: &str) -> Result<(), String> {
+    let path = resolve_app_path(path)?;
     fs::write(path, contents).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn read_file(path: &str) -> Result<String, String> {
+    let path = resolve_app_path(path)?;
     fs::read_to_string(path).map_err(|e| e.to_string())
 }
 

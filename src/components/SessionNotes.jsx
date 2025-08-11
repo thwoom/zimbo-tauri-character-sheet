@@ -1,3 +1,4 @@
+import { invoke } from '@tauri-apps/api/core';
 import styles from './SessionNotes.module.css';
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
@@ -19,6 +20,28 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
           }}
         >
           📅 Timestamp
+        </button>
+        <button
+          className={styles.button}
+          onClick={async () => {
+            await invoke('write_file', {
+              path: 'session_notes.txt',
+              contents: sessionNotes,
+            });
+          }}
+        >
+          💾 Save
+        </button>
+        <button
+          className={styles.button}
+          onClick={async () => {
+            const contents = await invoke('read_file', {
+              path: 'session_notes.txt',
+            }).catch(() => '');
+            setSessionNotes(contents);
+          }}
+        >
+          📂 Load
         </button>
         <button
           className={`${styles.button} ${styles.danger}`}

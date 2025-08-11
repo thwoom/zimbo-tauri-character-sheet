@@ -13,6 +13,7 @@ import { panelStyle, buttonStyle } from './components/styles.js';
 import useModal from './hooks/useModal';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
+import { invoke } from '@tauri-apps/api/core';
 
 function App() {
   const { character, setCharacter } = useCharacter();
@@ -51,6 +52,11 @@ function App() {
       setLevelUpState((prev) => ({ ...prev, newLevel: character.level + 1 }));
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
+
+  // Log operating system information
+  useEffect(() => {
+    invoke('get_os').then((info) => console.log('Running on', info));
+  }, []);
 
   // Utility Functions
   const rollDie = (sides) => Math.floor(Math.random() * sides) + 1;
@@ -602,22 +608,22 @@ function App() {
             )}
           </div>
 
-            {/* Quick Inventory Panel */}
-            <InventoryPanel
-              character={character}
-              setCharacter={setCharacter}
-              rollDie={rollDie}
-              setRollResult={setRollResult}
-            />
+          {/* Quick Inventory Panel */}
+          <InventoryPanel
+            character={character}
+            setCharacter={setCharacter}
+            rollDie={rollDie}
+            setRollResult={setRollResult}
+          />
 
-            {/* Session Notes Panel */}
+          {/* Session Notes Panel */}
 
-            <SessionNotes
-              sessionNotes={sessionNotes}
-              setSessionNotes={setSessionNotes}
-              compactMode={compactMode}
-              setCompactMode={setCompactMode}
-            />
+          <SessionNotes
+            sessionNotes={sessionNotes}
+            setSessionNotes={setSessionNotes}
+            compactMode={compactMode}
+            setCompactMode={setCompactMode}
+          />
         </div>
       </div>
 

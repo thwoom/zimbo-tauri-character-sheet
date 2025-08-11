@@ -22,6 +22,10 @@ fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
 #[tauri::command]
 fn write_file(path: &str, contents: &str) -> Result<(), String> {
     let path = resolve_app_path(path)?;
+    let parent = path
+        .parent()
+        .ok_or_else(|| "failed to determine parent directory".to_string())?;
+    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     fs::write(path, contents).map_err(|e| e.to_string())
 }
 

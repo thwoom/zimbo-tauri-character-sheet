@@ -120,6 +120,8 @@ const CharacterStats = ({
   autoXpOnMiss,
   setAutoXpOnMiss,
   setRollResult,
+  setSessionNotes,
+  clearRollHistory,
 }) => {
   return (
     <div style={panelStyle}>
@@ -315,6 +317,8 @@ const CharacterStats = ({
               advGear: 5,
             },
           }));
+          setSessionNotes('');
+          clearRollHistory();
           setRollResult('🔄 All resources restored!');
         }}
         style={resetButtonStyle}

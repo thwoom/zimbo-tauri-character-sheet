@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import './InventoryModal.css';
 
@@ -43,6 +44,14 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
       </div>
     </div>
   );
+};
+
+InventoryModal.propTypes = {
+  inventory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onEquip: PropTypes.func.isRequired,
+  onConsume: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default InventoryModal;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
@@ -109,3 +110,9 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
     </div>
   );
 }
+
+EndSessionModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onLevelUp: PropTypes.func.isRequired,
+};

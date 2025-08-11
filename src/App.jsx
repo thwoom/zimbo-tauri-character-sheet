@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
@@ -8,6 +8,8 @@ import SessionNotes from './components/SessionNotes.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
+import useStatusEffects from './hooks/useStatusEffects.js';
+import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import styles from './styles/AppStyles.module.css';
@@ -59,85 +61,20 @@ function App() {
     }
   }, [sessionNotes]);
 
-  // Undo System
-  const timeoutRef = useRef(null);
+  const { actionHistory, saveToHistory, undoLastAction } = useUndo(
+    character,
+    setCharacter,
+    setRollResult,
+  );
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  const saveToHistory = (action) => {
-    setCharacter((prev) => ({
-      ...prev,
-      actionHistory: [
-        { action, state: structuredClone(prev), timestamp: Date.now() },
-        ...prev.actionHistory.slice(0, 4),
-      ],
-    }));
-  };
-
-  const undoLastAction = () => {
-    if (character.actionHistory.length > 0) {
-      const lastAction = character.actionHistory[0];
-      setCharacter(structuredClone(lastAction.state));
-      setRollResult(`↶ Undid: ${lastAction.action}`);
-      timeoutRef.current = setTimeout(() => setRollResult('Ready to roll!'), 2000);
-    }
-  };
-
-  // Visual effects based on status
-  const statusEffectClassMap = {
-    poisoned: 'poisoned-overlay',
-    burning: 'burning-overlay',
-    shocked: 'shocked-overlay',
-    frozen: 'frozen-overlay',
-    blessed: 'blessed-overlay',
-  };
-
-  const getActiveVisualEffects = () => {
-    for (const [effect, cssClass] of Object.entries(statusEffectClassMap)) {
-      if (character.statusEffects.includes(effect)) {
-        return cssClass;
-      }
-    }
-    return '';
-  };
-
-  const handleToggleStatusEffect = (effect) => {
-    setCharacter((prev) => ({
-      ...prev,
-      statusEffects: prev.statusEffects.includes(effect)
-        ? prev.statusEffects.filter((e) => e !== effect)
-        : [...prev.statusEffects, effect],
-    }));
-  };
-
-  const handleToggleDebility = (debility) => {
-    setCharacter((prev) => ({
-      ...prev,
-      debilities: prev.debilities.includes(debility)
-        ? prev.debilities.filter((d) => d !== debility)
-        : [...prev.debilities, debility],
-    }));
-  };
-
-  const getHeaderColor = () => {
-    if (character.statusEffects.includes('poisoned'))
-      return 'linear-gradient(45deg, #22c55e, #059669, #00d4aa)';
-    if (character.statusEffects.includes('burning'))
-      return 'linear-gradient(45deg, #ef4444, #f97316, #fbbf24)';
-    if (character.statusEffects.includes('shocked'))
-      return 'linear-gradient(45deg, #3b82f6, #eab308, #00d4aa)';
-    if (character.statusEffects.includes('frozen'))
-      return 'linear-gradient(45deg, #06b6d4, #3b82f6, #6366f1)';
-    if (character.statusEffects.includes('blessed'))
-      return 'linear-gradient(45deg, #fbbf24, #f59e0b, #00d4aa)';
-    return 'linear-gradient(45deg, #6366f1, #8b5cf6, #00d4aa)';
-  };
+  const {
+    statusEffects,
+    debilities,
+    getActiveVisualEffects,
+    getHeaderColor,
+    toggleStatusEffect,
+    toggleDebility,
+  } = useStatusEffects(character, setCharacter);
 
   // Styles moved to CSS modules
 
@@ -185,7 +122,7 @@ function App() {
                 onClick={() => setShowStatusModal(true)}
                 className={`${styles.button} ${styles.statusButton}`}
               >
-                💀 Effects ({character.statusEffects.length + character.debilities.length})
+                💀 Effects ({statusEffects.length + debilities.length})
               </button>
               <button
                 onClick={() => setShowInventoryModal(true)}
@@ -267,8 +204,8 @@ function App() {
         setShowStatusModal={setShowStatusModal}
         statusEffectTypes={statusEffectTypes}
         debilityTypes={debilityTypes}
-        handleToggleStatusEffect={handleToggleStatusEffect}
-        handleToggleDebility={handleToggleDebility}
+        handleToggleStatusEffect={toggleStatusEffect}
+        handleToggleDebility={toggleDebility}
         showDamageModal={showDamageModal}
         setShowDamageModal={setShowDamageModal}
         showInventoryModal={showInventoryModal}

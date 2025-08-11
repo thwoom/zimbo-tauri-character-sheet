@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
@@ -69,3 +70,8 @@ export default function DamageModal({ isOpen, onClose }) {
     </div>
   );
 }
+
+DamageModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

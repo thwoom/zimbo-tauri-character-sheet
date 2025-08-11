@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { debilityTypes } from '../state/character';
-import { rollDie, rollDice as rollDiceUtil } from '../utils/dice.js';
+import * as diceUtils from '../utils/dice.js';
+import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
 export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
-    const saved = localStorage.getItem('rollHistory');
+    const saved = safeLocalStorage.getItem('rollHistory');
     if (!saved) return [];
     try {
       return JSON.parse(saved);
@@ -20,9 +21,9 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
 
   useEffect(() => {
     if (rollHistory.length > 0) {
-      localStorage.setItem('rollHistory', JSON.stringify(rollHistory));
+      safeLocalStorage.setItem('rollHistory', JSON.stringify(rollHistory));
     } else {
-      localStorage.removeItem('rollHistory');
+      safeLocalStorage.removeItem('rollHistory');
     }
   }, [rollHistory]);
 
@@ -117,10 +118,10 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     const match = formula.match(/^(\d*)d(\d+)([+-]\d+)?$/i);
     if (!match) return;
 
-    const diceCount = match[1];
-    const sides = match[2];
+    const diceCount = parseInt(match[1] || '1', 10);
+    const sides = parseInt(match[2], 10);
     const baseModifier = parseInt(match[3] || '0', 10);
-    const dicePart = `${diceCount && diceCount !== '1' ? diceCount : ''}d${sides}`;
+    const dicePart = `${diceCount !== 1 ? diceCount : ''}d${sides}`;
 
     let rollType = 'general';
     if (desc.includes('str') || desc.includes('hack')) rollType = 'str';
@@ -139,7 +140,10 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     const statusMods = getStatusModifiers(rollType);
     const totalModifier = baseModifier + statusMods.modifier;
 
-    const roll = rollDiceUtil(dicePart);
+    let roll = 0;
+    for (let i = 0; i < diceCount; i += 1) {
+      roll += diceUtils.rollDie(sides);
+    }
     total = roll + totalModifier;
 
     result = `${dicePart}: ${roll}`;
@@ -192,7 +196,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     rollDice,
     rollModal,
     rollModalData,
-    rollDie,
+    rollDie: diceUtils.rollDie,
     clearRollHistory: () => setRollHistory([]),
   };
 }

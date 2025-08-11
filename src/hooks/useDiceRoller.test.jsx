@@ -1,7 +1,6 @@
 /* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
-import * as diceUtils from '../utils/dice.js';
 import useDiceRoller from './useDiceRoller.js';
 
 describe('useDiceRoller contexts', () => {
@@ -21,34 +20,34 @@ describe('useDiceRoller contexts', () => {
   ])('returns correct success context for %s', (desc, expected) => {
     localStorage.clear();
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
-    const rollDieSpy = vi.spyOn(diceUtils, 'rollDie').mockReturnValue(6);
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     act(() => {
       result.current.rollDice('2d6', desc);
     });
-    rollDieSpy.mockRestore();
+    randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe(expected);
   });
 
   it('returns correct partial context for HaCk', () => {
     localStorage.clear();
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
-    const rollDieSpy = vi.spyOn(diceUtils, 'rollDie');
-    rollDieSpy.mockReturnValueOnce(3).mockReturnValueOnce(4);
+    const randomSpy = vi.spyOn(Math, 'random');
+    randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     act(() => {
       result.current.rollDice('2d6', 'HaCk');
     });
-    rollDieSpy.mockRestore();
+    randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('Hit them, but they hit you back!');
   });
 
   it('returns correct failure context for taunt', () => {
     localStorage.clear();
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
-    const rollDieSpy = vi.spyOn(diceUtils, 'rollDie').mockReturnValue(1);
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'taunt');
     });
-    rollDieSpy.mockRestore();
+    randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
   });
 
@@ -104,5 +103,37 @@ describe('useDiceRoller mixed-case status modifiers', () => {
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.result).toMatch(/Weakened \(-1 damage\)/);
+  });
+});
+
+describe('useDiceRoller safe localStorage handling', () => {
+  const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
+  const setCharacter = () => {};
+  const original = global.localStorage;
+
+  afterEach(() => {
+    global.localStorage = original;
+  });
+
+  it('initializes with empty history when localStorage is undefined', () => {
+    global.localStorage = undefined;
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    expect(result.current.rollHistory).toEqual([]);
+  });
+
+  it('initializes with empty history when localStorage throws', () => {
+    global.localStorage = {
+      getItem() {
+        throw new Error('fail');
+      },
+      setItem() {
+        throw new Error('fail');
+      },
+      removeItem() {
+        throw new Error('fail');
+      },
+    };
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    expect(result.current.rollHistory).toEqual([]);
   });
 });

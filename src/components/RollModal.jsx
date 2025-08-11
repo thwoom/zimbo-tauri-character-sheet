@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './RollModal.module.css';
 
@@ -26,3 +27,13 @@ export default function RollModal({ isOpen, data, onClose }) {
     </div>
   );
 }
+
+RollModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  data: PropTypes.object,
+  onClose: PropTypes.func.isRequired,
+};
+
+RollModal.defaultProps = {
+  data: null,
+};

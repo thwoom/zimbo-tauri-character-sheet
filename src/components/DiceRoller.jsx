@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import RollModal from './RollModal.jsx';
 import { panelStyle, buttonStyle } from './styles.js';
@@ -143,5 +144,19 @@ const DiceRoller = ({
     <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
   </>
 );
+DiceRoller.propTypes = {
+  character: PropTypes.shape({
+    stats: PropTypes.object.isRequired,
+  }).isRequired,
+  rollDice: PropTypes.func.isRequired,
+  rollResult: PropTypes.string.isRequired,
+  rollHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  equippedWeaponDamage: PropTypes.string.isRequired,
+  rollModal: PropTypes.shape({
+    isOpen: PropTypes.bool.isRequired,
+    close: PropTypes.func.isRequired,
+  }).isRequired,
+  rollModalData: PropTypes.object.isRequired,
+};
 
 export default DiceRoller;

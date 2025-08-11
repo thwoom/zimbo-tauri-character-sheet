@@ -54,6 +54,9 @@ npm run tauri build
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is available under a custom non-commercial license. You may use,
+modify, and distribute the software for non-commercial purposes. Commercial use
+requires prior written permission from Zimbo. See the [LICENSE](LICENSE) file
+for details.
 
 ## SMOKE TEST

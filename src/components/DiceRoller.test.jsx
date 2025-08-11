@@ -22,7 +22,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
@@ -43,7 +43,7 @@ describe('DiceRoller', () => {
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
@@ -58,22 +58,26 @@ describe('DiceRoller', () => {
   it('updates displayed roll result when prop changes', () => {
     const rollDice = vi.fn();
     const { rerender } = render(
-      <MoveList
+      <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 9"
         rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
       />,
     );
     expect(screen.getByText('Result: 9')).toBeInTheDocument();
     rerender(
-      <MoveList
+      <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
-        getEquippedWeaponDamage={() => 'd8'}
+        equippedWeaponDamage="d8"
         rollResult="Result: 10"
         rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
       />,
     );
     expect(screen.getByText('Result: 10')).toBeInTheDocument();

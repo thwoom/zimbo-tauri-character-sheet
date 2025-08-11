@@ -115,7 +115,7 @@ const CharacterStats = ({
   character,
   setCharacter,
   saveToHistory,
-  getTotalArmor,
+  totalArmor,
   setShowLevelUpModal,
   autoXpOnMiss,
   setAutoXpOnMiss,
@@ -150,7 +150,7 @@ const CharacterStats = ({
         />
       </div>
       <div style={centerTextStyle}>
-        HP: {character.hp}/{character.maxHp} | Armor: {getTotalArmor()}
+        HP: {character.hp}/{character.maxHp} | Armor: {totalArmor}
       </div>
       <div style={controlsStyle}>
         <button

@@ -66,7 +66,50 @@ describe('CharacterStats', () => {
 
   it('disables chrono-retcon button when no uses left', () => {
     renderComponent();
-    const chronoButton = screen.getByRole('button', { name: /Chrono-Retcon/i });
+    const chronoButton = screen.getByRole('button', { name: /Use Chrono-Retcon/i });
     expect(chronoButton).toBeDisabled();
+  });
+
+  it('adjusts chrono-retcon uses with clamping', async () => {
+    const user = userEvent.setup();
+    const setCharacter = vi.fn();
+    const initialCharacter = makeCharacter({
+      resources: {
+        chronoUses: 1,
+        paradoxPoints: 0,
+        bandages: 1,
+        rations: 1,
+        advGear: 1,
+      },
+    });
+    renderComponent({ character: initialCharacter, setCharacter });
+
+    const incButton = screen.getByLabelText('Increase Chrono-Retcon');
+    const decButton = screen.getByLabelText('Decrease Chrono-Retcon');
+
+    await user.click(incButton); // 1 -> 2
+    let updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
+    let state = updateFn(initialCharacter);
+    expect(state.resources.chronoUses).toBe(2);
+
+    await user.click(incButton); // Clamp at 2
+    updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
+    state = updateFn(state);
+    expect(state.resources.chronoUses).toBe(2);
+
+    await user.click(decButton); // 2 -> 1
+    updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
+    state = updateFn(state);
+    expect(state.resources.chronoUses).toBe(1);
+
+    await user.click(decButton); // 1 -> 0
+    updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
+    state = updateFn(state);
+    expect(state.resources.chronoUses).toBe(0);
+
+    await user.click(decButton); // Clamp at 0
+    updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
+    state = updateFn(state);
+    expect(state.resources.chronoUses).toBe(0);
   });
 });

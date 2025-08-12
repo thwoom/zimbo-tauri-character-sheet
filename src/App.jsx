@@ -5,6 +5,7 @@ import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
 import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
+import Settings from './components/Settings.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
@@ -139,6 +140,7 @@ function App() {
               >
                 💾 Export/Save
               </button>
+              <Settings />
             </div>
           </div>
         </div>

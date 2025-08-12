@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
+import { ThemeProvider } from './state/ThemeContext.jsx';
 
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {
@@ -14,9 +15,11 @@ describe('App level up auto-detection', () => {
       const [character, setChar] = React.useState(initialCharacter);
       setCharacter = setChar;
       return (
-        <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -45,9 +48,11 @@ describe('XP gain on miss', () => {
     const Wrapper = ({ children }) => {
       const [character, setCharacter] = React.useState(initialCharacter);
       return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -76,9 +81,11 @@ describe('XP gain on miss', () => {
     const Wrapper = ({ children }) => {
       const [character, setCharacter] = React.useState(initialCharacter);
       return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -109,9 +116,11 @@ describe.skip('localStorage persistence', () => {
   const Wrapper = ({ children }) => {
     const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
     return (
-      <CharacterContext.Provider value={{ character, setCharacter }}>
-        {children}
-      </CharacterContext.Provider>
+      <ThemeProvider>
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      </ThemeProvider>
     );
   };
 

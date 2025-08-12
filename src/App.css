@@ -9,8 +9,8 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  color: #e0e0e0;
+  background: var(--background);
+  color: var(--text-color);
   overflow-x: hidden;
 }
 

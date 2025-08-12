@@ -41,14 +41,14 @@
 }
 
 .statusLabel {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .statusButton {
   background: linear-gradient(45deg, var(--color-warning), var(--color-warning-dark));
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: var(--color-white);
   padding: 5px 10px;
   cursor: pointer;
   margin-top: 10px;

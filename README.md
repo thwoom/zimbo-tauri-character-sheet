@@ -26,6 +26,21 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 npm install
 ```
 
+### Install git hooks
+
+This project uses [pre-commit](https://pre-commit.com/) to run linters, formatters,
+and tests on each commit. After installing dependencies, set up the hooks with:
+
+```bash
+pre-commit install
+```
+
+Run all checks manually at any time with:
+
+```bash
+pre-commit run --all-files
+```
+
 ### Run in development
 
 ```bash
@@ -66,9 +81,13 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 
 ## Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup, linting, and testing instructions.
+
 1. Fork the repository.
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
+
+For AI-assisted development guidelines, see [docs/codex.md](docs/codex.md).
 
 ## License
 

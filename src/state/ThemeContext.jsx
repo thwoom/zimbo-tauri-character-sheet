@@ -7,12 +7,18 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || DEFAULT_THEME);
 
   useEffect(() => {
-    const themeVars = THEMES[theme];
-    if (themeVars) {
-      Object.entries(themeVars).forEach(([key, value]) => {
+    const allVars = new Set();
+    Object.values(THEMES).forEach((vars) => {
+      Object.keys(vars).forEach((key) => allVars.add(key));
+    });
+
+    allVars.forEach((key) => {
+      const value = THEMES[theme][key];
+      if (value !== undefined) {
         document.documentElement.style.setProperty(key, value);
-      });
-    }
+      }
+    });
+
     localStorage.setItem('theme', theme);
   }, [theme]);
 

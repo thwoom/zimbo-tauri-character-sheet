@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { FaDiceD20 } from 'react-icons/fa6';
 import RollModal from './RollModal.jsx';
 import { panelStyle, buttonStyle } from './styles.js';
 
@@ -14,7 +15,18 @@ const DiceRoller = ({
 }) => (
   <>
     <div style={panelStyle}>
-      <h3 style={{ color: '#00ff88', marginBottom: '15px', fontSize: '1.3rem' }}>🎲 Dice Roller</h3>
+      <h3
+        style={{
+          color: '#00ff88',
+          marginBottom: '15px',
+          fontSize: '1.3rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+        }}
+      >
+        <FaDiceD20 /> Dice Roller
+      </h3>
 
       {/* Stat Check Buttons */}
       <div style={{ marginBottom: '15px' }}>

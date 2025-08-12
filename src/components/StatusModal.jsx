@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import './StatusModal.css';
+import { FaRadiation } from 'react-icons/fa6';
 
 const StatusModal = ({
   statusEffects,
@@ -14,7 +15,9 @@ const StatusModal = ({
   return (
     <div className="status-overlay">
       <div className="status-modal">
-        <h2 className="status-title">💀 Status & Debilities</h2>
+        <h2 className="status-title">
+          <FaRadiation style={{ marginRight: '4px' }} /> Status & Debilities
+        </h2>
         <div>
           <h3 className="status-subtitle">Status Effects</h3>
           <ul className="status-list">

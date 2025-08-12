@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import './InventoryModal.css';
+import { FaBoxOpen } from 'react-icons/fa6';
 
 const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
   return (
     <div className="inventory-overlay">
       <div className="inventory-modal">
-        <h2 className="inventory-title">🎒 Inventory</h2>
+        <h2 className="inventory-title">
+          <FaBoxOpen style={{ marginRight: '4px' }} /> Inventory
+        </h2>
         {inventory.length === 0 ? (
           <p className="inventory-empty">No items</p>
         ) : (

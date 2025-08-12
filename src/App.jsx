@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import {
+  FaClock,
+  FaMeteor,
+  FaRadiation,
+  FaBoxOpen,
+  FaUserAstronaut,
+  FaSatellite,
+  FaArrowRotateLeft,
+} from 'react-icons/fa6';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
@@ -97,20 +106,25 @@ function App() {
         <div className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
             <div>
-              <h1 className={styles.title}>🧾 ZIMBO – The Time-Bound Juggernaut</h1>
+              <h1 className={styles.title}>
+                <FaClock className={styles.icon} /> ZIMBO – The Time-Bound Juggernaut
+              </h1>
               <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 {character.statusEffects.length > 0 && (
                   <div className={styles.statusEffectsContainer}>
-                    {character.statusEffects.map((effect) => (
-                      <span
-                        key={effect}
-                        title={statusEffectTypes[effect]?.name}
-                        className={styles.statusEffectIcon}
-                      >
-                        {statusEffectTypes[effect]?.icon}
-                      </span>
-                    ))}
+                    {character.statusEffects.map((effect) => {
+                      const Icon = statusEffectTypes[effect]?.icon;
+                      return (
+                        <span
+                          key={effect}
+                          title={statusEffectTypes[effect]?.name}
+                          className={styles.statusEffectIcon}
+                        >
+                          {Icon && <Icon />}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -122,37 +136,39 @@ function App() {
                 className={`${styles.button} ${styles.undoButton}`}
                 title="Undo last action"
               >
-                ↶ Undo
+                <FaArrowRotateLeft className={styles.icon} /> Undo
               </button>
               <button
                 onClick={() => setShowDamageModal(true)}
                 className={`${styles.button} ${styles.damageButton}`}
               >
-                💔 Take Damage
+                <FaMeteor className={styles.icon} /> Take Damage
               </button>
               <button
                 onClick={() => setShowStatusModal(true)}
                 className={`${styles.button} ${styles.statusButton}`}
               >
-                💀 Effects ({statusEffects.length + debilities.length})
+                <FaRadiation className={styles.icon} /> Effects (
+                {statusEffects.length + debilities.length})
               </button>
               <button
                 onClick={() => setShowInventoryModal(true)}
                 className={`${styles.button} ${styles.inventoryButton}`}
               >
-                🎒 Inventory
+                <FaBoxOpen className={styles.icon} /> Inventory
               </button>
               <button
                 onClick={bondsModal.open}
                 className={`${styles.button} ${styles.bondsButton}`}
               >
-                👥 Bonds ({character.bonds.filter((b) => !b.resolved).length})
+                <FaUserAstronaut className={styles.icon} /> Bonds (
+                {character.bonds.filter((b) => !b.resolved).length})
               </button>
               <button
                 onClick={() => setShowExportModal(true)}
                 className={`${styles.button} ${styles.exportButton}`}
               >
-                💾 Export/Save
+                <FaSatellite className={styles.icon} /> Export/Save
               </button>
             </div>
           </div>

@@ -12,8 +12,8 @@
 }
 
 .modal {
-  background: #1a1a2e;
-  border: 2px solid #00ff88;
+  background: var(--color-modal-bg);
+  border: 2px solid var(--color-neon);
   border-radius: 15px;
   padding: 30px;
   text-align: center;
@@ -21,26 +21,26 @@
 }
 
 .title {
-  color: #00ff88;
+  color: var(--color-neon);
 }
 
 .info {
   margin: 15px 0;
-  color: #fff;
+  color: var(--color-white);
 }
 
 .input {
-  background: #0f0f1f;
-  border: 1px solid #00ff88;
+  background: var(--color-modal-bg-dark);
+  border: 1px solid var(--color-neon);
   border-radius: 6px;
-  color: white;
+  color: var(--color-white);
   padding: 8px;
   width: 100%;
   margin-bottom: 10px;
 }
 
 .summary {
-  color: #aaa;
+  color: var(--color-gray-350);
   margin-bottom: 20px;
 }
 
@@ -50,10 +50,10 @@
 }
 
 .button {
-  background: linear-gradient(45deg, #00ff88, #00cc6a);
+  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
   border: none;
   border-radius: 6px;
-  color: white;
+  color: var(--color-white);
   padding: 8px 15px;
   cursor: pointer;
   font-weight: bold;
@@ -62,5 +62,5 @@
 }
 
 .applyButton {
-  background: linear-gradient(45deg, #ef4444, #dc2626);
+  background: linear-gradient(45deg, var(--color-danger), var(--color-danger-dark));
 }

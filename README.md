@@ -50,6 +50,16 @@ npm test
 npm run tauri build
 ```
 
+The command above bundles the application and produces platform-specific installers in
+`src-tauri/target/release/bundle/<platform>/`.
+
+1. Run the installer for your operating system (e.g., `.msi`, `.dmg`, `.AppImage`/`.deb`) and follow the prompts.
+2. Launch the installed application and confirm the main window appears. Try creating or loading a character and rolling dice to verify basic functionality.
+
+Logs are written to OS-specific locations such as `~/.local/share/zimbo-panel/logs` on Linux, `~/Library/Logs/zimbo-panel` on macOS, or `%APPDATA%\zimbo-panel\logs` on Windows. Running the app from a terminal will also display any runtime messages.
+
+If you encounter issues, capture the relevant logs or console output and [open an issue](../../issues) describing the problem.
+
 ## Screenshots
 
 _Add screenshots or GIFs demonstrating character stats, dice roller, and inventory panels._
@@ -60,8 +70,6 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
-
 ## License
-
 
 This project is licensed under a custom Non-Commercial License; commercial use requires prior written permission. See [LICENSE](LICENSE) for details.

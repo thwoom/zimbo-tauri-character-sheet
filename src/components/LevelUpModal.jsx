@@ -48,14 +48,6 @@ const LevelUpModal = ({
     return () => node.removeEventListener('keydown', handleTabTrap);
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
   // Helper functions
   const canIncreaseTwo = () => {
     const validStats = Object.entries(character.stats)

@@ -16,7 +16,7 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) and npm
+- [Node.js](https://nodejs.org/) >=20 and npm
 - [Rust](https://www.rust-lang.org/tools/install) and Cargo
 - Tauri CLI (`npm install` or `cargo install tauri-cli`)
 
@@ -60,8 +60,6 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
-
 ## License
-
 
 This project is licensed under a custom Non-Commercial License; commercial use requires prior written permission. See [LICENSE](LICENSE) for details.

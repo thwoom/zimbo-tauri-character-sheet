@@ -79,6 +79,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     if (description.includes('cha')) return 'Surprisingly charming for a cyber-barbarian!';
     if (description.includes('hack')) return "Clean hit, enemy can't counter!";
     if (description.includes('taunt')) return "They're completely focused on you now!";
+    if (description.includes('upper hand')) return 'Extra brutal damage with the upper hand!';
     return 'Perfect execution!';
   };
 
@@ -92,6 +93,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     if (description.includes('cha')) return 'Awkward interaction, mixed signals';
     if (description.includes('hack')) return 'Hit them, but they hit you back!';
     if (description.includes('taunt')) return 'They attack you but with +1 ongoing damage!';
+    if (description.includes('upper hand')) return 'Deal damage, but lose the upper hand!';
     return 'Success with complications';
   };
 
@@ -105,6 +107,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     if (description.includes('cha')) return 'Offensive, rude, or make things worse';
     if (description.includes('hack')) return 'Miss entirely, terrible position';
     if (description.includes('taunt')) return 'They ignore you completely';
+    if (description.includes('upper hand')) return 'Upper hand slips away completely!';
     return 'Things go badly';
   };
 

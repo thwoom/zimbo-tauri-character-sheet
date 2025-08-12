@@ -16,6 +16,7 @@ describe('useDiceRoller contexts', () => {
     ['cHa', 'Surprisingly charming for a cyber-barbarian!'],
     ['hack', "Clean hit, enemy can't counter!"],
     ['TAUNT', "They're completely focused on you now!"],
+    ['upper hand', 'Extra brutal damage with the upper hand!'],
     ['unknown', 'Perfect execution!'],
   ])('returns correct success context for %s', (desc, expected) => {
     localStorage.clear();
@@ -40,6 +41,18 @@ describe('useDiceRoller contexts', () => {
     expect(result.current.rollModalData.context).toBe('Hit them, but they hit you back!');
   });
 
+  it('returns correct partial context for upper hand', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const randomSpy = vi.spyOn(Math, 'random');
+    randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
+    act(() => {
+      result.current.rollDice('2d6', 'upper hand');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollModalData.context).toBe('Deal damage, but lose the upper hand!');
+  });
+
   it('returns correct failure context for taunt', () => {
     localStorage.clear();
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
@@ -51,6 +64,17 @@ describe('useDiceRoller contexts', () => {
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
   });
 
+  it('returns correct failure context for upper hand', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    act(() => {
+      result.current.rollDice('2d6', 'upper hand');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollModalData.context).toBe('Upper hand slips away completely!');
+  });
+
   it('updates rollResult with latest roll', () => {
     localStorage.clear();
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
@@ -60,6 +84,17 @@ describe('useDiceRoller contexts', () => {
     });
     randomSpy.mockRestore();
     expect(result.current.rollResult).toBe('d4: 1 = 1');
+  });
+
+  it('retains the original description in rollModalData', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
+    act(() => {
+      result.current.rollDice('2d6', 'Upper Hand');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollModalData.description).toBe('Upper Hand');
   });
 });
 

@@ -25,10 +25,24 @@
 
   --color-blue: #4f6db8;
   --color-blue-dark: #324f99;
+  --color-blue-light: #6b8ed6;
 
   --color-green: #4ab381;
   --color-green-dark: #3a8f66;
   --color-green-rgb: 74, 179, 129;
+
+  --color-danger: var(--color-red);
+  --color-danger-dark: var(--color-red-dark);
+  --color-amber: var(--color-orange);
+  --color-amber-dark: var(--color-orange-dark);
+  --color-warning: #fbbf24;
+  --color-warning-dark: #d97706;
+  --color-success: var(--color-green);
+  --color-success-dark: var(--color-green-dark);
+  --color-gray: var(--color-gray-400);
+  --color-gray-dark: var(--color-gray-600);
+  --color-info: var(--color-blue);
+  --color-info-dark: var(--color-blue-dark);
 
   --overlay-poison: rgba(var(--color-accent-rgb), 0.1);
   --overlay-burning: rgba(var(--color-red-rgb), 0.15);
@@ -42,6 +56,7 @@
   --panel-bg: rgba(255, 255, 255, 0.1);
   --panel-border: rgba(var(--color-accent-rgb), 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.3);
+  --color-bg-primary: var(--panel-bg);
 
   --glow-shadow: rgba(var(--color-accent-rgb), 0.3);
   --glow-shadow-strong: rgba(var(--color-accent-rgb), 0.6);

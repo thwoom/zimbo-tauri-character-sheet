@@ -43,4 +43,26 @@ describe('InventoryPanel', () => {
     expect(screen.getByText(/Active Debilities:/i)).toBeInTheDocument();
     expect(screen.getByText(/Weak/)).toBeInTheDocument();
   });
+
+  it('renders item descriptions', () => {
+    const character = {
+      inventory: [
+        {
+          id: 1,
+          name: 'Sword',
+          description: 'A sharp blade',
+        },
+      ],
+      debilities: [],
+    };
+    render(
+      <InventoryPanel
+        character={character}
+        setCharacter={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+      />,
+    );
+    expect(screen.getByText('A sharp blade')).toBeInTheDocument();
+  });
 });

@@ -7,8 +7,6 @@ const CharacterStats = ({
   saveToHistory,
   totalArmor,
   setShowLevelUpModal,
-  autoXpOnMiss,
-  setAutoXpOnMiss,
   setRollResult,
   setSessionNotes,
   clearRollHistory,
@@ -85,14 +83,6 @@ const CharacterStats = ({
           -1 XP
         </button>
       </div>
-      <label className={styles.autoXpLabel}>
-        <input
-          type="checkbox"
-          checked={autoXpOnMiss}
-          onChange={() => setAutoXpOnMiss((prev) => !prev)}
-        />{' '}
-        Auto XP on Miss
-      </label>
       {import.meta.env.DEV && (
         <button
           onClick={() => setShowLevelUpModal(true)}
@@ -254,8 +244,6 @@ CharacterStats.propTypes = {
   saveToHistory: PropTypes.func.isRequired,
   totalArmor: PropTypes.number.isRequired,
   setShowLevelUpModal: PropTypes.func.isRequired,
-  autoXpOnMiss: PropTypes.bool.isRequired,
-  setAutoXpOnMiss: PropTypes.func.isRequired,
   setRollResult: PropTypes.func.isRequired,
   setSessionNotes: PropTypes.func,
   clearRollHistory: PropTypes.func,

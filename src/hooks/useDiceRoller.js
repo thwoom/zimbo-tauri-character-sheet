@@ -4,7 +4,7 @@ import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
-export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
+export default function useDiceRoller(character, setCharacter) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
@@ -173,9 +173,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(desc);
-        if (autoXpOnMiss) {
-          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-        }
+        setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         if (window.confirm('Did you get help?')) {
           originalResult = result + interpretation;
           let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
@@ -206,6 +204,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
           } else {
             interpretation = ' ❌ Failure';
             context = getFailureContext(desc);
+            setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
           }
         }
       }

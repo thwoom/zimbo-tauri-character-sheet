@@ -106,9 +106,7 @@ function App() {
         <div className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
             <div>
-              <h1 className={styles.title}>
-                <FaClock className={styles.icon} /> ZIMBO – The Time-Bound Juggernaut
-              </h1>
+              <h1 className={styles.title}>ZIMBO – The Time-Bound Juggernaut</h1>
               <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 {character.statusEffects.length > 0 && (

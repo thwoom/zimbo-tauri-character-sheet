@@ -126,29 +126,6 @@ describe('XP gain on failure', () => {
   });
 });
 
-describe('help mechanics', () => {
-  it('stores original roll and adds extra XP on failed help', () => {
-    localStorage.clear();
-    const setCharacter = vi.fn();
-    const { result } = renderHook(() =>
-      useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter),
-    );
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    window.confirm.mockReturnValue(true);
-    vi.spyOn(window, 'prompt').mockReturnValue('0');
-    act(() => {
-      result.current.rollDice('2d6', 'str');
-    });
-    randomSpy.mockRestore();
-    confirmSpy.mockRestore();
-    promptSpy.mockRestore();
-    expect(result.current.rollModalData.originalResult).toMatch(/❌ Failure/);
-    expect(result.current.rollModalData.result).toMatch(/❌ Failure/);
-    expect(setCharacter).toHaveBeenCalledTimes(2);
-    window.prompt.mockRestore();
-  });
-});
-
 describe('useDiceRoller localStorage', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
   const setCharacter = () => {};

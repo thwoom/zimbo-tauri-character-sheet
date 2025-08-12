@@ -1,8 +1,48 @@
+/* global autoXpOnMiss */
 import { useState, useEffect } from 'react';
 import { debilityTypes } from '../state/character';
 import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
+
+const buildResultString = (mods, total, notes = []) => {
+  const [base, ...rest] = mods;
+  let result = base;
+  rest.forEach((mod) => {
+    if (mod !== 0) {
+      result += ` ${mod >= 0 ? '+' : ''}${mod}`;
+    }
+  });
+  result += ` = ${total}`;
+  if (notes.length > 0) {
+    result += ` (${notes.join(', ')})`;
+  }
+  return result;
+};
+
+const resolveAidOrInterfere = () => {
+  const type = window.prompt('Aid or Interfere? (a/i)', 'a');
+  if (!type) return { modifier: 0, consequence: false };
+  const isAid = type.toLowerCase().startsWith('a');
+  let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
+  if (Number.isNaN(bond)) bond = 0;
+  bond = Math.max(0, Math.min(3, bond));
+  const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6) + bond;
+  let modifier = 0;
+  let consequence = false;
+  if (helperRoll >= 10) {
+    modifier = isAid ? 1 : -2;
+  } else if (helperRoll >= 7) {
+    modifier = isAid ? 1 : -2;
+    consequence = true;
+  } else {
+    consequence = true;
+  }
+  if (consequence) {
+    window.alert('The helper exposes themselves to danger, retribution, or cost.');
+  }
+  return { modifier, consequence };
+};
 
 export default function useDiceRoller(character, setCharacter) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
@@ -147,24 +187,14 @@ export default function useDiceRoller(character, setCharacter) {
     for (let i = 0; i < diceCount; i += 1) {
       rolls.push(diceUtils.rollDie(sides));
     }
-    let roll = rolls.reduce((sum, r) => sum + r, 0);
-    total = roll + totalModifier;
+    total = rolls.reduce((sum, r) => sum + r, 0) + totalModifier;
 
-    result = `${dicePart}: ${rolls.join(' + ')}`;
-    if (baseModifier !== 0) {
-      result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-    }
-    if (statusMods.modifier !== 0) {
-      result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-    }
-    result += ` = ${total}`;
-
-    if (statusMods.notes.length > 0) {
-      result += ` (${statusMods.notes.join(', ')})`;
-    }
+    const mods = [`${dicePart}: ${rolls.join(' + ')}`, baseModifier, statusMods.modifier];
+    result = buildResultString(mods, total, statusMods.notes);
 
     let originalResult;
     if (dicePart === '2d6') {
+      const isAidMove = desc.includes('aid') || desc.includes('interfere');
       if (total >= 10) {
         interpretation = ' ✅ Success!';
         context = getSuccessContext(desc);
@@ -174,53 +204,22 @@ export default function useDiceRoller(character, setCharacter) {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(desc);
+      }
+
+      if (total < 7 && (typeof autoXpOnMiss === 'undefined' || autoXpOnMiss)) {
         setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
       }
 
-      if (total <= 9 && window.confirm('Did someone Aid or Interfere?')) {
+      if (!isAidMove && window.confirm('Did someone Aid or Interfere?')) {
         originalResult = result + interpretation;
-        const isInterfere = window.confirm('Are they interfering?');
-        let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
-        if (Number.isNaN(bond)) bond = 0;
-        bond = Math.max(0, Math.min(3, bond));
-        const helperRolls = [diceUtils.rollDie(6), diceUtils.rollDie(6)];
-        const helperTotal = helperRolls[0] + helperRolls[1] + bond;
-        let helperMod = 0;
-        let helperNote = '';
-        if (isInterfere) {
-          if (helperTotal >= 10) {
-            helperMod = -2;
-          } else if (helperTotal >= 7) {
-            helperMod = -2;
-            window.alert('Helper Consequences');
-            helperNote = ' (Helper Consequences)';
-          } else {
-            setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-          }
-        } else if (helperTotal >= 10) {
-          helperMod = 1;
-        } else if (helperTotal >= 7) {
-          helperMod = 1;
-          window.alert('Helper Consequences');
-          helperNote = ' (Helper Consequences)';
-        } else {
-          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-        }
+        const { modifier: assistMod, consequence } = resolveAidOrInterfere();
+        if (assistMod !== 0 || consequence) {
+          mods.push(assistMod);
+          total += assistMod;
+          const notes = [...statusMods.notes];
+          if (consequence) notes.push('Helper Consequences');
+          result = buildResultString(mods, total, notes);
 
-        if (helperMod !== 0) {
-          total += helperMod;
-          result = `${dicePart}: ${roll}`;
-          if (baseModifier !== 0) {
-            result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-          }
-          if (statusMods.modifier !== 0) {
-            result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-          }
-          result += ` ${helperMod >= 0 ? '+' : ''}${helperMod} = ${total}`;
-          if (statusMods.notes.length > 0) {
-            result += ` (${statusMods.notes.join(', ')})`;
-          }
-          result += helperNote;
           if (total >= 10) {
             interpretation = ' ✅ Success!';
             context = getSuccessContext(desc);

@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "sync": "bash git-sync-ask.sh",
+    "fix-prs": "node fix-prs.mjs",
     "prepare": "husky"
   },
   "dependencies": {

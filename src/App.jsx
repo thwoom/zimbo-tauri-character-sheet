@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import {
+  FaClock,
+  FaMeteor,
+  FaRadiation,
+  FaBoxOpen,
+  FaUserAstronaut,
+  FaSatellite,
+  FaArrowRotateLeft,
+} from 'react-icons/fa6';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
@@ -31,6 +40,15 @@ function App() {
   const [compactMode, setCompactMode] = useState(false);
   const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
+  const getDefaultLevelUpState = () => ({
+    selectedStats: [],
+    selectedMove: '',
+    hpIncrease: 0,
+    newLevel: character.level + 1,
+    expandedMove: '',
+  });
+  const [levelUpState, setLevelUpState] = useState(getDefaultLevelUpState);
+
   const {
     rollResult,
     setRollResult,
@@ -48,11 +66,17 @@ function App() {
   // Auto-detect level up opportunity
   useEffect(() => {
     if (character.xp >= character.xpNeeded && !showLevelUpModal) {
+      setLevelUpState((prev) => ({ ...prev, newLevel: character.level + 1 }));
       setShowLevelUpModal(true);
-      // ensure next level reflects current character.level
-      // (avoids stale closure if character.level changed)
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
+
+  // Reset level up state when modal closes or level changes
+  useEffect(() => {
+    if (!showLevelUpModal) {
+      setLevelUpState(getDefaultLevelUpState());
+    }
+  }, [showLevelUpModal, character.level]);
 
   // Persist session notes
   useEffect(() => {
@@ -83,20 +107,23 @@ function App() {
         <div className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
             <div>
-              <h1 className={styles.title}>🧾 ZIMBO – The Time-Bound Juggernaut</h1>
+              <h1 className={styles.title}>ZIMBO – The Time-Bound Juggernaut</h1>
               <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 {character.statusEffects.length > 0 && (
                   <div className={styles.statusEffectsContainer}>
-                    {character.statusEffects.map((effect) => (
-                      <span
-                        key={effect}
-                        title={statusEffectTypes[effect]?.name}
-                        className={styles.statusEffectIcon}
-                      >
-                        {statusEffectTypes[effect]?.icon}
-                      </span>
-                    ))}
+                    {character.statusEffects.map((effect) => {
+                      const Icon = statusEffectTypes[effect]?.icon;
+                      return (
+                        <span
+                          key={effect}
+                          title={statusEffectTypes[effect]?.name}
+                          className={styles.statusEffectIcon}
+                        >
+                          {Icon && <Icon />}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -108,37 +135,39 @@ function App() {
                 className={`${styles.button} ${styles.undoButton}`}
                 title="Undo last action"
               >
-                ↶ Undo
+                <FaArrowRotateLeft className={styles.icon} /> Undo
               </button>
               <button
                 onClick={() => setShowDamageModal(true)}
                 className={`${styles.button} ${styles.damageButton}`}
               >
-                💔 Take Damage
+                <FaMeteor className={styles.icon} /> Take Damage
               </button>
               <button
                 onClick={() => setShowStatusModal(true)}
                 className={`${styles.button} ${styles.statusButton}`}
               >
-                💀 Effects ({statusEffects.length + debilities.length})
+                <FaRadiation className={styles.icon} /> Effects (
+                {statusEffects.length + debilities.length})
               </button>
               <button
                 onClick={() => setShowInventoryModal(true)}
                 className={`${styles.button} ${styles.inventoryButton}`}
               >
-                🎒 Inventory
+                <FaBoxOpen className={styles.icon} /> Inventory
               </button>
               <button
                 onClick={bondsModal.open}
                 className={`${styles.button} ${styles.bondsButton}`}
               >
-                👥 Bonds ({character.bonds.filter((b) => !b.resolved).length})
+                <FaUserAstronaut className={styles.icon} /> Bonds (
+                {character.bonds.filter((b) => !b.resolved).length})
               </button>
               <button
                 onClick={() => setShowExportModal(true)}
                 className={`${styles.button} ${styles.exportButton}`}
               >
-                💾 Export/Save
+                <FaSatellite className={styles.icon} /> Export/Save
               </button>
               <Settings />
             </div>
@@ -193,14 +222,8 @@ function App() {
       <GameModals
         character={character}
         setCharacter={setCharacter}
-        levelUpState={{
-          selectedStats: [],
-          selectedMove: '',
-          hpIncrease: 0,
-          newLevel: character.level + 1,
-          expandedMove: '',
-        }}
-        setLevelUpState={() => {}}
+        levelUpState={levelUpState}
+        setLevelUpState={setLevelUpState}
         showLevelUpModal={showLevelUpModal}
         setShowLevelUpModal={setShowLevelUpModal}
         rollDie={rollDie}

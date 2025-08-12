@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { FaMeteor } from 'react-icons/fa6';
 import useInventory from '../hooks/useInventory';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
@@ -35,7 +36,9 @@ export default function DamageModal({ isOpen, onClose }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>💔 Damage Calculator</h2>
+        <h2 className={styles.title}>
+          <FaMeteor style={{ marginRight: '4px' }} /> Damage Calculator
+        </h2>
         <div className={styles.info}>Armor: {totalArmor}</div>
         <input
           type="number"

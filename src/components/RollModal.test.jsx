@@ -30,4 +30,11 @@ describe('RollModal', () => {
 
     expect(onClose).toHaveBeenCalledTimes(2);
   });
+
+  it('displays original and helped results when provided', () => {
+    const data = { result: '2d6: 7', originalResult: '2d6: 5' };
+    render(<RollModal isOpen data={data} onClose={() => {}} />);
+    expect(screen.getByText(/Original: 2d6: 5/)).toBeInTheDocument();
+    expect(screen.getByText(/With Help: 2d6: 7/)).toBeInTheDocument();
+  });
 });

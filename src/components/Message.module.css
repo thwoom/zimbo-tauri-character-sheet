@@ -5,13 +5,13 @@
 }
 
 .message-error {
-  color: #ff5555;
+  color: var(--color-danger);
 }
 
 .message-warning {
-  color: #ffaa44;
+  color: var(--color-amber);
 }
 
 .message-success {
-  color: #00ff88;
+  color: var(--color-accent);
 }

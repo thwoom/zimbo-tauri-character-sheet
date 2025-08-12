@@ -70,6 +70,8 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
+For AI-assisted development guidelines, see [docs/codex.md](docs/codex.md).
+
 ## License
 
 This project is licensed under a custom Non-Commercial License; commercial use requires prior written permission. See [LICENSE](LICENSE) for details.

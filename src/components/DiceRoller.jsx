@@ -61,6 +61,12 @@ const DiceRoller = ({
           >
             Taunt Enemy
           </button>
+          <button
+            onClick={() => rollDice('2d6', 'Aid/Interfere')}
+            className={`${styles.button} ${styles.purple} ${styles.small}`}
+          >
+            Aid/Interfere
+          </button>
         </div>
       </div>
 

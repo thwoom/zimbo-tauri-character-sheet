@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import './StatusModal.css';
-import { FaRadiation } from 'react-icons/fa6';
+import styles from './StatusModal.module.css';
 
 const StatusModal = ({
   statusEffects,
@@ -13,17 +12,15 @@ const StatusModal = ({
   onClose,
 }) => {
   return (
-    <div className="status-overlay">
-      <div className="status-modal">
-        <h2 className="status-title">
-          <FaRadiation style={{ marginRight: '4px' }} /> Status & Debilities
-        </h2>
+    <div className={styles.statusOverlay}>
+      <div className={styles.statusModal}>
+        <h2 className={styles.statusTitle}>💀 Status & Debilities</h2>
         <div>
-          <h3 className="status-subtitle">Status Effects</h3>
-          <ul className="status-list">
+          <h3 className={styles.statusSubtitle}>Status Effects</h3>
+          <ul className={styles.statusList}>
             {Object.keys(statusEffectTypes).map((key) => (
-              <li key={key} className="status-item">
-                <label className="status-label">
+              <li key={key} className={styles.statusItem}>
+                <label className={styles.statusLabel}>
                   <input
                     type="checkbox"
                     checked={statusEffects.includes(key)}
@@ -36,11 +33,11 @@ const StatusModal = ({
           </ul>
         </div>
         <div>
-          <h3 className="status-subtitle">Debilities</h3>
-          <ul className="status-list">
+          <h3 className={styles.statusSubtitle}>Debilities</h3>
+          <ul className={styles.statusList}>
             {Object.keys(debilityTypes).map((key) => (
-              <li key={key} className="status-item">
-                <label className="status-label">
+              <li key={key} className={styles.statusItem}>
+                <label className={styles.statusLabel}>
                   <input
                     type="checkbox"
                     checked={debilities.includes(key)}
@@ -52,8 +49,8 @@ const StatusModal = ({
             ))}
           </ul>
         </div>
-        <div className="status-footer">
-          <button className="status-button" onClick={onClose}>
+        <div className={styles.statusFooter}>
+          <button className={styles.statusButton} onClick={onClose}>
             Close
           </button>
         </div>

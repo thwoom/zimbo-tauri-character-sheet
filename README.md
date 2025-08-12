@@ -60,6 +60,8 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
+
+This project tracks `package-lock.json` in version control. When dependencies change, run `npm install --package-lock-only` and commit the resulting lockfile updates.
 ## License
 
 This project is licensed under a custom Non-Commercial License; commercial use requires prior written permission. See [LICENSE](LICENSE) for details.

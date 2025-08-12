@@ -8,7 +8,7 @@
 }
 
 .title {
-  color: #00ff88;
+  color: var(--color-neon);
   margin-bottom: 15px;
   font-size: 1.3rem;
 }
@@ -23,11 +23,11 @@
   padding: 8px 12px;
   margin: 5px 0;
   border-radius: 6px;
-  border-left: 3px solid #00ff88;
+  border-left: 3px solid var(--color-neon);
 }
 
 .equipped {
-  border-left-color: #10b981;
+  border-left-color: var(--color-emerald);
 }
 
 .itemRow {
@@ -57,7 +57,7 @@
   display: none;
   position: absolute;
   background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  color: var(--color-white);
   padding: 4px 8px;
   border-radius: 4px;
   top: 100%;
@@ -73,19 +73,19 @@
 }
 
 .equippedMark {
-  color: #10b981;
+  color: var(--color-emerald);
   font-size: 0.7rem;
 }
 
 .itemDetails {
   font-size: 0.7rem;
-  color: #aaa;
+  color: var(--color-gray-350);
 }
 
 .useButton {
-  background: linear-gradient(45deg, #10b981, #059669);
+  background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
   border: none;
-  color: white;
+  color: var(--color-white);
   padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
@@ -100,7 +100,7 @@
 
 .debilitiesTitle {
   font-size: 0.8rem;
-  color: #ef4444;
+  color: var(--color-danger);
   margin-bottom: 5px;
 }
 
@@ -112,8 +112,8 @@
 
 .debilityTag {
   background: rgba(239, 68, 68, 0.2);
-  border: 1px solid #ef4444;
-  color: #fca5a5;
+  border: 1px solid var(--color-danger);
+  color: var(--color-red-light);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.7rem;

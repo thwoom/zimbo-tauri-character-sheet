@@ -41,7 +41,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           STRATEGY: ${{ github.event.inputs.strategy }}
           INCLUDE_FORKS: ${{ github.event.inputs.include_forks }}
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.dry_run }}
         run: |
           set -euo pipefail
 

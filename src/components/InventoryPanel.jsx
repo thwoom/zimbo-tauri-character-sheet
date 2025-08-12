@@ -23,6 +23,9 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => 
                   {(!item.type || item.type === 'gear') && '🎒'}
                   {item.name}
                   {item.equipped && <span className={styles.equippedMark}>✓</span>}
+                  {item.description && (
+                    <div className={styles.itemDescription}>{item.description}</div>
+                  )}
                 </div>
                 <div className={styles.itemDetails}>
                   {item.damage && `${item.damage} damage`}

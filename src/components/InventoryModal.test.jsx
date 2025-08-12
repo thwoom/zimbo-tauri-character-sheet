@@ -37,6 +37,26 @@ describe('InventoryModal', () => {
     expect(screen.getByText('No items')).toBeInTheDocument();
   });
 
+  it('renders item descriptions', () => {
+    const inventory = [
+      {
+        id: 1,
+        name: 'Lantern',
+        description: 'Lights up dark places',
+      },
+    ];
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onClose={() => {}}
+      />,
+    );
+    expect(screen.getByText('Lights up dark places')).toBeInTheDocument();
+  });
+
   it('calls handlers on user actions', async () => {
     const user = userEvent.setup();
     const onEquip = vi.fn();

@@ -45,6 +45,26 @@
 .inventory-item-name {
   color: #fff;
   font-weight: bold;
+  position: relative;
+}
+
+.inventory-item-description {
+  display: none;
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  top: 100%;
+  left: 0;
+  font-size: 0.8rem;
+  width: max-content;
+  max-width: 250px;
+  z-index: 10;
+}
+
+.inventory-item-name:hover .inventory-item-description {
+  display: block;
 }
 
 .inventory-item-actions {

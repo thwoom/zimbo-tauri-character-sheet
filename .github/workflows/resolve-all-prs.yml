@@ -13,9 +13,7 @@ on:
       dry_run:
         description: 'Log actions without pushing'
         required: false
-        default: 'false'
-  schedule:
-    - cron: '47 3 * * *'
+        default: 'true'
 
 permissions:
   contents: write
@@ -47,12 +45,24 @@ jobs:
         run: |
           set -euo pipefail
 
-          choose_side() {
-            f="$1"
-            if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
-            if echo "$f" | grep -Eq '^src/|package\.json$'; then echo "ours"; return; fi
-            if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
-          }
+            choose_side() {
+              f="$1"
+              if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
+              if echo "$f" | grep -Eq '^src/|package\.json$'; then echo "ours"; return; fi
+              if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
+            }
+
+            union_ignore() {
+              f="$1"
+              awk 'BEGIN{state=0}
+                   /^<<<<<<< /{state=1;delete lines;next}
+                   /^=======/{state=2;next}
+                   /^>>>>>>>/{for(i=1;i<=n;i++) if(lines[i]!="" && !seen[lines[i]]++){print lines[i]} state=0;n=0;next}
+                   {if(state==0){print}else{lines[++n]=$0}}
+                  ' "$f" > "$f.tmp"
+              mv "$f.tmp" "$f"
+              git add -- "$f"
+            }
 
           jq -c '.[]' prs.json | while read pr; do
             num=$(echo "$pr" | jq -r .number)
@@ -81,10 +91,18 @@ jobs:
 
             if git ls-files -u | grep -q .; then
               git diff --name-only --diff-filter=U | while read f; do
-                side=$(choose_side "$f")
-                echo "Resolving $f -> $side"
-                git checkout --"$side" -- "$f"
-                git add -- "$f"
+                case "$f" in
+                  .prettierignore|.eslintignore)
+                    echo "Union resolving $f"
+                    union_ignore "$f"
+                    ;;
+                  *)
+                    side=$(choose_side "$f")
+                    echo "Resolving $f -> $side"
+                    git checkout --"$side" -- "$f"
+                    git add -- "$f"
+                    ;;
+                esac
               done
               git commit -m "autofix(#$num): policy resolve (${STRATEGY:-prefer-pr}; src/** & package.json from PR; lockfiles from base)"
             fi

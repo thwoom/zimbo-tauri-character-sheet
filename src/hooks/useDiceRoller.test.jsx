@@ -134,8 +134,8 @@ describe('help mechanics', () => {
       useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter),
     );
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-    const promptSpy = vi.spyOn(window, 'prompt').mockReturnValue('0');
+    window.confirm.mockReturnValue(true);
+    vi.spyOn(window, 'prompt').mockReturnValue('0');
     act(() => {
       result.current.rollDice('2d6', 'str');
     });

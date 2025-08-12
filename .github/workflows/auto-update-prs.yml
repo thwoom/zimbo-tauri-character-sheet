@@ -1,0 +1,28 @@
+name: Auto-update PR branches
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "17 3 * * *"    # daily
+  push:
+    branches: [ main ]
+permissions:
+  pull-requests: write
+  contents: read
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List open PRs
+        env: { GH_TOKEN: ${{ github.token }} }
+        run: |
+          gh pr list --state open --json number,isCrossRepository > prs.json
+          cat prs.json
+      - name: Update same-repo PRs
+        env: { GH_TOKEN: ${{ github.token }} }
+        run: |
+          set -e
+          jq -c '.[] | select(.isCrossRepository==false)' prs.json | while read pr; do
+            num=$(echo "$pr" | jq -r .number)
+            echo "Updating PR #$num"
+            gh api -X PUT "repos/${{ github.repository }}/pulls/$num/update-branch" -f expected_head_sha= || true
+          done

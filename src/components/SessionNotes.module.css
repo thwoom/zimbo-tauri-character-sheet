@@ -41,6 +41,9 @@
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .danger {
@@ -49,6 +52,10 @@
 
 .compact {
   background: linear-gradient(45deg, #6366f1, #4f46e5);
+}
+
+.icon {
+  vertical-align: middle;
 }
 
 .fullWidth {

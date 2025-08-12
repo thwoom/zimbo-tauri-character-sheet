@@ -56,6 +56,10 @@
   animation: pulse 2s infinite;
 }
 
+.icon {
+  vertical-align: middle;
+}
+
 .buttonRow {
   display: flex;
   gap: 10px;
@@ -78,6 +82,9 @@
   font-weight: bold;
   transition: all 0.3s ease;
   margin: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .undoButton {

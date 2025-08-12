@@ -2,7 +2,7 @@ name: Auto-update PR branches
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "17 3 * * *"    # daily
+    - cron: "17 3 * * *"
   push:
     branches: [ main ]
 permissions:
@@ -12,6 +12,10 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: Show gh/jq versions
+        run: |
+          gh --version || true
+          jq --version || true
       - name: List open PRs
         env: { GH_TOKEN: ${{ github.token }} }
         run: |
@@ -20,7 +24,6 @@ jobs:
       - name: Update same-repo PRs
         env: { GH_TOKEN: ${{ github.token }} }
         run: |
-          set -e
           jq -c '.[] | select(.isCrossRepository==false)' prs.json | while read pr; do
             num=$(echo "$pr" | jq -r .number)
             echo "Updating PR #$num"

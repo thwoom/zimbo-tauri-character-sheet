@@ -1,0 +1,107 @@
+name: Resolve ALL PRs (policy merge)
+on:
+  workflow_dispatch:
+    inputs:
+      strategy:
+        description: "prefer-pr or prefer-base"
+        required: false
+        default: "prefer-pr"
+      include_forks:
+        description: "Also handle fork PRs (creates takeover PRs)"
+        required: false
+        default: "false"
+      dry_run:
+        description: "Log actions without pushing"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  resolve-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Ensure jq
+        run: sudo apt-get update -y && sudo apt-get install -y jq
+
+      - name: Fetch open PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr list --state open --json number,isCrossRepository,headRefName,baseRefName > prs.json
+
+      - name: Resolve each PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STRATEGY: ${{ github.event.inputs.strategy }}
+          INCLUDE_FORKS: ${{ github.event.inputs.include_forks }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          choose_side() {
+            f="$1"
+            if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
+            if echo "$f" | grep -Eq '^src/|package\.json$'; then echo "ours"; return; fi
+            if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
+          }
+
+          jq -c '.[]' prs.json | while read pr; do
+            num=$(echo "$pr" | jq -r .number)
+            fork=$(echo "$pr" | jq -r .isCrossRepository)
+            head=$(echo "$pr" | jq -r .headRefName)
+            base=$(echo "$pr" | jq -r .baseRefName)
+
+            if [[ "$fork" = "true" && "${INCLUDE_FORKS}" != "true" ]]; then
+              echo "::notice ::Skipping fork PR #$num (include_forks=false)"
+              continue
+            fi
+
+            echo "::group::PR #$num  head=$head  base=$base  fork=$fork"
+
+            if [[ "$fork" = "false" ]]; then
+              git fetch origin "$head":"$head"
+              git checkout "$head"
+            else
+              git fetch origin "pull/$num/head:autofix/pr-$num"
+              git checkout "autofix/pr-$num"
+            fi
+
+            git fetch origin "$base"
+            pref=ours; [[ "${STRATEGY:-prefer-pr}" = "prefer-base" ]] && pref=theirs
+            git merge --no-edit -s recursive -X "$pref" "origin/$base" || true
+
+            if git ls-files -u | grep -q .; then
+              git diff --name-only --diff-filter=U | while read f; do
+                side=$(choose_side "$f")
+                echo "Resolving $f -> $side"
+                git checkout --"$side" -- "$f"
+                git add -- "$f"
+              done
+              git commit -m "autofix(#$num): policy resolve (${STRATEGY:-prefer-pr}; src/** & package.json from PR; lockfiles from base)"
+            fi
+
+            if [[ "${DRY_RUN}" = "true" ]]; then
+              echo "::notice ::Dry run: not pushing changes for PR #$num"
+              git reset --hard HEAD >/dev/null 2>&1 || true
+              echo "::endgroup::"
+              continue
+            fi
+
+            if [[ "$fork" = "false" ]]; then
+              git push origin HEAD
+            else
+              git push -u origin "autofix/pr-$num"
+              gh pr create --title "Takeover: resolve conflicts for #$num" \
+                --body "Supersedes #$num. Merged $base and resolved conflicts (src/** & package.json from PR; lockfiles from base)." \
+                --base "$base" --head "autofix/pr-$num" || true
+            fi
+
+            echo "::endgroup::"
+          done

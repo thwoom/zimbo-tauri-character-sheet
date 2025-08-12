@@ -66,6 +66,8 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 
 ## Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup, linting, and testing instructions.
+
 1. Fork the repository.
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.

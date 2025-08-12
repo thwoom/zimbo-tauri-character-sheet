@@ -1,11 +1,7 @@
 .container {
   min-height: 100vh;
-  background: url('/starfield.svg'), linear-gradient(135deg, #1a1a2e, #16213e);
-  background-repeat: repeat, no-repeat;
-  background-size:
-    512px 512px,
-    cover;
-  color: #e0e0e0;
+  background: var(--background);
+  color: var(--text-color);
   padding: 20px;
   font-family: var(--font-body);
   font-size: var(--font-size-body);
@@ -22,8 +18,8 @@
   margin-bottom: 30px;
   padding: 20px;
   border-radius: 15px;
-  border: 2px solid #00ff88;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  border: 2px solid var(--accent-color);
+  box-shadow: 0 0 20px var(--accent-shadow);
   transition: all 0.5s ease;
 }
 
@@ -38,7 +34,7 @@
   font-size: var(--font-size-heading);
   font-weight: var(--font-weight-heading);
   margin-bottom: 10px;
-  text-shadow: 0 0 10px #00ff88;
+  text-shadow: 0 0 10px var(--accent-color);
 }
 
 .subHeader {

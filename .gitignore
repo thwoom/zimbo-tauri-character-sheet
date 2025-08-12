@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Ignore PR fix scripts
-fix-pr*.ps1
+# Local scripts (ignored by default)
+scripts/

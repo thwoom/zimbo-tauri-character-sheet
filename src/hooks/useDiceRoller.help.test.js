@@ -18,7 +18,7 @@ describe('useDiceRoller help reroll', () => {
       .mockReturnValueOnce(3)
       .mockReturnValueOnce(4);
 
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     act(() => {
       result.current.rollDice('2d6', 'test');
     });

@@ -28,7 +28,7 @@ describe('useDiceRoller contexts', () => {
     ['unknown', 'Perfect execution!'],
   ])('returns correct success context for %s', (desc, expected) => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     act(() => {
       result.current.rollDice('2d6', desc);
@@ -39,7 +39,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct partial context for HaCk', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     act(() => {
@@ -51,7 +51,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct partial context for upper hand', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     act(() => {
@@ -63,7 +63,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct failure context for taunt', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'taunt');
@@ -74,7 +74,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct failure context for upper hand', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'upper hand');
@@ -85,7 +85,7 @@ describe('useDiceRoller contexts', () => {
 
   it('updates rollResult with latest roll', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('d4', 'test');
@@ -96,7 +96,7 @@ describe('useDiceRoller contexts', () => {
 
   it('retains the original description in rollModalData', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     act(() => {
       result.current.rollDice('2d6', 'Upper Hand');
@@ -106,16 +106,34 @@ describe('useDiceRoller contexts', () => {
   });
 });
 
+describe('XP gain on failure', () => {
+  it('awards XP on 6- rolls', () => {
+    localStorage.clear();
+    const character = { statusEffects: [], debilities: [], xp: 0 };
+    let updated = character;
+    const setCharacter = (fn) => {
+      updated = fn(updated);
+    };
+    const { result } = renderHook(() => useDiceRoller(character, setCharacter));
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    act(() => {
+      result.current.rollDice('2d6', 'str');
+    });
+    randomSpy.mockRestore();
+    expect(updated.xp).toBe(1);
+  });
+});
+
 describe('help mechanics', () => {
   it('stores original roll and adds extra XP on failed help', () => {
     localStorage.clear();
     const setCharacter = vi.fn();
     const { result } = renderHook(() =>
-      useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter, true),
+      useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter),
     );
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     window.confirm.mockReturnValue(true);
-    window.prompt.mockReturnValue('0');
+    vi.spyOn(window, 'prompt').mockReturnValue('0');
     act(() => {
       result.current.rollDice('2d6', 'str');
     });
@@ -123,6 +141,7 @@ describe('help mechanics', () => {
     expect(result.current.rollModalData.originalResult).toMatch(/❌ Failure/);
     expect(result.current.rollModalData.result).toMatch(/❌ Failure/);
     expect(setCharacter).toHaveBeenCalledTimes(2);
+    window.prompt.mockRestore();
   });
 });
 
@@ -134,7 +153,7 @@ describe('useDiceRoller localStorage', () => {
     localStorage.clear();
     localStorage.setItem('rollHistory', 'not json');
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     expect(result.current.rollHistory).toEqual([]);
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
@@ -151,7 +170,7 @@ describe('useDiceRoller mixed-case status modifiers', () => {
       debilities: [],
       xp: 0,
     };
-    const { result } = renderHook(() => useDiceRoller(character, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(character, setCharacter));
     const randomSpy = vi.spyOn(Math, 'random');
 
     randomSpy.mockReturnValueOnce(0.4).mockReturnValueOnce(0.4);
@@ -180,7 +199,7 @@ describe('useDiceRoller safe localStorage handling', () => {
 
   it('initializes with empty history when localStorage is undefined', () => {
     global.localStorage = undefined;
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     expect(result.current.rollHistory).toEqual([]);
   });
 
@@ -196,7 +215,7 @@ describe('useDiceRoller safe localStorage handling', () => {
         throw new Error('fail');
       },
     };
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
     expect(result.current.rollHistory).toEqual([]);
   });
 });

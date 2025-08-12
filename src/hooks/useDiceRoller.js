@@ -175,29 +175,52 @@ export default function useDiceRoller(character, setCharacter) {
         interpretation = ' ❌ Failure';
         context = getFailureContext(desc);
         setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-        if (window.confirm('Did you get help?')) {
-          originalResult = result + interpretation;
-          let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
-          if (Number.isNaN(bond)) bond = 0;
-          bond = Math.max(0, Math.min(3, bond));
-          const newRolls = [diceUtils.rollDie(6), diceUtils.rollDie(6)];
-          rolls.splice(0, rolls.length, ...newRolls);
-          roll = newRolls[0] + newRolls[1];
-          total = roll + totalModifier + bond;
-          result = `2d6: ${rolls.join(' + ')}`;
+      }
+
+      if (total <= 9 && window.confirm('Did someone Aid or Interfere?')) {
+        originalResult = result + interpretation;
+        const isInterfere = window.confirm('Are they interfering?');
+        let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
+        if (Number.isNaN(bond)) bond = 0;
+        bond = Math.max(0, Math.min(3, bond));
+        const helperRolls = [diceUtils.rollDie(6), diceUtils.rollDie(6)];
+        const helperTotal = helperRolls[0] + helperRolls[1] + bond;
+        let helperMod = 0;
+        let helperNote = '';
+        if (isInterfere) {
+          if (helperTotal >= 10) {
+            helperMod = -2;
+          } else if (helperTotal >= 7) {
+            helperMod = -2;
+            window.alert('Helper Consequences');
+            helperNote = ' (Helper Consequences)';
+          } else {
+            setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+          }
+        } else if (helperTotal >= 10) {
+          helperMod = 1;
+        } else if (helperTotal >= 7) {
+          helperMod = 1;
+          window.alert('Helper Consequences');
+          helperNote = ' (Helper Consequences)';
+        } else {
+          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+        }
+
+        if (helperMod !== 0) {
+          total += helperMod;
+          result = `${dicePart}: ${roll}`;
           if (baseModifier !== 0) {
             result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
           }
           if (statusMods.modifier !== 0) {
             result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
           }
-          if (bond !== 0) {
-            result += ` +${bond}`;
-          }
-          result += ` = ${total}`;
+          result += ` ${helperMod >= 0 ? '+' : ''}${helperMod} = ${total}`;
           if (statusMods.notes.length > 0) {
             result += ` (${statusMods.notes.join(', ')})`;
           }
+          result += helperNote;
           if (total >= 10) {
             interpretation = ' ✅ Success!';
             context = getSuccessContext(desc);
@@ -207,9 +230,6 @@ export default function useDiceRoller(character, setCharacter) {
           } else {
             interpretation = ' ❌ Failure';
             context = getFailureContext(desc);
-            if (autoXpOnMiss) {
-              setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-            }
           }
         }
       }

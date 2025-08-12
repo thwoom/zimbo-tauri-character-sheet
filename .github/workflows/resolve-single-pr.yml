@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       number:
-        description: "PR number to resolve"
+        description: 'PR number to resolve'
         required: true
       strategy:
-        description: "Global preference if needed (prefer-pr or prefer-base)"
+        description: 'Global preference if needed (prefer-pr or prefer-base)'
         required: false
-        default: "prefer-pr"
+        default: 'prefer-pr'
 
 permissions:
   contents: write
@@ -52,6 +52,18 @@ jobs:
             if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
           }
 
+          union_ignore() {
+            f="$1"
+            awk 'BEGIN{state=0}
+                 /^<<<<<<< /{state=1;delete lines;next}
+                 /^=======/{state=2;next}
+                 /^>>>>>>>/{for(i=1;i<=n;i++) if(lines[i]!="" && !seen[lines[i]]++){print lines[i]} state=0;n=0;next}
+                 {if(state==0){print}else{lines[++n]=$0}}
+                ' "$f" > "$f.tmp"
+            mv "$f.tmp" "$f"
+            git add -- "$f"
+          }
+
           if [ "$isFork" = "false" ]; then
             git checkout "$head"
           else
@@ -65,10 +77,18 @@ jobs:
 
           if git ls-files -u | grep -q .; then
             git diff --name-only --diff-filter=U | while read f; do
-              side=$(choose_side "$f")
-              echo "Resolving $f -> $side"
-              git checkout --"$side" -- "$f"
-              git add -- "$f"
+              case "$f" in
+                .prettierignore|.eslintignore)
+                  echo "Union resolving $f"
+                  union_ignore "$f"
+                  ;;
+                *)
+                  side=$(choose_side "$f")
+                  echo "Resolving $f -> $side"
+                  git checkout --"$side" -- "$f"
+                  git add -- "$f"
+                  ;;
+              esac
             done
             git commit -m "autofix(#$NUM): resolve conflicts ($STRATEGY; src/** & package.json from PR; lockfiles from base)"
           fi

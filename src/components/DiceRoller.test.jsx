@@ -12,10 +12,10 @@ const minimalCharacter = {
   },
 };
 
-const rollHistory = [{ timestamp: '10:00', result: '2d6: 7' }];
+const rollHistory = [{ timestamp: '10:00', result: '2d6: 7 = 7' }];
 
 describe('DiceRoller', () => {
-  it('calls rollDice for stat checks and basic dice', async () => {
+  it('calls rollDice when buttons clicked', async () => {
     const user = userEvent.setup();
     const rollDice = vi.fn();
     render(
@@ -23,7 +23,7 @@ describe('DiceRoller', () => {
         character={minimalCharacter}
         rollDice={rollDice}
         equippedWeaponDamage="d8"
-        rollResult="Result: 9"
+        rollResult="d20: 9 = 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
@@ -47,15 +47,15 @@ describe('DiceRoller', () => {
         character={minimalCharacter}
         rollDice={rollDice}
         equippedWeaponDamage="d8"
-        rollResult="Result: 9"
+        rollResult="d20: 9 = 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
       />,
     );
-    expect(screen.getByText('Result: 9')).toBeInTheDocument();
+    expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
     expect(screen.getByText('Recent Rolls:')).toBeInTheDocument();
-    expect(screen.getByText(/2d6: 7/)).toBeInTheDocument();
+    expect(screen.getByText(/2d6: 7 = 7/)).toBeInTheDocument();
   });
 
   it('updates displayed roll result when prop changes', () => {
@@ -65,24 +65,24 @@ describe('DiceRoller', () => {
         character={minimalCharacter}
         rollDice={rollDice}
         equippedWeaponDamage="d8"
-        rollResult="Result: 9"
+        rollResult="d20: 9 = 9"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
       />,
     );
-    expect(screen.getByText('Result: 9')).toBeInTheDocument();
+    expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
     rerender(
       <DiceRoller
         character={minimalCharacter}
         rollDice={rollDice}
         equippedWeaponDamage="d8"
-        rollResult="Result: 10"
+        rollResult="d20: 10 = 10"
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
       />,
     );
-    expect(screen.getByText('Result: 10')).toBeInTheDocument();
+    expect(screen.getByText('d20: 10 = 10')).toBeInTheDocument();
   });
 });

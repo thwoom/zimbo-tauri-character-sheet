@@ -1,0 +1,103 @@
+name: Resolve a PR (policy merge)
+on:
+  workflow_dispatch:
+    inputs:
+      number:
+        description: 'PR number to resolve'
+        required: true
+      strategy:
+        description: 'Global preference if needed (prefer-pr or prefer-base)'
+        required: false
+        default: 'prefer-pr'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Ensure jq present
+        run: sudo apt-get update -y && sudo apt-get install -y jq
+
+      - name: Get PR data
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr view ${{ github.event.inputs.number }} --json number,isCrossRepository,headRefName,baseRefName > pr.json
+          cat pr.json
+
+      - name: Resolve PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUM: ${{ github.event.inputs.number }}
+          STRATEGY: ${{ github.event.inputs.strategy }}
+        run: |
+          set -euo pipefail
+          isFork=$(jq -r '.isCrossRepository' pr.json)
+          head=$(jq -r '.headRefName' pr.json)
+          base=$(jq -r '.baseRefName' pr.json)
+
+          choose_side() {
+            f="$1"
+            if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
+            if echo "$f" | grep -Eq '^src/|package\.json$'; then echo "ours"; return; fi
+            if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
+          }
+
+          union_ignore() {
+            f="$1"
+            awk 'BEGIN{state=0}
+                 /^<<<<<<< /{state=1;delete lines;next}
+                 /^=======/{state=2;next}
+                 /^>>>>>>>/{for(i=1;i<=n;i++) if(lines[i]!="" && !seen[lines[i]]++){print lines[i]} state=0;n=0;next}
+                 {if(state==0){print}else{lines[++n]=$0}}
+                ' "$f" > "$f.tmp"
+            mv "$f.tmp" "$f"
+            git add -- "$f"
+          }
+
+          if [ "$isFork" = "false" ]; then
+            git checkout "$head"
+          else
+            git fetch origin "pull/$NUM/head:autofix/pr-$NUM"
+            git checkout "autofix/pr-$NUM"
+          fi
+
+          git fetch origin "$base"
+          if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then pref=theirs; else pref=ours; fi
+          git merge --no-edit -s recursive -X "$pref" "origin/$base" || true
+
+          if git ls-files -u | grep -q .; then
+            git diff --name-only --diff-filter=U | while read f; do
+              case "$f" in
+                .prettierignore|.eslintignore)
+                  echo "Union resolving $f"
+                  union_ignore "$f"
+                  ;;
+                *)
+                  side=$(choose_side "$f")
+                  echo "Resolving $f -> $side"
+                  git checkout --"$side" -- "$f"
+                  git add -- "$f"
+                  ;;
+              esac
+            done
+            git commit -m "autofix(#$NUM): resolve conflicts ($STRATEGY; src/** & package.json from PR; lockfiles from base)"
+          fi
+
+          if [ "$isFork" = "false" ]; then
+            git push origin HEAD
+          else
+            git push -u origin "autofix/pr-$NUM"
+            gh pr create --title "Takeover: resolve conflicts for #$NUM" \
+              --body "Supersedes #$NUM. Merged $base and resolved conflicts (src/** & package.json from PR; lockfiles from base)." \
+              --base "$base" --head "autofix/pr-$NUM"
+          fi

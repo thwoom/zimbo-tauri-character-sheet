@@ -64,7 +64,9 @@ sh('npx eslint .', { ignore: true });
 console.log('[INFO] Tests (non-blocking)…');
 try {
   sh('npm test --silent', { ignore: true });
-} catch {}
+} catch {
+  // ignore
+}
 
 sh('git switch -');
 sh(`git branch -D ${temp}`, { ignore: true });

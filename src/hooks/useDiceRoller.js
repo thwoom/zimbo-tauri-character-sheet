@@ -1,10 +1,50 @@
+/* global autoXpOnMiss */
 import { useState, useEffect } from 'react';
 import { debilityTypes } from '../state/character';
 import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
-export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
+const buildResultString = (mods, total, notes = []) => {
+  const [base, ...rest] = mods;
+  let result = base;
+  rest.forEach((mod) => {
+    if (mod !== 0) {
+      result += ` ${mod >= 0 ? '+' : ''}${mod}`;
+    }
+  });
+  result += ` = ${total}`;
+  if (notes.length > 0) {
+    result += ` (${notes.join(', ')})`;
+  }
+  return result;
+};
+
+const resolveAidOrInterfere = () => {
+  const type = window.prompt('Aid or Interfere? (a/i)', 'a');
+  if (!type) return { modifier: 0, consequence: false };
+  const isAid = type.toLowerCase().startsWith('a');
+  let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
+  if (Number.isNaN(bond)) bond = 0;
+  bond = Math.max(0, Math.min(3, bond));
+  const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6) + bond;
+  let modifier = 0;
+  let consequence = false;
+  if (helperRoll >= 10) {
+    modifier = isAid ? 1 : -2;
+  } else if (helperRoll >= 7) {
+    modifier = isAid ? 1 : -2;
+    consequence = true;
+  } else {
+    consequence = true;
+  }
+  if (consequence) {
+    window.alert('The helper exposes themselves to danger, retribution, or cost.');
+  }
+  return { modifier, consequence };
+};
+
+export default function useDiceRoller(character, setCharacter) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
@@ -143,11 +183,11 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     const statusMods = getStatusModifiers(rollType);
     const totalModifier = baseModifier + statusMods.modifier;
 
-    let roll = 0;
+    const rolls = [];
     for (let i = 0; i < diceCount; i += 1) {
-      roll += diceUtils.rollDie(sides);
+      rolls.push(diceUtils.rollDie(sides));
     }
-    total = roll + totalModifier;
+    total = rolls.reduce((sum, r) => sum + r, 0) + totalModifier;
 
     const buildResultString = (mods, totalValue, notes = []) => {
       let str = `${dicePart}: ${roll}`;
@@ -192,6 +232,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     };
 
     if (dicePart === '2d6') {
+      const isAidMove = desc.includes('aid') || desc.includes('interfere');
       if (total >= 10) {
         interpretation = ' ✅ Success!';
         context = getSuccessContext(desc);
@@ -243,6 +284,8 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       description,
       context,
       total,
+      rolls,
+      modifier: totalModifier,
       timestamp: new Date().toLocaleTimeString(),
       ...(originalResult && { originalResult }),
     };

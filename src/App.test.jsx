@@ -2,9 +2,11 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App.jsx';
+import Settings from './components/Settings.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
+import './styles/theme.css';
 
 beforeEach(() => {
   vi.spyOn(window, 'confirm').mockReturnValue(false);
@@ -91,7 +93,6 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
   });
-
   it('does not increment XP when auto XP toggle is off', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
@@ -210,5 +211,24 @@ describe.skip('localStorage persistence', () => {
 
     window.confirm.mockRestore();
     Math.random.mockRestore();
+  });
+});
+
+describe('Theme switching', () => {
+  it('updates the theme attribute when selecting classic', () => {
+    render(
+      <ThemeProvider>
+        <Settings />
+      </ThemeProvider>,
+    );
+
+    const select = screen.getByLabelText(/Theme:/i);
+
+    return waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic');
+    }).then(() => {
+      fireEvent.change(select, { target: { value: 'classic' } });
+      expect(document.documentElement.getAttribute('data-theme')).toBe('classic');
+    });
   });
 });

@@ -22,25 +22,32 @@ function renderWithCharacter(ui, { character }) {
 describe('DamageModal', () => {
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
+    const onLastBreath = vi.fn();
     const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
-    const { rerender } = renderWithCharacter(<DamageModal isOpen={false} onClose={onClose} />, {
-      character: initial,
-    });
+    const { rerender } = renderWithCharacter(
+      <DamageModal isOpen={false} onClose={onClose} onLastBreath={onLastBreath} />,
+      {
+        character: initial,
+      },
+    );
     expect(screen.queryByText(/Damage Calculator/i)).not.toBeInTheDocument();
-    rerender(<DamageModal isOpen onClose={onClose} />);
+    rerender(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />);
     expect(screen.getByText(/Damage Calculator/i)).toBeInTheDocument();
   });
 
   it('applies damage accounting for armor', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
+    const onLastBreath = vi.fn();
     const initial = {
       hp: 10,
       armor: 1,
       inventory: [{ id: 1, armor: 1, equipped: true }],
       actionHistory: [],
     };
-    renderWithCharacter(<DamageModal isOpen onClose={onClose} />, { character: initial });
+    renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
+      character: initial,
+    });
 
     await user.type(screen.getByPlaceholderText('Incoming damage'), '5');
     await user.click(screen.getByText('Apply'));
@@ -52,11 +59,30 @@ describe('DamageModal', () => {
   it('cancels without changing hp', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
+    const onLastBreath = vi.fn();
     const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
-    renderWithCharacter(<DamageModal isOpen onClose={onClose} />, { character: initial });
+    renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
+      character: initial,
+    });
 
     await user.click(screen.getByText('Cancel'));
     expect(onClose).toHaveBeenCalled();
     expect(screen.getByTestId('hp')).toHaveTextContent('10');
+    expect(onLastBreath).not.toHaveBeenCalled();
+  });
+
+  it('triggers Last Breath when hp drops to zero', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const onLastBreath = vi.fn();
+    const initial = { hp: 5, armor: 0, inventory: [], actionHistory: [] };
+    renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
+      character: initial,
+    });
+
+    await user.type(screen.getByPlaceholderText('Incoming damage'), '5');
+    await user.click(screen.getByText('Apply'));
+
+    await waitFor(() => expect(onLastBreath).toHaveBeenCalled());
   });
 });

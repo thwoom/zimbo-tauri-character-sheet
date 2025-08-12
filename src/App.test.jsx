@@ -16,6 +16,15 @@ afterEach(() => {
   window.prompt.mockRestore();
 });
 
+let confirmSpy;
+beforeEach(() => {
+  confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+});
+
+afterEach(() => {
+  confirmSpy.mockRestore();
+});
+
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {
     let setCharacter;

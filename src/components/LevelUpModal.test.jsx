@@ -158,8 +158,7 @@ describe('LevelUpModal visibility and closing', () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     render(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
-    const overlay = screen.getByLabelText('Close');
-    overlay.focus();
+    screen.getByLabelText('Close').focus();
     await user.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalled();
   });

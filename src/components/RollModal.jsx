@@ -20,7 +20,7 @@ export default function RollModal({ isOpen, data, onClose }) {
         </div>
         <div className={styles.body}>
           {data.originalResult && (
-            <div className={styles.original}>Original: {data.originalResult}</div>
+            <div className={styles.originalResult}>Original Roll: {data.originalResult}</div>
           )}
           <div className={styles.result}>
             {data.originalResult ? `With Help: ${data.result}` : data.result}

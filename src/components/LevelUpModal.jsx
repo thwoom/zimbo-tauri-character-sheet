@@ -68,17 +68,20 @@ const LevelUpModal = ({
     setLevelUpState((prev) => ({ ...prev, hpIncrease: increase }));
     setRollResult(`HP Roll: d10(${roll}) + CON(${conMod}) = +${increase} HP`);
 
-    // Add visual feedback
-    const rollHistory = {
-      type: 'HP Roll',
-      result: `+${increase} HP`,
-      rolls: [roll],
-      modifier: conMod,
-      total: increase,
-      timestamp: new Date().toLocaleTimeString(),
-    };
-
-    return rollHistory;
+    setCharacter((prev) => ({
+      ...prev,
+      rollHistory: [
+        {
+          type: 'HP Roll',
+          result: `+${increase} HP`,
+          rolls: [roll],
+          modifier: conMod,
+          total: increase,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+        ...(prev.rollHistory ? prev.rollHistory.slice(0, 9) : []),
+      ],
+    }));
   };
 
   const completeLevelUp = () => {

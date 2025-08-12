@@ -70,6 +70,10 @@ _Add screenshots or GIFs demonstrating character stats, dice roller, and invento
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
+## Development scripts
+
+Optional helper scripts can be kept in a local `scripts/` directory. This folder is ignored by Git and is not required for building or running the project.
+
 ## License
 
 This project is licensed under a custom Non-Commercial License; commercial use requires prior written permission. See [LICENSE](LICENSE) for details.

@@ -30,6 +30,41 @@
   --color-green-dark: #3a8f66;
   --color-green-rgb: 74, 179, 129;
 
+  --color-white: #ffffff;
+
+  --color-neon: #00ff88;
+  --color-neon-dark: #00cc6a;
+  --color-neon-darker: #00aa55;
+
+  --color-indigo: #6366f1;
+  --color-indigo-dark: #4f46e5;
+
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+
+  --color-emerald: #10b981;
+  --color-emerald-dark: #059669;
+
+  --color-red-light: #fca5a5;
+
+  --color-blue-deep: #0f3460;
+  --color-purple-deep: #533483;
+
+  --color-modal-bg: #1a1a2e;
+  --color-modal-bg-secondary: #16213e;
+  --color-modal-bg-dark: #0f0f1f;
+
+  --color-gray-100: #e0e0e0;
+  --color-gray-200: #cccccc;
+  --color-gray-300: #bbbbbb;
+  --color-gray-350: #aaaaaa;
+  --color-gray-700: #666666;
+  --color-gray-750: #555555;
+  --color-gray-800: #333333;
+  --color-gray-900: #222222;
+
+  --color-blue-light: #e0f2fe;
+
   --overlay-poison: rgba(var(--color-accent-rgb), 0.1);
   --overlay-burning: rgba(var(--color-red-rgb), 0.15);
   --overlay-shocked-blue: rgba(79, 109, 184, 0.1);
@@ -80,4 +115,34 @@
   --critical-hit-end: var(--color-orange);
   --critical-failure-start: var(--color-red);
   --critical-failure-end: var(--color-red-dark);
+
+  /* Shared color map extensions */
+  --color-white: #ffffff;
+  --color-yellow: #fbbf24;
+  --color-purple-light: #8b5cf6;
+  --color-orange-light: #f97316;
+  --color-cyan: #06b6d4;
+
+  /* Header gradients for status effects */
+  --gradient-header-default: linear-gradient(
+    45deg,
+    #6366f1,
+    var(--color-purple-light),
+    var(--color-cyan)
+  );
+  --gradient-header-poisoned: linear-gradient(45deg, #22c55e, #059669, var(--color-cyan));
+  --gradient-header-burning: linear-gradient(
+    45deg,
+    #ef4444,
+    var(--color-orange-light),
+    var(--color-yellow)
+  );
+  --gradient-header-shocked: linear-gradient(45deg, #3b82f6, #eab308, var(--color-cyan));
+  --gradient-header-frozen: linear-gradient(45deg, var(--color-cyan), #3b82f6, #6366f1);
+  --gradient-header-blessed: linear-gradient(
+    45deg,
+    var(--color-yellow),
+    #f59e0b,
+    var(--color-cyan)
+  );
 }

@@ -7,16 +7,11 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || DEFAULT_THEME);
 
   useEffect(() => {
-    const themeVars = THEMES[theme];
-    if (themeVars) {
-      Object.entries(themeVars).forEach(([key, value]) => {
-        document.documentElement.style.setProperty(key, value);
-      });
-    }
+    document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const value = { theme, setTheme, themes: Object.keys(THEMES) };
+  const value = { theme, setTheme, themes: THEMES };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

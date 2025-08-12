@@ -115,7 +115,7 @@ describe('help mechanics', () => {
     );
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     window.confirm.mockReturnValue(true);
-    window.prompt.mockReturnValue('0');
+    vi.spyOn(window, 'prompt').mockReturnValue('0');
     act(() => {
       result.current.rollDice('2d6', 'str');
     });

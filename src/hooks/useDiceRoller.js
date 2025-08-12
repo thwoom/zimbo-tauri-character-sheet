@@ -206,6 +206,9 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
           } else {
             interpretation = ' ❌ Failure';
             context = getFailureContext(desc);
+            if (autoXpOnMiss) {
+              setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+            }
           }
         }
       }

@@ -5,7 +5,7 @@ import useInventory from '../hooks/useInventory';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
 
-export default function DamageModal({ isOpen, onClose }) {
+export default function DamageModal({ isOpen, onClose, onLastBreath }) {
   const { character, setCharacter } = useCharacter();
   const [damage, setDamage] = useState('');
   const { totalArmor } = useInventory(character, setCharacter);
@@ -21,16 +21,20 @@ export default function DamageModal({ isOpen, onClose }) {
     const dmg = parseInt(damage, 10);
     if (isNaN(dmg)) return;
     const finalDamage = Math.max(0, dmg - totalArmor);
+    const newHp = Math.max(0, character.hp - finalDamage);
     setCharacter((prev) => ({
       ...prev,
       actionHistory: [
         { action: 'HP Change', state: prev, timestamp: Date.now() },
         ...prev.actionHistory.slice(0, 4),
       ],
-      hp: Math.max(0, prev.hp - finalDamage),
+      hp: newHp,
     }));
     setDamage('');
     onClose();
+    if (newHp <= 0) {
+      onLastBreath();
+    }
   };
 
   return (
@@ -64,4 +68,5 @@ export default function DamageModal({ isOpen, onClose }) {
 DamageModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onLastBreath: PropTypes.func.isRequired,
 };

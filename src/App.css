@@ -1,5 +1,15 @@
 /* Zimbo's Cyber-Barbarian Theme CSS */
 
+/* Root font variables */
+:root {
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-size-heading: 2.5rem;
+  --font-size-body: 1rem;
+  --font-weight-heading: 700;
+  --font-weight-body: 400;
+}
+
 /* Reset and base styles */
 * {
   margin: 0;
@@ -8,10 +18,26 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-body);
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   color: #e0e0e0;
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+}
+
+h1 {
+  font-size: var(--font-size-heading);
 }
 
 /* Animations */

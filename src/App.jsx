@@ -30,6 +30,15 @@ function App() {
   const [compactMode, setCompactMode] = useState(false);
   const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
+  const getDefaultLevelUpState = () => ({
+    selectedStats: [],
+    selectedMove: '',
+    hpIncrease: 0,
+    newLevel: character.level + 1,
+    expandedMove: '',
+  });
+  const [levelUpState, setLevelUpState] = useState(getDefaultLevelUpState);
+
   const {
     rollResult,
     setRollResult,
@@ -47,11 +56,17 @@ function App() {
   // Auto-detect level up opportunity
   useEffect(() => {
     if (character.xp >= character.xpNeeded && !showLevelUpModal) {
+      setLevelUpState((prev) => ({ ...prev, newLevel: character.level + 1 }));
       setShowLevelUpModal(true);
-      // ensure next level reflects current character.level
-      // (avoids stale closure if character.level changed)
     }
   }, [character.xp, character.xpNeeded, character.level, showLevelUpModal]);
+
+  // Reset level up state when modal closes or level changes
+  useEffect(() => {
+    if (!showLevelUpModal) {
+      setLevelUpState(getDefaultLevelUpState());
+    }
+  }, [showLevelUpModal, character.level]);
 
   // Persist session notes
   useEffect(() => {
@@ -191,14 +206,8 @@ function App() {
       <GameModals
         character={character}
         setCharacter={setCharacter}
-        levelUpState={{
-          selectedStats: [],
-          selectedMove: '',
-          hpIncrease: 0,
-          newLevel: character.level + 1,
-          expandedMove: '',
-        }}
-        setLevelUpState={() => {}}
+        levelUpState={levelUpState}
+        setLevelUpState={setLevelUpState}
         showLevelUpModal={showLevelUpModal}
         setShowLevelUpModal={setShowLevelUpModal}
         rollDie={rollDie}

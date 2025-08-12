@@ -1,46 +1,33 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import useInventory from '../hooks/useInventory';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
 
 export default function DamageModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
   const [damage, setDamage] = useState('');
+  const { totalArmor } = useInventory(character, setCharacter);
 
   if (!isOpen) return null;
 
-  const getTotalArmor = () => {
-    const baseArmor = character.armor || 0;
-    const equippedArmor = character.inventory
-      .filter((item) => item.equipped && item.armor)
-      .reduce((total, item) => total + (item.armor || 0), 0);
-    return baseArmor + equippedArmor;
-  };
-
   const effectiveDamage = () => {
     const dmg = parseInt(damage, 10);
-    return isNaN(dmg) ? 0 : Math.max(0, dmg - getTotalArmor());
+    return isNaN(dmg) ? 0 : Math.max(0, dmg - totalArmor);
   };
 
   const applyDamage = () => {
     const dmg = parseInt(damage, 10);
     if (isNaN(dmg)) return;
-    setCharacter((prev) => {
-      const armor = prev.armor || 0;
-      const equippedArmor = prev.inventory
-        .filter((item) => item.equipped && item.armor)
-        .reduce((total, item) => total + (item.armor || 0), 0);
-      const totalArmor = armor + equippedArmor;
-      const finalDamage = Math.max(0, dmg - totalArmor);
-      return {
-        ...prev,
-        actionHistory: [
-          { action: 'HP Change', state: prev, timestamp: Date.now() },
-          ...prev.actionHistory.slice(0, 4),
-        ],
-        hp: Math.max(0, prev.hp - finalDamage),
-      };
-    });
+    const finalDamage = Math.max(0, dmg - totalArmor);
+    setCharacter((prev) => ({
+      ...prev,
+      actionHistory: [
+        { action: 'HP Change', state: prev, timestamp: Date.now() },
+        ...prev.actionHistory.slice(0, 4),
+      ],
+      hp: Math.max(0, prev.hp - finalDamage),
+    }));
     setDamage('');
     onClose();
   };
@@ -49,7 +36,7 @@ export default function DamageModal({ isOpen, onClose }) {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <h2 className={styles.title}>💔 Damage Calculator</h2>
-        <div className={styles.info}>Armor: {getTotalArmor()}</div>
+        <div className={styles.info}>Armor: {totalArmor}</div>
         <input
           type="number"
           placeholder="Incoming damage"

@@ -56,5 +56,8 @@
     "setupFiles": [
       "<rootDir>/jest.setup.cjs"
     ]
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

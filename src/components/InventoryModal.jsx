@@ -16,6 +16,9 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
                 <div className="inventory-item-name">
                   {item.name}
                   {item.quantity ? ` x${item.quantity}` : ''}
+                  {item.description && (
+                    <div className="inventory-item-description">{item.description}</div>
+                  )}
                 </div>
                 <div className="inventory-item-actions">
                   {'equipped' in item && (

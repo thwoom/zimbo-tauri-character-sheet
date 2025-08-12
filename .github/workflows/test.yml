@@ -6,7 +6,13 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,8 +25,7 @@ jobs:
           elif [ -f yarn.lock ]; then yarn install --silent;
           elif [ -f package-lock.json ]; then npm ci;
           else npm i --no-audit --no-fund; fi
-      - name: Clean install (avoid Rollup optional-deps bug on Linux)
-        run: rm -rf node_modules package-lock.json && npm install
       - run: npm run lint
       - run: npx prettier --check .
       - run: npm test
+      - run: npm run build

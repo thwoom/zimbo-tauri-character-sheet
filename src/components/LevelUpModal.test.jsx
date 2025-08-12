@@ -147,4 +147,20 @@ describe('LevelUpModal visibility and closing', () => {
     await user.click(screen.getByLabelText('Close'));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('closes when pressing Escape', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('closes when clicking the close button', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
+    await user.click(screen.getByLabelText('Close modal'));
+    expect(onClose).toHaveBeenCalled();
+  });
 });

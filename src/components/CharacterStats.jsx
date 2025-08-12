@@ -214,6 +214,19 @@ const CharacterStats = ({
         />{' '}
         Auto XP on Miss
       </label>
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => setShowLevelUpModal(true)}
+          style={{
+            ...buttonStyle,
+            background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+            width: '100%',
+            marginTop: '10px',
+          }}
+        >
+          Open Level Up Test Modal
+        </button>
+      )}
       {character.xp >= character.xpNeeded && (
         <button
           onClick={() => setShowLevelUpModal(true)}
@@ -231,7 +244,47 @@ const CharacterStats = ({
         </button>
       )}
       <div style={{ marginTop: '15px' }}>
-        <div style={centerTextStyle}>Chrono-Retcon Uses: {character.resources.chronoUses}</div>
+        <div
+          style={{
+            ...centerTextStyle,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '5px',
+          }}
+        >
+          <button
+            aria-label="Decrease Chrono-Retcon"
+            onClick={() =>
+              setCharacter((prev) => ({
+                ...prev,
+                resources: {
+                  ...prev.resources,
+                  chronoUses: Math.max(0, prev.resources.chronoUses - 1),
+                },
+              }))
+            }
+            style={minusButtonStyle}
+          >
+            -1
+          </button>
+          <span>Chrono-Retcon Uses: {character.resources.chronoUses}</span>
+          <button
+            aria-label="Increase Chrono-Retcon"
+            onClick={() =>
+              setCharacter((prev) => ({
+                ...prev,
+                resources: {
+                  ...prev.resources,
+                  chronoUses: Math.min(2, prev.resources.chronoUses + 1),
+                },
+              }))
+            }
+            style={plusButtonStyle}
+          >
+            +1
+          </button>
+        </div>
         <button
           onClick={() => {
             if (character.resources.chronoUses > 0) {
@@ -239,7 +292,7 @@ const CharacterStats = ({
                 ...prev,
                 resources: {
                   ...prev.resources,
-                  chronoUses: prev.resources.chronoUses - 1,
+                  chronoUses: Math.max(0, prev.resources.chronoUses - 1),
                 },
               }));
               setRollResult('⏰ Chrono-Retcon activated - rewrite any recent action!');

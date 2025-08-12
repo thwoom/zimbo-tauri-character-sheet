@@ -40,25 +40,6 @@ describe('DiceRoller', () => {
     expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
   });
 
-  it('calls rollDice for combat rolls', async () => {
-    const user = userEvent.setup();
-    const rollDice = vi.fn();
-    render(
-      <DiceRoller
-        character={minimalCharacter}
-        rollDice={rollDice}
-        equippedWeaponDamage="d8"
-        rollResult="d20: 9 = 9"
-        rollHistory={rollHistory}
-        rollModal={{ isOpen: false, close: vi.fn() }}
-        rollModalData={{}}
-      />,
-    );
-
-    await user.click(screen.getByText('Aid/Interfere'));
-    expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
-  });
-
   it('shows roll result and history', () => {
     const rollDice = vi.fn();
     render(

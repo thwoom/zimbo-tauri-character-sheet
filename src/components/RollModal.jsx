@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { FaDiceD20 } from 'react-icons/fa6';
 import styles from './RollModal.module.css';
 
 export default function RollModal({ isOpen, data, onClose }) {
@@ -9,7 +10,9 @@ export default function RollModal({ isOpen, data, onClose }) {
       <div className={styles.modal}>
         <div className={styles.header}>
           <div className={styles.headerRow}>
-            <h2 className={styles.title}>🎲 Roll Result</h2>
+            <h2 className={styles.title}>
+              <FaDiceD20 style={{ marginRight: '4px' }} /> Roll Result
+            </h2>
             <button onClick={onClose} className={styles.closeButton}>
               ×
             </button>

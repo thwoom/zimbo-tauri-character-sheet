@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { resourceColors } from '../styles/colorMap.js';
 import styles from './CharacterStats.module.css';
 
 const CharacterStats = ({
@@ -7,8 +8,6 @@ const CharacterStats = ({
   saveToHistory,
   totalArmor,
   setShowLevelUpModal,
-  autoXpOnMiss,
-  setAutoXpOnMiss,
   setRollResult,
   setSessionNotes,
   clearRollHistory,
@@ -85,14 +84,6 @@ const CharacterStats = ({
           -1 XP
         </button>
       </div>
-      <label className={styles.autoXpLabel}>
-        <input
-          type="checkbox"
-          checked={autoXpOnMiss}
-          onChange={() => setAutoXpOnMiss((prev) => !prev)}
-        />{' '}
-        Auto XP on Miss
-      </label>
       {import.meta.env.DEV && (
         <button
           onClick={() => setShowLevelUpModal(true)}
@@ -167,15 +158,15 @@ const CharacterStats = ({
         </button>
       </div>
       {[
-        { key: 'paradoxPoints', label: 'Paradox Points', max: 3, color: '#fbbf24' },
-        { key: 'bandages', label: 'Bandages', max: 3, color: '#8b5cf6' },
-        { key: 'rations', label: 'Rations', max: 5, color: '#f97316' },
-        { key: 'advGear', label: 'Adventuring Gear', max: 5, color: '#06b6d4' },
-      ].map(({ key, label, max, color }) => (
+        { key: 'paradoxPoints', label: 'Paradox Points', max: 3 },
+        { key: 'bandages', label: 'Bandages', max: 3 },
+        { key: 'rations', label: 'Rations', max: 5 },
+        { key: 'advGear', label: 'Adventuring Gear', max: 5 },
+      ].map(({ key, label, max }) => (
         <div key={key} className={styles.resourceRow}>
           <div className={styles.resourceHeader}>
             <span className={styles.resourceLabel}>{label}:</span>
-            <span className={styles.resourceValue} style={{ color }}>
+            <span className={styles.resourceValue} style={{ color: resourceColors[key] }}>
               {character.resources[key]}/{max}
             </span>
           </div>
@@ -254,8 +245,6 @@ CharacterStats.propTypes = {
   saveToHistory: PropTypes.func.isRequired,
   totalArmor: PropTypes.number.isRequired,
   setShowLevelUpModal: PropTypes.func.isRequired,
-  autoXpOnMiss: PropTypes.bool.isRequired,
-  setAutoXpOnMiss: PropTypes.func.isRequired,
   setRollResult: PropTypes.func.isRequired,
   setSessionNotes: PropTypes.func,
   clearRollHistory: PropTypes.func,

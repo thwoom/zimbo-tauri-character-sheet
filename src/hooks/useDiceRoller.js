@@ -4,7 +4,7 @@ import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
-export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
+export default function useDiceRoller(character, setCharacter) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
@@ -143,13 +143,14 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     const statusMods = getStatusModifiers(rollType);
     const totalModifier = baseModifier + statusMods.modifier;
 
-    let roll = 0;
+    const rolls = [];
     for (let i = 0; i < diceCount; i += 1) {
-      roll += diceUtils.rollDie(sides);
+      rolls.push(diceUtils.rollDie(sides));
     }
+    let roll = rolls.reduce((sum, r) => sum + r, 0);
     total = roll + totalModifier;
 
-    result = `${dicePart}: ${roll}`;
+    result = `${dicePart}: ${rolls.join(' + ')}`;
     if (baseModifier !== 0) {
       result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
     }
@@ -173,17 +174,17 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(desc);
-        if (autoXpOnMiss) {
-          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
-        }
+        setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         if (window.confirm('Did you get help?')) {
           originalResult = result + interpretation;
           let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
           if (Number.isNaN(bond)) bond = 0;
           bond = Math.max(0, Math.min(3, bond));
-          roll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
+          const newRolls = [diceUtils.rollDie(6), diceUtils.rollDie(6)];
+          rolls.splice(0, rolls.length, ...newRolls);
+          roll = newRolls[0] + newRolls[1];
           total = roll + totalModifier + bond;
-          result = `2d6: ${roll}`;
+          result = `2d6: ${rolls.join(' + ')}`;
           if (baseModifier !== 0) {
             result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
           }
@@ -219,6 +220,8 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       description,
       context,
       total,
+      rolls,
+      modifier: totalModifier,
       timestamp: new Date().toLocaleTimeString(),
       ...(originalResult && { originalResult }),
     };

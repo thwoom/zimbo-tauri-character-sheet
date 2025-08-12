@@ -36,8 +36,6 @@ describe('CharacterStats', () => {
       saveToHistory: vi.fn(),
       totalArmor: 0,
       setShowLevelUpModal: vi.fn(),
-      autoXpOnMiss: false,
-      setAutoXpOnMiss: vi.fn(),
       setRollResult: vi.fn(),
       ...propOverrides,
     };
@@ -54,14 +52,6 @@ describe('CharacterStats', () => {
     expect(levelUpButton).toBeInTheDocument();
     await user.click(levelUpButton);
     expect(props.setShowLevelUpModal).toHaveBeenCalledWith(true);
-  });
-
-  it('toggles auto XP on miss checkbox', async () => {
-    const user = userEvent.setup();
-    const { props } = renderComponent();
-    const checkbox = screen.getByLabelText(/Auto XP on Miss/i);
-    await user.click(checkbox);
-    expect(props.setAutoXpOnMiss).toHaveBeenCalled();
   });
 
   it('disables chrono-retcon button when no uses left', () => {

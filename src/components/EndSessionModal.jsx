@@ -13,6 +13,7 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
     alignment: false,
   });
   const [resolvedBonds, setResolvedBonds] = useState([]);
+  const [replacementBonds, setReplacementBonds] = useState({});
 
   if (!isOpen) return null;
 
@@ -21,9 +22,21 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   };
 
   const toggleBond = (index) => {
-    setResolvedBonds((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
-    );
+    setResolvedBonds((prev) => {
+      if (prev.includes(index)) {
+        setReplacementBonds((r) => {
+          const rest = { ...r };
+          delete rest[index];
+          return rest;
+        });
+        return prev.filter((i) => i !== index);
+      }
+      return [...prev, index];
+    });
+  };
+
+  const handleBondTextChange = (index, text) => {
+    setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
@@ -31,11 +44,26 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const handleEnd = () => {
     const xpGained = totalXP;
     const newXp = character.xp + xpGained;
-    setCharacter((prev) => ({
-      ...prev,
-      xp: newXp,
-      bonds: prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx)),
-    }));
+    setCharacter((prev) => {
+      const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
+      const newBonds = resolvedBonds
+        .map((idx) => {
+          const text = replacementBonds[idx]?.trim();
+          if (!text) return null;
+          return {
+            name: prev.bonds[idx].name,
+            relationship: text,
+            resolved: false,
+          };
+        })
+        .filter(Boolean);
+
+      return {
+        ...prev,
+        xp: newXp,
+        bonds: [...remainingBonds, ...newBonds],
+      };
+    });
 
     if (newXp >= character.level + 7) {
       onLevelUp();
@@ -93,6 +121,15 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
                     />{' '}
                     {bond.name}: {bond.relationship}
                   </label>
+                  {resolvedBonds.includes(idx) && (
+                    <input
+                      type="text"
+                      placeholder="New bond text"
+                      value={replacementBonds[idx] || ''}
+                      onChange={(e) => handleBondTextChange(idx, e.target.value)}
+                      className={styles.bondInput}
+                    />
+                  )}
                 </li>
               ))}
             </ul>

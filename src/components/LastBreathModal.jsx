@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import React, { useEffect, useState } from 'react';
 import { FaSkull } from 'react-icons/fa6';
 import styles from './LastBreathModal.module.css';

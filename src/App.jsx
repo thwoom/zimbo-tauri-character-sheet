@@ -26,6 +26,7 @@ function App() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
   const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
@@ -61,11 +62,7 @@ function App() {
     }
   }, [sessionNotes]);
 
-  const { actionHistory, saveToHistory, undoLastAction } = useUndo(
-    character,
-    setCharacter,
-    setRollResult,
-  );
+  const { saveToHistory, undoLastAction } = useUndo(character, setCharacter, setRollResult);
 
   const {
     statusEffects,
@@ -135,6 +132,12 @@ function App() {
                 className={`${styles.button} ${styles.bondsButton}`}
               >
                 👥 Bonds ({character.bonds.filter((b) => !b.resolved).length})
+              </button>
+              <button
+                onClick={() => setShowExportModal(true)}
+                className={`${styles.button} ${styles.exportButton}`}
+              >
+                💾 Export/Save
               </button>
             </div>
           </div>
@@ -215,6 +218,8 @@ function App() {
         handleConsumeItem={handleConsumeItem}
         handleDropItem={handleDropItem}
         bondsModal={bondsModal}
+        showExportModal={showExportModal}
+        setShowExportModal={setShowExportModal}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BondsModal from './BondsModal.jsx';
 import DamageModal from './DamageModal.jsx';
+import ExportModal from './ExportModal.jsx';
 import InventoryModal from './InventoryModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
 import StatusModal from './StatusModal.jsx';
@@ -29,6 +30,8 @@ const GameModals = ({
   handleEquipItem,
   handleConsumeItem,
   handleDropItem,
+  showExportModal,
+  setShowExportModal,
   bondsModal,
 }) => (
   <>
@@ -69,6 +72,8 @@ const GameModals = ({
     )}
 
     <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
+
+    <ExportModal isOpen={showExportModal} onClose={() => setShowExportModal(false)} />
   </>
 );
 
@@ -95,6 +100,8 @@ GameModals.propTypes = {
   handleEquipItem: PropTypes.func.isRequired,
   handleConsumeItem: PropTypes.func.isRequired,
   handleDropItem: PropTypes.func.isRequired,
+  showExportModal: PropTypes.bool.isRequired,
+  setShowExportModal: PropTypes.func.isRequired,
   bondsModal: PropTypes.shape({
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,

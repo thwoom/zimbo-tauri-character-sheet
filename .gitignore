@@ -23,12 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-fix-pr*.ps1
-
-fix-pr*.ps1
-
-fix-pr*.ps1
-
-fix-pr*.ps1
-
+# Ignore PR fix scripts
 fix-pr*.ps1

@@ -7,22 +7,12 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || DEFAULT_THEME);
 
   useEffect(() => {
-    const allVars = new Set();
-    Object.values(THEMES).forEach((vars) => {
-      Object.keys(vars).forEach((key) => allVars.add(key));
-    });
-
-    allVars.forEach((key) => {
-      const value = THEMES[theme][key];
-      if (value !== undefined) {
-        document.documentElement.style.setProperty(key, value);
-      }
-    });
+    document.documentElement.setAttribute('data-theme', theme);
 
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const value = { theme, setTheme, themes: Object.keys(THEMES) };
+  const value = { theme, setTheme, themes: THEMES };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

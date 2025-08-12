@@ -109,7 +109,42 @@ describe('XP gain on miss', () => {
         </ThemeProvider>
       );
     };
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
 
+    const toggle = screen.getByLabelText(/Auto XP on Miss/i);
+    act(() => {
+      fireEvent.click(toggle);
+    });
+
+    const button = screen.getByRole('button', { name: 'INT (+0)' });
+    act(() => {
+      fireEvent.click(button);
+    });
+
+    expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
+
+    Math.random.mockRestore();
+  });
+
+  it('increments XP for both players when help still fails', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
+      );
+    };
     window.confirm.mockReturnValue(true);
     window.prompt.mockReturnValue('0');
 

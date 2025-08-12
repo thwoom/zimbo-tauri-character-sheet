@@ -109,16 +109,14 @@ describe('XP gain on miss', () => {
       );
     };
 
+    const previousSetting = globalThis.autoXpOnMiss;
+    globalThis.autoXpOnMiss = false;
+
     render(
       <Wrapper>
         <App />
       </Wrapper>,
     );
-
-    const toggle = screen.getByLabelText(/Auto XP on Miss/i);
-    act(() => {
-      fireEvent.click(toggle);
-    });
 
     const button = screen.getByRole('button', { name: 'INT (+0)' });
     act(() => {
@@ -128,6 +126,7 @@ describe('XP gain on miss', () => {
     expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
 
     Math.random.mockRestore();
+    globalThis.autoXpOnMiss = previousSetting;
   });
 });
 

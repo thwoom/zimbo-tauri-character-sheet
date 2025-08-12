@@ -6,3 +6,6 @@ if (!globalThis.crypto) {
 }
 
 import '@testing-library/jest-dom/vitest';
+
+// Enable automatic XP gain on a miss during tests
+globalThis.autoXpOnMiss = true;

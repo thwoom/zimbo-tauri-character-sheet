@@ -64,13 +64,16 @@ describe('EndSessionModal', () => {
     expect(getCharacter().xp).toBe(0);
   });
 
-  it('awards XP for resolved bonds and removes them', async () => {
+  it('replaces resolved bonds with new entries and awards XP', async () => {
     const user = userEvent.setup();
     const initial = {
       xp: 0,
       level: 1,
       xpNeeded: 8,
-      bonds: [{ name: 'Alice', relationship: 'Friend', resolved: false }],
+      bonds: [
+        { name: 'Alice', relationship: 'Friend', resolved: false },
+        { name: 'Bob', relationship: 'Ally', resolved: false },
+      ],
     };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
@@ -78,9 +81,13 @@ describe('EndSessionModal', () => {
     );
 
     await user.click(screen.getByLabelText(/Alice: Friend/));
+    await user.type(screen.getByPlaceholderText('New bond text'), 'Best buds');
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(1);
-    expect(getCharacter().bonds).toHaveLength(0);
+    expect(getCharacter().bonds).toEqual([
+      { name: 'Bob', relationship: 'Ally', resolved: false },
+      { name: 'Alice', relationship: 'Best buds', resolved: false },
+    ]);
   });
 });

@@ -5,45 +5,6 @@ import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
-const buildResultString = (mods, total, notes = []) => {
-  const [base, ...rest] = mods;
-  let result = base;
-  rest.forEach((mod) => {
-    if (mod !== 0) {
-      result += ` ${mod >= 0 ? '+' : ''}${mod}`;
-    }
-  });
-  result += ` = ${total}`;
-  if (notes.length > 0) {
-    result += ` (${notes.join(', ')})`;
-  }
-  return result;
-};
-
-const resolveAidOrInterfere = () => {
-  const type = window.prompt('Aid or Interfere? (a/i)', 'a');
-  if (!type) return { modifier: 0, consequence: false };
-  const isAid = type.toLowerCase().startsWith('a');
-  let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
-  if (Number.isNaN(bond)) bond = 0;
-  bond = Math.max(0, Math.min(3, bond));
-  const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6) + bond;
-  let modifier = 0;
-  let consequence = false;
-  if (helperRoll >= 10) {
-    modifier = isAid ? 1 : -2;
-  } else if (helperRoll >= 7) {
-    modifier = isAid ? 1 : -2;
-    consequence = true;
-  } else {
-    consequence = true;
-  }
-  if (consequence) {
-    window.alert('The helper exposes themselves to danger, retribution, or cost.');
-  }
-  return { modifier, consequence };
-};
-
 export default function useDiceRoller(character, setCharacter) {
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
@@ -190,7 +151,7 @@ export default function useDiceRoller(character, setCharacter) {
     total = rolls.reduce((sum, r) => sum + r, 0) + totalModifier;
 
     const buildResultString = (mods, totalValue, notes = []) => {
-      let str = `${dicePart}: ${roll}`;
+      let str = `${dicePart}: ${rolls.join(' + ')}`;
       mods.forEach((m) => {
         if (m !== 0) str += ` ${m >= 0 ? '+' : ''}${m}`;
       });
@@ -250,11 +211,7 @@ export default function useDiceRoller(character, setCharacter) {
         setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
       }
 
-      if (
-        !desc.includes('aid') &&
-        !desc.includes('interfere') &&
-        window.confirm('Did someone aid or interfere?')
-      ) {
+      if (!isAidMove && window.confirm('Did someone aid or interfere?')) {
         originalResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
         const aid = resolveAidOrInterfere();
         if (aid.modifier !== 0) {

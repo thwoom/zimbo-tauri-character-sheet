@@ -3,17 +3,19 @@ on:
   workflow_dispatch:
     inputs:
       strategy:
-        description: "prefer-pr or prefer-base"
+        description: 'prefer-pr or prefer-base'
         required: false
-        default: "prefer-pr"
+        default: 'prefer-pr'
       include_forks:
-        description: "Also handle fork PRs (creates takeover PRs)"
+        description: 'Also handle fork PRs (creates takeover PRs)'
         required: false
-        default: "false"
+        default: 'false'
       dry_run:
-        description: "Log actions without pushing"
+        description: 'Log actions without pushing'
         required: false
-        default: "true"
+        default: 'false'
+  schedule:
+    - cron: '47 3 * * *'
 
 permissions:
   contents: write
@@ -41,7 +43,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           STRATEGY: ${{ github.event.inputs.strategy }}
           INCLUDE_FORKS: ${{ github.event.inputs.include_forks }}
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.dry_run }}
         run: |
           set -euo pipefail
 

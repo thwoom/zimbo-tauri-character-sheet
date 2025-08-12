@@ -172,23 +172,33 @@ const LevelUpModal = ({
     if (e.target === e.currentTarget) onClose();
   };
 
+  const handleOverlayKeyDown = (e) => {
+    if (e.key === 'Escape' || e.key === 'Enter') onClose();
+  };
+
   return (
     <div
       className="levelup-overlay"
       onClick={handleOverlayClick}
+      onKeyDown={handleOverlayKeyDown}
       role="button"
       tabIndex={0}
       aria-label="Close"
-      onKeyDown={(e) => e.key === 'Enter' && handleOverlayClick(e)}
     >
-      <div className="levelup-modal">
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
+      <div
+        className="levelup-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         {/* Header */}
         <div className="levelup-header">
           <h2 className="levelup-header-title">LEVEL UP!</h2>
           <p className="levelup-header-text">
             {character.name} advances to Level {levelUpState.newLevel}
           </p>
-          <button onClick={onClose} className="levelup-close-button">
+          <button onClick={onClose} className="levelup-close-button" aria-label="Close modal">
             ×
           </button>
         </div>

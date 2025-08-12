@@ -45,7 +45,7 @@
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: var(--color-white);
   padding: 8px 15px;
   cursor: pointer;
   font-weight: bold;
@@ -108,7 +108,7 @@
 }
 
 .historyItem {
-  color: #aaa;
+  color: var(--color-gray-350);
   margin-bottom: 2px;
 }
 

@@ -12,8 +12,8 @@
 }
 
 .modal {
-  background: #1a1a2e;
-  border: 2px solid #00ff88;
+  background: var(--color-modal-bg);
+  border: 2px solid var(--color-neon);
   border-radius: 15px;
   padding: 30px;
   text-align: center;
@@ -23,7 +23,7 @@
 }
 
 .title {
-  color: #00ff88;
+  color: var(--color-neon);
 }
 
 .section {
@@ -45,14 +45,14 @@
   margin-top: 5px;
   padding: 5px;
   border-radius: 4px;
-  border: 1px solid #00ff88;
-  background: #0f0f1a;
-  color: #fff;
+  border: 1px solid var(--color-neon);
+  background: var(--color-modal-bg-dark);
+  color: var(--color-white);
 }
 
 .total {
   margin-top: 10px;
-  color: #fff;
+  color: var(--color-white);
 }
 
 .actions {
@@ -60,10 +60,10 @@
 }
 
 .button {
-  background: linear-gradient(45deg, #00ff88, #00cc6a);
+  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
   border: none;
   border-radius: 6px;
-  color: white;
+  color: var(--color-white);
   padding: 8px 15px;
   cursor: pointer;
   font-weight: bold;
@@ -72,5 +72,5 @@
 }
 
 .cancelButton {
-  background: linear-gradient(45deg, #ef4444, #dc2626);
+  background: linear-gradient(45deg, var(--color-danger), var(--color-danger-dark));
 }

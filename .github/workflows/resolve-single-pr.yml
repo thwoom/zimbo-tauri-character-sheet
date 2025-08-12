@@ -6,7 +6,7 @@ on:
         description: "PR number to resolve"
         required: true
       strategy:
-        description: "Global preference if needed (prefer-pr or prefer-base)"
+        description: "prefer-pr or prefer-base"
         required: false
         default: "prefer-pr"
 permissions:
@@ -20,10 +20,6 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
-      - name: Show gh/jq versions
-        run: |
-          gh --version || true
-          jq --version || true
       - name: Get PR data
         id: pr
         env: { GH_TOKEN: ${{ github.token }} }

@@ -12,10 +12,6 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Show gh/jq versions
-        run: |
-          gh --version || true
-          jq --version || true
       - name: List open PRs
         env: { GH_TOKEN: ${{ github.token }} }
         run: |

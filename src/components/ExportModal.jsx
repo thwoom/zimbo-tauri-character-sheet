@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { FaSatellite } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './ExportModal.module.css';
 
@@ -37,7 +38,9 @@ export default function ExportModal({ isOpen, onClose }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>💾 Export / Import</h2>
+        <h2 className={styles.title}>
+          <FaSatellite style={{ marginRight: '4px' }} /> Export / Import
+        </h2>
         <input
           type="text"
           value={fileName}

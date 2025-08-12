@@ -1,11 +1,22 @@
 import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
+import {
+  FaClipboard,
+  FaCalendarDays,
+  FaFloppyDisk,
+  FaFolderOpen,
+  FaTrash,
+  FaLaptop,
+  FaMobileScreen,
+} from 'react-icons/fa6';
 import styles from './SessionNotes.module.css';
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
   return (
     <div className={`${styles.panel} ${compactMode ? '' : styles.fullWidth}`}>
-      <h3 className={styles.title}>📝 Session Notes</h3>
+      <h3 className={styles.title}>
+        <FaClipboard className={styles.icon} /> Session Notes
+      </h3>
       <textarea
         className={styles.textarea}
         value={sessionNotes}
@@ -20,7 +31,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             setSessionNotes((prev) => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
           }}
         >
-          📅 Timestamp
+          <FaCalendarDays className={styles.icon} /> Timestamp
         </button>
         <button
           className={styles.button}
@@ -31,7 +42,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             });
           }}
         >
-          💾 Save
+          <FaFloppyDisk className={styles.icon} /> Save
         </button>
         <button
           className={styles.button}
@@ -42,7 +53,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             setSessionNotes(contents);
           }}
         >
-          📂 Load
+          <FaFolderOpen className={styles.icon} /> Load
         </button>
         <button
           className={`${styles.button} ${styles.danger}`}
@@ -52,13 +63,13 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             }
           }}
         >
-          🗑️ Clear
+          <FaTrash className={styles.icon} /> Clear
         </button>
         <button
           className={`${styles.button} ${styles.compact}`}
           onClick={() => setCompactMode(!compactMode)}
         >
-          {compactMode ? '🖥️' : '📱'} {compactMode ? 'Expand' : 'Compact'}
+          {compactMode ? <FaLaptop /> : <FaMobileScreen />} {compactMode ? 'Expand' : 'Compact'}
         </button>
       </div>
     </div>

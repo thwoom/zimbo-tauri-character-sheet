@@ -1,9 +1,29 @@
 import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
+import { ThemeProvider } from './state/ThemeContext.jsx';
+
+beforeEach(() => {
+  vi.spyOn(window, 'confirm').mockReturnValue(false);
+  vi.spyOn(window, 'prompt').mockReturnValue('0');
+});
+
+afterEach(() => {
+  window.confirm.mockRestore();
+  window.prompt.mockRestore();
+});
+
+let confirmSpy;
+beforeEach(() => {
+  confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+});
+
+afterEach(() => {
+  confirmSpy.mockRestore();
+});
 
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {
@@ -14,9 +34,11 @@ describe('App level up auto-detection', () => {
       const [character, setChar] = React.useState(initialCharacter);
       setCharacter = setChar;
       return (
-        <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -45,9 +67,11 @@ describe('XP gain on miss', () => {
     const Wrapper = ({ children }) => {
       const [character, setCharacter] = React.useState(initialCharacter);
       return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -76,9 +100,11 @@ describe('XP gain on miss', () => {
     const Wrapper = ({ children }) => {
       const [character, setCharacter] = React.useState(initialCharacter);
       return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -102,6 +128,41 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
   });
+
+  it('increments XP for both players when help still fails', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      );
+    };
+
+    window.confirm.mockReturnValue(true);
+    window.prompt.mockReturnValue('0');
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const button = screen.getByRole('button', { name: 'INT (+0)' });
+    act(() => {
+      fireEvent.click(button);
+    });
+
+    expect(screen.getByText(/XP: 2\/5/i)).toBeInTheDocument();
+    expect(screen.getByText(/Original:/i)).toBeInTheDocument();
+    expect(screen.getByText(/With Help:/i)).toBeInTheDocument();
+
+    randomSpy.mockRestore();
+  });
 });
 
 // Skipped in Vitest environment due to jsdom localStorage limitations
@@ -109,9 +170,11 @@ describe.skip('localStorage persistence', () => {
   const Wrapper = ({ children }) => {
     const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
     return (
-      <CharacterContext.Provider value={{ character, setCharacter }}>
-        {children}
-      </CharacterContext.Provider>
+      <ThemeProvider>
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      </ThemeProvider>
     );
   };
 

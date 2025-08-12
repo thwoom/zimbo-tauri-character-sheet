@@ -162,6 +162,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       result += ` (${statusMods.notes.join(', ')})`;
     }
 
+    let originalResult;
     if (dicePart === '2d6') {
       if (total >= 10) {
         interpretation = ' ✅ Success!';
@@ -175,6 +176,38 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
         if (autoXpOnMiss) {
           setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         }
+        if (window.confirm('Did you get help?')) {
+          originalResult = result + interpretation;
+          let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
+          if (Number.isNaN(bond)) bond = 0;
+          bond = Math.max(0, Math.min(3, bond));
+          roll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
+          total = roll + totalModifier + bond;
+          result = `2d6: ${roll}`;
+          if (baseModifier !== 0) {
+            result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
+          }
+          if (statusMods.modifier !== 0) {
+            result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+          }
+          if (bond !== 0) {
+            result += ` +${bond}`;
+          }
+          result += ` = ${total}`;
+          if (statusMods.notes.length > 0) {
+            result += ` (${statusMods.notes.join(', ')})`;
+          }
+          if (total >= 10) {
+            interpretation = ' ✅ Success!';
+            context = getSuccessContext(desc);
+          } else if (total >= 7) {
+            interpretation = ' ⚠️ Partial Success';
+            context = getPartialContext(desc);
+          } else {
+            interpretation = ' ❌ Failure';
+            context = getFailureContext(desc);
+          }
+        }
       }
     }
 
@@ -184,7 +217,9 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       context,
       total,
       timestamp: new Date().toLocaleTimeString(),
+      ...(originalResult && { originalResult }),
     };
+    if (originalResult) rollData.originalResult = originalResult;
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);
     setRollModalData(rollData);

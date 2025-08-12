@@ -1,14 +1,14 @@
 export const panelStyle = {
-  background: 'rgba(255, 255, 255, 0.1)',
+  background: 'var(--panel-bg)',
   backdropFilter: 'blur(10px)',
   borderRadius: '12px',
   padding: '20px',
-  border: '1px solid rgba(0, 255, 136, 0.3)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+  border: '1px solid var(--panel-border)',
+  boxShadow: '0 8px 32px var(--panel-shadow)',
 };
 
 export const buttonStyle = {
-  background: 'linear-gradient(45deg, #00ff88, #00cc6a)',
+  background: 'linear-gradient(45deg, var(--color-accent), var(--color-accent-dark))',
   border: 'none',
   borderRadius: '6px',
   color: 'white',

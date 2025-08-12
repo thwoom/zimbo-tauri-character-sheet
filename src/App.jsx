@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import {
-  FaClock,
   FaMeteor,
   FaRadiation,
   FaBoxOpen,
@@ -58,7 +57,7 @@ function App() {
     rollModalData,
     rollDie,
     clearRollHistory,
-  } = useDiceRoller(character, setCharacter, autoXpOnMiss);
+  } = useDiceRoller(character, setCharacter);
 
   const { totalArmor, equippedWeaponDamage, handleEquipItem, handleConsumeItem, handleDropItem } =
     useInventory(character, setCharacter);

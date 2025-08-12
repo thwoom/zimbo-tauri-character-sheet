@@ -15,6 +15,38 @@ const LevelUpModal = ({
 }) => {
   const [showMoveDetails, setShowMoveDetails] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (!modalRef.current) return;
+    modalRef.current.focus();
+
+    const handleTabTrap = (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = modalRef.current.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    const node = modalRef.current;
+    node.addEventListener('keydown', handleTabTrap);
+    return () => node.removeEventListener('keydown', handleTabTrap);
+  }, []);
 
   // Helper functions
   const canIncreaseTwo = () => {
@@ -60,17 +92,20 @@ const LevelUpModal = ({
     setLevelUpState((prev) => ({ ...prev, hpIncrease: increase }));
     setRollResult(`HP Roll: d10(${roll}) + CON(${conMod}) = +${increase} HP`);
 
-    // Add visual feedback
-    const rollHistory = {
-      type: 'HP Roll',
-      result: `+${increase} HP`,
-      rolls: [roll],
-      modifier: conMod,
-      total: increase,
-      timestamp: new Date().toLocaleTimeString(),
-    };
-
-    return rollHistory;
+    setCharacter((prev) => ({
+      ...prev,
+      rollHistory: [
+        {
+          type: 'HP Roll',
+          result: `+${increase} HP`,
+          rolls: [roll],
+          modifier: conMod,
+          total: increase,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+        ...(prev.rollHistory ? prev.rollHistory.slice(0, 9) : []),
+      ],
+    }));
   };
 
   const completeLevelUp = () => {
@@ -173,7 +208,7 @@ const LevelUpModal = ({
   };
 
   const handleOverlayKeyDown = (e) => {
-    if (e.key === 'Escape' || e.key === 'Enter') onClose();
+    if (e.key === 'Escape') onClose();
   };
 
   useEffect(() => {
@@ -185,20 +220,21 @@ const LevelUpModal = ({
   }, [onClose]);
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
     <div
       className="levelup-overlay"
       onClick={handleOverlayClick}
       onKeyDown={handleOverlayKeyDown}
-      role="button"
-      tabIndex={0}
       aria-label="Close"
     >
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
+        ref={modalRef}
         className="levelup-modal"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
+        tabIndex={-1}
       >
         {/* Header */}
         <div className="levelup-header">

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
 import Message from './Message.jsx';

@@ -35,6 +35,9 @@ describe('DiceRoller', () => {
 
     await user.click(screen.getByText('d6'));
     expect(rollDice).toHaveBeenCalledWith('d6');
+
+    await user.click(screen.getByText('Aid/Interfere'));
+    expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
   });
 
   it('shows roll result and history', () => {

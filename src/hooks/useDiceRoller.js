@@ -149,20 +149,48 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
     }
     total = roll + totalModifier;
 
-    result = `${dicePart}: ${roll}`;
-    if (baseModifier !== 0) {
-      result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-    }
-    if (statusMods.modifier !== 0) {
-      result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-    }
-    result += ` = ${total}`;
+    const buildResultString = (mods, totalValue, notes = []) => {
+      let str = `${dicePart}: ${roll}`;
+      mods.forEach((m) => {
+        if (m !== 0) str += ` ${m >= 0 ? '+' : ''}${m}`;
+      });
+      str += ` = ${totalValue}`;
+      if (notes.length > 0) {
+        str += ` (${notes.join(', ')})`;
+      }
+      return str;
+    };
 
-    if (statusMods.notes.length > 0) {
-      result += ` (${statusMods.notes.join(', ')})`;
-    }
+    const mods = [baseModifier, statusMods.modifier];
+    let notes = [...statusMods.notes];
 
+    const originalTotal = total;
+    let originalInterpretation = '';
     let originalResult;
+
+    const resolveAidOrInterfere = () => {
+      const isAid = window.confirm('Aid? (Cancel for Interfere)');
+      let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
+      if (Number.isNaN(bond)) bond = 0;
+      bond = Math.max(0, Math.min(3, bond));
+      const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
+      const helperTotal = helperRoll + bond;
+      let modifier = 0;
+      let consequence = false;
+      if (helperTotal >= 10) {
+        modifier = isAid ? 1 : -2;
+      } else if (helperTotal >= 7) {
+        modifier = isAid ? 1 : -2;
+        consequence = true;
+      } else {
+        consequence = true;
+      }
+      if (consequence) {
+        window.alert('Helper exposes themselves to danger, retribution, or cost!');
+      }
+      return { modifier, consequence };
+    };
+
     if (dicePart === '2d6') {
       if (total >= 10) {
         interpretation = ' ✅ Success!';
@@ -173,43 +201,42 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       } else {
         interpretation = ' ❌ Failure';
         context = getFailureContext(desc);
-        if (autoXpOnMiss) {
-          setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+      }
+
+      originalInterpretation = interpretation;
+
+      if (originalTotal < 7 && autoXpOnMiss) {
+        setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+      }
+
+      if (
+        !desc.includes('aid') &&
+        !desc.includes('interfere') &&
+        window.confirm('Did someone aid or interfere?')
+      ) {
+        originalResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
+        const aid = resolveAidOrInterfere();
+        if (aid.modifier !== 0) {
+          mods.push(aid.modifier);
+          total += aid.modifier;
         }
-        if (window.confirm('Did you get help?')) {
-          originalResult = result + interpretation;
-          let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
-          if (Number.isNaN(bond)) bond = 0;
-          bond = Math.max(0, Math.min(3, bond));
-          roll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
-          total = roll + totalModifier + bond;
-          result = `2d6: ${roll}`;
-          if (baseModifier !== 0) {
-            result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
-          }
-          if (statusMods.modifier !== 0) {
-            result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
-          }
-          if (bond !== 0) {
-            result += ` +${bond}`;
-          }
-          result += ` = ${total}`;
-          if (statusMods.notes.length > 0) {
-            result += ` (${statusMods.notes.join(', ')})`;
-          }
-          if (total >= 10) {
-            interpretation = ' ✅ Success!';
-            context = getSuccessContext(desc);
-          } else if (total >= 7) {
-            interpretation = ' ⚠️ Partial Success';
-            context = getPartialContext(desc);
-          } else {
-            interpretation = ' ❌ Failure';
-            context = getFailureContext(desc);
-          }
+        if (aid.consequence) {
+          notes = [...notes, 'Helper Consequences'];
+        }
+        if (total >= 10) {
+          interpretation = ' ✅ Success!';
+          context = getSuccessContext(desc);
+        } else if (total >= 7) {
+          interpretation = ' ⚠️ Partial Success';
+          context = getPartialContext(desc);
+        } else {
+          interpretation = ' ❌ Failure';
+          context = getFailureContext(desc);
         }
       }
     }
+
+    result = buildResultString(mods, total, notes);
 
     const rollData = {
       result: result + interpretation,

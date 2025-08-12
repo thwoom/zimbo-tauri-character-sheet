@@ -128,41 +128,6 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
   });
-
-  it('increments XP for both players when help still fails', () => {
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-
-    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
-
-    const Wrapper = ({ children }) => {
-      const [character, setCharacter] = React.useState(initialCharacter);
-      return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
-      );
-    };
-
-    window.confirm.mockReturnValue(true);
-    window.prompt.mockReturnValue('0');
-
-    render(
-      <Wrapper>
-        <App />
-      </Wrapper>,
-    );
-
-    const button = screen.getByRole('button', { name: 'INT (+0)' });
-    act(() => {
-      fireEvent.click(button);
-    });
-
-    expect(screen.getByText(/XP: 2\/5/i)).toBeInTheDocument();
-    expect(screen.getByText(/Original:/i)).toBeInTheDocument();
-    expect(screen.getByText(/With Help:/i)).toBeInTheDocument();
-
-    randomSpy.mockRestore();
-  });
 });
 
 // Skipped in Vitest environment due to jsdom localStorage limitations

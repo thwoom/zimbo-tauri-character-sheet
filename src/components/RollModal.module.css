@@ -74,6 +74,12 @@
   margin-bottom: 20px;
 }
 
+.original {
+  font-size: 1rem;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
 .button {
   background: linear-gradient(45deg, #00ff88, #00cc6a);
   border: none;

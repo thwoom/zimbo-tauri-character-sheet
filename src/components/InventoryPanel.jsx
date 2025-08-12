@@ -1,4 +1,13 @@
 import PropTypes from 'prop-types';
+import {
+  FaBoxOpen,
+  FaMeteor,
+  FaStar,
+  FaFlask,
+  FaShield,
+  FaCube,
+  FaSatellite,
+} from 'react-icons/fa6';
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
@@ -8,19 +17,23 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => 
 
   return (
     <div className={styles.panel}>
-      <h3 className={styles.title}>🎒 Equipment</h3>
+      <h3 className={styles.title}>
+        <FaBoxOpen className={styles.itemIcon} /> Equipment
+      </h3>
       <div className={styles.items}>
         {character.inventory.slice(0, 5).map((item) => (
           <div key={item.id} className={`${styles.item} ${item.equipped ? styles.equipped : ''}`}>
             <div className={styles.itemRow}>
               <div className={styles.itemInfo}>
                 <div className={styles.itemName}>
-                  {item.type === 'weapon' && '⚔️'}
-                  {item.type === 'magic' && '💍'}
-                  {item.type === 'consumable' && '🧪'}
-                  {item.type === 'armor' && '🛡️'}
-                  {item.type === 'material' && '📦'}
-                  {(!item.type || item.type === 'gear') && '🎒'}
+                  {item.type === 'weapon' && <FaMeteor className={styles.itemIcon} />}
+                  {item.type === 'magic' && <FaStar className={styles.itemIcon} />}
+                  {item.type === 'consumable' && <FaFlask className={styles.itemIcon} />}
+                  {item.type === 'armor' && <FaShield className={styles.itemIcon} />}
+                  {item.type === 'material' && <FaCube className={styles.itemIcon} />}
+                  {(!item.type || item.type === 'gear') && (
+                    <FaSatellite className={styles.itemIcon} />
+                  )}
                   {item.name}
                   {item.equipped && <span className={styles.equippedMark}>✓</span>}
                   {item.description && (
@@ -60,11 +73,14 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => 
         <div className={styles.debilitiesSection}>
           <div className={styles.debilitiesTitle}>Active Debilities:</div>
           <div className={styles.debilitiesList}>
-            {character.debilities.map((debility) => (
-              <span key={debility} className={styles.debilityTag}>
-                {debilityTypes[debility].icon} {debilityTypes[debility].name}
-              </span>
-            ))}
+            {character.debilities.map((debility) => {
+              const Icon = debilityTypes[debility].icon;
+              return (
+                <span key={debility} className={styles.debilityTag}>
+                  {Icon && <Icon className={styles.itemIcon} />} {debilityTypes[debility].name}
+                </span>
+              );
+            })}
           </div>
         </div>
       )}

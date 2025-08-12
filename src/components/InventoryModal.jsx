@@ -7,6 +7,7 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
     <div className={styles.inventoryOverlay}>
       <div className={styles.inventoryModal}>
         <h2 className={styles.inventoryTitle}>🎒 Inventory</h2>
+
         {inventory.length === 0 ? (
           <p className={styles.inventoryEmpty}>No items</p>
         ) : (

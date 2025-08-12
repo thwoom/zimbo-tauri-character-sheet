@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
@@ -46,7 +47,9 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>🏁 End of Session</h2>
+        <h2 className={styles.title}>
+          <FaFlagCheckered style={{ marginRight: '4px' }} /> End of Session
+        </h2>
         <div className={styles.section}>
           <label>
             <input type="checkbox" checked={answers.q1} onChange={() => toggleAnswer('q1')} /> Did

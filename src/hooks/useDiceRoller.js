@@ -162,6 +162,8 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       result += ` (${statusMods.notes.join(', ')})`;
     }
 
+    let originalResult;
+
     if (dicePart === '2d6') {
       if (total >= 10) {
         interpretation = ' ✅ Success!';
@@ -175,6 +177,45 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
         if (autoXpOnMiss) {
           setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
         }
+        originalResult = result + interpretation;
+
+        if (window.confirm('Did you get help?')) {
+          const bondInput = window.prompt('Enter bond modifier', '0');
+          const bondModifier = parseInt(bondInput, 10) || 0;
+
+          const helpRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
+          total = helpRoll + totalModifier + bondModifier;
+
+          result = `${dicePart}: ${helpRoll}`;
+          if (baseModifier !== 0) {
+            result += ` ${baseModifier >= 0 ? '+' : ''}${baseModifier}`;
+          }
+          if (statusMods.modifier !== 0) {
+            result += ` ${statusMods.modifier >= 0 ? '+' : ''}${statusMods.modifier}`;
+          }
+          if (bondModifier !== 0) {
+            result += ` ${bondModifier >= 0 ? '+' : ''}${bondModifier}`;
+          }
+          result += ` = ${total}`;
+
+          if (statusMods.notes.length > 0) {
+            result += ` (${statusMods.notes.join(', ')})`;
+          }
+
+          if (total >= 10) {
+            interpretation = ' ✅ Success!';
+            context = getSuccessContext(desc);
+          } else if (total >= 7) {
+            interpretation = ' ⚠️ Partial Success';
+            context = getPartialContext(desc);
+          } else {
+            interpretation = ' ❌ Failure';
+            context = getFailureContext(desc);
+            if (autoXpOnMiss) {
+              setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+            }
+          }
+        }
       }
     }
 
@@ -184,6 +225,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       context,
       total,
       timestamp: new Date().toLocaleTimeString(),
+      ...(originalResult && { originalResult }),
     };
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);

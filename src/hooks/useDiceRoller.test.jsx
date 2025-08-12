@@ -114,12 +114,14 @@ describe('help mechanics', () => {
       useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter, true),
     );
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    window.confirm.mockReturnValue(true);
-    window.prompt.mockReturnValue('0');
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const promptSpy = vi.spyOn(window, 'prompt').mockReturnValue('0');
     act(() => {
       result.current.rollDice('2d6', 'str');
     });
     randomSpy.mockRestore();
+    confirmSpy.mockRestore();
+    promptSpy.mockRestore();
     expect(result.current.rollModalData.originalResult).toMatch(/❌ Failure/);
     expect(result.current.rollModalData.result).toMatch(/❌ Failure/);
     expect(setCharacter).toHaveBeenCalledTimes(2);

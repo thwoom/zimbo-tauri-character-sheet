@@ -137,9 +137,11 @@ describe('XP gain on miss', () => {
     const Wrapper = ({ children }) => {
       const [character, setCharacter] = React.useState(initialCharacter);
       return (
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
       );
     };
 
@@ -158,7 +160,7 @@ describe('XP gain on miss', () => {
     });
 
     expect(screen.getByText(/XP: 2\/5/i)).toBeInTheDocument();
-    expect(screen.getByText(/Original:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Original Roll:/i)).toBeInTheDocument();
     expect(screen.getByText(/With Help:/i)).toBeInTheDocument();
 
     randomSpy.mockRestore();

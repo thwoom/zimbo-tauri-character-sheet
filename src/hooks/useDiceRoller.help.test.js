@@ -26,8 +26,8 @@ describe('useDiceRoller help reroll', () => {
     expect(confirmSpy).toHaveBeenCalled();
     expect(promptSpy).toHaveBeenCalled();
     expect(rollSpy).toHaveBeenCalledTimes(4);
-    expect(result.current.rollModalData.originalResult).toBe('2d6: 2 = 2 ❌ Failure');
-    expect(result.current.rollModalData.result).toBe('2d6: 7 +2 = 9 ⚠️ Partial Success');
+    expect(result.current.rollModalData.originalResult).toBe('2d6: 1 + 1 = 2 ❌ Failure');
+    expect(result.current.rollModalData.result).toBe('2d6: 3 + 4 +2 = 9 ⚠️ Partial Success');
 
     confirmSpy.mockRestore();
     promptSpy.mockRestore();

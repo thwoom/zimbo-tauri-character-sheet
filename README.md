@@ -59,6 +59,14 @@ npm run build
 npm test
 ```
 
+### Sync with GitHub
+
+```bash
+npm run sync
+```
+
+This wraps the `git-sync-ask.sh` script to fetch, commit, and push changes with confirmation.
+
 ### Package for production
 
 ```bash

@@ -214,6 +214,19 @@ const CharacterStats = ({
         />{' '}
         Auto XP on Miss
       </label>
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => setShowLevelUpModal(true)}
+          style={{
+            ...buttonStyle,
+            background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+            width: '100%',
+            marginTop: '10px',
+          }}
+        >
+          Open Level Up Test Modal
+        </button>
+      )}
       {character.xp >= character.xpNeeded && (
         <button
           onClick={() => setShowLevelUpModal(true)}

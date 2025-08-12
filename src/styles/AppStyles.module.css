@@ -1,6 +1,10 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  background: url('/starfield.svg'), linear-gradient(135deg, #1a1a2e, #16213e);
+  background-repeat: repeat, no-repeat;
+  background-size:
+    512px 512px,
+    cover;
   color: #e0e0e0;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

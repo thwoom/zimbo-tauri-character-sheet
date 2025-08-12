@@ -115,4 +115,34 @@
   --critical-hit-end: var(--color-orange);
   --critical-failure-start: var(--color-red);
   --critical-failure-end: var(--color-red-dark);
+
+  /* Shared color map extensions */
+  --color-white: #ffffff;
+  --color-yellow: #fbbf24;
+  --color-purple-light: #8b5cf6;
+  --color-orange-light: #f97316;
+  --color-cyan: #06b6d4;
+
+  /* Header gradients for status effects */
+  --gradient-header-default: linear-gradient(
+    45deg,
+    #6366f1,
+    var(--color-purple-light),
+    var(--color-cyan)
+  );
+  --gradient-header-poisoned: linear-gradient(45deg, #22c55e, #059669, var(--color-cyan));
+  --gradient-header-burning: linear-gradient(
+    45deg,
+    #ef4444,
+    var(--color-orange-light),
+    var(--color-yellow)
+  );
+  --gradient-header-shocked: linear-gradient(45deg, #3b82f6, #eab308, var(--color-cyan));
+  --gradient-header-frozen: linear-gradient(45deg, var(--color-cyan), #3b82f6, #6366f1);
+  --gradient-header-blessed: linear-gradient(
+    45deg,
+    var(--color-yellow),
+    #f59e0b,
+    var(--color-cyan)
+  );
 }

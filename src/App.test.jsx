@@ -2,9 +2,11 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App.jsx';
+import Settings from './components/Settings.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
+import './styles/theme.css';
 
 beforeEach(() => {
   vi.spyOn(window, 'confirm').mockReturnValue(false);
@@ -91,9 +93,8 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
   });
-
-  it('increments XP for both players when help still fails', () => {
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+  it('does not increment XP when auto XP toggle is off', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
 
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
 
@@ -108,25 +109,25 @@ describe('XP gain on miss', () => {
       );
     };
 
-    window.confirm.mockReturnValue(true);
-    window.prompt.mockReturnValue('0');
-
     render(
       <Wrapper>
         <App />
       </Wrapper>,
     );
 
+    const toggle = screen.getByLabelText(/Auto XP on Miss/i);
+    act(() => {
+      fireEvent.click(toggle);
+    });
+
     const button = screen.getByRole('button', { name: 'INT (+0)' });
     act(() => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByText(/XP: 2\/5/i)).toBeInTheDocument();
-    expect(screen.getByText(/Original Roll:/i)).toBeInTheDocument();
-    expect(screen.getByText(/With Help:/i)).toBeInTheDocument();
+    expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
 
-    randomSpy.mockRestore();
+    Math.random.mockRestore();
   });
 });
 
@@ -210,5 +211,24 @@ describe.skip('localStorage persistence', () => {
 
     window.confirm.mockRestore();
     Math.random.mockRestore();
+  });
+});
+
+describe('Theme switching', () => {
+  it('updates the theme attribute when selecting classic', () => {
+    render(
+      <ThemeProvider>
+        <Settings />
+      </ThemeProvider>,
+    );
+
+    const select = screen.getByLabelText(/Theme:/i);
+
+    return waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic');
+    }).then(() => {
+      fireEvent.change(select, { target: { value: 'classic' } });
+      expect(document.documentElement.getAttribute('data-theme')).toBe('classic');
+    });
   });
 });

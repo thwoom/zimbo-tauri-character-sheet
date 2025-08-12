@@ -1,35 +1,39 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { FaSkull } from 'react-icons/fa6';
-import * as diceUtils from '../utils/dice.js';
+import styles from './LastBreathModal.module.css';
 
 export default function LastBreathModal({ isOpen, onClose, rollDie }) {
-  const [roll, setRoll] = useState(null);
-  if (!isOpen) return null;
+  const [result, setResult] = useState(null);
 
-  const handleRoll = () => {
-    const total = rollDie(6) + rollDie(6);
-    let message;
-    if (total >= 10) message = 'You survive by sheer will!';
-    else if (total >= 7) message = 'Death offers a bargain.';
-    else message = 'Your time has come.';
-    setRoll({ total, message });
-  };
+  useEffect(() => {
+    if (isOpen) {
+      const total = rollDie(6) + rollDie(6);
+      let outcome;
+      if (total >= 10) outcome = 'You evade Death... for now.';
+      else if (total >= 7) outcome = 'Death offers you a bargain.';
+      else outcome = 'Your journey ends here.';
+      setResult({ total, outcome });
+    } else {
+      setResult(null);
+    }
+  }, [isOpen, rollDie]);
+
+  if (!isOpen || !result) return null;
 
   return (
-    <div role="dialog">
-      <h2>
-        <FaSkull /> Last Breath
-      </h2>
-      {roll ? (
-        <>
-          <div>2d6: {roll.total}</div>
-          <div>{roll.message}</div>
-        </>
-      ) : (
-        <button onClick={handleRoll}>Roll</button>
-      )}
-      <button onClick={onClose}>Close</button>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>
+          <FaSkull style={{ marginRight: '4px' }} /> Last Breath
+        </h2>
+        <div className={styles.result}>Roll: {result.total}</div>
+        <div className={styles.outcome}>{result.outcome}</div>
+        <button onClick={onClose} className={styles.button}>
+          Close
+        </button>
+      </div>
     </div>
   );
 }
@@ -37,9 +41,5 @@ export default function LastBreathModal({ isOpen, onClose, rollDie }) {
 LastBreathModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  rollDie: PropTypes.func,
-};
-
-LastBreathModal.defaultProps = {
-  rollDie: diceUtils.rollDie,
+  rollDie: PropTypes.func.isRequired,
 };

@@ -4,6 +4,7 @@ import BondsModal from './BondsModal.jsx';
 import DamageModal from './DamageModal.jsx';
 import ExportModal from './ExportModal.jsx';
 import InventoryModal from './InventoryModal.jsx';
+import LastBreathModal from './LastBreathModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
 import StatusModal from './StatusModal.jsx';
 
@@ -24,6 +25,8 @@ const GameModals = ({
   handleToggleDebility,
   showDamageModal,
   setShowDamageModal,
+  showLastBreathModal,
+  setShowLastBreathModal,
   showInventoryModal,
   setShowInventoryModal,
   inventory,
@@ -59,7 +62,17 @@ const GameModals = ({
       />
     )}
 
-    <DamageModal isOpen={showDamageModal} onClose={() => setShowDamageModal(false)} />
+    <DamageModal
+      isOpen={showDamageModal}
+      onClose={() => setShowDamageModal(false)}
+      onLastBreath={() => setShowLastBreathModal(true)}
+    />
+
+    <LastBreathModal
+      isOpen={showLastBreathModal}
+      onClose={() => setShowLastBreathModal(false)}
+      rollDie={rollDie}
+    />
 
     {showInventoryModal && (
       <InventoryModal
@@ -94,6 +107,8 @@ GameModals.propTypes = {
   handleToggleDebility: PropTypes.func.isRequired,
   showDamageModal: PropTypes.bool.isRequired,
   setShowDamageModal: PropTypes.func.isRequired,
+  showLastBreathModal: PropTypes.bool.isRequired,
+  setShowLastBreathModal: PropTypes.func.isRequired,
   showInventoryModal: PropTypes.bool.isRequired,
   setShowInventoryModal: PropTypes.func.isRequired,
   inventory: PropTypes.arrayOf(PropTypes.object).isRequired,

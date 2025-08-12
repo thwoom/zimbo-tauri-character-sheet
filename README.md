@@ -59,6 +59,14 @@ npm run build
 npm test
 ```
 
+### Sync with GitHub
+
+```bash
+npm run sync
+```
+
+This wraps the `git-sync-ask.sh` script to fetch, commit, and push changes with confirmation.
+
 ### Package for production
 
 ```bash
@@ -87,7 +95,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup, linting, and testing 
 2. Create a branch for your feature or fix.
 3. Submit a pull request with a clear description of changes.
 
-For AI-assisted development guidelines, see [docs/codex.md](docs/codex.md).
+## Development scripts
+
+Optional helper scripts can be kept in a local `scripts/` directory. This folder is ignored by Git and is not required for building or running the project.
+
 
 ## License
 

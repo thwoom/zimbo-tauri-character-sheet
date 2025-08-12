@@ -207,4 +207,10 @@ foreach ($pr in $prs) {
   }
 }
 
-Write-Host "`nAll PRs processed."
+# no matching PR found, create new branch and PR
+$rand = -join ((48..57)+(97..122) | Get-Random -Count 8 | ForEach-Object {[char]$_})
+$branch = "$rand-codex/$Base"
+Write-Host "Creating new branch $branch and opening PR." -ForegroundColor Yellow
+git checkout -b $branch *> $null
+git push -u origin $branch | Out-String
+gh pr create --fill --head $branch --base $Base | Out-String

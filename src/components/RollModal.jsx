@@ -22,9 +22,17 @@ export default function RollModal({ isOpen, data, onClose }) {
           {data.originalResult && (
             <div className={styles.originalResult}>Original Roll: {data.originalResult}</div>
           )}
-          <div className={styles.result}>
-            {data.originalResult ? `With Help: ${data.result}` : data.result}
-          </div>
+          {Array.isArray(data.result) ? (
+            <div className={styles.result}>
+              {data.result.map((r, i) => (
+                <div key={i}>{r}</div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.result}>
+              {data.originalResult ? `With Help: ${data.result}` : data.result}
+            </div>
+          )}
           {data.description && <div className={styles.description}>{data.description}</div>}
           {data.context && <div className={styles.context}>{data.context}</div>}
           <button onClick={onClose} className={styles.button}>

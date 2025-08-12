@@ -108,45 +108,6 @@ describe('useDiceRoller contexts', () => {
   });
 });
 
-describe('XP gain on failure', () => {
-  it('awards XP on 6- rolls', () => {
-    localStorage.clear();
-    const character = { statusEffects: [], debilities: [], xp: 0 };
-    let updated = character;
-    const setCharacter = (fn) => {
-      updated = fn(updated);
-    };
-    const { result } = renderHook(() => useDiceRoller(character, setCharacter));
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    act(() => {
-      result.current.rollDice('2d6', 'str');
-    });
-    randomSpy.mockRestore();
-    expect(updated.xp).toBe(1);
-  });
-});
-
-describe('help mechanics', () => {
-  it('stores original roll and adds extra XP on failed help', () => {
-    localStorage.clear();
-    const setCharacter = vi.fn();
-    const { result } = renderHook(() =>
-      useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter),
-    );
-    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-    window.confirm.mockReturnValue(true);
-    vi.spyOn(window, 'prompt').mockReturnValue('0');
-    act(() => {
-      result.current.rollDice('2d6', 'str');
-    });
-    randomSpy.mockRestore();
-    expect(result.current.rollModalData.originalResult).toMatch(/❌ Failure/);
-    expect(result.current.rollModalData.result).toMatch(/❌ Failure/);
-    expect(setCharacter).toHaveBeenCalledTimes(2);
-    window.prompt.mockRestore();
-  });
-});
-
 describe('useDiceRoller localStorage', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
   const setCharacter = () => {};

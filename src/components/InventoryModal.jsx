@@ -1,37 +1,37 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import './InventoryModal.css';
+import styles from './InventoryModal.module.css';
 
 const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
   return (
-    <div className="inventory-overlay">
-      <div className="inventory-modal">
-        <h2 className="inventory-title">🎒 Inventory</h2>
+    <div className={styles.inventoryOverlay}>
+      <div className={styles.inventoryModal}>
+        <h2 className={styles.inventoryTitle}>🎒 Inventory</h2>
         {inventory.length === 0 ? (
-          <p className="inventory-empty">No items</p>
+          <p className={styles.inventoryEmpty}>No items</p>
         ) : (
-          <ul className="inventory-list">
+          <ul className={styles.inventoryList}>
             {inventory.map((item) => (
-              <li key={item.id} className="inventory-item">
-                <div className="inventory-item-name">
+              <li key={item.id} className={styles.inventoryItem}>
+                <div className={styles.inventoryItemName}>
                   {item.name}
                   {item.quantity ? ` x${item.quantity}` : ''}
                   {item.description && (
-                    <div className="inventory-item-description">{item.description}</div>
+                    <div className={styles.inventoryItemDescription}>{item.description}</div>
                   )}
                 </div>
-                <div className="inventory-item-actions">
+                <div className={styles.inventoryItemActions}>
                   {'equipped' in item && (
-                    <button className="inventory-button" onClick={() => onEquip(item.id)}>
+                    <button className={styles.inventoryButton} onClick={() => onEquip(item.id)}>
                       {item.equipped ? 'Unequip' : 'Equip'}
                     </button>
                   )}
                   {item.type === 'consumable' && (
-                    <button className="inventory-button" onClick={() => onConsume(item.id)}>
+                    <button className={styles.inventoryButton} onClick={() => onConsume(item.id)}>
                       Consume
                     </button>
                   )}
-                  <button className="inventory-button" onClick={() => onDrop(item.id)}>
+                  <button className={styles.inventoryButton} onClick={() => onDrop(item.id)}>
                     Drop
                   </button>
                 </div>
@@ -39,8 +39,8 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
             ))}
           </ul>
         )}
-        <div className="inventory-close">
-          <button className="inventory-button" onClick={onClose}>
+        <div className={styles.inventoryClose}>
+          <button className={styles.inventoryButton} onClick={onClose}>
             Close
           </button>
         </div>

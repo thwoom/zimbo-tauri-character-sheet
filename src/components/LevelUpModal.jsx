@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import './LevelUpModal.css';
+import { useState, useEffect } from 'react';
+import './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
 import Message from './Message.jsx';
 
@@ -175,6 +175,14 @@ const LevelUpModal = ({
   const handleOverlayKeyDown = (e) => {
     if (e.key === 'Escape' || e.key === 'Enter') onClose();
   };
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
 
   return (
     <div

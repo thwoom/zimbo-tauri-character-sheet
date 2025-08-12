@@ -6,9 +6,9 @@ on:
         description: "PR number to resolve"
         required: true
       strategy:
-        description: "Global preference if needed"
+        description: "prefer-pr or prefer-base"
         required: false
-        default: "prefer-pr"  # or prefer-base
+        default: "prefer-pr"
 permissions:
   contents: write
   pull-requests: write
@@ -20,10 +20,6 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
-      - name: Install gh + jq
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y jq
       - name: Get PR data
         id: pr
         env: { GH_TOKEN: ${{ github.token }} }
@@ -41,7 +37,6 @@ jobs:
           head=$(jq -r '.headRefName' pr.json)
           base=$(jq -r '.baseRefName' pr.json)
 
-          # helper to pick side based on path
           choose_side() {
             f="$1"
             if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
@@ -50,22 +45,17 @@ jobs:
           }
 
           if [ "$isFork" = "false" ]; then
-            # same-repo: operate directly on the PR head branch
             git checkout "$head"
           else
-            # fork PR: fetch PR head into a local branch we can push
             git fetch origin "pull/$NUM/head:autofix/pr-$NUM"
             git checkout "autofix/pr-$NUM"
           fi
 
           git fetch origin "$base"
-          # try global preference first
           if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then pref=theirs; else pref=ours; fi
           git merge --no-edit -s recursive -X "$pref" "origin/$base" || true
 
-          # resolve any remaining conflicts file-by-file
           if git ls-files -u | grep -q .; then
-            # list unmerged files
             git diff --name-only --diff-filter=U | while read f; do
               side=$(choose_side "$f")
               echo "Resolving $f -> $side"
@@ -75,7 +65,6 @@ jobs:
             git commit -m "autofix(#$NUM): resolve conflicts ($STRATEGY; src/** & package.json from PR; lockfiles from base)"
           fi
 
-          # push back
           if [ "$isFork" = "false" ]; then
             git push origin HEAD
           else

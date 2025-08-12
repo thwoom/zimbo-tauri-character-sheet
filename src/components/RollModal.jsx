@@ -16,7 +16,12 @@ export default function RollModal({ isOpen, data, onClose }) {
           </div>
         </div>
         <div className={styles.body}>
-          <div className={styles.result}>{data.result}</div>
+          {data.originalResult && (
+            <div className={styles.original}>Original: {data.originalResult}</div>
+          )}
+          <div className={styles.result}>
+            {data.originalResult ? `With Help: ${data.result}` : data.result}
+          </div>
           {data.description && <div className={styles.description}>{data.description}</div>}
           {data.context && <div className={styles.context}>{data.context}</div>}
           <button onClick={onClose} className={styles.button}>

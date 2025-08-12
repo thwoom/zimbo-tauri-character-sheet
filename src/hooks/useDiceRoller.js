@@ -217,6 +217,7 @@ export default function useDiceRoller(character, setCharacter, autoXpOnMiss) {
       context,
       total,
       timestamp: new Date().toLocaleTimeString(),
+      ...(originalResult && { originalResult }),
     };
     if (originalResult) rollData.originalResult = originalResult;
 

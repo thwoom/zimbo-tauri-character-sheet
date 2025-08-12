@@ -1,3 +1,19 @@
+import {
+  FaSkull,
+  FaBolt,
+  FaFire,
+  FaSnowflake,
+  FaQuestion,
+  FaWeightHanging,
+  FaStar,
+  FaGhost,
+  FaDumbbell,
+  FaArrowsLeftRight,
+  FaHeadSideVirus,
+  FaBrain,
+  FaFaceFrownOpen,
+} from 'react-icons/fa6';
+
 export const INITIAL_CHARACTER_DATA = {
   // Basic Info
   level: 4,
@@ -88,36 +104,46 @@ export const INITIAL_CHARACTER_DATA = {
 };
 
 export const statusEffectTypes = {
-  poisoned: { name: 'Poisoned', description: '-1 to all rolls', color: 'green', icon: '🤢' },
-  shocked: { name: 'Shocked', description: '-2 to DEX rolls', color: 'blue-yellow', icon: '⚡' },
+  poisoned: { name: 'Poisoned', description: '-1 to all rolls', color: 'green', icon: FaSkull },
+  shocked: { name: 'Shocked', description: '-2 to DEX rolls', color: 'blue-yellow', icon: FaBolt },
   burning: {
     name: 'Burning',
     description: 'Fire damage each turn',
     color: 'red-orange',
-    icon: '🔥',
+    icon: FaFire,
   },
-  frozen: { name: 'Frozen', description: '-1 to physical actions', color: 'cyan-blue', icon: '🧊' },
+  frozen: {
+    name: 'Frozen',
+    description: '-1 to physical actions',
+    color: 'cyan-blue',
+    icon: FaSnowflake,
+  },
   confused: {
     name: 'Confused',
     description: 'GM controls one action',
     color: 'purple',
-    icon: '😵',
+    icon: FaQuestion,
   },
-  weakened: { name: 'Weakened', description: '-1 to damage rolls', color: 'gray', icon: '💔' },
-  blessed: { name: 'Blessed', description: '+1 to all rolls', color: 'yellow', icon: '✨' },
+  weakened: {
+    name: 'Weakened',
+    description: '-1 to damage rolls',
+    color: 'gray',
+    icon: FaWeightHanging,
+  },
+  blessed: { name: 'Blessed', description: '+1 to all rolls', color: 'yellow', icon: FaStar },
   invisible: {
     name: 'Invisible',
     description: 'Cannot be targeted',
     color: 'transparent',
-    icon: '👻',
+    icon: FaGhost,
   },
 };
 
 export const debilityTypes = {
-  weak: { name: 'Weak', description: '-1 to STR rolls', icon: '💪' },
-  shaky: { name: 'Shaky', description: '-1 to DEX rolls', icon: '🫨' },
-  sick: { name: 'Sick', description: '-1 to CON rolls', icon: '🤒' },
-  stunned: { name: 'Stunned', description: '-1 to INT rolls', icon: '😵‍💫' },
-  confused: { name: 'Confused', description: '-1 to WIS rolls', icon: '🤯' },
-  scarred: { name: 'Scarred', description: '-1 to CHA rolls', icon: '😰' },
+  weak: { name: 'Weak', description: '-1 to STR rolls', icon: FaDumbbell },
+  shaky: { name: 'Shaky', description: '-1 to DEX rolls', icon: FaArrowsLeftRight },
+  sick: { name: 'Sick', description: '-1 to CON rolls', icon: FaHeadSideVirus },
+  stunned: { name: 'Stunned', description: '-1 to INT rolls', icon: FaBrain },
+  confused: { name: 'Confused', description: '-1 to WIS rolls', icon: FaQuestion },
+  scarred: { name: 'Scarred', description: '-1 to CHA rolls', icon: FaFaceFrownOpen },
 };

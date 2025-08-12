@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
-import { vi } from 'vitest';
+import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
 import useDiceRoller from './useDiceRoller.js';
 
 beforeEach(() => {
@@ -103,6 +103,26 @@ describe('useDiceRoller contexts', () => {
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.description).toBe('Upper Hand');
+  });
+});
+
+describe('help mechanics', () => {
+  it('stores original roll and adds extra XP on failed help', () => {
+    localStorage.clear();
+    const setCharacter = vi.fn();
+    const { result } = renderHook(() =>
+      useDiceRoller({ statusEffects: [], debilities: [], xp: 0 }, setCharacter, true),
+    );
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    window.confirm.mockReturnValue(true);
+    window.prompt.mockReturnValue('0');
+    act(() => {
+      result.current.rollDice('2d6', 'str');
+    });
+    randomSpy.mockRestore();
+    expect(result.current.rollModalData.originalResult).toMatch(/❌ Failure/);
+    expect(result.current.rollModalData.result).toMatch(/❌ Failure/);
+    expect(setCharacter).toHaveBeenCalledTimes(2);
   });
 });
 

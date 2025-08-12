@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import './Message.css';
+import styles from './Message.module.css';
 
 const Message = ({ type = 'error', children }) => {
-  return <p className={`message message-${type}`}>{children}</p>;
+  return <p className={`${styles.message} ${styles[`message-${type}`]}`}>{children}</p>;
 };
 
 export default Message;

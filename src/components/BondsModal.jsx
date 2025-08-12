@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { FaUserAstronaut } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './BondsModal.module.css';
 
@@ -43,7 +44,9 @@ export default function BondsModal({ isOpen, onClose }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>👥 Character Bonds</h2>
+        <h2 className={styles.title}>
+          <FaUserAstronaut style={{ marginRight: '4px' }} /> Character Bonds
+        </h2>
         {character.bonds.length === 0 ? (
           <p className={styles.empty}>No bonds yet.</p>
         ) : (

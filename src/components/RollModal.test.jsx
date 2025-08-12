@@ -33,11 +33,20 @@ describe('RollModal', () => {
 
   it('renders original and help results when provided', () => {
     const data = {
-      result: '2d6: 8 = 8',
-      originalResult: '2d6: 3 = 3 ❌ Failure',
+      result: '2d6: 3 + 5 = 8',
+      originalResult: '2d6: 1 + 2 = 3 ❌ Failure',
     };
     render(<RollModal isOpen data={data} onClose={() => {}} />);
-    expect(screen.getByText('Original Roll: 2d6: 3 = 3 ❌ Failure')).toBeInTheDocument();
-    expect(screen.getByText('With Help: 2d6: 8 = 8')).toBeInTheDocument();
+    expect(screen.getByText('Original Roll: 2d6: 1 + 2 = 3 ❌ Failure')).toBeInTheDocument();
+    expect(screen.getByText('With Help: 2d6: 3 + 5 = 8')).toBeInTheDocument();
+  });
+
+  it('renders array of roll results', () => {
+    const data = {
+      result: ['2d6: 3 + 4 = 7', 'd4: 2 = 2'],
+    };
+    render(<RollModal isOpen data={data} onClose={() => {}} />);
+    expect(screen.getByText('2d6: 3 + 4 = 7')).toBeInTheDocument();
+    expect(screen.getByText('d4: 2 = 2')).toBeInTheDocument();
   });
 });

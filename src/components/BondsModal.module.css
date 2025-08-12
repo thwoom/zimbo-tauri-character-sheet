@@ -12,8 +12,8 @@
 }
 
 .modal {
-  background: #1a1a2e;
-  border: 2px solid #00ff88;
+  background: var(--color-modal-bg);
+  border: 2px solid var(--color-neon);
   border-radius: 15px;
   padding: 30px;
   text-align: center;
@@ -23,11 +23,11 @@
 }
 
 .title {
-  color: #00ff88;
+  color: var(--color-neon);
 }
 
 .empty {
-  color: #aaa;
+  color: var(--color-gray-350);
   margin: 20px 0;
 }
 
@@ -43,11 +43,11 @@
 }
 
 .bondText {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .bondResolved {
-  color: #fff;
+  color: var(--color-white);
   text-decoration: line-through;
 }
 
@@ -56,10 +56,10 @@
 }
 
 .button {
-  background: linear-gradient(45deg, #00ff88, #00cc6a);
+  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
   border: none;
   border-radius: 6px;
-  color: white;
+  color: var(--color-white);
   padding: 8px 15px;
   cursor: pointer;
   font-weight: bold;
@@ -68,22 +68,22 @@
 }
 
 .resolveButton {
-  background: linear-gradient(45deg, #10b981, #059669);
+  background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
 }
 
 .unresolveButton {
-  background: linear-gradient(45deg, #6366f1, #4f46e5);
+  background: linear-gradient(45deg, var(--color-indigo), var(--color-indigo-dark));
 }
 
 .removeButton {
-  background: linear-gradient(45deg, #ef4444, #dc2626);
+  background: linear-gradient(45deg, var(--color-danger), var(--color-danger-dark));
 }
 
 .input {
-  background: #0f0f1f;
-  border: 1px solid #00ff88;
+  background: var(--color-modal-bg-dark);
+  border: 1px solid var(--color-neon);
   border-radius: 6px;
-  color: white;
+  color: var(--color-white);
   padding: 8px;
   width: 100%;
   margin-bottom: 10px;

@@ -25,7 +25,5 @@ jobs:
           elif [ -f yarn.lock ]; then yarn install --silent;
           elif [ -f package-lock.json ]; then npm ci;
           else npm i --no-audit --no-fund; fi
-      - run: npm run lint
-      - run: npx prettier --check .
-      - run: npm test
+      - uses: pre-commit/action@v3.0.1
       - run: npm run build

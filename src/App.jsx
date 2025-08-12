@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import {
-  FaClock,
   FaMeteor,
   FaRadiation,
   FaBoxOpen,
@@ -35,10 +34,10 @@ function App() {
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDamageModal, setShowDamageModal] = useState(false);
+  const [showLastBreathModal, setShowLastBreathModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
-  const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -58,7 +57,7 @@ function App() {
     rollModalData,
     rollDie,
     clearRollHistory,
-  } = useDiceRoller(character, setCharacter, autoXpOnMiss);
+  } = useDiceRoller(character, setCharacter);
 
   const { totalArmor, equippedWeaponDamage, handleEquipItem, handleConsumeItem, handleDropItem } =
     useInventory(character, setCharacter);
@@ -183,8 +182,6 @@ function App() {
             saveToHistory={saveToHistory}
             totalArmor={totalArmor}
             setShowLevelUpModal={setShowLevelUpModal}
-            autoXpOnMiss={autoXpOnMiss}
-            setAutoXpOnMiss={setAutoXpOnMiss}
             setRollResult={setRollResult}
             setSessionNotes={setSessionNotes}
             clearRollHistory={clearRollHistory}
@@ -236,6 +233,8 @@ function App() {
         handleToggleDebility={toggleDebility}
         showDamageModal={showDamageModal}
         setShowDamageModal={setShowDamageModal}
+        showLastBreathModal={showLastBreathModal}
+        setShowLastBreathModal={setShowLastBreathModal}
         showInventoryModal={showInventoryModal}
         setShowInventoryModal={setShowInventoryModal}
         inventory={character.inventory}

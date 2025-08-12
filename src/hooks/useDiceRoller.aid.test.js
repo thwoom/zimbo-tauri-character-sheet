@@ -36,5 +36,18 @@ describe('useDiceRoller aid/interfere', () => {
     window.confirm.mockRestore();
     promptSpy.mockRestore();
     alertSpy.mockRestore();
+    expect(confirmSpy).toHaveBeenCalledTimes(2);
+    expect(promptSpy).toHaveBeenCalled();
+    expect(alertSpy).toHaveBeenCalledWith('Helper Consequences');
+    expect(rollSpy).toHaveBeenCalledTimes(4);
+    expect(result.current.rollModalData.originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
+    expect(result.current.rollModalData.result).toBe(
+      '2d6: 6 +1 = 7 (Helper Consequences) ⚠️ Partial Success',
+    );
+
+    confirmSpy.mockRestore();
+    promptSpy.mockRestore();
+    alertSpy.mockRestore();
+    rollSpy.mockRestore();
   });
 });

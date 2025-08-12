@@ -219,6 +219,7 @@ export default function useDiceRoller(character, setCharacter) {
           const notes = [...statusMods.notes];
           if (consequence) notes.push('Helper Consequences');
           result = buildResultString(mods, total, notes);
+
           if (total >= 10) {
             interpretation = ' ✅ Success!';
             context = getSuccessContext(desc);

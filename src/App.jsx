@@ -37,7 +37,6 @@ function App() {
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
-  const [autoXpOnMiss, setAutoXpOnMiss] = useState(true);
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -182,8 +181,6 @@ function App() {
             saveToHistory={saveToHistory}
             totalArmor={totalArmor}
             setShowLevelUpModal={setShowLevelUpModal}
-            autoXpOnMiss={autoXpOnMiss}
-            setAutoXpOnMiss={setAutoXpOnMiss}
             setRollResult={setRollResult}
             setSessionNotes={setSessionNotes}
             clearRollHistory={clearRollHistory}

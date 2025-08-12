@@ -5,10 +5,12 @@ import useDiceRoller from './useDiceRoller.js';
 
 beforeEach(() => {
   vi.spyOn(window, 'confirm').mockReturnValue(false);
+  vi.spyOn(window, 'prompt').mockReturnValue('0');
 });
 
 afterEach(() => {
   window.confirm.mockRestore();
+  window.prompt.mockRestore();
 });
 
 describe('useDiceRoller contexts', () => {

@@ -80,4 +80,10 @@
   --critical-hit-end: var(--color-orange);
   --critical-failure-start: var(--color-red);
   --critical-failure-end: var(--color-red-dark);
+
+  /* legacy variable aliases */
+  --background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+  --text-color: var(--color-text);
+  --accent-color: var(--color-accent);
+  --accent-shadow: var(--glow-shadow);
 }

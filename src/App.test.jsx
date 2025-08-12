@@ -1,9 +1,18 @@
 import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
+
+let confirmSpy;
+beforeEach(() => {
+  confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+});
+
+afterEach(() => {
+  confirmSpy.mockRestore();
+});
 
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {

@@ -3,6 +3,14 @@ import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import useDiceRoller from './useDiceRoller.js';
 
+beforeEach(() => {
+  vi.spyOn(window, 'confirm').mockReturnValue(false);
+});
+
+afterEach(() => {
+  window.confirm.mockRestore();
+});
+
 describe('useDiceRoller contexts', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
   const setCharacter = () => {};

@@ -56,6 +56,12 @@
   text-align: center;
 }
 
+.originalResult {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+
 .result {
   font-size: 1.5rem;
   font-weight: bold;

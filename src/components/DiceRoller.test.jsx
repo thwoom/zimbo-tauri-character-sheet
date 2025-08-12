@@ -15,7 +15,7 @@ const minimalCharacter = {
 const rollHistory = [{ timestamp: '10:00', result: '2d6: 7 = 7' }];
 
 describe('DiceRoller', () => {
-  it('calls rollDice for stat checks and basic dice', async () => {
+  it('calls rollDice when buttons clicked', async () => {
     const user = userEvent.setup();
     const rollDice = vi.fn();
     render(
@@ -35,6 +35,9 @@ describe('DiceRoller', () => {
 
     await user.click(screen.getByText('d6'));
     expect(rollDice).toHaveBeenCalledWith('d6');
+
+    await user.click(screen.getByText('Aid/Interfere'));
+    expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
   });
 
   it('calls rollDice for combat rolls', async () => {

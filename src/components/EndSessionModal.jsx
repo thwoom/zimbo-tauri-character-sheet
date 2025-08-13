@@ -1,17 +1,13 @@
+import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
-export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
+export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
-  const [answers, setAnswers] = useState({
-    q1: false,
-    q2: false,
-    q3: false,
-    alignment: false,
-  });
+  const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
   const [inventoryChanges, setInventoryChanges] = useState({});
@@ -61,10 +57,11 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
 
-  const handleEnd = () => {
+  const handleEnd = async () => {
+    setSaveError(false);
     const xpGained = totalXP;
-    const newXp = character.xp + xpGained;
     setCharacter((prev) => {
+      const newXp = prev.xp + xpGained;
       const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
       const newBonds = resolvedBonds
         .map((idx) => {
@@ -108,10 +105,6 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         debilities: prev.debilities.filter((d) => !clearedDebilities.includes(d)),
       };
     });
-
-    if (newXp >= character.level + 7) {
-      onLevelUp();
-    }
 
     onClose();
   };
@@ -179,7 +172,7 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
             </ul>
           </div>
         )}
-
+        
         {character.inventory.length > 0 && (
           <div className={styles.section}>
             <h3 className={styles.title}>Item Usage</h3>
@@ -258,14 +251,30 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         )}
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
+        {error && <div className={styles.error}>{error}</div>}
+
+        {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
 
         <div className={styles.actions}>
-          <button onClick={handleEnd} className={styles.button}>
-            End Session
-          </button>
-          <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-            Cancel
-          </button>
+          {saveError ? (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                Retry
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                End Session
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -275,5 +284,4 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 EndSessionModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onLevelUp: PropTypes.func.isRequired,
 };

@@ -50,6 +50,7 @@
   color: var(--color-white);
 }
 
+
 .recapInput {
   width: 100%;
   margin-top: 5px;
@@ -65,8 +66,18 @@
   color: var(--color-white);
 }
 
+.error {
+  color: var(--color-danger);
+  margin-top: 10px;
+}
+
 .actions {
   margin-top: 20px;
+}
+
+.error {
+  color: var(--color-danger);
+  margin-top: 10px;
 }
 
 .button {

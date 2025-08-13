@@ -72,13 +72,25 @@ const CharacterStats = ({
       </div>
       <div className={styles.controls}>
         <button
-          onClick={() => setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }))}
+          onClick={() =>
+            setCharacter((prev) => ({
+              ...prev,
+              xp: prev.xp + 1,
+              xpNeeded: prev.level + 7,
+            }))
+          }
           className={styles.button}
         >
           +1 XP
         </button>
         <button
-          onClick={() => setCharacter((prev) => ({ ...prev, xp: Math.max(0, prev.xp - 1) }))}
+          onClick={() =>
+            setCharacter((prev) => ({
+              ...prev,
+              xp: Math.max(0, prev.xp - 1),
+              xpNeeded: prev.level + 7,
+            }))
+          }
           className={`${styles.button} ${styles.buttonRed}`}
         >
           -1 XP

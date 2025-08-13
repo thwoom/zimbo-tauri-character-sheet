@@ -89,7 +89,7 @@ describe('XP gain on miss', () => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByText(/XP: 1\/5/i)).toBeInTheDocument();
+    expect(screen.getByText(/XP: 1\/11/i)).toBeInTheDocument();
 
     Math.random.mockRestore();
   });
@@ -127,6 +127,37 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
     globalThis.autoXpOnMiss = previousSetting;
+  });
+});
+
+describe('End session flow', () => {
+  it('opens EndSessionModal when End Session button is clicked', () => {
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5, bonds: [] };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
+      );
+    };
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.queryByText(/End of Session/i)).toBeNull();
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: /End Session/i }));
+    });
+
+    expect(screen.getByText(/End of Session/i)).toBeInTheDocument();
   });
 });
 

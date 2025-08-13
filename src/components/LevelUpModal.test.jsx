@@ -69,6 +69,7 @@ describe('LevelUpModal XP calculation', () => {
       xpNeeded: 8,
       selectedMoves: [],
       actionHistory: [],
+      levelUpPending: true,
     };
 
     const levelUpState = {

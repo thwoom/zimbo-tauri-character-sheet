@@ -21,6 +21,7 @@ export const INITIAL_CHARACTER_DATA = {
   maxHp: 25,
   xp: 4,
   xpNeeded: 11, // Formula: level + 7
+  levelUpPending: false,
   armor: 0,
 
   // Attributes
@@ -100,6 +101,7 @@ export const INITIAL_CHARACTER_DATA = {
 
   // Session Data
   sessionNotes: '', // Campaign notes and events
+  sessionRecapPublic: '', // Shareable session recap
   rollHistory: [], // Recent dice rolls (last 10)
   lastSessionEnd: null, // ISO timestamp when session last ended
   sessionRecap: '', // Summary of last session

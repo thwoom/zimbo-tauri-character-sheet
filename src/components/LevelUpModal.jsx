@@ -141,6 +141,7 @@ const LevelUpModal = ({
       xp: prev.xp - prev.xpNeeded,
       xpNeeded: levelUpState.newLevel + 7,
       selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
+      levelUpPending: false,
       actionHistory: [
         ...prev.actionHistory.slice(-4), // Keep last 4 actions
         {

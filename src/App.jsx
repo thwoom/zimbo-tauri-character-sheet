@@ -7,6 +7,7 @@ import {
   FaUserAstronaut,
   FaSatellite,
   FaArrowRotateLeft,
+  FaFlagCheckered,
 } from 'react-icons/fa6';
 import CharacterStats from './components/CharacterStats.jsx';
 import DiceRoller from './components/DiceRoller.jsx';
@@ -37,6 +38,7 @@ function App() {
   const [showLastBreathModal, setShowLastBreathModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
 
   const getDefaultLevelUpState = () => ({
@@ -163,6 +165,12 @@ function App() {
                 {character.bonds.filter((b) => !b.resolved).length})
               </button>
               <button
+                onClick={() => setShowEndSessionModal(true)}
+                className={`${styles.button} ${styles.endSessionButton}`}
+              >
+                <FaFlagCheckered className={styles.icon} /> End Session
+              </button>
+              <button
                 onClick={() => setShowExportModal(true)}
                 className={`${styles.button} ${styles.exportButton}`}
               >
@@ -241,9 +249,11 @@ function App() {
         handleEquipItem={handleEquipItem}
         handleConsumeItem={handleConsumeItem}
         handleDropItem={handleDropItem}
-        bondsModal={bondsModal}
         showExportModal={showExportModal}
         setShowExportModal={setShowExportModal}
+        showEndSessionModal={showEndSessionModal}
+        setShowEndSessionModal={setShowEndSessionModal}
+        bondsModal={bondsModal}
       />
     </div>
   );

@@ -90,4 +90,36 @@ describe('EndSessionModal', () => {
       { name: 'Alice', relationship: 'Best buds', resolved: false },
     ]);
   });
+
+  it('displays character summary information', () => {
+    const initial = {
+      hp: 10,
+      maxHp: 20,
+      xp: 3,
+      level: 1,
+      xpNeeded: 8,
+      debilities: ['weak'],
+      holds: 2,
+      statusEffects: ['poisoned'],
+      actionHistory: [
+        { action: 'Inventory Added: Sword' },
+        { action: 'Inventory Removed: Potion' },
+      ],
+      bonds: [],
+    };
+
+    renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    expect(screen.getByText('HP: 10/20')).toBeInTheDocument();
+    expect(screen.getByText('XP: 3')).toBeInTheDocument();
+    expect(screen.getByText('Debilities: weak')).toBeInTheDocument();
+    expect(screen.getByText('Holds: 2')).toBeInTheDocument();
+    expect(screen.getByText('Active Effects: poisoned')).toBeInTheDocument();
+    const inventorySummary = screen.getByText(/Inventory Changes:/);
+    expect(inventorySummary.textContent).toContain('Inventory Added: Sword');
+    expect(inventorySummary.textContent).toContain('Inventory Removed: Potion');
+  });
 });

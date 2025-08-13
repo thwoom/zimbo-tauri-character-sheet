@@ -113,6 +113,10 @@
   background: linear-gradient(45deg, var(--color-blue), var(--color-blue-dark));
 }
 
+.endSessionButton {
+  background: linear-gradient(45deg, var(--color-green), var(--color-green-dark));
+}
+
 .exportButton {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
 }

@@ -1,19 +1,23 @@
+import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
+const defaultAnswers = () => ({
+  q1: false,
+  q2: false,
+  q3: false,
+  alignment: false,
+});
+
 export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const { character, setCharacter } = useCharacter();
-  const [answers, setAnswers] = useState({
-    q1: false,
-    q2: false,
-    q3: false,
-    alignment: false,
-  });
+  const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
+  const [saveError, setSaveError] = useState(false);
 
   if (!isOpen) return null;
 
@@ -39,37 +43,59 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
+  const handleRecapTextChange = (key, text) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], text },
+    }));
+  };
+
+  const toggleRecapPublic = (key) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], isPublic: !prev[key].isPublic },
+    }));
+  };
+
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
 
-  const handleEnd = () => {
+  const handleEnd = async () => {
+    setSaveError(false);
     const xpGained = totalXP;
     const newXp = character.xp + xpGained;
-    setCharacter((prev) => {
-      const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
-      const newBonds = resolvedBonds
-        .map((idx) => {
-          const text = replacementBonds[idx]?.trim();
-          if (!text) return null;
-          return {
-            name: prev.bonds[idx].name,
-            relationship: text,
-            resolved: false,
-          };
-        })
-        .filter(Boolean);
 
-      return {
-        ...prev,
-        xp: newXp,
-        bonds: [...remainingBonds, ...newBonds],
-      };
-    });
+    const remainingBonds = character.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
+    const newBonds = resolvedBonds
+      .map((idx) => {
+        const text = replacementBonds[idx]?.trim();
+        if (!text) return null;
+        return {
+          name: character.bonds[idx].name,
+          relationship: text,
+          resolved: false,
+        };
+      })
+      .filter(Boolean);
 
-    if (newXp >= character.level + 7) {
-      onLevelUp();
+    const updatedCharacter = {
+      ...character,
+      xp: newXp,
+      bonds: [...remainingBonds, ...newBonds],
+    };
+
+    try {
+      await invoke('write_file', {
+        path: 'character.json',
+        contents: JSON.stringify(updatedCharacter, null, 2),
+      });
+      setCharacter(updatedCharacter);
+      if (newXp >= character.level + 7) {
+        onLevelUp();
+      }
+      onClose();
+    } catch (err) {
+      setSaveError(true);
     }
-
-    onClose();
   };
 
   return (
@@ -162,14 +188,30 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
+        {error && <div className={styles.error}>{error}</div>}
+
+        {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
 
         <div className={styles.actions}>
-          <button onClick={handleEnd} className={styles.button}>
-            End Session
-          </button>
-          <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-            Cancel
-          </button>
+          {saveError ? (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                Retry
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                End Session
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

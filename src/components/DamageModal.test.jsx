@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
+import fs from 'fs';
+import path from 'path';
 import CharacterContext from '../state/CharacterContext.jsx';
 import DamageModal from './DamageModal.jsx';
 
@@ -84,5 +86,10 @@ describe('DamageModal', () => {
     await user.click(screen.getByText('Apply'));
 
     await waitFor(() => expect(onLastBreath).toHaveBeenCalled());
+  });
+
+  it('includes flex-wrap styling for action buttons', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './DamageModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.buttonGroup[^}]*flex-wrap:\s*wrap/);
   });
 });

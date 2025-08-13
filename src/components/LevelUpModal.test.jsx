@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
+import fs from 'fs';
+import path from 'path';
 import { advancedMoves } from '../data/advancedMoves.js';
 import LevelUpModal from './LevelUpModal.jsx';
 
@@ -170,5 +172,10 @@ describe('LevelUpModal visibility and closing', () => {
     render(<LevelUpWrapper isOpen {...baseProps} onClose={onClose} />);
     await user.click(screen.getByLabelText('Close modal'));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('includes flex-wrap styling for action buttons', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './LevelUpModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.levelup-actions[^}]*flex-wrap:\s*wrap/);
   });
 });

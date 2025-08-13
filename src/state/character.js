@@ -103,6 +103,8 @@ export const INITIAL_CHARACTER_DATA = {
   sessionNotes: '', // Campaign notes and events
   sessionRecapPublic: '', // Shareable session recap
   rollHistory: [], // Recent dice rolls (last 10)
+  lastSessionEnd: null, // ISO timestamp when session last ended
+  sessionRecap: '', // Summary of last session
 };
 
 export const statusEffectTypes = {

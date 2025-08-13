@@ -11,7 +11,6 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
   const [recap, setRecap] = useState('');
-  const [shareRecap, setShareRecap] = useState(false);
 
   if (!isOpen) return null;
 
@@ -58,6 +57,9 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const handleEnd = async () => {
     setSaveError(false);
     const xpGained = totalXP;
+    const newXp = character.xp + xpGained;
+    const timestamp = new Date().toISOString();
+
     setCharacter((prev) => {
       const newXp = prev.xp + xpGained;
       const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
@@ -77,7 +79,8 @@ export default function EndSessionModal({ isOpen, onClose }) {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
-        sessionNotes: recap,
+        lastSessionEnd: timestamp,
+        sessionRecap: recap,
       };
       if (shareRecap) {
         updated.sessionRecapPublic = recap;
@@ -235,6 +238,17 @@ export default function EndSessionModal({ isOpen, onClose }) {
             ))}
           </div>
         )}
+
+        <div className={styles.section}>
+          <label htmlFor="session-recap">Session Recap</label>
+          <textarea
+            id="session-recap"
+            value={recap}
+            onChange={(e) => setRecap(e.target.value)}
+            placeholder="Brief recap of this session"
+            className={styles.recapInput}
+          />
+        </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
         {error && <div className={styles.error}>{error}</div>}

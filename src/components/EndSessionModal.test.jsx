@@ -90,4 +90,29 @@ describe('EndSessionModal', () => {
       { name: 'Alice', relationship: 'Best buds', resolved: false },
     ]);
   });
+
+  it('resets state when reopened', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [{ name: 'Alice', relationship: 'Friend', resolved: false }],
+    };
+    const { rerender } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByLabelText(/Alice: Friend/));
+
+    rerender(<EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />);
+    rerender(<EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />);
+
+    expect(screen.getByLabelText(/learn something new/i)).not.toBeChecked();
+    expect(screen.getByLabelText(/Alice: Friend/)).not.toBeChecked();
+    expect(screen.queryByPlaceholderText('New bond text')).not.toBeInTheDocument();
+  });
 });

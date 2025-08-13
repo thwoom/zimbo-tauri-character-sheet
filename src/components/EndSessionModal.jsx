@@ -1,26 +1,37 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
+const defaultAnswers = () => ({
+  q1: false,
+  q2: false,
+  q3: false,
+  alignment: false,
+});
+
 export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const { character, setCharacter } = useCharacter();
-  const [answers, setAnswers] = useState({
-    q1: false,
-    q2: false,
-    q3: false,
-    alignment: false,
-  });
-  const [recapAnswers, setRecapAnswers] = useState({
-    highlights: { text: '', isPublic: false },
-    npcEncounters: { text: '', isPublic: false },
-    looseEnds: { text: '', isPublic: false },
-    nextSteps: { text: '', isPublic: false },
-  });
+  const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setAnswers(defaultAnswers());
+      setResolvedBonds([]);
+      setReplacementBonds({});
+    }
+    return () => {
+      if (isOpen) {
+        setAnswers(defaultAnswers());
+        setResolvedBonds([]);
+        setReplacementBonds({});
+      }
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

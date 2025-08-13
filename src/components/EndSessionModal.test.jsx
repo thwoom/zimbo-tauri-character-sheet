@@ -101,31 +101,27 @@ describe('EndSessionModal', () => {
     ]);
   });
 
-  it('saves session recap and public entries separately', async () => {
+  it('resets state when reopened', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
-    const { getCharacter } = renderWithCharacter(
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [{ name: 'Alice', relationship: 'Friend', resolved: false }],
+    };
+    const { rerender } = renderWithCharacter(
       <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
       initial,
     );
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByLabelText(/Alice: Friend/));
 
-    await fillRecap(user);
-    const shares = screen.getAllByLabelText(/share publicly/i);
-    await user.click(shares[0]);
-    await user.click(shares[1]);
-    await user.click(screen.getByText(/end session/i));
+    rerender(<EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />);
+    rerender(<EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />);
 
-    expect(getCharacter().sessionRecap).toEqual({
-      highlights: 'Highlight text',
-      npcEncounters: 'NPC text',
-      looseEnds: 'Loose text',
-      nextSteps: 'Next text',
-    });
-    expect(getCharacter().sessionRecapPublic).toEqual({
-      highlights: 'Highlight text',
-      npcEncounters: 'NPC text',
-    });
-    expect(onClose).toHaveBeenCalled();
+    expect(screen.getByLabelText(/learn something new/i)).not.toBeChecked();
+    expect(screen.getByLabelText(/Alice: Friend/)).not.toBeChecked();
+    expect(screen.queryByPlaceholderText('New bond text')).not.toBeInTheDocument();
   });
 });

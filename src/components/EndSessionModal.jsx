@@ -163,79 +163,28 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         )}
 
         <div className={styles.section}>
-          <h3 className={styles.title}>Session Recap</h3>
-          <div className={styles.recapItem}>
-            <label className={styles.recapLabel}>
-              Highlights
-              <textarea
-                value={recapAnswers.highlights.text}
-                onChange={(e) => handleRecapTextChange('highlights', e.target.value)}
-                className={styles.textarea}
-              />
-            </label>
-            <label className={styles.shareLabel}>
-              <input
-                type="checkbox"
-                checked={recapAnswers.highlights.isPublic}
-                onChange={() => toggleRecapPublic('highlights')}
-              />{' '}
-              Share publicly
-            </label>
-          </div>
-          <div className={styles.recapItem}>
-            <label className={styles.recapLabel}>
-              NPC Encounters
-              <textarea
-                value={recapAnswers.npcEncounters.text}
-                onChange={(e) => handleRecapTextChange('npcEncounters', e.target.value)}
-                className={styles.textarea}
-              />
-            </label>
-            <label className={styles.shareLabel}>
-              <input
-                type="checkbox"
-                checked={recapAnswers.npcEncounters.isPublic}
-                onChange={() => toggleRecapPublic('npcEncounters')}
-              />{' '}
-              Share publicly
-            </label>
-          </div>
-          <div className={styles.recapItem}>
-            <label className={styles.recapLabel}>
-              Loose Ends
-              <textarea
-                value={recapAnswers.looseEnds.text}
-                onChange={(e) => handleRecapTextChange('looseEnds', e.target.value)}
-                className={styles.textarea}
-              />
-            </label>
-            <label className={styles.shareLabel}>
-              <input
-                type="checkbox"
-                checked={recapAnswers.looseEnds.isPublic}
-                onChange={() => toggleRecapPublic('looseEnds')}
-              />{' '}
-              Share publicly
-            </label>
-          </div>
-          <div className={styles.recapItem}>
-            <label className={styles.recapLabel}>
-              Next Steps
-              <textarea
-                value={recapAnswers.nextSteps.text}
-                onChange={(e) => handleRecapTextChange('nextSteps', e.target.value)}
-                className={styles.textarea}
-              />
-            </label>
-            <label className={styles.shareLabel}>
-              <input
-                type="checkbox"
-                checked={recapAnswers.nextSteps.isPublic}
-                onChange={() => toggleRecapPublic('nextSteps')}
-              />{' '}
-              Share publicly
-            </label>
-          </div>
+          <h3 className={styles.title}>Summary</h3>
+          <ul className={styles.bondList}>
+            <li className={styles.bondItem}>
+              HP: {character.hp}/{character.maxHp}
+            </li>
+            <li className={styles.bondItem}>XP: {character.xp}</li>
+            <li className={styles.bondItem}>
+              Debilities: {character.debilities?.length ? character.debilities.join(', ') : 'None'}
+            </li>
+            <li className={styles.bondItem}>Holds: {character.holds || 0}</li>
+            <li className={styles.bondItem}>
+              Active Effects:{' '}
+              {character.statusEffects?.length ? character.statusEffects.join(', ') : 'None'}
+            </li>
+            <li className={styles.bondItem}>
+              Inventory Changes:{' '}
+              {character.actionHistory
+                ?.filter((a) => a.action?.toLowerCase().includes('inventory'))
+                .map((a) => a.action)
+                .join(', ') || 'None'}
+            </li>
+          </ul>
         </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>

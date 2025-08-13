@@ -36,7 +36,7 @@ describe('EndSessionModal', () => {
   it('adds XP for positive answers', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const initial = { xp: 0, level: 1, xpNeeded: 10, bonds: [] };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
       initial,
@@ -49,7 +49,25 @@ describe('EndSessionModal', () => {
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(4);
+    expect(getCharacter().xpNeeded).toBe(getCharacter().level + 7);
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('uses xpNeeded to trigger level up', async () => {
+    const user = userEvent.setup();
+    const onLevelUp = vi.fn();
+    const initial = { xp: 7, level: 1, xpNeeded: 12, bonds: [] };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={onLevelUp} />,
+      initial,
+    );
+
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(onLevelUp).not.toHaveBeenCalled();
+    expect(getCharacter().xp).toBe(8);
+    expect(getCharacter().xpNeeded).toBe(getCharacter().level + 7);
   });
 
   it('does not add XP for negative answers', async () => {

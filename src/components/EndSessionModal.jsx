@@ -61,11 +61,12 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
       return {
         ...prev,
         xp: newXp,
+        xpNeeded: prev.level + 7,
         bonds: [...remainingBonds, ...newBonds],
       };
     });
 
-    if (newXp >= character.level + 7) {
+    if (newXp >= character.xpNeeded) {
       onLevelUp();
     }
 

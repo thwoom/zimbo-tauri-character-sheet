@@ -208,7 +208,11 @@ export default function useDiceRoller(character, setCharacter) {
       originalInterpretation = interpretation;
 
       if (originalTotal < 7 && autoXpOnMiss) {
-        setCharacter((prev) => ({ ...prev, xp: prev.xp + 1 }));
+        setCharacter((prev) => ({
+          ...prev,
+          xp: prev.xp + 1,
+          xpNeeded: prev.level + 7,
+        }));
       }
 
       if (!isAidMove && window.confirm('Did someone aid or interfere?')) {

@@ -36,23 +36,22 @@ describe('EndSessionModal', () => {
   });
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
     const { rerender } = renderWithCharacter(
-      <EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />,
+      <EndSessionModal isOpen={false} onClose={onClose} />,
       initial,
     );
     expect(screen.queryByText(/End of Session/i)).not.toBeInTheDocument();
-    rerender(<EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />);
+    rerender(<EndSessionModal isOpen onClose={onClose} />);
     expect(screen.getByText(/End of Session/i)).toBeInTheDocument();
   });
 
   it('adds XP for positive answers', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
-    invoke.mockResolvedValue();
+    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
     const { getCharacter } = renderWithCharacter(
-      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      <EndSessionModal isOpen onClose={onClose} />,
       initial,
     );
 
@@ -88,10 +87,9 @@ describe('EndSessionModal', () => {
 
   it('does not add XP for negative answers', async () => {
     const user = userEvent.setup();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
-    invoke.mockResolvedValue();
+    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
     const { getCharacter } = renderWithCharacter(
-      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      <EndSessionModal isOpen onClose={() => {}} />,
       initial,
     );
 
@@ -112,10 +110,11 @@ describe('EndSessionModal', () => {
         { name: 'Alice', relationship: 'Friend', resolved: false },
         { name: 'Bob', relationship: 'Ally', resolved: false },
       ],
+      levelUpPending: false,
     };
     invoke.mockResolvedValue();
     const { getCharacter } = renderWithCharacter(
-      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      <EndSessionModal isOpen onClose={() => {}} />,
       initial,
     );
 
@@ -209,5 +208,20 @@ describe('EndSessionModal', () => {
     const inventorySummary = screen.getByText(/Inventory Changes:/);
     expect(inventorySummary.textContent).toContain('Inventory Added: Sword');
     expect(inventorySummary.textContent).toContain('Inventory Removed: Potion');
+  });
+
+  it('flags pending level up when xp threshold is reached', async () => {
+    const user = userEvent.setup();
+    const initial = { xp: 7, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} />,
+      initial,
+    );
+
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().xp).toBe(8);
+    expect(getCharacter().levelUpPending).toBe(true);
   });
 });

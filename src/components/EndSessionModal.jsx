@@ -5,14 +5,7 @@ import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
-const defaultAnswers = () => ({
-  q1: false,
-  q2: false,
-  q3: false,
-  alignment: false,
-});
-
-export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
+export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
   const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
@@ -62,40 +55,30 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const handleEnd = async () => {
     setSaveError(false);
     const xpGained = totalXP;
-    const newXp = character.xp + xpGained;
+    setCharacter((prev) => {
+      const newXp = prev.xp + xpGained;
+      const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
+      const newBonds = resolvedBonds
+        .map((idx) => {
+          const text = replacementBonds[idx]?.trim();
+          if (!text) return null;
+          return {
+            name: prev.bonds[idx].name,
+            relationship: text,
+            resolved: false,
+          };
+        })
+        .filter(Boolean);
 
-    const remainingBonds = character.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
-    const newBonds = resolvedBonds
-      .map((idx) => {
-        const text = replacementBonds[idx]?.trim();
-        if (!text) return null;
-        return {
-          name: character.bonds[idx].name,
-          relationship: text,
-          resolved: false,
-        };
-      })
-      .filter(Boolean);
+      return {
+        ...prev,
+        xp: newXp,
+        bonds: [...remainingBonds, ...newBonds],
+        levelUpPending: newXp >= prev.xpNeeded || prev.levelUpPending,
+      };
+    });
 
-    const updatedCharacter = {
-      ...character,
-      xp: newXp,
-      bonds: [...remainingBonds, ...newBonds],
-    };
-
-    try {
-      await invoke('write_file', {
-        path: 'character.json',
-        contents: JSON.stringify(updatedCharacter, null, 2),
-      });
-      setCharacter(updatedCharacter);
-      if (newXp >= character.level + 7) {
-        onLevelUp();
-      }
-      onClose();
-    } catch (err) {
-      setSaveError(true);
-    }
+    onClose();
   };
 
   return (
@@ -221,5 +204,4 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 EndSessionModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onLevelUp: PropTypes.func.isRequired,
 };

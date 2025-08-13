@@ -4,7 +4,7 @@ import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
-export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
+export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
   const [answers, setAnswers] = useState({
     q1: false,
@@ -43,8 +43,8 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 
   const handleEnd = () => {
     const xpGained = totalXP;
-    const newXp = character.xp + xpGained;
     setCharacter((prev) => {
+      const newXp = prev.xp + xpGained;
       const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
       const newBonds = resolvedBonds
         .map((idx) => {
@@ -62,12 +62,9 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
+        levelUpPending: newXp >= prev.xpNeeded || prev.levelUpPending,
       };
     });
-
-    if (newXp >= character.level + 7) {
-      onLevelUp();
-    }
 
     onClose();
   };
@@ -154,5 +151,4 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 EndSessionModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onLevelUp: PropTypes.func.isRequired,
 };

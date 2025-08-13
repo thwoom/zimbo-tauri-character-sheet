@@ -14,6 +14,7 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   });
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
+  const [recap, setRecap] = useState('');
 
   if (!isOpen) return null;
 
@@ -44,6 +45,8 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const handleEnd = () => {
     const xpGained = totalXP;
     const newXp = character.xp + xpGained;
+    const timestamp = new Date().toISOString();
+
     setCharacter((prev) => {
       const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
       const newBonds = resolvedBonds
@@ -62,6 +65,8 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
+        lastSessionEnd: timestamp,
+        sessionRecap: recap,
       };
     });
 
@@ -135,6 +140,17 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
             </ul>
           </div>
         )}
+
+        <div className={styles.section}>
+          <label htmlFor="session-recap">Session Recap</label>
+          <textarea
+            id="session-recap"
+            value={recap}
+            onChange={(e) => setRecap(e.target.value)}
+            placeholder="Brief recap of this session"
+            className={styles.recapInput}
+          />
+        </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
 

@@ -1,3 +1,4 @@
+import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
@@ -16,22 +17,7 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (isOpen) {
-      setAnswers(defaultAnswers());
-      setResolvedBonds([]);
-      setReplacementBonds({});
-    }
-    return () => {
-      if (isOpen) {
-        setAnswers(defaultAnswers());
-        setResolvedBonds([]);
-        setReplacementBonds({});
-      }
-    };
-  }, [isOpen]);
+  const [saveError, setSaveError] = useState(false);
 
   if (!isOpen) return null;
 
@@ -73,54 +59,43 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
 
-  const handleEnd = () => {
-    const missingRecap = Object.values(recapAnswers).some(({ text }) => !text.trim());
-    if (missingRecap) {
-      setError('Please complete all recap fields.');
-      return;
-    }
-
+  const handleEnd = async () => {
+    setSaveError(false);
     const xpGained = totalXP;
     const newXp = character.xp + xpGained;
-    setCharacter((prev) => {
-      const remainingBonds = prev.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
-      const newBonds = resolvedBonds
-        .map((idx) => {
-          const text = replacementBonds[idx]?.trim();
-          if (!text) return null;
-          return {
-            name: prev.bonds[idx].name,
-            relationship: text,
-            resolved: false,
-          };
-        })
-        .filter(Boolean);
 
-      const sessionRecap = Object.fromEntries(
-        Object.entries(recapAnswers).map(([key, { text }]) => [key, text.trim()]),
-      );
+    const remainingBonds = character.bonds.filter((_, idx) => !resolvedBonds.includes(idx));
+    const newBonds = resolvedBonds
+      .map((idx) => {
+        const text = replacementBonds[idx]?.trim();
+        if (!text) return null;
+        return {
+          name: character.bonds[idx].name,
+          relationship: text,
+          resolved: false,
+        };
+      })
+      .filter(Boolean);
 
-      const sessionRecapPublic = Object.fromEntries(
-        Object.entries(recapAnswers)
-          .filter(([, { isPublic, text }]) => isPublic && text.trim())
-          .map(([key, { text }]) => [key, text.trim()]),
-      );
+    const updatedCharacter = {
+      ...character,
+      xp: newXp,
+      bonds: [...remainingBonds, ...newBonds],
+    };
 
-      return {
-        ...prev,
-        xp: newXp,
-        xpNeeded: prev.level + 7,
-        bonds: [...remainingBonds, ...newBonds],
-        sessionRecap,
-        ...(Object.keys(sessionRecapPublic).length > 0 && { sessionRecapPublic }),
-      };
-    });
-
-    if (newXp >= character.xpNeeded) {
-      onLevelUp();
+    try {
+      await invoke('write_file', {
+        path: 'character.json',
+        contents: JSON.stringify(updatedCharacter, null, 2),
+      });
+      setCharacter(updatedCharacter);
+      if (newXp >= character.level + 7) {
+        onLevelUp();
+      }
+      onClose();
+    } catch (err) {
+      setSaveError(true);
     }
-
-    onClose();
   };
 
   return (
@@ -266,13 +241,28 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
         {error && <div className={styles.error}>{error}</div>}
 
+        {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
+
         <div className={styles.actions}>
-          <button onClick={handleEnd} className={styles.button}>
-            End Session
-          </button>
-          <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-            Cancel
-          </button>
+          {saveError ? (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                Retry
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                End Session
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -90,4 +90,49 @@ describe('EndSessionModal', () => {
       { name: 'Alice', relationship: 'Best buds', resolved: false },
     ]);
   });
+
+  it('saves recap privately when not shared', async () => {
+    const user = userEvent.setup();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      sessionNotes: '',
+      sessionRecapPublic: '',
+    };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    await user.type(screen.getByPlaceholderText(/what happened this session/i), 'Private recap');
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().sessionNotes).toBe('Private recap');
+    expect(getCharacter().sessionRecapPublic).toBe('');
+  });
+
+  it('saves recap publicly when shared', async () => {
+    const user = userEvent.setup();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      sessionNotes: '',
+      sessionRecapPublic: '',
+    };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    await user.type(screen.getByPlaceholderText(/what happened this session/i), 'Public recap');
+    await user.click(screen.getByLabelText(/share recap publicly/i));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().sessionNotes).toBe('Public recap');
+    expect(getCharacter().sessionRecapPublic).toBe('Public recap');
+  });
 });

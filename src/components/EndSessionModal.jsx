@@ -14,6 +14,8 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   });
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
+  const [recap, setRecap] = useState('');
+  const [shareRecap, setShareRecap] = useState(false);
 
   if (!isOpen) return null;
 
@@ -58,11 +60,16 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         })
         .filter(Boolean);
 
-      return {
+      const updated = {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
+        sessionNotes: recap,
       };
+      if (shareRecap) {
+        updated.sessionRecapPublic = recap;
+      }
+      return updated;
     });
 
     if (newXp >= character.level + 7) {
@@ -135,6 +142,25 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
             </ul>
           </div>
         )}
+
+        <div className={styles.section}>
+          <label htmlFor="session-recap">Session Recap</label>
+          <textarea
+            id="session-recap"
+            className={styles.recapTextarea}
+            placeholder="What happened this session?"
+            value={recap}
+            onChange={(e) => setRecap(e.target.value)}
+          />
+          <label className={styles.shareLabel}>
+            <input
+              type="checkbox"
+              checked={shareRecap}
+              onChange={(e) => setShareRecap(e.target.checked)}
+            />{' '}
+            Share recap publicly
+          </label>
+        </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
 

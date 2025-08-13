@@ -100,6 +100,7 @@ export const INITIAL_CHARACTER_DATA = {
 
   // Session Data
   sessionNotes: '', // Campaign notes and events
+  sessionRecapPublic: '', // Shareable session recap
   rollHistory: [], // Recent dice rolls (last 10)
 };
 

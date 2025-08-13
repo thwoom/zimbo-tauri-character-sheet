@@ -50,6 +50,22 @@
   color: var(--color-white);
 }
 
+.recapTextarea {
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid var(--color-neon);
+  background: var(--color-modal-bg-dark);
+  color: var(--color-white);
+  min-height: 80px;
+}
+
+.shareLabel {
+  display: block;
+  margin-top: 8px;
+}
+
 .total {
   margin-top: 10px;
   color: var(--color-white);

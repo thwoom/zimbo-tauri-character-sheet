@@ -20,6 +20,13 @@ function renderWithCharacter(ui, initialCharacter) {
   return { ...render(ui, { wrapper: Wrapper }), getCharacter: () => currentCharacter };
 }
 
+async function fillRecap(user) {
+  await user.type(screen.getByLabelText(/Highlights/i), 'Highlight text');
+  await user.type(screen.getByLabelText(/NPC Encounters/i), 'NPC text');
+  await user.type(screen.getByLabelText(/Loose Ends/i), 'Loose text');
+  await user.type(screen.getByLabelText(/Next Steps/i), 'Next text');
+}
+
 describe('EndSessionModal', () => {
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
@@ -46,6 +53,7 @@ describe('EndSessionModal', () => {
     await user.click(screen.getByLabelText(/notable monster/i));
     await user.click(screen.getByLabelText(/memorable treasure/i));
     await user.click(screen.getByLabelText(/alignment\/drive/i));
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(4);
@@ -60,6 +68,7 @@ describe('EndSessionModal', () => {
       initial,
     );
 
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
     expect(getCharacter().xp).toBe(0);
   });
@@ -82,6 +91,7 @@ describe('EndSessionModal', () => {
 
     await user.click(screen.getByLabelText(/Alice: Friend/));
     await user.type(screen.getByPlaceholderText('New bond text'), 'Best buds');
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(1);
@@ -104,7 +114,6 @@ describe('EndSessionModal', () => {
       <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
       initial,
     );
-
     await user.click(screen.getByLabelText(/learn something new/i));
     await user.click(screen.getByLabelText(/Alice: Friend/));
 

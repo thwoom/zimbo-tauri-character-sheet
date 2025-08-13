@@ -130,6 +130,37 @@ describe('XP gain on miss', () => {
   });
 });
 
+describe('End session flow', () => {
+  it('opens EndSessionModal when End Session button is clicked', () => {
+    const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5, bonds: [] };
+
+    const Wrapper = ({ children }) => {
+      const [character, setCharacter] = React.useState(initialCharacter);
+      return (
+        <ThemeProvider>
+          <CharacterContext.Provider value={{ character, setCharacter }}>
+            {children}
+          </CharacterContext.Provider>
+        </ThemeProvider>
+      );
+    };
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.queryByText(/End of Session/i)).toBeNull();
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: /End Session/i }));
+    });
+
+    expect(screen.getByText(/End of Session/i)).toBeInTheDocument();
+  });
+});
+
 // Skipped in Vitest environment due to jsdom localStorage limitations
 describe.skip('localStorage persistence', () => {
   const Wrapper = ({ children }) => {

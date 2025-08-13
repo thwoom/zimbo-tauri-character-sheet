@@ -36,7 +36,16 @@ describe('EndSessionModal', () => {
   });
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { rerender } = renderWithCharacter(
       <EndSessionModal isOpen={false} onClose={onClose} />,
       initial,
@@ -49,7 +58,16 @@ describe('EndSessionModal', () => {
   it('adds XP for positive answers', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={onClose} />,
       initial,
@@ -87,7 +105,16 @@ describe('EndSessionModal', () => {
 
   it('does not add XP for negative answers', async () => {
     const user = userEvent.setup();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [], levelUpPending: false };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={() => {}} />,
       initial,
@@ -110,7 +137,10 @@ describe('EndSessionModal', () => {
         { name: 'Alice', relationship: 'Friend', resolved: false },
         { name: 'Bob', relationship: 'Ally', resolved: false },
       ],
-      levelUpPending: false,
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
     };
     invoke.mockResolvedValue();
     const { getCharacter } = renderWithCharacter(

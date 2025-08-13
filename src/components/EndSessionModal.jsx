@@ -37,18 +37,20 @@ export default function EndSessionModal({ isOpen, onClose }) {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
-  const handleRecapTextChange = (key, text) => {
-    setRecapAnswers((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], text },
-    }));
+  const handleInventoryChange = (id, value) => {
+    setInventoryChanges((prev) => ({ ...prev, [id]: value }));
   };
 
-  const toggleRecapPublic = (key) => {
-    setRecapAnswers((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], isPublic: !prev[key].isPublic },
-    }));
+  const toggleStatus = (effect) => {
+    setClearedStatus((prev) =>
+      prev.includes(effect) ? prev.filter((e) => e !== effect) : [...prev, effect],
+    );
+  };
+
+  const toggleDebility = (debility) => {
+    setClearedDebilities((prev) =>
+      prev.includes(debility) ? prev.filter((d) => d !== debility) : [...prev, debility],
+    );
   };
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
@@ -149,6 +151,41 @@ export default function EndSessionModal({ isOpen, onClose }) {
             </ul>
           </div>
         )}
+        
+        {character.inventory.length > 0 && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Item Usage</h3>
+            <ul className={styles.bondList}>
+              {character.inventory.map((item) => (
+                <li key={item.id} className={styles.bondItem}>
+                  {item.quantity != null ? (
+                    <label>
+                      {item.name} used:{' '}
+                      <input
+                        type="number"
+                        min="0"
+                        max={item.quantity}
+                        value={inventoryChanges[item.id] || 0}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.value)}
+                        aria-label={`Used ${item.name}`}
+                        className={styles.bondInput}
+                      />
+                    </label>
+                  ) : (
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={inventoryChanges[item.id] || false}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.checked)}
+                      />{' '}
+                      {item.name} used up
+                    </label>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className={styles.section}>
           <label htmlFor="session-recap">Session Recap</label>
@@ -168,6 +205,36 @@ export default function EndSessionModal({ isOpen, onClose }) {
             Share recap publicly
           </label>
         </div>
+
+        {(character.statusEffects.length > 0 || character.debilities.length > 0) && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Clear Temporary Effects</h3>
+            {character.statusEffects.map((effect) => (
+              <div key={effect}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedStatus.includes(effect)}
+                    onChange={() => toggleStatus(effect)}
+                  />{' '}
+                  {effect}
+                </label>
+              </div>
+            ))}
+            {character.debilities.map((debility) => (
+              <div key={debility}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedDebilities.includes(debility)}
+                    onChange={() => toggleDebility(debility)}
+                  />{' '}
+                  {debility}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
         {error && <div className={styles.error}>{error}</div>}

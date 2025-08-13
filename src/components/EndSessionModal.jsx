@@ -1,19 +1,16 @@
+import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
 export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
-  const [answers, setAnswers] = useState({
-    q1: false,
-    q2: false,
-    q3: false,
-    alignment: false,
-  });
+  const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
+  const [saveError, setSaveError] = useState(false);
 
   if (!isOpen) return null;
 
@@ -39,9 +36,24 @@ export default function EndSessionModal({ isOpen, onClose }) {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
+  const handleRecapTextChange = (key, text) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], text },
+    }));
+  };
+
+  const toggleRecapPublic = (key) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], isPublic: !prev[key].isPublic },
+    }));
+  };
+
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
 
-  const handleEnd = () => {
+  const handleEnd = async () => {
+    setSaveError(false);
     const xpGained = totalXP;
     setCharacter((prev) => {
       const newXp = prev.xp + xpGained;
@@ -133,15 +145,56 @@ export default function EndSessionModal({ isOpen, onClose }) {
           </div>
         )}
 
+        <div className={styles.section}>
+          <h3 className={styles.title}>Summary</h3>
+          <ul className={styles.bondList}>
+            <li className={styles.bondItem}>
+              HP: {character.hp}/{character.maxHp}
+            </li>
+            <li className={styles.bondItem}>XP: {character.xp}</li>
+            <li className={styles.bondItem}>
+              Debilities: {character.debilities?.length ? character.debilities.join(', ') : 'None'}
+            </li>
+            <li className={styles.bondItem}>Holds: {character.holds || 0}</li>
+            <li className={styles.bondItem}>
+              Active Effects:{' '}
+              {character.statusEffects?.length ? character.statusEffects.join(', ') : 'None'}
+            </li>
+            <li className={styles.bondItem}>
+              Inventory Changes:{' '}
+              {character.actionHistory
+                ?.filter((a) => a.action?.toLowerCase().includes('inventory'))
+                .map((a) => a.action)
+                .join(', ') || 'None'}
+            </li>
+          </ul>
+        </div>
+
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
+        {error && <div className={styles.error}>{error}</div>}
+
+        {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
 
         <div className={styles.actions}>
-          <button onClick={handleEnd} className={styles.button}>
-            End Session
-          </button>
-          <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-            Cancel
-          </button>
+          {saveError ? (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                Retry
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleEnd} className={styles.button}>
+                End Session
+              </button>
+              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

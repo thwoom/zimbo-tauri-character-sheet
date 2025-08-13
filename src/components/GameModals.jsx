@@ -3,6 +3,7 @@ import React from 'react';
 import BondsModal from './BondsModal.jsx';
 import DamageModal from './DamageModal.jsx';
 import ExportModal from './ExportModal.jsx';
+import EndSessionModal from './EndSessionModal.jsx';
 import InventoryModal from './InventoryModal.jsx';
 import LastBreathModal from './LastBreathModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
@@ -35,6 +36,8 @@ const GameModals = ({
   handleDropItem,
   showExportModal,
   setShowExportModal,
+  showEndSessionModal,
+  setShowEndSessionModal,
   bondsModal,
 }) => (
   <>
@@ -86,6 +89,12 @@ const GameModals = ({
 
     <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
 
+    <EndSessionModal
+      isOpen={showEndSessionModal}
+      onClose={() => setShowEndSessionModal(false)}
+      onLevelUp={() => setShowLevelUpModal(true)}
+    />
+
     <ExportModal isOpen={showExportModal} onClose={() => setShowExportModal(false)} />
   </>
 );
@@ -117,6 +126,8 @@ GameModals.propTypes = {
   handleDropItem: PropTypes.func.isRequired,
   showExportModal: PropTypes.bool.isRequired,
   setShowExportModal: PropTypes.func.isRequired,
+  showEndSessionModal: PropTypes.bool.isRequired,
+  setShowEndSessionModal: PropTypes.func.isRequired,
   bondsModal: PropTypes.shape({
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,

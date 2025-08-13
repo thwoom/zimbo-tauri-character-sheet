@@ -10,7 +10,10 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
-  const [saveError, setSaveError] = useState(false);
+  const [inventoryChanges, setInventoryChanges] = useState({});
+  const [coinChange, setCoinChange] = useState(0);
+  const [clearedStatus, setClearedStatus] = useState([]);
+  const [clearedDebilities, setClearedDebilities] = useState([]);
 
   if (!isOpen) return null;
 
@@ -36,18 +39,20 @@ export default function EndSessionModal({ isOpen, onClose }) {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
-  const handleRecapTextChange = (key, text) => {
-    setRecapAnswers((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], text },
-    }));
+  const handleInventoryChange = (id, value) => {
+    setInventoryChanges((prev) => ({ ...prev, [id]: value }));
   };
 
-  const toggleRecapPublic = (key) => {
-    setRecapAnswers((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], isPublic: !prev[key].isPublic },
-    }));
+  const toggleStatus = (effect) => {
+    setClearedStatus((prev) =>
+      prev.includes(effect) ? prev.filter((e) => e !== effect) : [...prev, effect],
+    );
+  };
+
+  const toggleDebility = (debility) => {
+    setClearedDebilities((prev) =>
+      prev.includes(debility) ? prev.filter((d) => d !== debility) : [...prev, debility],
+    );
   };
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
@@ -70,11 +75,34 @@ export default function EndSessionModal({ isOpen, onClose }) {
         })
         .filter(Boolean);
 
+      const updatedInventory = prev.inventory
+        .map((item) => {
+          const change = inventoryChanges[item.id];
+          if (item.quantity != null) {
+            const used = Number(change) || 0;
+            const newQty = item.quantity - used;
+            if (newQty > 0) return { ...item, quantity: newQty };
+            if (used > 0) return null;
+            return item;
+          }
+          if (change) return null;
+          return item;
+        })
+        .filter(Boolean);
+
+      const updatedResources = {
+        ...prev.resources,
+        coin: (prev.resources.coin || 0) + Number(coinChange || 0),
+      };
+
       return {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
-        levelUpPending: newXp >= prev.xpNeeded || prev.levelUpPending,
+        inventory: updatedInventory,
+        resources: updatedResources,
+        statusEffects: prev.statusEffects.filter((e) => !clearedStatus.includes(e)),
+        debilities: prev.debilities.filter((d) => !clearedDebilities.includes(d)),
       };
     });
 
@@ -144,31 +172,83 @@ export default function EndSessionModal({ isOpen, onClose }) {
             </ul>
           </div>
         )}
+        
+        {character.inventory.length > 0 && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Item Usage</h3>
+            <ul className={styles.bondList}>
+              {character.inventory.map((item) => (
+                <li key={item.id} className={styles.bondItem}>
+                  {item.quantity != null ? (
+                    <label>
+                      {item.name} used:{' '}
+                      <input
+                        type="number"
+                        min="0"
+                        max={item.quantity}
+                        value={inventoryChanges[item.id] || 0}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.value)}
+                        aria-label={`Used ${item.name}`}
+                        className={styles.bondInput}
+                      />
+                    </label>
+                  ) : (
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={inventoryChanges[item.id] || false}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.checked)}
+                      />{' '}
+                      {item.name} used up
+                    </label>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className={styles.section}>
-          <h3 className={styles.title}>Summary</h3>
-          <ul className={styles.bondList}>
-            <li className={styles.bondItem}>
-              HP: {character.hp}/{character.maxHp}
-            </li>
-            <li className={styles.bondItem}>XP: {character.xp}</li>
-            <li className={styles.bondItem}>
-              Debilities: {character.debilities?.length ? character.debilities.join(', ') : 'None'}
-            </li>
-            <li className={styles.bondItem}>Holds: {character.holds || 0}</li>
-            <li className={styles.bondItem}>
-              Active Effects:{' '}
-              {character.statusEffects?.length ? character.statusEffects.join(', ') : 'None'}
-            </li>
-            <li className={styles.bondItem}>
-              Inventory Changes:{' '}
-              {character.actionHistory
-                ?.filter((a) => a.action?.toLowerCase().includes('inventory'))
-                .map((a) => a.action)
-                .join(', ') || 'None'}
-            </li>
-          </ul>
+          <label>
+            Coin change:
+            <input
+              type="number"
+              value={coinChange}
+              onChange={(e) => setCoinChange(e.target.value)}
+              className={styles.bondInput}
+            />
+          </label>
         </div>
+
+        {(character.statusEffects.length > 0 || character.debilities.length > 0) && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Clear Temporary Effects</h3>
+            {character.statusEffects.map((effect) => (
+              <div key={effect}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedStatus.includes(effect)}
+                    onChange={() => toggleStatus(effect)}
+                  />{' '}
+                  {effect}
+                </label>
+              </div>
+            ))}
+            {character.debilities.map((debility) => (
+              <div key={debility}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedDebilities.includes(debility)}
+                    onChange={() => toggleDebility(debility)}
+                  />{' '}
+                  {debility}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
         {error && <div className={styles.error}>{error}</div>}

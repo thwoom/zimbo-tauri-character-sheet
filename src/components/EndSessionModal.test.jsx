@@ -255,37 +255,48 @@ describe('EndSessionModal', () => {
     expect(getCharacter().levelUpPending).toBe(true);
   });
 
-  it('updates inventory, coin, and clears temporary effects', async () => {
+  it('saves recap privately when not shared', async () => {
     const user = userEvent.setup();
-    const onClose = vi.fn();
     const initial = {
       xp: 0,
       level: 1,
       xpNeeded: 8,
       bonds: [],
-      inventory: [{ id: 1, name: 'Potion', quantity: 2 }],
-      resources: { coin: 5 },
-      statusEffects: ['poisoned'],
-      debilities: ['weak'],
+      sessionNotes: '',
+      sessionRecapPublic: '',
     };
     const { getCharacter } = renderWithCharacter(
-      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
       initial,
     );
 
-    const potionInput = screen.getByLabelText('Used Potion');
-    await user.clear(potionInput);
-    await user.type(potionInput, '1');
-    const coinInput = screen.getByLabelText(/coin change/i);
-    await user.clear(coinInput);
-    await user.type(coinInput, '3');
-    await user.click(screen.getByLabelText('poisoned'));
-    await user.click(screen.getByLabelText('weak'));
+    await user.type(screen.getByPlaceholderText(/what happened this session/i), 'Private recap');
     await user.click(screen.getByText(/end session/i));
 
-    expect(getCharacter().inventory).toEqual([{ id: 1, name: 'Potion', quantity: 1 }]);
-    expect(getCharacter().resources.coin).toBe(8);
-    expect(getCharacter().statusEffects).toEqual([]);
-    expect(getCharacter().debilities).toEqual([]);
+    expect(getCharacter().sessionNotes).toBe('Private recap');
+    expect(getCharacter().sessionRecapPublic).toBe('');
+  });
+
+  it('saves recap publicly when shared', async () => {
+    const user = userEvent.setup();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      sessionNotes: '',
+      sessionRecapPublic: '',
+    };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    await user.type(screen.getByPlaceholderText(/what happened this session/i), 'Public recap');
+    await user.click(screen.getByLabelText(/share recap publicly/i));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().sessionNotes).toBe('Public recap');
+    expect(getCharacter().sessionRecapPublic).toBe('Public recap');
   });
 });

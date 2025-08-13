@@ -10,10 +10,8 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
-  const [inventoryChanges, setInventoryChanges] = useState({});
-  const [coinChange, setCoinChange] = useState(0);
-  const [clearedStatus, setClearedStatus] = useState([]);
-  const [clearedDebilities, setClearedDebilities] = useState([]);
+  const [recap, setRecap] = useState('');
+  const [shareRecap, setShareRecap] = useState(false);
 
   if (!isOpen) return null;
 
@@ -75,35 +73,16 @@ export default function EndSessionModal({ isOpen, onClose }) {
         })
         .filter(Boolean);
 
-      const updatedInventory = prev.inventory
-        .map((item) => {
-          const change = inventoryChanges[item.id];
-          if (item.quantity != null) {
-            const used = Number(change) || 0;
-            const newQty = item.quantity - used;
-            if (newQty > 0) return { ...item, quantity: newQty };
-            if (used > 0) return null;
-            return item;
-          }
-          if (change) return null;
-          return item;
-        })
-        .filter(Boolean);
-
-      const updatedResources = {
-        ...prev.resources,
-        coin: (prev.resources.coin || 0) + Number(coinChange || 0),
-      };
-
-      return {
+      const updated = {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
-        inventory: updatedInventory,
-        resources: updatedResources,
-        statusEffects: prev.statusEffects.filter((e) => !clearedStatus.includes(e)),
-        debilities: prev.debilities.filter((d) => !clearedDebilities.includes(d)),
+        sessionNotes: recap,
       };
+      if (shareRecap) {
+        updated.sessionRecapPublic = recap;
+      }
+      return updated;
     });
 
     onClose();
@@ -209,14 +188,21 @@ export default function EndSessionModal({ isOpen, onClose }) {
         )}
 
         <div className={styles.section}>
-          <label>
-            Coin change:
+          <label htmlFor="session-recap">Session Recap</label>
+          <textarea
+            id="session-recap"
+            className={styles.recapTextarea}
+            placeholder="What happened this session?"
+            value={recap}
+            onChange={(e) => setRecap(e.target.value)}
+          />
+          <label className={styles.shareLabel}>
             <input
-              type="number"
-              value={coinChange}
-              onChange={(e) => setCoinChange(e.target.value)}
-              className={styles.bondInput}
-            />
+              type="checkbox"
+              checked={shareRecap}
+              onChange={(e) => setShareRecap(e.target.checked)}
+            />{' '}
+            Share recap publicly
           </label>
         </div>
 

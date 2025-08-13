@@ -23,7 +23,16 @@ function renderWithCharacter(ui, initialCharacter) {
 describe('EndSessionModal', () => {
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { rerender } = renderWithCharacter(
       <EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />,
       initial,
@@ -36,7 +45,16 @@ describe('EndSessionModal', () => {
   it('adds XP for positive answers', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
       initial,
@@ -54,7 +72,16 @@ describe('EndSessionModal', () => {
 
   it('does not add XP for negative answers', async () => {
     const user = userEvent.setup();
-    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
       initial,
@@ -74,6 +101,10 @@ describe('EndSessionModal', () => {
         { name: 'Alice', relationship: 'Friend', resolved: false },
         { name: 'Bob', relationship: 'Ally', resolved: false },
       ],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
     };
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={() => {}} onLevelUp={() => {}} />,
@@ -89,5 +120,39 @@ describe('EndSessionModal', () => {
       { name: 'Bob', relationship: 'Ally', resolved: false },
       { name: 'Alice', relationship: 'Best buds', resolved: false },
     ]);
+  });
+
+  it('updates inventory, coin, and clears temporary effects', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [{ id: 1, name: 'Potion', quantity: 2 }],
+      resources: { coin: 5 },
+      statusEffects: ['poisoned'],
+      debilities: ['weak'],
+    };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    const potionInput = screen.getByLabelText('Used Potion');
+    await user.clear(potionInput);
+    await user.type(potionInput, '1');
+    const coinInput = screen.getByLabelText(/coin change/i);
+    await user.clear(coinInput);
+    await user.type(coinInput, '3');
+    await user.click(screen.getByLabelText('poisoned'));
+    await user.click(screen.getByLabelText('weak'));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().inventory).toEqual([{ id: 1, name: 'Potion', quantity: 1 }]);
+    expect(getCharacter().resources.coin).toBe(8);
+    expect(getCharacter().statusEffects).toEqual([]);
+    expect(getCharacter().debilities).toEqual([]);
   });
 });

@@ -14,6 +14,10 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   });
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
+  const [inventoryChanges, setInventoryChanges] = useState({});
+  const [coinChange, setCoinChange] = useState(0);
+  const [clearedStatus, setClearedStatus] = useState([]);
+  const [clearedDebilities, setClearedDebilities] = useState([]);
 
   if (!isOpen) return null;
 
@@ -39,6 +43,22 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
   };
 
+  const handleInventoryChange = (id, value) => {
+    setInventoryChanges((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const toggleStatus = (effect) => {
+    setClearedStatus((prev) =>
+      prev.includes(effect) ? prev.filter((e) => e !== effect) : [...prev, effect],
+    );
+  };
+
+  const toggleDebility = (debility) => {
+    setClearedDebilities((prev) =>
+      prev.includes(debility) ? prev.filter((d) => d !== debility) : [...prev, debility],
+    );
+  };
+
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
 
   const handleEnd = () => {
@@ -58,10 +78,34 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
         })
         .filter(Boolean);
 
+      const updatedInventory = prev.inventory
+        .map((item) => {
+          const change = inventoryChanges[item.id];
+          if (item.quantity != null) {
+            const used = Number(change) || 0;
+            const newQty = item.quantity - used;
+            if (newQty > 0) return { ...item, quantity: newQty };
+            if (used > 0) return null;
+            return item;
+          }
+          if (change) return null;
+          return item;
+        })
+        .filter(Boolean);
+
+      const updatedResources = {
+        ...prev.resources,
+        coin: (prev.resources.coin || 0) + Number(coinChange || 0),
+      };
+
       return {
         ...prev,
         xp: newXp,
         bonds: [...remainingBonds, ...newBonds],
+        inventory: updatedInventory,
+        resources: updatedResources,
+        statusEffects: prev.statusEffects.filter((e) => !clearedStatus.includes(e)),
+        debilities: prev.debilities.filter((d) => !clearedDebilities.includes(d)),
       };
     });
 
@@ -133,6 +177,83 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {character.inventory.length > 0 && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Item Usage</h3>
+            <ul className={styles.bondList}>
+              {character.inventory.map((item) => (
+                <li key={item.id} className={styles.bondItem}>
+                  {item.quantity != null ? (
+                    <label>
+                      {item.name} used:{' '}
+                      <input
+                        type="number"
+                        min="0"
+                        max={item.quantity}
+                        value={inventoryChanges[item.id] || 0}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.value)}
+                        aria-label={`Used ${item.name}`}
+                        className={styles.bondInput}
+                      />
+                    </label>
+                  ) : (
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={inventoryChanges[item.id] || false}
+                        onChange={(e) => handleInventoryChange(item.id, e.target.checked)}
+                      />{' '}
+                      {item.name} used up
+                    </label>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className={styles.section}>
+          <label>
+            Coin change:
+            <input
+              type="number"
+              value={coinChange}
+              onChange={(e) => setCoinChange(e.target.value)}
+              className={styles.bondInput}
+            />
+          </label>
+        </div>
+
+        {(character.statusEffects.length > 0 || character.debilities.length > 0) && (
+          <div className={styles.section}>
+            <h3 className={styles.title}>Clear Temporary Effects</h3>
+            {character.statusEffects.map((effect) => (
+              <div key={effect}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedStatus.includes(effect)}
+                    onChange={() => toggleStatus(effect)}
+                  />{' '}
+                  {effect}
+                </label>
+              </div>
+            ))}
+            {character.debilities.map((debility) => (
+              <div key={debility}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clearedDebilities.includes(debility)}
+                    onChange={() => toggleDebility(debility)}
+                  />{' '}
+                  {debility}
+                </label>
+              </div>
+            ))}
           </div>
         )}
 

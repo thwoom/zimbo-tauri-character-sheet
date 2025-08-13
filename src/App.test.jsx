@@ -89,7 +89,7 @@ describe('XP gain on miss', () => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByText(/XP: 1\/5/i)).toBeInTheDocument();
+    expect(screen.getByText(/XP: 1\/11/i)).toBeInTheDocument();
 
     Math.random.mockRestore();
   });

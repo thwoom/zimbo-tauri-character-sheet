@@ -1,18 +1,20 @@
 import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
+const defaultAnswers = () => ({
+  q1: false,
+  q2: false,
+  q3: false,
+  alignment: false,
+});
+
 export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
   const { character, setCharacter } = useCharacter();
-  const [answers, setAnswers] = useState({
-    q1: false,
-    q2: false,
-    q3: false,
-    alignment: false,
-  });
+  const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
   const [saveError, setSaveError] = useState(false);
@@ -39,6 +41,20 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
 
   const handleBondTextChange = (index, text) => {
     setReplacementBonds((prev) => ({ ...prev, [index]: text }));
+  };
+
+  const handleRecapTextChange = (key, text) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], text },
+    }));
+  };
+
+  const toggleRecapPublic = (key) => {
+    setRecapAnswers((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], isPublic: !prev[key].isPublic },
+    }));
   };
 
   const totalXP = Object.values(answers).filter(Boolean).length + resolvedBonds.length;
@@ -146,7 +162,84 @@ export default function EndSessionModal({ isOpen, onClose, onLevelUp }) {
           </div>
         )}
 
+        <div className={styles.section}>
+          <h3 className={styles.title}>Session Recap</h3>
+          <div className={styles.recapItem}>
+            <label className={styles.recapLabel}>
+              Highlights
+              <textarea
+                value={recapAnswers.highlights.text}
+                onChange={(e) => handleRecapTextChange('highlights', e.target.value)}
+                className={styles.textarea}
+              />
+            </label>
+            <label className={styles.shareLabel}>
+              <input
+                type="checkbox"
+                checked={recapAnswers.highlights.isPublic}
+                onChange={() => toggleRecapPublic('highlights')}
+              />{' '}
+              Share publicly
+            </label>
+          </div>
+          <div className={styles.recapItem}>
+            <label className={styles.recapLabel}>
+              NPC Encounters
+              <textarea
+                value={recapAnswers.npcEncounters.text}
+                onChange={(e) => handleRecapTextChange('npcEncounters', e.target.value)}
+                className={styles.textarea}
+              />
+            </label>
+            <label className={styles.shareLabel}>
+              <input
+                type="checkbox"
+                checked={recapAnswers.npcEncounters.isPublic}
+                onChange={() => toggleRecapPublic('npcEncounters')}
+              />{' '}
+              Share publicly
+            </label>
+          </div>
+          <div className={styles.recapItem}>
+            <label className={styles.recapLabel}>
+              Loose Ends
+              <textarea
+                value={recapAnswers.looseEnds.text}
+                onChange={(e) => handleRecapTextChange('looseEnds', e.target.value)}
+                className={styles.textarea}
+              />
+            </label>
+            <label className={styles.shareLabel}>
+              <input
+                type="checkbox"
+                checked={recapAnswers.looseEnds.isPublic}
+                onChange={() => toggleRecapPublic('looseEnds')}
+              />{' '}
+              Share publicly
+            </label>
+          </div>
+          <div className={styles.recapItem}>
+            <label className={styles.recapLabel}>
+              Next Steps
+              <textarea
+                value={recapAnswers.nextSteps.text}
+                onChange={(e) => handleRecapTextChange('nextSteps', e.target.value)}
+                className={styles.textarea}
+              />
+            </label>
+            <label className={styles.shareLabel}>
+              <input
+                type="checkbox"
+                checked={recapAnswers.nextSteps.isPublic}
+                onChange={() => toggleRecapPublic('nextSteps')}
+              />{' '}
+              Share publicly
+            </label>
+          </div>
+        </div>
+
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
+        {error && <div className={styles.error}>{error}</div>}
 
         {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
 

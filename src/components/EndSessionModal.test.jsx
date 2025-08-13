@@ -23,6 +23,13 @@ function renderWithCharacter(ui, initialCharacter) {
   return { ...render(ui, { wrapper: Wrapper }), getCharacter: () => currentCharacter };
 }
 
+async function fillRecap(user) {
+  await user.type(screen.getByLabelText(/Highlights/i), 'Highlight text');
+  await user.type(screen.getByLabelText(/NPC Encounters/i), 'NPC text');
+  await user.type(screen.getByLabelText(/Loose Ends/i), 'Loose text');
+  await user.type(screen.getByLabelText(/Next Steps/i), 'Next text');
+}
+
 describe('EndSessionModal', () => {
   beforeEach(() => {
     invoke.mockReset();
@@ -53,12 +60,30 @@ describe('EndSessionModal', () => {
     await user.click(screen.getByLabelText(/notable monster/i));
     await user.click(screen.getByLabelText(/memorable treasure/i));
     await user.click(screen.getByLabelText(/alignment\/drive/i));
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     await waitFor(() => {
       expect(getCharacter().xp).toBe(4);
       expect(onClose).toHaveBeenCalled();
     });
+  });
+
+  it('uses xpNeeded to trigger level up', async () => {
+    const user = userEvent.setup();
+    const onLevelUp = vi.fn();
+    const initial = { xp: 7, level: 1, xpNeeded: 12, bonds: [] };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={() => {}} onLevelUp={onLevelUp} />,
+      initial,
+    );
+
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByText(/end session/i));
+
+    expect(onLevelUp).not.toHaveBeenCalled();
+    expect(getCharacter().xp).toBe(8);
+    expect(getCharacter().xpNeeded).toBe(getCharacter().level + 7);
   });
 
   it('does not add XP for negative answers', async () => {
@@ -70,6 +95,7 @@ describe('EndSessionModal', () => {
       initial,
     );
 
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
     await waitFor(() => {
       expect(getCharacter().xp).toBe(0);
@@ -95,6 +121,7 @@ describe('EndSessionModal', () => {
 
     await user.click(screen.getByLabelText(/Alice: Friend/));
     await user.type(screen.getByPlaceholderText('New bond text'), 'Best buds');
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     await waitFor(() => {
@@ -126,5 +153,29 @@ describe('EndSessionModal', () => {
     expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
     expect(screen.getByPlaceholderText('New bond text')).toHaveValue('Best buds');
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('resets state when reopened', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [{ name: 'Alice', relationship: 'Friend', resolved: false }],
+    };
+    const { rerender } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      initial,
+    );
+    await user.click(screen.getByLabelText(/learn something new/i));
+    await user.click(screen.getByLabelText(/Alice: Friend/));
+
+    rerender(<EndSessionModal isOpen={false} onClose={onClose} onLevelUp={() => {}} />);
+    rerender(<EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />);
+
+    expect(screen.getByLabelText(/learn something new/i)).not.toBeChecked();
+    expect(screen.getByLabelText(/Alice: Friend/)).not.toBeChecked();
+    expect(screen.queryByPlaceholderText('New bond text')).not.toBeInTheDocument();
   });
 });

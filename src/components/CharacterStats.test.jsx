@@ -17,6 +17,7 @@ function makeCharacter(overrides = {}) {
     xp: 10,
     xpNeeded: 10,
     level: 1,
+    levelUpPending: false,
     resources: {
       chronoUses: 0,
       paradoxPoints: 0,

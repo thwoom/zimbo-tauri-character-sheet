@@ -71,8 +71,18 @@
   color: var(--color-white);
 }
 
+.error {
+  color: var(--color-danger);
+  margin-top: 10px;
+}
+
 .actions {
   margin-top: 20px;
+}
+
+.error {
+  color: var(--color-danger);
+  margin-top: 10px;
 }
 
 .button {

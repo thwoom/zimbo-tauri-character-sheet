@@ -20,6 +20,13 @@ function renderWithCharacter(ui, initialCharacter) {
   return { ...render(ui, { wrapper: Wrapper }), getCharacter: () => currentCharacter };
 }
 
+async function fillRecap(user) {
+  await user.type(screen.getByLabelText(/Highlights/i), 'Highlight text');
+  await user.type(screen.getByLabelText(/NPC Encounters/i), 'NPC text');
+  await user.type(screen.getByLabelText(/Loose Ends/i), 'Loose text');
+  await user.type(screen.getByLabelText(/Next Steps/i), 'Next text');
+}
+
 describe('EndSessionModal', () => {
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
@@ -46,6 +53,7 @@ describe('EndSessionModal', () => {
     await user.click(screen.getByLabelText(/notable monster/i));
     await user.click(screen.getByLabelText(/memorable treasure/i));
     await user.click(screen.getByLabelText(/alignment\/drive/i));
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(4);
@@ -60,6 +68,7 @@ describe('EndSessionModal', () => {
       initial,
     );
 
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
     expect(getCharacter().xp).toBe(0);
   });
@@ -82,6 +91,7 @@ describe('EndSessionModal', () => {
 
     await user.click(screen.getByLabelText(/Alice: Friend/));
     await user.type(screen.getByPlaceholderText('New bond text'), 'Best buds');
+    await fillRecap(user);
     await user.click(screen.getByText(/end session/i));
 
     expect(getCharacter().xp).toBe(1);
@@ -89,5 +99,33 @@ describe('EndSessionModal', () => {
       { name: 'Bob', relationship: 'Ally', resolved: false },
       { name: 'Alice', relationship: 'Best buds', resolved: false },
     ]);
+  });
+
+  it('saves session recap and public entries separately', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const initial = { xp: 0, level: 1, xpNeeded: 8, bonds: [] };
+    const { getCharacter } = renderWithCharacter(
+      <EndSessionModal isOpen onClose={onClose} onLevelUp={() => {}} />,
+      initial,
+    );
+
+    await fillRecap(user);
+    const shares = screen.getAllByLabelText(/share publicly/i);
+    await user.click(shares[0]);
+    await user.click(shares[1]);
+    await user.click(screen.getByText(/end session/i));
+
+    expect(getCharacter().sessionRecap).toEqual({
+      highlights: 'Highlight text',
+      npcEncounters: 'NPC text',
+      looseEnds: 'Loose text',
+      nextSteps: 'Next text',
+    });
+    expect(getCharacter().sessionRecapPublic).toEqual({
+      highlights: 'Highlight text',
+      npcEncounters: 'NPC text',
+    });
+    expect(onClose).toHaveBeenCalled();
   });
 });

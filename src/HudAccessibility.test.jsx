@@ -6,6 +6,7 @@ import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
+import { SettingsProvider } from './state/SettingsContext.jsx';
 
 function renderApp(overrides = {}) {
   const initialCharacter = { ...INITIAL_CHARACTER_DATA, ...overrides };
@@ -14,7 +15,7 @@ function renderApp(overrides = {}) {
     return (
       <ThemeProvider>
         <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
+          <SettingsProvider initialAutoXpOnMiss={true}>{children}</SettingsProvider>
         </CharacterContext.Provider>
       </ThemeProvider>
     );

@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 const createWrapper =
-  (initialCharacter, autoXpOnMiss = true) =>
+  (initialCharacter, autoXpOnMiss) =>
   ({ children }) => {
     const [character, setCharacter] = React.useState(initialCharacter);
     return (
@@ -52,7 +52,7 @@ describe('App level up auto-detection', () => {
       return (
         <ThemeProvider>
           <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
-            <SettingsProvider initialAutoXpOnMiss>{children}</SettingsProvider>
+            <SettingsProvider initialAutoXpOnMiss={true}>{children}</SettingsProvider>
           </CharacterContext.Provider>
         </ThemeProvider>
       );
@@ -125,7 +125,7 @@ describe('XP gain on miss', () => {
 describe('End session flow', () => {
   it('opens EndSessionModal when End Session button is clicked', () => {
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5, bonds: [] };
-    const Wrapper = createWrapper(initialCharacter);
+    const Wrapper = createWrapper(initialCharacter, true);
 
     render(
       <Wrapper>
@@ -144,7 +144,7 @@ describe('End session flow', () => {
 });
 
 describe('Rulebook display', () => {
-  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA);
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
 
   it('renders the rulebook name in the header', () => {
     render(
@@ -159,7 +159,7 @@ describe('Rulebook display', () => {
 
 // Skipped in Vitest environment due to jsdom localStorage limitations
 describe.skip('localStorage persistence', () => {
-  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA);
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
 
   beforeEach(() => {
     localStorage.clear();
@@ -236,7 +236,7 @@ describe('Theme switching', () => {
   it('updates the theme attribute when selecting classic', () => {
     render(
       <ThemeProvider>
-        <SettingsProvider initialAutoXpOnMiss>
+        <SettingsProvider initialAutoXpOnMiss={true}>
           <Settings />
         </SettingsProvider>
       </ThemeProvider>,
@@ -255,7 +255,7 @@ describe('Theme switching', () => {
   it('updates the theme attribute when selecting moebius', () => {
     render(
       <ThemeProvider>
-        <SettingsProvider initialAutoXpOnMiss>
+        <SettingsProvider initialAutoXpOnMiss={true}>
           <Settings />
         </SettingsProvider>
       </ThemeProvider>,
@@ -279,7 +279,7 @@ describe('App header', () => {
         <CharacterContext.Provider
           value={{ character: INITIAL_CHARACTER_DATA, setCharacter: () => {} }}
         >
-          <SettingsProvider initialAutoXpOnMiss>
+          <SettingsProvider initialAutoXpOnMiss={true}>
             <App />
           </SettingsProvider>
         </CharacterContext.Provider>

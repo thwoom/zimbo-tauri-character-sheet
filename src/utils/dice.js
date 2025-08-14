@@ -4,7 +4,7 @@ export const rollDie = (sides) => {
   if (!Number.isInteger(sides) || sides <= 0) {
     throw new Error('sides must be a positive integer');
   }
-  if (process.env.NODE_ENV === 'test') {
+  if (import.meta.env.MODE === 'test') {
     if (typeof crypto?.getRandomValues === 'function' && crypto.getRandomValues.mock) {
       const array = new Uint32Array(1);
       crypto.getRandomValues(array);

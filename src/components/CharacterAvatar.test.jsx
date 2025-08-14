@@ -9,7 +9,6 @@ describe('CharacterAvatar', () => {
     const character = { statusEffects: ['poisoned'], debilities: [] };
     render(<CharacterAvatar character={character} />);
     const img = screen.getByRole('img', { name: /character avatar/i });
-    // overlay class is applied to the wrapper div
     expect(img.parentElement).toHaveClass('poisoned-overlay');
     expect(img.getAttribute('src')).toBe('/avatars/poisoned.svg');
   });

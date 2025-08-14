@@ -1,8 +1,8 @@
 .avatarContainer {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: var(--hud-radius);
+  padding: var(--hud-spacing);
   border: 1px solid rgba(0, 255, 136, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -15,6 +15,34 @@
   max-width: 200px;
   border-radius: 50%;
   border: 2px solid var(--color-accent);
+  cursor: pointer;
+}
+
+.avatar:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.silhouette {
+  fill: #ccc;
+}
+
+.lowHpLayer,
+.shieldLayer {
+  opacity: 0;
+  pointer-events: none;
+}
+
+:global(.low-hp-overlay) .lowHpLayer {
+  opacity: 1;
+}
+
+:global(.shielded-overlay) .shieldLayer {
+  opacity: 0.6;
+}
+
+:global(.stunned-overlay) .silhouette {
+  filter: url('#desaturate');
 }
 
 .avatar:focus {

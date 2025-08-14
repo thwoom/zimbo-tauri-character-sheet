@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './App.css';
 import {
   FaMeteor,
@@ -14,7 +14,7 @@ import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
 import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
-import CharacterAvatar from './components/CharacterAvatar.jsx';
+import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
@@ -24,6 +24,11 @@ import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import styles from './styles/AppStyles.module.css';
+
+const PerformanceHud =
+  import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
+    ? lazy(() => import('./components/PerformanceHud.jsx'))
+    : null;
 
 function App() {
   const { character, setCharacter } = useCharacter();
@@ -58,6 +63,7 @@ function App() {
     rollDice,
     rollModal,
     rollModalData,
+    aidModal,
     rollDie,
     clearRollHistory,
   } = useDiceRoller(character, setCharacter);
@@ -193,7 +199,7 @@ function App() {
         {/* Main Grid Layout */}
         <div className={styles.grid}>
           {/* Avatar Panel */}
-          <CharacterAvatar character={character} />
+          <CharacterHUD />
 
           {/* Stats Panel */}
           <CharacterStats
@@ -216,6 +222,7 @@ function App() {
             equippedWeaponDamage={equippedWeaponDamage}
             rollModal={rollModal}
             rollModalData={rollModalData}
+            aidModal={aidModal}
           />
 
           {/* Quick Inventory Panel */}
@@ -267,6 +274,11 @@ function App() {
         setShowEndSessionModal={setShowEndSessionModal}
         bondsModal={bondsModal}
       />
+      {PerformanceHud && (
+        <Suspense fallback={null}>
+          <PerformanceHud />
+        </Suspense>
+      )}
     </div>
   );
 }

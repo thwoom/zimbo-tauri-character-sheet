@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { debilityTypes } from '../state/character';
+import { useSettings } from '../state/SettingsContext.jsx';
 import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
 export default function useDiceRoller(character, setCharacter) {
+  const { autoXpOnMiss } = useSettings();
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
   const [rollHistory, setRollHistory] = useState(() => {
@@ -133,7 +135,7 @@ export default function useDiceRoller(character, setCharacter) {
 
   const rollDice = async (formula, description = '') => {
     const desc = description.toLowerCase();
-    const xpOnMiss = globalThis.autoXpOnMiss ?? false;
+    const xpOnMiss = autoXpOnMiss;
     let result = '';
     let total = 0;
     let interpretation = '';

@@ -6,6 +6,7 @@ import Settings from './components/Settings.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
+import { SettingsProvider } from './state/SettingsContext.jsx';
 import './styles/theme.css';
 
 beforeEach(() => {
@@ -27,6 +28,19 @@ afterEach(() => {
   confirmSpy.mockRestore();
 });
 
+const createWrapper =
+  (initialCharacter, autoXpOnMiss = true) =>
+  ({ children }) => {
+    const [character, setCharacter] = React.useState(initialCharacter);
+    return (
+      <ThemeProvider>
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          <SettingsProvider initialAutoXpOnMiss={autoXpOnMiss}>{children}</SettingsProvider>
+        </CharacterContext.Provider>
+      </ThemeProvider>
+    );
+  };
+
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {
     let setCharacter;
@@ -38,7 +52,7 @@ describe('App level up auto-detection', () => {
       return (
         <ThemeProvider>
           <CharacterContext.Provider value={{ character, setCharacter: setChar }}>
-            {children}
+            <SettingsProvider initialAutoXpOnMiss>{children}</SettingsProvider>
           </CharacterContext.Provider>
         </ThemeProvider>
       );
@@ -66,16 +80,7 @@ describe('XP gain on miss', () => {
 
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
 
-    const Wrapper = ({ children }) => {
-      const [character, setCharacter] = React.useState(initialCharacter);
-      return (
-        <ThemeProvider>
-          <CharacterContext.Provider value={{ character, setCharacter }}>
-            {children}
-          </CharacterContext.Provider>
-        </ThemeProvider>
-      );
-    };
+    const Wrapper = createWrapper(initialCharacter, true);
 
     render(
       <Wrapper>
@@ -98,19 +103,7 @@ describe('XP gain on miss', () => {
 
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
 
-    const Wrapper = ({ children }) => {
-      const [character, setCharacter] = React.useState(initialCharacter);
-      return (
-        <ThemeProvider>
-          <CharacterContext.Provider value={{ character, setCharacter }}>
-            {children}
-          </CharacterContext.Provider>
-        </ThemeProvider>
-      );
-    };
-
-    const previousSetting = globalThis.autoXpOnMiss;
-    globalThis.autoXpOnMiss = false;
+    const Wrapper = createWrapper(initialCharacter, false);
 
     render(
       <Wrapper>
@@ -126,24 +119,13 @@ describe('XP gain on miss', () => {
     expect(screen.getByText(/XP: 0\/5/i)).toBeInTheDocument();
 
     Math.random.mockRestore();
-    globalThis.autoXpOnMiss = previousSetting;
   });
 });
 
 describe('End session flow', () => {
   it('opens EndSessionModal when End Session button is clicked', () => {
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5, bonds: [] };
-
-    const Wrapper = ({ children }) => {
-      const [character, setCharacter] = React.useState(initialCharacter);
-      return (
-        <ThemeProvider>
-          <CharacterContext.Provider value={{ character, setCharacter }}>
-            {children}
-          </CharacterContext.Provider>
-        </ThemeProvider>
-      );
-    };
+    const Wrapper = createWrapper(initialCharacter);
 
     render(
       <Wrapper>
@@ -162,16 +144,7 @@ describe('End session flow', () => {
 });
 
 describe('Rulebook display', () => {
-  const Wrapper = ({ children }) => {
-    const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
-    return (
-      <ThemeProvider>
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
-      </ThemeProvider>
-    );
-  };
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA);
 
   it('renders the rulebook name in the header', () => {
     render(
@@ -186,16 +159,7 @@ describe('Rulebook display', () => {
 
 // Skipped in Vitest environment due to jsdom localStorage limitations
 describe.skip('localStorage persistence', () => {
-  const Wrapper = ({ children }) => {
-    const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
-    return (
-      <ThemeProvider>
-        <CharacterContext.Provider value={{ character, setCharacter }}>
-          {children}
-        </CharacterContext.Provider>
-      </ThemeProvider>
-    );
-  };
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA);
 
   beforeEach(() => {
     localStorage.clear();
@@ -272,7 +236,9 @@ describe('Theme switching', () => {
   it('updates the theme attribute when selecting classic', () => {
     render(
       <ThemeProvider>
-        <Settings />
+        <SettingsProvider initialAutoXpOnMiss>
+          <Settings />
+        </SettingsProvider>
       </ThemeProvider>,
     );
 
@@ -289,7 +255,9 @@ describe('Theme switching', () => {
   it('updates the theme attribute when selecting moebius', () => {
     render(
       <ThemeProvider>
-        <Settings />
+        <SettingsProvider initialAutoXpOnMiss>
+          <Settings />
+        </SettingsProvider>
       </ThemeProvider>,
     );
 
@@ -311,7 +279,9 @@ describe('App header', () => {
         <CharacterContext.Provider
           value={{ character: INITIAL_CHARACTER_DATA, setCharacter: () => {} }}
         >
-          <App />
+          <SettingsProvider initialAutoXpOnMiss>
+            <App />
+          </SettingsProvider>
         </CharacterContext.Provider>
       </ThemeProvider>,
     );

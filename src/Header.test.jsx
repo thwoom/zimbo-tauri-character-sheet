@@ -6,13 +6,14 @@ import styles from './styles/AppStyles.module.css';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
+import { SettingsProvider } from './state/SettingsContext.jsx';
 
 const Wrapper = ({ children }) => {
   const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
   return (
     <ThemeProvider>
       <CharacterContext.Provider value={{ character, setCharacter }}>
-        {children}
+        <SettingsProvider initialAutoXpOnMiss>{children}</SettingsProvider>
       </CharacterContext.Provider>
     </ThemeProvider>
   );

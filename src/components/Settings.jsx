@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTheme } from '../state/ThemeContext.jsx';
+import { useSettings } from '../state/SettingsContext.jsx';
 
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();
+  const { autoXpOnMiss, setAutoXpOnMiss } = useSettings();
 
   return (
     <div>
@@ -14,6 +16,15 @@ const Settings = () => {
           </option>
         ))}
       </select>
+      <label htmlFor="xp-on-miss">
+        <input
+          id="xp-on-miss"
+          type="checkbox"
+          checked={autoXpOnMiss}
+          onChange={(e) => setAutoXpOnMiss(e.target.checked)}
+        />{' '}
+        Auto XP on miss
+      </label>
     </div>
   );
 };

@@ -25,12 +25,12 @@ describe('useStatusEffects', () => {
   it('returns space-separated classes for multiple active overlays', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({
-        statusEffects: ['poisoned', 'burning'],
+        statusEffects: ['poisoned', 'confused'],
         debilities: [],
       });
       return useStatusEffects(character, setCharacter);
     });
 
-    expect(result.current.getActiveVisualEffects()).toBe('poisoned-overlay burning-overlay');
+    expect(result.current.getActiveVisualEffects()).toBe('poisoned-overlay confused-overlay');
   });
 });

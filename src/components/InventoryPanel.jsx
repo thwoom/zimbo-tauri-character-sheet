@@ -12,7 +12,7 @@ import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
 
-const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => {
+const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveToHistory }) => {
   const { handleConsumeItem } = useInventory(character, setCharacter);
 
   return (
@@ -50,6 +50,7 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult }) => 
                 <button
                   className={styles.useButton}
                   onClick={() => {
+                    saveToHistory('Inventory Change');
                     if (item.name === 'Healing Potion') {
                       const healing = rollDie(8);
                       setRollResult(`Used ${item.name}: healed ${healing} HP!`);
@@ -93,6 +94,7 @@ InventoryPanel.propTypes = {
   setCharacter: PropTypes.func.isRequired,
   rollDie: PropTypes.func.isRequired,
   setRollResult: PropTypes.func.isRequired,
+  saveToHistory: PropTypes.func.isRequired,
 };
 
 export default InventoryPanel;

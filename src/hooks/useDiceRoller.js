@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { debilityTypes } from '../state/character';
 import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
@@ -18,6 +18,26 @@ export default function useDiceRoller(character, setCharacter) {
     }
   });
   const rollModal = useModal();
+  const aidModalState = useModal();
+  const aidResolverRef = useRef(null);
+
+  const openAidModal = () =>
+    new Promise((resolve) => {
+      aidResolverRef.current = resolve;
+      aidModalState.open();
+    });
+
+  const handleAidConfirm = (data) => {
+    if (aidResolverRef.current) aidResolverRef.current(data);
+    aidResolverRef.current = null;
+    aidModalState.close();
+  };
+
+  const handleAidCancel = () => {
+    if (aidResolverRef.current) aidResolverRef.current(null);
+    aidResolverRef.current = null;
+    aidModalState.close();
+  };
 
   useEffect(() => {
     if (rollHistory.length > 0) {
@@ -111,7 +131,7 @@ export default function useDiceRoller(character, setCharacter) {
     return 'Things go badly';
   };
 
-  const rollDice = (formula, description = '') => {
+  const rollDice = async (formula, description = '') => {
     const desc = description.toLowerCase();
     const xpOnMiss = globalThis.autoXpOnMiss ?? false;
     let result = '';
@@ -169,11 +189,11 @@ export default function useDiceRoller(character, setCharacter) {
     let originalInterpretation = '';
     let originalResult;
 
-    const resolveAidOrInterfere = () => {
-      const isAid = window.confirm('Aid? (Cancel for Interfere)');
-      let bond = parseInt(window.prompt('Bond bonus? (0-3)', '0'), 10);
-      if (Number.isNaN(bond)) bond = 0;
-      bond = Math.max(0, Math.min(3, bond));
+    const resolveAidOrInterfere = async () => {
+      const response = await openAidModal();
+      if (!response) return null;
+      const { action, bond } = response;
+      const isAid = action === 'aid';
       const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
       const helperTotal = helperRoll + bond;
       let modifier = 0;
@@ -215,25 +235,27 @@ export default function useDiceRoller(character, setCharacter) {
         }));
       }
 
-      if (!isAidMove && window.confirm('Did someone aid or interfere?')) {
-        originalResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
-        const aid = resolveAidOrInterfere();
-        if (aid.modifier !== 0) {
-          mods.push(aid.modifier);
-          total += aid.modifier;
-        }
-        if (aid.consequence) {
-          notes = [...notes, 'Helper Consequences'];
-        }
-        if (total >= 10) {
-          interpretation = ' ✅ Success!';
-          context = getSuccessContext(desc);
-        } else if (total >= 7) {
-          interpretation = ' ⚠️ Partial Success';
-          context = getPartialContext(desc);
-        } else {
-          interpretation = ' ❌ Failure';
-          context = getFailureContext(desc);
+      if (!isAidMove) {
+        const aid = await resolveAidOrInterfere();
+        if (aid) {
+          originalResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
+          if (aid.modifier !== 0) {
+            mods.push(aid.modifier);
+            total += aid.modifier;
+          }
+          if (aid.consequence) {
+            notes = [...notes, 'Helper Consequences'];
+          }
+          if (total >= 10) {
+            interpretation = ' ✅ Success!';
+            context = getSuccessContext(desc);
+          } else if (total >= 7) {
+            interpretation = ' ⚠️ Partial Success';
+            context = getPartialContext(desc);
+          } else {
+            interpretation = ' ❌ Failure';
+            context = getFailureContext(desc);
+          }
         }
       }
     }
@@ -265,6 +287,11 @@ export default function useDiceRoller(character, setCharacter) {
     rollDice,
     rollModal,
     rollModalData,
+    aidModal: {
+      isOpen: aidModalState.isOpen,
+      onConfirm: handleAidConfirm,
+      onCancel: handleAidCancel,
+    },
     rollDie: diceUtils.rollDie,
     clearRollHistory: () => setRollHistory([]),
   };

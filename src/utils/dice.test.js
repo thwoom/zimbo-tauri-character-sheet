@@ -1,7 +1,15 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { rollDie, rollDice } from './dice.js';
 const MAX_COUNT = 1000; // should match value in dice.js
+
+beforeEach(() => {
+  vi.stubEnv('MODE', 'test');
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe('rollDie', () => {
   it('returns a value within 1..sides', () => {

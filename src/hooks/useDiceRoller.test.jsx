@@ -182,3 +182,22 @@ describe('useDiceRoller safe localStorage handling', () => {
     expect(result.current.rollHistory).toEqual([]);
   });
 });
+
+describe('useDiceRoller XP on miss handling', () => {
+  const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
+
+  it('does not grant XP when autoXpOnMiss is undefined', () => {
+    localStorage.clear();
+    const setCharacter = vi.fn();
+    const previousSetting = globalThis.autoXpOnMiss;
+    delete globalThis.autoXpOnMiss;
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    act(() => {
+      result.current.rollDice('2d6', 'test');
+    });
+    randomSpy.mockRestore();
+    expect(setCharacter).not.toHaveBeenCalled();
+    globalThis.autoXpOnMiss = previousSetting;
+  });
+});

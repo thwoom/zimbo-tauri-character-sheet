@@ -1,6 +1,7 @@
 /* eslint-env jest */
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, render } from '@testing-library/react';
 import React from 'react';
+import { vi } from 'vitest';
 import { INITIAL_CHARACTER_DATA } from './character.js';
 import { CharacterProvider, useCharacter } from './CharacterContext.jsx';
 
@@ -18,5 +19,30 @@ describe('CharacterContext', () => {
       result.current.setCharacter((prev) => ({ ...prev, hp: 20 }));
     });
     expect(result.current.character.hp).toBe(20);
+  });
+
+  it("doesn't re-render children when setCharacter is stable", () => {
+    const childRender = vi.fn();
+    const Child = () => {
+      const { setCharacter } = useCharacter();
+      void setCharacter;
+      childRender();
+      return null;
+    };
+    const MemoChild = React.memo(Child);
+
+    const Parent = ({ count }) => (
+      <>
+        <CharacterProvider>
+          <MemoChild />
+        </CharacterProvider>
+        <div>{count}</div>
+      </>
+    );
+
+    const { rerender } = render(<Parent count={0} />);
+    expect(childRender).toHaveBeenCalledTimes(1);
+    rerender(<Parent count={1} />);
+    expect(childRender).toHaveBeenCalledTimes(1);
   });
 });

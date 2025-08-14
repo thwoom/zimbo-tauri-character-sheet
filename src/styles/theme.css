@@ -1,4 +1,15 @@
 :root {
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-size-heading: 2.5rem;
+  --font-size-body: 1rem;
+  --font-size-sm: 0.75rem;
+  --font-weight-heading: 700;
+  --font-weight-body: 400;
+
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+
   --color-bg-start: #0b0d17;
   --color-bg-end: #1a1f38;
   --color-text: #d0d7e2;

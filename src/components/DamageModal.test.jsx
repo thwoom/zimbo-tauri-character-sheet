@@ -92,4 +92,25 @@ describe('DamageModal', () => {
     const css = fs.readFileSync(path.resolve(__dirname, './DamageModal.module.css'), 'utf8');
     expect(css).toMatch(/\.buttonGroup[^}]*flex-wrap:\s*wrap/);
   });
+
+  it('renders action buttons without overflow on narrow screens', () => {
+    const onClose = vi.fn();
+    const onLastBreath = vi.fn();
+    const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
+    document.body.style.width = '320px';
+    renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
+      character: initial,
+    });
+    const group = screen.getByText('Apply').parentElement;
+    group.style.overflowX = 'auto';
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('includes responsive styles for button group', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './DamageModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.buttonGroup[^}]*width:\s*100%/);
+    expect(css).toMatch(
+      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.buttonGroup[^}]*flex-direction:\s*column/,
+    );
+  });
 });

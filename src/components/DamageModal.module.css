@@ -48,6 +48,13 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .buttonGroup {
+    flex-direction: column;
+  }
 }
 
 .button {

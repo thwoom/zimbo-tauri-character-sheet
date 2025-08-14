@@ -53,6 +53,16 @@
 
 .bondActions {
   margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .bondActions {
+    flex-direction: column;
+  }
 }
 
 .button {

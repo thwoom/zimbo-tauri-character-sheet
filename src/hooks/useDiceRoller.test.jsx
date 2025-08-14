@@ -2,6 +2,14 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
 import useDiceRoller from './useDiceRoller.js';
+import { SettingsProvider } from '../state/SettingsContext.jsx';
+
+const getWrapper =
+  (autoXpOnMiss) =>
+  ({ children }) => (
+    <SettingsProvider initialAutoXpOnMiss={autoXpOnMiss}>{children}</SettingsProvider>
+  );
+const wrapper = getWrapper(false);
 
 beforeEach(() => {
   vi.spyOn(window, 'confirm').mockReturnValue(false);
@@ -30,7 +38,7 @@ describe('useDiceRoller contexts', () => {
     ['unknown', 'Perfect execution!'],
   ])('returns correct success context for %s', (desc, expected) => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     act(() => {
       result.current.rollDice('2d6', desc);
@@ -41,7 +49,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct partial context for HaCk', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     act(() => {
@@ -53,7 +61,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct partial context for upper hand', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     act(() => {
@@ -65,7 +73,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct failure context for taunt', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'taunt');
@@ -76,7 +84,7 @@ describe('useDiceRoller contexts', () => {
 
   it('returns correct failure context for upper hand', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'upper hand');
@@ -87,7 +95,7 @@ describe('useDiceRoller contexts', () => {
 
   it('updates rollResult with latest roll', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('d4', 'test');
@@ -98,7 +106,7 @@ describe('useDiceRoller contexts', () => {
 
   it('retains the original description in rollModalData', () => {
     localStorage.clear();
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     act(() => {
       result.current.rollDice('2d6', 'Upper Hand');
@@ -116,7 +124,7 @@ describe('useDiceRoller localStorage', () => {
     localStorage.clear();
     localStorage.setItem('rollHistory', 'not json');
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     expect(result.current.rollHistory).toEqual([]);
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
@@ -133,7 +141,7 @@ describe('useDiceRoller mixed-case status modifiers', () => {
       debilities: [],
       xp: 0,
     };
-    const { result } = renderHook(() => useDiceRoller(character, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(character, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random');
 
     randomSpy.mockReturnValueOnce(0.4).mockReturnValueOnce(0.4);
@@ -162,7 +170,7 @@ describe('useDiceRoller safe localStorage handling', () => {
 
   it('initializes with empty history when localStorage is undefined', () => {
     global.localStorage = undefined;
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     expect(result.current.rollHistory).toEqual([]);
   });
 
@@ -178,7 +186,7 @@ describe('useDiceRoller safe localStorage handling', () => {
         throw new Error('fail');
       },
     };
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     expect(result.current.rollHistory).toEqual([]);
   });
 });
@@ -186,18 +194,33 @@ describe('useDiceRoller safe localStorage handling', () => {
 describe('useDiceRoller XP on miss handling', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
 
-  it('does not grant XP when autoXpOnMiss is undefined', () => {
+  it('does not grant XP when autoXpOnMiss is false', () => {
     localStorage.clear();
     const setCharacter = vi.fn();
-    const previousSetting = globalThis.autoXpOnMiss;
-    delete globalThis.autoXpOnMiss;
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const noXpWrapper = getWrapper(false);
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), {
+      wrapper: noXpWrapper,
+    });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     act(() => {
       result.current.rollDice('2d6', 'test');
     });
     randomSpy.mockRestore();
     expect(setCharacter).not.toHaveBeenCalled();
-    globalThis.autoXpOnMiss = previousSetting;
+  });
+
+  it('grants XP when autoXpOnMiss is true', () => {
+    localStorage.clear();
+    const setCharacter = vi.fn();
+    const xpWrapper = getWrapper(true);
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), {
+      wrapper: xpWrapper,
+    });
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    act(() => {
+      result.current.rollDice('2d6', 'test');
+    });
+    randomSpy.mockRestore();
+    expect(setCharacter).toHaveBeenCalled();
   });
 });

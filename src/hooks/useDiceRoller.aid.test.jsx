@@ -3,6 +3,11 @@ import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import * as diceUtils from '../utils/dice.js';
 import useDiceRoller from './useDiceRoller.js';
+import { SettingsProvider } from '../state/SettingsContext.jsx';
+
+const wrapper = ({ children }) => (
+  <SettingsProvider initialAutoXpOnMiss={false}>{children}</SettingsProvider>
+);
 
 describe('useDiceRoller aid/interfere', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
@@ -21,7 +26,7 @@ describe('useDiceRoller aid/interfere', () => {
       .mockReturnValueOnce(3)
       .mockReturnValueOnce(4); // aid roll: 7
 
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter, false));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     act(() => {
       result.current.rollDice('2d6', 'test');
     });

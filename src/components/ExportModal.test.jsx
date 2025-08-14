@@ -1,13 +1,16 @@
 /* eslint-env jest */
-import { invoke } from '@tauri-apps/api/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import CharacterContext from '../state/CharacterContext.jsx';
 import ExportModal from './ExportModal.jsx';
+import { loadFile } from '../utils/fileStorage.js';
 
-vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
+vi.mock('../utils/fileStorage.js', () => ({
+  saveFile: vi.fn(),
+  loadFile: vi.fn(),
+}));
 
 function renderWithCharacter(ui, { character }) {
   const Wrapper = ({ children }) => {
@@ -38,7 +41,7 @@ describe('ExportModal', () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     const initial = { name: 'Hero' };
-    invoke.mockResolvedValueOnce('{"name":"New"}');
+    loadFile.mockResolvedValueOnce('{"name":"New"}');
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     await user.click(screen.getByText('Load'));
     expect(screen.getByTestId('name')).toHaveTextContent('New');

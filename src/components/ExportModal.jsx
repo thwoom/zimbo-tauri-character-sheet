@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
@@ -14,10 +14,7 @@ export default function ExportModal({ isOpen, onClose }) {
 
   const handleSave = async () => {
     try {
-      await invoke('write_file', {
-        path: fileName,
-        contents: JSON.stringify(character, null, 2),
-      });
+      await saveFile(fileName, JSON.stringify(character, null, 2));
       setMessage('Character saved!');
     } catch (err) {
       setMessage('Failed to save.');
@@ -26,7 +23,7 @@ export default function ExportModal({ isOpen, onClose }) {
 
   const handleLoad = async () => {
     try {
-      const contents = await invoke('read_file', { path: fileName });
+      const contents = await loadFile(fileName);
       const data = JSON.parse(contents);
       setCharacter(data);
       setMessage('Character loaded!');

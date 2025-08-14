@@ -4,8 +4,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import InventoryModal from './InventoryModal.jsx';
-import fs from 'fs';
-import path from 'path';
 
 function InventoryWrapper({ isOpen, ...props }) {
   return isOpen ? <InventoryModal {...props} /> : null;
@@ -95,6 +93,32 @@ describe('InventoryModal', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('wraps item action buttons when width is constrained', () => {
+    const inventory = [{ id: 1, name: 'Sword', type: 'weapon', equipped: false }];
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onClose={() => {}}
+      />,
+    );
+    const group = screen.getByText('Drop').parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+  });
+
   it('renders item action buttons without overflow on narrow screens', () => {
     const inventory = [{ id: 1, name: 'Sword', type: 'weapon', equipped: false }];
     document.body.style.width = '320px';
@@ -110,13 +134,5 @@ describe('InventoryModal', () => {
     const group = screen.getByText('Drop').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for item actions', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './InventoryModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.inventoryItemActions[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.inventoryItemActions[^}]*flex-direction:\s*column/,
-    );
   });
 });

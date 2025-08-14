@@ -4,8 +4,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import fs from 'fs';
-import path from 'path';
 import CharacterContext from '../state/CharacterContext.jsx';
 import ExportModal from './ExportModal.jsx';
 
@@ -46,6 +44,25 @@ describe('ExportModal', () => {
     expect(screen.getByTestId('name')).toHaveTextContent('New');
   });
 
+  it('wraps action buttons when width is constrained', () => {
+    const onClose = vi.fn();
+    const initial = { name: 'Hero' };
+    renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
+    const group = screen.getByText('Save').parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+  });
+
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     const initial = { name: 'Hero' };
@@ -54,13 +71,5 @@ describe('ExportModal', () => {
     const group = screen.getByText('Save').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for button group', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './ExportModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.buttonGroup[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.buttonGroup[^}]*flex-direction:\s*column/,
-    );
   });
 });

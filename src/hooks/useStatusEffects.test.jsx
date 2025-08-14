@@ -21,4 +21,16 @@ describe('useStatusEffects', () => {
     act(() => result.current.toggleDebility('weak'));
     expect(result.current.character.debilities).not.toContain('weak');
   });
+
+  it('returns space-separated classes for multiple active overlays', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({
+        statusEffects: ['poisoned', 'burning'],
+        debilities: [],
+      });
+      return useStatusEffects(character, setCharacter);
+    });
+
+    expect(result.current.getActiveVisualEffects()).toBe('poisoned-overlay burning-overlay');
+  });
 });

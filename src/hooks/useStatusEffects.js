@@ -18,12 +18,10 @@ export default function useStatusEffects(character, setCharacter) {
   };
 
   const getActiveVisualEffects = () => {
-    for (const [effect, cssClass] of Object.entries(statusEffectClassMap)) {
-      if (statusEffects.includes(effect)) {
-        return cssClass;
-      }
-    }
-    return '';
+    return Object.entries(statusEffectClassMap)
+      .filter(([effect]) => statusEffects.includes(effect))
+      .map(([, cssClass]) => cssClass)
+      .join(' ');
   };
 
   const toggleStatusEffect = (effect) => {

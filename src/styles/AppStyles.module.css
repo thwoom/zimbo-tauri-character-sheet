@@ -27,6 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .title {
@@ -63,6 +64,7 @@
 .buttonRow {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .grid {
@@ -119,4 +121,15 @@
 
 .exportButton {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
+}
+
+@media (max-width: 768px) {
+  .headerTop {
+    flex-direction: column;
+  }
+
+  .buttonRow {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -14,7 +14,7 @@ import DiceRoller from './components/DiceRoller.jsx';
 import GameModals from './components/GameModals.jsx';
 import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
-import CharacterAvatar from './components/CharacterAvatar.jsx';
+import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
@@ -186,7 +186,7 @@ function App() {
         {/* Main Grid Layout */}
         <div className={styles.grid}>
           {/* Avatar Panel */}
-          <CharacterAvatar character={character} />
+          <CharacterHUD />
 
           {/* Stats Panel */}
           <CharacterStats

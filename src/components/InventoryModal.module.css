@@ -28,7 +28,7 @@
 }
 
 .inventoryEmpty {
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
 }
 
 .inventoryList {
@@ -69,6 +69,16 @@
 
 .inventoryItemActions {
   margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .inventoryItemActions {
+    flex-direction: column;
+  }
 }
 
 .inventoryButton {

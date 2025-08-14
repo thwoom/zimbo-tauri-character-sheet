@@ -14,20 +14,20 @@
 }
 
 .modal {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  border: 2px solid #ff0066;
+  background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+  border: 2px solid var(--color-accent);
   border-radius: 15px;
   max-width: 400px;
   width: 100%;
-  box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+  box-shadow: 0 0 30px rgba(var(--color-accent-rgb), 0.5);
   text-align: center;
   padding: 30px;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .title {
   font-size: 1.5rem;
-  color: #ff0066;
+  color: var(--color-accent);
   margin: 0 0 20px 0;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .button {
-  background: linear-gradient(45deg, #ff0066, #cc0052);
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   border-radius: 6px;
   color: white;

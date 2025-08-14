@@ -72,6 +72,16 @@
 
 .actions {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .actions {
+    flex-direction: column;
+  }
 }
 
 .error {

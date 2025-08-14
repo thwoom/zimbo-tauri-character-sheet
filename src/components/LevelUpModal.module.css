@@ -115,7 +115,7 @@
 
   .levelup-stat-button {
     padding: 10px;
-    border: 2px solid var(--color-gray-750);
+    border: 2px solid var(--color-gray-700);
     border-radius: 8px;
     background: var(--color-modal-bg);
     color: var(--color-gray-100);
@@ -141,7 +141,7 @@
   .levelup-stat-button.disabled {
     border-color: var(--color-gray-800);
     background: var(--color-gray-900);
-    color: var(--color-gray-750);
+    color: var(--color-gray-700);
     cursor: not-allowed;
   }
 
@@ -174,7 +174,7 @@
   .levelup-move-list {
     max-height: 250px;
     overflow-y: auto;
-    border: 1px solid var(--color-gray-750);
+    border: 1px solid var(--color-gray-700);
     border-radius: 8px;
     padding: var(--space-sm);
   }
@@ -185,7 +185,7 @@
 
   .levelup-move-button {
     padding: 12px;
-    border: 2px solid var(--color-gray-750);
+    border: 2px solid var(--color-gray-700);
     border-radius: 8px;
     background: var(--color-modal-bg);
     color: var(--color-gray-100);
@@ -249,7 +249,7 @@
   }
 
   .levelup-move-examples {
-    color: var(--color-gray-350);
+    color: var(--color-gray-400);
   }
 
   .levelup-hp-container {
@@ -259,7 +259,7 @@
     padding: 15px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    border: 1px solid var(--color-gray-750);
+    border: 1px solid var(--color-gray-700);
   }
 
   .levelup-button {
@@ -279,7 +279,7 @@
   }
 
   .levelup-button-cancel {
-    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-750));
+    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-700));
   }
 
   .levelup-button-complete {
@@ -289,7 +289,7 @@
   }
 
   .levelup-button-disabled {
-    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-750));
+    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-700));
     opacity: 0.5;
     cursor: not-allowed;
   }
@@ -339,5 +339,12 @@
     gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
+  }
+
+  @media (max-width: 360px) {
+    .levelup-actions {
+      flex-direction: column;
+    }
   }
 }

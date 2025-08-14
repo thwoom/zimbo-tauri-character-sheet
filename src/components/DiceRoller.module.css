@@ -78,7 +78,7 @@
 }
 
 .amber {
-  background: linear-gradient(45deg, var(--color-amber), var(--color-amber-dark));
+  background: linear-gradient(45deg, var(--color-warning-light), var(--color-warning));
 }
 
 .cyan {

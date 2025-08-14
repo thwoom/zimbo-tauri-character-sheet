@@ -42,7 +42,7 @@
 
   .levelup-header-text {
     margin: 5px 0 0;
-    color: var(--color-blue-light);
+    color: var(--color-info-light);
   }
 
   .levelup-close-button {

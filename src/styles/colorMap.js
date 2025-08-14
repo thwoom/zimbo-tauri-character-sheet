@@ -7,10 +7,10 @@ export const baseColors = {
 };
 
 export const resourceColors = {
-  paradoxPoints: 'var(--color-yellow)',
-  bandages: 'var(--color-purple-light)',
-  rations: 'var(--color-orange-light)',
-  advGear: 'var(--color-cyan)',
+  paradoxPoints: 'var(--color-warning-light)',
+  bandages: 'var(--color-purple)',
+  rations: 'var(--color-warning)',
+  advGear: 'var(--color-info-light)',
 };
 
 export const headerGradients = {

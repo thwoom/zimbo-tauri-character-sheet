@@ -111,9 +111,9 @@
 }
 
 .debilityTag {
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--overlay-danger);
   border: 1px solid var(--color-danger);
-  color: var(--color-red-light);
+  color: var(--color-danger-light);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.7rem;

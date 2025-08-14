@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "test": "vitest run",
+    "test": "vitest run --exclude tests",
+    "test:e2e": "vitest run -c vitest.e2e.config.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -26,6 +27,7 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "@crabnebula/tauri-driver": "^2.0.5",
     "@tauri-apps/cli": "^2",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
@@ -45,7 +47,8 @@
     "rimraf": "^4.4.1",
     "rollup": "^4.46.2",
     "vite": "^7.0.4",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "webdriverio": "^9.19.1"
   },
   "overrides": {
     "file-entry-cache": "^10.1.3",

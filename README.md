@@ -47,6 +47,16 @@ pre-commit run --all-files
 npm run tauri dev
 ```
 
+### Browser development
+
+Start Vite's dev server in the browser without Tauri:
+
+```bash
+npm run dev
+```
+
+Features that rely on Tauri APIs, such as local file I/O, are limited in this mode.
+
 ### Build web assets
 
 ```bash
@@ -98,7 +108,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup, linting, and testing 
 ## Development scripts
 
 Optional helper scripts can be kept in a local `scripts/` directory. This folder is ignored by Git and is not required for building or running the project.
-
 
 ## License
 

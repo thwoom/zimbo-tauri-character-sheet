@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './App.css';
 import {
   FaMeteor,
@@ -24,6 +24,11 @@ import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import styles from './styles/AppStyles.module.css';
+
+const PerformanceHud =
+  import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
+    ? lazy(() => import('./components/PerformanceHud.jsx'))
+    : null;
 
 function App() {
   const { character, setCharacter } = useCharacter();
@@ -260,6 +265,11 @@ function App() {
         setShowEndSessionModal={setShowEndSessionModal}
         bondsModal={bondsModal}
       />
+      {PerformanceHud && (
+        <Suspense fallback={null}>
+          <PerformanceHud />
+        </Suspense>
+      )}
     </div>
   );
 }

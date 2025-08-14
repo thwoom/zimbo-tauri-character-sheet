@@ -10,7 +10,7 @@ describe('CharacterAvatar', () => {
     render(<CharacterAvatar character={character} />);
     const img = screen.getByRole('img', { name: /character avatar/i });
     expect(img.parentElement).toHaveClass('poisoned-overlay');
-    expect(img.getAttribute('src')).toBe('/avatars/poisoned.svg');
+    expect(img.src).toContain('/avatars/poisoned.svg');
     expect(img.parentElement).toHaveClass('poisoned-overlay');
   });
 

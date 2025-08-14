@@ -58,6 +58,7 @@ function App() {
     rollDice,
     rollModal,
     rollModalData,
+    aidModal,
     rollDie,
     clearRollHistory,
   } = useDiceRoller(character, setCharacter);
@@ -209,6 +210,7 @@ function App() {
             equippedWeaponDamage={equippedWeaponDamage}
             rollModal={rollModal}
             rollModalData={rollModalData}
+            aidModal={aidModal}
           />
 
           {/* Quick Inventory Panel */}

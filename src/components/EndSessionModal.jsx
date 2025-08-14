@@ -4,7 +4,7 @@ import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
-const defaultAnswers = { q1: false, q2: false, q3: false, drive: false };
+const defaultAnswers = { q1: false, q2: false, q3: false, alignment: false };
 
 export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();

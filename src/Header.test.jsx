@@ -13,7 +13,7 @@ const Wrapper = ({ children }) => {
   return (
     <ThemeProvider>
       <CharacterContext.Provider value={{ character, setCharacter }}>
-        <SettingsProvider initialAutoXpOnMiss>{children}</SettingsProvider>
+        <SettingsProvider initialAutoXpOnMiss={true}>{children}</SettingsProvider>
       </CharacterContext.Provider>
     </ThemeProvider>
   );

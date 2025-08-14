@@ -248,7 +248,7 @@ describe('useDiceRoller safe localStorage handling', () => {
 describe('useDiceRoller XP on miss handling', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
 
-  it('does not grant XP when autoXpOnMiss is false', () => {
+  it('does not grant XP when autoXpOnMiss is false', async () => {
     localStorage.clear();
     const setCharacter = vi.fn();
     const noXpWrapper = getWrapper(false);

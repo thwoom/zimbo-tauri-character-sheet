@@ -12,7 +12,7 @@ const wrapper = ({ children }) => (
 describe('useDiceRoller aid/interfere', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
 
-  it('applies modifiers and enforces helper consequences on 7-9', () => {
+  it('applies modifiers and enforces helper consequences on 7-9', async () => {
     const setCharacter = vi.fn();
     const confirmSpy = vi.spyOn(window, 'confirm');
     confirmSpy.mockReturnValueOnce(true); // someone aids or interferes
@@ -27,8 +27,8 @@ describe('useDiceRoller aid/interfere', () => {
       .mockReturnValueOnce(4); // aid roll: 7
 
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
-    act(() => {
-      result.current.rollDice('2d6', 'test');
+    await act(async () => {
+      await result.current.rollDice('2d6', 'test');
     });
 
     expect(confirmSpy).toHaveBeenCalledTimes(2);

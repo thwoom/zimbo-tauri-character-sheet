@@ -5,12 +5,20 @@ import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
 
+const defaultAnswers = { q1: false, q2: false, q3: false, drive: false };
+
 export default function EndSessionModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
   const [answers, setAnswers] = useState(defaultAnswers);
   const [resolvedBonds, setResolvedBonds] = useState([]);
   const [replacementBonds, setReplacementBonds] = useState({});
   const [recap, setRecap] = useState('');
+  const [inventoryChanges, setInventoryChanges] = useState({});
+  const [clearedStatus, setClearedStatus] = useState([]);
+  const [clearedDebilities, setClearedDebilities] = useState([]);
+  const [shareRecap, setShareRecap] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const [error, setError] = useState('');
 
   if (!isOpen) return null;
 
@@ -154,7 +162,7 @@ export default function EndSessionModal({ isOpen, onClose }) {
             </ul>
           </div>
         )}
-        
+
         {character.inventory.length > 0 && (
           <div className={styles.section}>
             <h3 className={styles.title}>Item Usage</h3>

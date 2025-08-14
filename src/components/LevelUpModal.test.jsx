@@ -178,4 +178,20 @@ describe('LevelUpModal visibility and closing', () => {
     const css = fs.readFileSync(path.resolve(__dirname, './LevelUpModal.module.css'), 'utf8');
     expect(css).toMatch(/\.levelup-actions[^}]*flex-wrap:\s*wrap/);
   });
+
+  it('renders action buttons without overflow on narrow screens', () => {
+    document.body.style.width = '320px';
+    render(<LevelUpWrapper isOpen {...baseProps} onClose={() => {}} />);
+    const group = screen.getByRole('button', { name: /Cancel/i }).parentElement;
+    group.style.overflowX = 'auto';
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('includes responsive styles for action buttons', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './LevelUpModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.levelup-actions[^}]*width:\s*100%/);
+    expect(css).toMatch(
+      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.levelup-actions[^}]*flex-direction:\s*column/,
+    );
+  });
 });

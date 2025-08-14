@@ -4,6 +4,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
+import fs from 'fs';
+import path from 'path';
 import CharacterContext from '../state/CharacterContext.jsx';
 import ExportModal from './ExportModal.jsx';
 
@@ -42,5 +44,23 @@ describe('ExportModal', () => {
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     await user.click(screen.getByText('Load'));
     expect(screen.getByTestId('name')).toHaveTextContent('New');
+  });
+
+  it('renders action buttons without overflow on narrow screens', () => {
+    const onClose = vi.fn();
+    const initial = { name: 'Hero' };
+    document.body.style.width = '320px';
+    renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
+    const group = screen.getByText('Save').parentElement;
+    group.style.overflowX = 'auto';
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('includes responsive styles for button group', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './ExportModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.buttonGroup[^}]*width:\s*100%/);
+    expect(css).toMatch(
+      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.buttonGroup[^}]*flex-direction:\s*column/,
+    );
   });
 });

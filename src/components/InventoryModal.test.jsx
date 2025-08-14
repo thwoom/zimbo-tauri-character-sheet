@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import InventoryModal from './InventoryModal.jsx';
+import fs from 'fs';
+import path from 'path';
 
 function InventoryWrapper({ isOpen, ...props }) {
   return isOpen ? <InventoryModal {...props} /> : null;
@@ -91,5 +93,30 @@ describe('InventoryModal', () => {
 
     await user.click(screen.getByText('Close'));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('renders item action buttons without overflow on narrow screens', () => {
+    const inventory = [{ id: 1, name: 'Sword', type: 'weapon', equipped: false }];
+    document.body.style.width = '320px';
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onClose={() => {}}
+      />,
+    );
+    const group = screen.getByText('Drop').parentElement;
+    group.style.overflowX = 'auto';
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('includes responsive styles for item actions', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, './InventoryModal.module.css'), 'utf8');
+    expect(css).toMatch(/\.inventoryItemActions[^}]*width:\s*100%/);
+    expect(css).toMatch(
+      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.inventoryItemActions[^}]*flex-direction:\s*column/,
+    );
   });
 });

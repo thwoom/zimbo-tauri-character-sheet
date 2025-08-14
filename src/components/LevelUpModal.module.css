@@ -339,5 +339,12 @@
     gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
+  }
+
+  @media (max-width: 360px) {
+    .levelup-actions {
+      flex-direction: column;
+    }
   }
 }

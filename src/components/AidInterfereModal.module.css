@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--hud-spacing);
+  padding: 20px;
 }
 
 .modal {
@@ -21,7 +21,7 @@
   width: 100%;
   box-shadow: 0 0 30px rgba(var(--color-accent-rgb), 0.5);
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   color: var(--color-text);
 }
 
@@ -31,22 +31,43 @@
   margin: 0 0 20px 0;
 }
 
-.result {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
+.formRow {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
-.outcome {
-  margin-bottom: 20px;
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bondLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bondInput {
+  width: 50px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .button {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
-  border-radius: var(--hud-radius-sm);
+  border-radius: 6px;
   color: white;
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: var(--hud-transition);
+  transition: all 0.3s ease;
 }

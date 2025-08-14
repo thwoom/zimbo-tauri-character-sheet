@@ -1,0 +1,38 @@
+.tray {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 4px;
+}
+
+.chip {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  padding: 2px 4px;
+}
+
+.countdown {
+  margin-left: 4px;
+  font-size: 12px;
+}

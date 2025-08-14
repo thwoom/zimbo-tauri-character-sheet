@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './App.css';
 import {
   FaMeteor,
@@ -24,6 +24,11 @@ import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import styles from './styles/AppStyles.module.css';
+
+const PerformanceHud =
+  import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
+    ? lazy(() => import('./components/PerformanceHud.jsx'))
+    : null;
 
 function App() {
   const { character, setCharacter } = useCharacter();
@@ -58,6 +63,7 @@ function App() {
     rollDice,
     rollModal,
     rollModalData,
+    aidModal,
     rollDie,
     clearRollHistory,
   } = useDiceRoller(character, setCharacter);
@@ -109,18 +115,25 @@ function App() {
         <div className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
             <div>
-              <h1 className={styles.title}>ZIMBO – The Time-Bound Juggernaut</h1>
+              {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+              <h1 className={styles.title} tabIndex={1}>
+                ZIMBO – The Time-Bound Juggernaut
+              </h1>
               <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 <p>Rulebook: {RULEBOOK}</p>
                 {character.statusEffects.length > 0 && (
                   <div className={styles.statusEffectsContainer}>
-                    {character.statusEffects.map((effect) => {
+                    {character.statusEffects.map((effect, idx) => {
                       const Icon = statusEffectTypes[effect]?.icon;
+                      const stacks = character.statusEffects.filter((e) => e === effect).length;
                       return (
+                        // eslint-disable-next-line jsx-a11y/tabindex-no-positive
                         <span
-                          key={effect}
-                          title={statusEffectTypes[effect]?.name}
+                          key={`${effect}-${idx}`}
+                          tabIndex={5 + idx}
+                          role="status"
+                          aria-label={`${statusEffectTypes[effect]?.name}: ${statusEffectTypes[effect]?.description}. Stack count: ${stacks}`}
                           className={styles.statusEffectIcon}
                         >
                           {Icon && <Icon />}
@@ -209,6 +222,7 @@ function App() {
             equippedWeaponDamage={equippedWeaponDamage}
             rollModal={rollModal}
             rollModalData={rollModalData}
+            aidModal={aidModal}
           />
 
           {/* Quick Inventory Panel */}
@@ -260,6 +274,11 @@ function App() {
         setShowEndSessionModal={setShowEndSessionModal}
         bondsModal={bondsModal}
       />
+      {PerformanceHud && (
+        <Suspense fallback={null}>
+          <PerformanceHud />
+        </Suspense>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './DiceRoller.module.css';
 import RollModal from './RollModal.jsx';
+import AidInterfereModal from './AidInterfereModal.jsx';
 
 const DiceRoller = ({
   character,
@@ -11,6 +12,7 @@ const DiceRoller = ({
   equippedWeaponDamage,
   rollModal,
   rollModalData,
+  aidModal,
 }) => (
   <>
     <div className={styles.panel}>
@@ -102,6 +104,11 @@ const DiceRoller = ({
       )}
     </div>
     <RollModal isOpen={rollModal.isOpen} data={rollModalData} onClose={rollModal.close} />
+    <AidInterfereModal
+      isOpen={aidModal.isOpen}
+      onConfirm={aidModal.onConfirm}
+      onCancel={aidModal.onCancel}
+    />
   </>
 );
 DiceRoller.propTypes = {
@@ -117,6 +124,11 @@ DiceRoller.propTypes = {
     close: PropTypes.func.isRequired,
   }).isRequired,
   rollModalData: PropTypes.object.isRequired,
+  aidModal: PropTypes.shape({
+    isOpen: PropTypes.bool.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default DiceRoller;

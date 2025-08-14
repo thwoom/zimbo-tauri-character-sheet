@@ -1,8 +1,8 @@
 .panel {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: var(--hud-radius);
+  padding: var(--hud-spacing);
   border: 1px solid rgba(0, 255, 136, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
@@ -18,9 +18,9 @@
   height: 120px;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 255, 136, 0.3);
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: var(--color-gray-100);
-  padding: 10px;
+  padding: var(--hud-spacing-sm);
   resize: vertical;
   font-family: inherit;
   font-size: 0.9rem;
@@ -41,12 +41,12 @@
 .button {
   background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: var(--hud-transition);
   display: flex;
   align-items: center;
   gap: 5px;

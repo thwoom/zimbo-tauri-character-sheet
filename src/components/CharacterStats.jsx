@@ -26,7 +26,16 @@ const CharacterStats = ({
           </div>
         ))}
       </div>
-      <div className={styles.hpBarContainer}>
+      {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+      <div
+        className={styles.hpBarContainer}
+        role="progressbar"
+        tabIndex={3}
+        aria-label="Health points"
+        aria-valuenow={character.hp}
+        aria-valuemin={0}
+        aria-valuemax={character.maxHp}
+      >
         <div
           className={styles.hpFill}
           style={{ width: `${(character.hp / character.maxHp) * 100}%` }}
@@ -61,7 +70,16 @@ const CharacterStats = ({
           -1 HP
         </button>
       </div>
-      <div className={styles.xpBarContainer}>
+      {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+      <div
+        className={styles.xpBarContainer}
+        role="progressbar"
+        tabIndex={4}
+        aria-label="Experience points"
+        aria-valuenow={character.xp}
+        aria-valuemin={0}
+        aria-valuemax={character.xpNeeded}
+      >
         <div
           className={styles.xpFill}
           style={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}

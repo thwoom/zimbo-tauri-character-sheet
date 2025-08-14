@@ -15,7 +15,7 @@
   background: var(--color-bg-primary);
   border: 2px solid var(--color-accent);
   border-radius: 15px;
-  padding: 20px;
+  padding: var(--hud-spacing);
   max-width: 500px;
   width: 100%;
   max-height: 80vh;
@@ -47,7 +47,7 @@
 .statusButton {
   background: linear-gradient(45deg, var(--color-warning), var(--color-warning-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   padding: 5px 10px;
   cursor: pointer;

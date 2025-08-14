@@ -150,7 +150,7 @@ select:focus {
 .glass-panel {
   background: var(--panel-bg);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
+  border-radius: var(--hud-radius);
   border: 1px solid var(--panel-border);
 }
 

@@ -12,6 +12,8 @@ import {
 } from 'react-icons/fa6';
 import styles from './SessionNotes.module.css';
 
+const NOTES_FILE = 'session_notes.txt';
+
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
   const [warning, setWarning] = useState('');
 
@@ -50,7 +52,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
           className={styles.button}
           onClick={async () => {
             try {
-              await saveFile('session_notes.txt', sessionNotes);
+              await saveFile(NOTES_FILE, sessionNotes);
             } catch {
               setWarning('Persistence unavailable; notes may not be saved.');
             }
@@ -62,7 +64,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
           className={styles.button}
           onClick={async () => {
             try {
-              const contents = await loadFile('session_notes.txt');
+              const contents = await loadFile(NOTES_FILE);
               setSessionNotes(contents);
             } catch {
               setWarning('Persistence unavailable; notes may not be loaded.');

@@ -4,20 +4,12 @@ import { renderHook, act } from '@testing-library/react';
 import { SettingsProvider, useSettings } from './SettingsContext.jsx';
 
 describe('SettingsContext', () => {
-  let originalEnv;
-
-  beforeEach(() => {
-    // Save and reset environment variable before each test
-    originalEnv = { ...import.meta.env };
-    import.meta.env.VITE_AUTO_XP_ON_MISS = 'true';
-  });
-
   afterEach(() => {
-    // Restore original environment
-    import.meta.env = { ...originalEnv };
+    delete import.meta.env.VITE_AUTO_XP_ON_MISS;
   });
 
-  it('uses default autoXpOnMiss from env and updates with setAutoXpOnMiss', () => {
+  it('uses env default when initialAutoXpOnMiss is omitted', () => {
+    import.meta.env.VITE_AUTO_XP_ON_MISS = 'true';
     const wrapper = ({ children }) => <SettingsProvider>{children}</SettingsProvider>;
     const { result } = renderHook(() => useSettings(), { wrapper });
 
@@ -28,7 +20,7 @@ describe('SettingsContext', () => {
     expect(result.current.autoXpOnMiss).toBe(false);
   });
 
-  it('honors initialAutoXpOnMiss prop and updates correctly', () => {
+  it('honors initialAutoXpOnMiss prop', () => {
     const wrapper = ({ children }) => (
       <SettingsProvider initialAutoXpOnMiss={false}>{children}</SettingsProvider>
     );

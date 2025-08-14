@@ -17,6 +17,11 @@
   border: 2px solid var(--color-accent);
 }
 
+.avatar:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
 /* Status Effect Overlays */
 :global(.poisoned-overlay) {
   position: relative;

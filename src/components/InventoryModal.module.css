@@ -28,7 +28,7 @@
 }
 
 .inventoryEmpty {
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
 }
 
 .inventoryList {

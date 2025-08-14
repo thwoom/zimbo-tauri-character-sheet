@@ -75,14 +75,14 @@
 }
 
 .context {
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
   font-size: 0.9rem;
   margin-bottom: 20px;
 }
 
 .original {
   font-size: 1rem;
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
   margin-bottom: 10px;
 }
 

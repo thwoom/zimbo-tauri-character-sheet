@@ -2,24 +2,16 @@ import React from 'react';
 import useStatusEffects from '../hooks/useStatusEffects.js';
 import styles from './CharacterAvatar.module.css';
 
-export default function CharacterAvatar({ character, onPortraitClick }) {
-  const { getActiveVisualEffects } = useStatusEffects(character, () => {});
-
-  const handleActivate = () => {
-    if (onPortraitClick) onPortraitClick();
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      e.stopPropagation();
-      handleActivate();
-    }
-  };
+export default function CharacterAvatar({ character }) {
+  const { getStatusEffectImage, getActiveVisualEffects } = useStatusEffects(character, () => {});
 
   return (
     <div className={`${styles.avatarContainer} ${getActiveVisualEffects()}`}>
-      <svg
+      {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+      <img
+        src={getStatusEffectImage()}
+        alt="Character avatar"
+        tabIndex={2}
         className={styles.avatar}
         role="img"
         aria-label="Character avatar"

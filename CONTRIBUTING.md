@@ -40,6 +40,14 @@ Thank you for your interest in contributing to Zimbo Tauri Character Sheet.
    npm run tauri dev
    ```
 
+6. For browser-only development, start Vite without Tauri:
+
+   ```bash
+   npm run dev
+   ```
+
+   This mode lacks Tauri features like local file I/O.
+
 ## Common Pitfalls
 
 - **Node version**: The project requires Node ≥20. Use a version manager like `nvm` if needed.

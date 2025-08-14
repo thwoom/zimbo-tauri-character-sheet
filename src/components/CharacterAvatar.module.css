@@ -15,6 +15,34 @@
   max-width: 200px;
   border-radius: 50%;
   border: 2px solid var(--color-accent);
+  cursor: pointer;
+}
+
+.avatar:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.silhouette {
+  fill: #ccc;
+}
+
+.lowHpLayer,
+.shieldLayer {
+  opacity: 0;
+  pointer-events: none;
+}
+
+:global(.low-hp-overlay) .lowHpLayer {
+  opacity: 1;
+}
+
+:global(.shielded-overlay) .shieldLayer {
+  opacity: 0.6;
+}
+
+:global(.stunned-overlay) .silhouette {
+  filter: url('#desaturate');
 }
 
 /* Status Effect Overlays */

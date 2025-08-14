@@ -1,6 +1,5 @@
-import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
@@ -246,17 +245,6 @@ export default function EndSessionModal({ isOpen, onClose }) {
             ))}
           </div>
         )}
-
-        <div className={styles.section}>
-          <label htmlFor="session-recap">Session Recap</label>
-          <textarea
-            id="session-recap"
-            value={recap}
-            onChange={(e) => setRecap(e.target.value)}
-            placeholder="Brief recap of this session"
-            className={styles.recapInput}
-          />
-        </div>
 
         <div className={styles.total}>Total XP Gained: {totalXP}</div>
         {error && <div className={styles.error}>{error}</div>}

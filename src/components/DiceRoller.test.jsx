@@ -27,6 +27,7 @@ describe('DiceRoller', () => {
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
       />,
     );
 
@@ -51,6 +52,7 @@ describe('DiceRoller', () => {
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
       />,
     );
     expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
@@ -69,6 +71,7 @@ describe('DiceRoller', () => {
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
       />,
     );
     expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
@@ -81,6 +84,7 @@ describe('DiceRoller', () => {
         rollHistory={rollHistory}
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
       />,
     );
     expect(screen.getByText('d20: 10 = 10')).toBeInTheDocument();

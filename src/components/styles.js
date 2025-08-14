@@ -14,7 +14,7 @@ export const buttonStyle = {
   border: 'none',
   borderRadius: '6px',
   color: baseColors.white,
-  padding: '8px 15px',
+  padding: 'var(--space-sm) 15px',
   cursor: 'pointer',
   fontWeight: 'bold',
   transition: 'all 0.3s ease',

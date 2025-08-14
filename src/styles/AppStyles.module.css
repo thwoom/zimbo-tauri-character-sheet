@@ -77,7 +77,7 @@
   border: none;
   border-radius: 6px;
   color: white;
-  padding: 8px 15px;
+  padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;

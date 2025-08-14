@@ -1,6 +1,6 @@
 .message {
-  margin: 8px 0 0;
-  font-size: 12px;
+  margin: var(--space-sm) 0 0;
+  font-size: var(--font-size-sm);
   font-style: italic;
 }
 

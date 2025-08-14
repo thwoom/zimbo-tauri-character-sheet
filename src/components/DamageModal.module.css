@@ -34,13 +34,13 @@
   border: 1px solid var(--color-neon);
   border-radius: 6px;
   color: var(--color-white);
-  padding: 8px;
+  padding: var(--space-sm);
   width: 100%;
   margin-bottom: 10px;
 }
 
 .summary {
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
   margin-bottom: 20px;
 }
 
@@ -48,6 +48,13 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .buttonGroup {
+    flex-direction: column;
+  }
 }
 
 .button {
@@ -55,7 +62,7 @@
   border: none;
   border-radius: 6px;
   color: var(--color-white);
-  padding: 8px 15px;
+  padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;

@@ -37,7 +37,7 @@
 }
 
 .statusItem {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 
 .statusLabel {

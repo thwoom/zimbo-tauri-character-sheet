@@ -20,7 +20,7 @@
 
 .item {
   background: rgba(0, 0, 0, 0.3);
-  padding: 8px 12px;
+  padding: var(--space-sm) 12px;
   margin: 5px 0;
   border-radius: 6px;
   border-left: 3px solid var(--color-neon);
@@ -58,7 +58,7 @@
   position: absolute;
   background: rgba(0, 0, 0, 0.8);
   color: var(--color-white);
-  padding: 4px 8px;
+  padding: 4px var(--space-sm);
   border-radius: 4px;
   top: 100%;
   left: 0;
@@ -79,14 +79,14 @@
 
 .itemDetails {
   font-size: 0.7rem;
-  color: var(--color-gray-350);
+  color: var(--color-gray-400);
 }
 
 .useButton {
   background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
   border: none;
   color: var(--color-white);
-  padding: 4px 8px;
+  padding: 4px var(--space-sm);
   border-radius: 4px;
   cursor: pointer;
   font-size: 10px;

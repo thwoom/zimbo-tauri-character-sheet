@@ -50,7 +50,6 @@
   color: var(--color-white);
 }
 
-
 .recapInput {
   width: 100%;
   margin-top: 5px;
@@ -73,6 +72,16 @@
 
 .actions {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .actions {
+    flex-direction: column;
+  }
 }
 
 .error {
@@ -85,7 +94,7 @@
   border: none;
   border-radius: 6px;
   color: var(--color-white);
-  padding: 8px 15px;
+  padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;

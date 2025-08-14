@@ -4,6 +4,17 @@
   Verify new combinations with tools like https://webaim.org/resources/contrastchecker/.
 */
 :root {
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-size-heading: 2.5rem;
+  --font-size-body: 1rem;
+  --font-size-sm: 0.75rem;
+  --font-weight-heading: 700;
+  --font-weight-body: 400;
+
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+
   --color-bg-start: #0b0d17;
   --color-bg-end: #1a1f38;
   --color-text: #d0d7e2;
@@ -40,6 +51,7 @@
   --color-info-light: #6b8ed6;
   --color-info-rgb: 79, 109, 184;
 
+
   --color-purple: #6e5aa3;
   --color-purple-dark: #59458c;
 
@@ -61,6 +73,9 @@
   --panel-border: rgba(var(--color-accent-rgb), 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.3);
   --color-bg-primary: var(--panel-bg);
+  --color-modal-bg: var(--panel-bg);
+  --color-modal-bg-secondary: rgba(255, 255, 255, 0.05);
+  --color-modal-bg-dark: rgba(0, 0, 0, 0.6);
 
   --glow-shadow: rgba(var(--color-accent-rgb), 0.3);
   --glow-shadow-strong: rgba(var(--color-accent-rgb), 0.6);
@@ -163,6 +178,9 @@
   --panel-bg: rgba(255, 255, 255, 0.7);
   --panel-border: rgba(var(--color-accent-rgb), 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.2);
+  --color-modal-bg: var(--panel-bg);
+  --color-modal-bg-secondary: rgba(255, 255, 255, 0.5);
+  --color-modal-bg-dark: rgba(0, 0, 0, 0.1);
 
   --glow-shadow: rgba(var(--color-accent-rgb), 0.3);
   --glow-shadow-strong: rgba(var(--color-accent-rgb), 0.6);

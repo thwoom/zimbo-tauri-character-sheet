@@ -87,7 +87,7 @@
   }
 
   .levelup-progress-label {
-    font-size: 12px;
+    font-size: var(--font-size-sm);
   }
 
   .levelup-step {
@@ -103,7 +103,7 @@
   .levelup-step-desc {
     color: var(--color-gray-100);
     font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: var(--space-md);
   }
 
   .levelup-stat-grid {
@@ -115,7 +115,7 @@
 
   .levelup-stat-button {
     padding: 10px;
-    border: 2px solid var(--color-gray-750);
+    border: 2px solid var(--color-gray-700);
     border-radius: 8px;
     background: var(--color-modal-bg);
     color: var(--color-gray-100);
@@ -141,7 +141,7 @@
   .levelup-stat-button.disabled {
     border-color: var(--color-gray-800);
     background: var(--color-gray-900);
-    color: var(--color-gray-750);
+    color: var(--color-gray-700);
     cursor: not-allowed;
   }
 
@@ -150,7 +150,7 @@
   }
 
   .levelup-stat-score {
-    font-size: 12px;
+    font-size: var(--font-size-sm);
   }
 
   .levelup-stat-mod {
@@ -159,7 +159,7 @@
   }
 
   .levelup-selected-box {
-    padding: 8px 12px;
+    padding: var(--space-sm) 12px;
     background: rgba(0, 255, 136, 0.1);
     border: 1px solid rgba(0, 255, 136, 0.3);
     border-radius: 6px;
@@ -168,31 +168,31 @@
   }
 
   .levelup-selected-move {
-    margin-top: 8px;
+    margin-top: var(--space-sm);
   }
 
   .levelup-move-list {
     max-height: 250px;
     overflow-y: auto;
-    border: 1px solid var(--color-gray-750);
+    border: 1px solid var(--color-gray-700);
     border-radius: 8px;
-    padding: 8px;
+    padding: var(--space-sm);
   }
 
   .levelup-move-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
   }
 
   .levelup-move-button {
     padding: 12px;
-    border: 2px solid var(--color-gray-750);
+    border: 2px solid var(--color-gray-700);
     border-radius: 8px;
     background: var(--color-modal-bg);
     color: var(--color-gray-100);
     cursor: pointer;
     text-align: left;
     transition: all 0.3s ease;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
   }
 
   .levelup-move-button.selected {
@@ -219,7 +219,7 @@
 
   .levelup-move-desc {
     margin: 4px 0 0;
-    font-size: 12px;
+    font-size: var(--font-size-sm);
     color: var(--color-gray-200);
     line-height: 1.3;
   }
@@ -229,8 +229,8 @@
     border: none;
     color: var(--color-neon);
     cursor: pointer;
-    font-size: 12px;
-    margin-left: 8px;
+    font-size: var(--font-size-sm);
+    margin-left: var(--space-sm);
   }
 
   .levelup-move-details {
@@ -239,17 +239,17 @@
     border: 1px solid rgba(0, 255, 136, 0.2);
     border-radius: 6px;
     margin-left: 10px;
-    font-size: 12px;
+    font-size: var(--font-size-sm);
   }
 
   .levelup-move-expanded {
     color: var(--color-gray-100);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
     line-height: 1.4;
   }
 
   .levelup-move-examples {
-    color: var(--color-gray-350);
+    color: var(--color-gray-400);
   }
 
   .levelup-hp-container {
@@ -259,7 +259,7 @@
     padding: 15px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    border: 1px solid var(--color-gray-750);
+    border: 1px solid var(--color-gray-700);
   }
 
   .levelup-button {
@@ -279,7 +279,7 @@
   }
 
   .levelup-button-cancel {
-    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-750));
+    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-700));
   }
 
   .levelup-button-complete {
@@ -289,7 +289,7 @@
   }
 
   .levelup-button-disabled {
-    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-750));
+    background: linear-gradient(45deg, var(--color-gray-700), var(--color-gray-700));
     opacity: 0.5;
     cursor: not-allowed;
   }
@@ -334,10 +334,17 @@
   }
 
   .levelup-actions {
-    margin-top: 15px;
+    margin-top: var(--space-md);
     display: flex;
     gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
+  }
+
+  @media (max-width: 360px) {
+    .levelup-actions {
+      flex-direction: column;
+    }
   }
 }

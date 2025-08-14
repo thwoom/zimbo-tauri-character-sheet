@@ -1,5 +1,9 @@
 export const baseColors = {
   white: 'var(--color-white)',
+  yellow: 'var(--color-yellow)',
+  purpleLight: 'var(--color-purple-light)',
+  orangeLight: 'var(--color-orange-light)',
+  cyan: 'var(--color-cyan)',
 };
 
 export const resourceColors = {

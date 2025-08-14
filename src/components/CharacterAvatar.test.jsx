@@ -1,9 +1,22 @@
 /* eslint-env jest */
-import { statusEffectImageMap } from '../hooks/useStatusEffects.js';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import CharacterAvatar from './CharacterAvatar.jsx';
 
 describe('CharacterAvatar', () => {
-  it('uses SVG images for avatar states', () => {
-    expect(statusEffectImageMap.default).toBe('/avatars/default.svg');
-    expect(statusEffectImageMap.poisoned).toBe('/avatars/poisoned.svg');
+  it('applies poisoned overlay and image when status effect active', () => {
+    const character = { statusEffects: ['poisoned'], debilities: [] };
+    render(<CharacterAvatar character={character} />);
+    const img = screen.getByRole('img', { name: /character avatar/i });
+    expect(img).toHaveClass('poisoned-overlay');
+    expect(img.getAttribute('src')).toBe('/avatars/poisoned.svg');
+  });
+
+  it('uses default image when no status effects', () => {
+    const character = { statusEffects: [], debilities: [] };
+    render(<CharacterAvatar character={character} />);
+    const img = screen.getByRole('img', { name: /character avatar/i });
+    expect(img.getAttribute('src')).toBe('/avatars/default.svg');
   });
 });

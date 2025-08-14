@@ -1,6 +1,9 @@
 /* eslint-env jest */
 import { describe, it, expect } from 'vitest';
-import useStatusEffects, { statusEffectImageMap } from './useStatusEffects.js';
+import useStatusEffects, {
+  statusEffectImageMap,
+  getStatusEffectImage as getStatusEffectImageFromMap,
+} from './useStatusEffects.js';
 
 describe('statusEffectImageMap', () => {
   it('returns poisoned image and overlay when status effect active', () => {
@@ -9,6 +12,9 @@ describe('statusEffectImageMap', () => {
 
     expect(getStatusEffectImage()).toBe(statusEffectImageMap.poisoned);
     expect(getActiveVisualEffects()).toBe('poisoned-overlay');
+    expect(getStatusEffectImageFromMap(character.statusEffects)).toBe(
+      statusEffectImageMap.poisoned,
+    );
   });
 
   it('uses default image when no status effects', () => {
@@ -17,5 +23,6 @@ describe('statusEffectImageMap', () => {
 
     expect(getStatusEffectImage()).toBe(statusEffectImageMap.default);
     expect(getActiveVisualEffects()).toBe('');
+    expect(getStatusEffectImageFromMap(character.statusEffects)).toBe(statusEffectImageMap.default);
   });
 });

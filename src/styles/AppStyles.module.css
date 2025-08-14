@@ -98,11 +98,11 @@
 }
 
 .damageButton {
-  background: linear-gradient(45deg, var(--color-red), var(--color-red-dark));
+  background: linear-gradient(45deg, var(--color-danger), var(--color-danger-dark));
 }
 
 .statusButton {
-  background: linear-gradient(45deg, var(--color-orange), var(--color-orange-dark));
+  background: linear-gradient(45deg, var(--color-warning), var(--color-warning-dark));
 }
 
 .inventoryButton {
@@ -110,11 +110,11 @@
 }
 
 .bondsButton {
-  background: linear-gradient(45deg, var(--color-blue), var(--color-blue-dark));
+  background: linear-gradient(45deg, var(--color-info), var(--color-info-dark));
 }
 
 .endSessionButton {
-  background: linear-gradient(45deg, var(--color-green), var(--color-green-dark));
+  background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
 }
 
 .exportButton {

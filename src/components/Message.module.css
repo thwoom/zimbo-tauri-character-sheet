@@ -9,7 +9,7 @@
 }
 
 .message-warning {
-  color: var(--color-amber);
+  color: var(--color-warning);
 }
 
 .message-success {

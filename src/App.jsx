@@ -16,6 +16,7 @@ import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
 import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
+import AppVersion from './components/AppVersion.tsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
@@ -279,6 +280,7 @@ function App() {
           <PerformanceHud />
         </Suspense>
       )}
+      <AppVersion />
     </div>
   );
 }

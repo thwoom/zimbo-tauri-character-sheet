@@ -12,6 +12,8 @@ vi.mock('../utils/fileStorage.js', () => ({
   loadFile: vi.fn(),
 }));
 
+const NOTES_FILE = 'session_notes.txt';
+
 describe('SessionNotes', () => {
   it('updates notes when typing', async () => {
     const user = userEvent.setup();
@@ -88,7 +90,7 @@ describe('SessionNotes', () => {
       />,
     );
     await user.click(screen.getByRole('button', { name: /Save/i }));
-    expect(saveFile).toHaveBeenCalledWith('session_notes.txt', 'hello');
+    expect(saveFile).toHaveBeenCalledWith(NOTES_FILE, 'hello');
   });
 
   it('loads notes using fileStorage', async () => {
@@ -104,7 +106,7 @@ describe('SessionNotes', () => {
       />,
     );
     await user.click(screen.getByRole('button', { name: /Load/i }));
-    expect(loadFile).toHaveBeenCalledWith('session_notes.txt');
+    expect(loadFile).toHaveBeenCalledWith(NOTES_FILE);
     expect(setSessionNotes).toHaveBeenCalledWith('loaded');
   });
 

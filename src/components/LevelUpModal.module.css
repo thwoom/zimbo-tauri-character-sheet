@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: var(--hud-spacing);
     overflow-y: auto;
   }
 
@@ -28,7 +28,7 @@
 
   .levelup-header {
     background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
-    padding: 20px;
+    padding: var(--hud-spacing);
     border-radius: 13px 13px 0 0;
     text-align: center;
     position: relative;
@@ -60,14 +60,14 @@
   }
 
   .levelup-content {
-    padding: 20px;
+    padding: var(--hud-spacing);
   }
 
   .levelup-progress {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    padding: 10px;
+    padding: var(--hud-spacing-sm);
     background: rgba(0, 255, 136, 0.1);
     border-radius: 8px;
     border: 1px solid rgba(0, 255, 136, 0.3);
@@ -114,14 +114,14 @@
   }
 
   .levelup-stat-button {
-    padding: 10px;
+    padding: var(--hud-spacing-sm);
     border: 2px solid var(--color-gray-700);
     border-radius: 8px;
     background: var(--color-modal-bg);
     color: var(--color-gray-100);
     cursor: pointer;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: var(--hud-transition);
     font-size: 14px;
   }
 
@@ -162,7 +162,7 @@
     padding: var(--space-sm) 12px;
     background: rgba(0, 255, 136, 0.1);
     border: 1px solid rgba(0, 255, 136, 0.3);
-    border-radius: 6px;
+    border-radius: var(--hud-radius-sm);
     font-size: 14px;
     color: var(--color-neon);
   }
@@ -191,7 +191,7 @@
     color: var(--color-gray-100);
     cursor: pointer;
     text-align: left;
-    transition: all 0.3s ease;
+    transition: var(--hud-transition);
     margin-bottom: var(--space-sm);
   }
 
@@ -237,7 +237,7 @@
     padding: 12px;
     background: rgba(0, 255, 136, 0.05);
     border: 1px solid rgba(0, 255, 136, 0.2);
-    border-radius: 6px;
+    border-radius: var(--hud-radius-sm);
     margin-left: 10px;
     font-size: var(--font-size-sm);
   }
@@ -267,10 +267,10 @@
     border: none;
     color: var(--color-white);
     padding: 10px 20px;
-    border-radius: 6px;
+    border-radius: var(--hud-radius-sm);
     cursor: pointer;
     font-weight: bold;
-    transition: all 0.3s ease;
+    transition: var(--hud-transition);
     font-size: 14px;
   }
 

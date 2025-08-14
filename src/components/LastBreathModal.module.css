@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: var(--hud-spacing);
 }
 
 .modal {
@@ -43,10 +43,10 @@
 .button {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: white;
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: var(--hud-transition);
 }

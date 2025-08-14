@@ -1,8 +1,8 @@
 .panel {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: var(--hud-radius);
+  padding: var(--hud-spacing);
   border: 1px solid rgba(0, 255, 136, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
@@ -44,12 +44,12 @@
 .button {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: var(--hud-transition);
   margin: 5px;
 }
 
@@ -87,8 +87,8 @@
 
 .resultBox {
   background: rgba(0, 255, 136, 0.2);
-  padding: 10px;
-  border-radius: 6px;
+  padding: var(--hud-spacing-sm);
+  border-radius: var(--hud-radius-sm);
   text-align: center;
   font-weight: bold;
   min-height: 40px;

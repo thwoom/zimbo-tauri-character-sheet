@@ -1,13 +1,10 @@
 /* eslint-env jest */
-import { invoke } from '@tauri-apps/api/core';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import CharacterContext from '../state/CharacterContext.jsx';
 import EndSessionModal from './EndSessionModal.jsx';
-
-vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
 
 function renderWithCharacter(ui, initialCharacter) {
   let currentCharacter;
@@ -31,9 +28,6 @@ async function fillRecap(user) {
 }
 
 describe('EndSessionModal', () => {
-  beforeEach(() => {
-    invoke.mockReset();
-  });
   it('toggles visibility with isOpen prop', () => {
     const onClose = vi.fn();
     const initial = {
@@ -152,7 +146,6 @@ describe('EndSessionModal', () => {
       statusEffects: [],
       debilities: [],
     };
-    invoke.mockResolvedValue();
     const { getCharacter } = renderWithCharacter(
       <EndSessionModal isOpen onClose={() => {}} />,
       initial,

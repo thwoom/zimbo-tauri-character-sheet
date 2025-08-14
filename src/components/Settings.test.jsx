@@ -1,8 +1,7 @@
-/* eslint-env jest */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import ThemeContext from '../state/ThemeContext.jsx';
 import SettingsContext from '../state/SettingsContext.jsx';
 import Settings from './Settings.jsx';

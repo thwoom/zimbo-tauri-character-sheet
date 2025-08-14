@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import InventoryPanel from './InventoryPanel.jsx';
+import useUndo from '../hooks/useUndo.js';
 
 describe('InventoryPanel', () => {
   it('uses consumable items and calls handlers', async () => {
@@ -21,6 +22,7 @@ describe('InventoryPanel', () => {
         setCharacter={setCharacter}
         rollDie={rollDie}
         setRollResult={setRollResult}
+        saveToHistory={() => {}}
       />,
     );
     const useBtn = screen.getByText('Use');
@@ -38,6 +40,7 @@ describe('InventoryPanel', () => {
         setCharacter={() => {}}
         rollDie={() => 1}
         setRollResult={() => {}}
+        saveToHistory={() => {}}
       />,
     );
     expect(screen.getByText(/Active Debilities:/i)).toBeInTheDocument();
@@ -61,8 +64,38 @@ describe('InventoryPanel', () => {
         setCharacter={() => {}}
         rollDie={() => 1}
         setRollResult={() => {}}
+        saveToHistory={() => {}}
       />,
     );
     expect(screen.getByText('A sharp blade')).toBeInTheDocument();
+  });
+
+  it('undo restores consumed item', async () => {
+    const user = userEvent.setup();
+    function Wrapper() {
+      const [character, setCharacter] = React.useState({
+        inventory: [{ id: 1, name: 'Potion', type: 'consumable', quantity: 1 }],
+        debilities: [],
+        actionHistory: [],
+      });
+      const { saveToHistory, undoLastAction } = useUndo(character, setCharacter);
+      return (
+        <>
+          <InventoryPanel
+            character={character}
+            setCharacter={setCharacter}
+            rollDie={() => 1}
+            setRollResult={() => {}}
+            saveToHistory={saveToHistory}
+          />
+          <button onClick={undoLastAction}>Undo</button>
+        </>
+      );
+    }
+    render(<Wrapper />);
+    await user.click(screen.getByText('Use'));
+    expect(screen.queryByText('Potion')).not.toBeInTheDocument();
+    await user.click(screen.getByText('Undo'));
+    expect(screen.getByText('Potion')).toBeInTheDocument();
   });
 });

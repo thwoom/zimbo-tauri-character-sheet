@@ -1,5 +1,10 @@
 import { headerGradients } from '../styles/colorMap.js';
 
+export const statusEffectImageMap = {
+  default: '/avatars/default.svg',
+  poisoned: '/avatars/poisoned.svg',
+};
+
 export default function useStatusEffects(character, setCharacter) {
   const statusEffects = character.statusEffects;
   const debilities = character.debilities;
@@ -20,6 +25,11 @@ export default function useStatusEffects(character, setCharacter) {
       .filter(([effect]) => statusEffects.includes(effect))
       .map(([, cssClass]) => cssClass)
       .join(' ');
+  };
+
+  const getStatusEffectImage = () => {
+    const effect = statusEffects.find((e) => statusEffectImageMap[e]);
+    return statusEffectImageMap[effect] || statusEffectImageMap.default;
   };
 
   const toggleStatusEffect = (effect) => {
@@ -54,6 +64,7 @@ export default function useStatusEffects(character, setCharacter) {
     debilities,
     getActiveVisualEffects,
     getHeaderColor,
+    getStatusEffectImage,
     toggleStatusEffect,
     toggleDebility,
   };

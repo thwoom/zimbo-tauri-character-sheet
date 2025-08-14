@@ -39,6 +39,7 @@ const GameModals = ({
   showEndSessionModal,
   setShowEndSessionModal,
   bondsModal,
+  saveToHistory,
 }) => (
   <>
     {showLevelUpModal && (
@@ -62,6 +63,7 @@ const GameModals = ({
         onToggleStatusEffect={handleToggleStatusEffect}
         onToggleDebility={handleToggleDebility}
         onClose={() => setShowStatusModal(false)}
+        saveToHistory={saveToHistory}
       />
     )}
 
@@ -132,6 +134,7 @@ GameModals.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
   }).isRequired,
+  saveToHistory: PropTypes.func.isRequired,
 };
 
 export default GameModals;

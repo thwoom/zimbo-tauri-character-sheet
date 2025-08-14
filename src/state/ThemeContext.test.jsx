@@ -2,34 +2,26 @@
 import { renderHook, act } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
+
+vi.mock('../utils/safeLocalStorage.js', () => ({
+  default: {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+  },
+}));
+
+import safeLocalStorage from '../utils/safeLocalStorage.js';
 import { ThemeProvider, useTheme } from './ThemeContext.jsx';
 import { DEFAULT_THEME } from './theme.js';
 
 describe('ThemeContext', () => {
-  let localStorageMock;
   let originalDocumentElement;
   let setAttributeMock;
 
   beforeEach(() => {
-    // Mock localStorage
-    localStorageMock = (() => {
-      let store = {};
-      return {
-        getItem: vi.fn((key) => store[key] ?? null),
-        setItem: vi.fn((key, value) => {
-          store[key] = String(value);
-        }),
-        clear: () => {
-          store = {};
-        },
-      };
-    })();
-    Object.defineProperty(window, 'localStorage', {
-      value: localStorageMock,
-      configurable: true,
-    });
+    safeLocalStorage.getItem.mockReset();
+    safeLocalStorage.setItem.mockReset();
 
-    // Mock document.documentElement
     originalDocumentElement = document.documentElement;
     setAttributeMock = vi.fn();
     Object.defineProperty(document, 'documentElement', {
@@ -39,37 +31,40 @@ describe('ThemeContext', () => {
   });
 
   afterEach(() => {
-    // Restore document.documentElement
     Object.defineProperty(document, 'documentElement', {
       value: originalDocumentElement,
       configurable: true,
     });
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   const wrapper = ({ children }) => <ThemeProvider>{children}</ThemeProvider>;
 
   it('uses the default theme when none is stored', () => {
+    safeLocalStorage.getItem.mockImplementation((key, fallback) => fallback);
     const { result } = renderHook(() => useTheme(), { wrapper });
     expect(result.current.theme).toBe(DEFAULT_THEME);
+    expect(safeLocalStorage.getItem).toHaveBeenCalledWith('theme', DEFAULT_THEME);
   });
 
   it('updates the data-theme attribute when the theme changes', () => {
+    safeLocalStorage.getItem.mockImplementation((key, fallback) => fallback);
     const { result } = renderHook(() => useTheme(), { wrapper });
     act(() => {
       result.current.setTheme('classic');
     });
     expect(setAttributeMock).toHaveBeenCalledWith('data-theme', 'classic');
+    expect(safeLocalStorage.setItem).toHaveBeenCalledWith('theme', 'classic');
   });
 
-  it('persists theme changes to localStorage and loads stored theme', () => {
-    localStorage.setItem('theme', 'classic');
+  it('persists theme changes and loads stored theme', () => {
+    safeLocalStorage.getItem.mockReturnValue('classic');
     const { result } = renderHook(() => useTheme(), { wrapper });
     expect(result.current.theme).toBe('classic');
 
     act(() => {
       result.current.setTheme('moebius');
     });
-    expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'moebius');
+    expect(safeLocalStorage.setItem).toHaveBeenCalledWith('theme', 'moebius');
   });
 });

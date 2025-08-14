@@ -268,6 +268,7 @@ describe.skip('localStorage persistence', () => {
 });
 
 describe('Theme switching', () => {
+  beforeEach(() => localStorage.removeItem('theme'));
   it('updates the theme attribute when selecting classic', () => {
     render(
       <ThemeProvider>
@@ -282,6 +283,23 @@ describe('Theme switching', () => {
     }).then(() => {
       fireEvent.change(select, { target: { value: 'classic' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('classic');
+    });
+  });
+
+  it('updates the theme attribute when selecting moebius', () => {
+    render(
+      <ThemeProvider>
+        <Settings />
+      </ThemeProvider>,
+    );
+
+    const select = screen.getByLabelText(/Theme:/i);
+
+    return waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic');
+    }).then(() => {
+      fireEvent.change(select, { target: { value: 'moebius' } });
+      expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
     });
   });
 });

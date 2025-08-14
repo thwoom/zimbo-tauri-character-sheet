@@ -51,7 +51,6 @@
   --color-info-light: #6b8ed6;
   --color-info-rgb: 79, 109, 184;
 
-
   --color-purple: #6e5aa3;
   --color-purple-dark: #59458c;
 
@@ -219,4 +218,45 @@
   --critical-hit-end: var(--color-warning);
   --critical-failure-start: var(--color-danger);
   --critical-failure-end: var(--color-danger-dark);
+}
+
+:root[data-theme='moebius'] {
+  --color-bg-start: #f2e9e4;
+  --color-bg-end: #e4d2cc;
+  --color-text: #2d2a26;
+
+  --color-accent: #27a9a1;
+  --color-accent-dark: #1e827c;
+  --color-accent-darker: #155b58;
+  --color-accent-rgb: 39, 169, 161;
+
+  --color-info: #d2666f;
+  --color-info-dark: #a74e55;
+  --color-info-light: #e88c94;
+  --color-info-rgb: 210, 102, 111;
+
+  --color-purple: #8f6fd6;
+  --color-purple-dark: #6c51aa;
+
+  --color-success: #7bb662;
+  --color-success-dark: #5b8f49;
+  --color-success-light: #97cc79;
+  --color-success-rgb: 123, 182, 98;
+
+  --color-warning: #f1a85a;
+  --color-warning-dark: #c9833e;
+  --color-warning-light: #f5c588;
+  --color-warning-rgb: 241, 168, 90;
+
+  --color-danger: #e36c57;
+  --color-danger-dark: #b25441;
+  --color-danger-light: #e98f7c;
+  --color-danger-rgb: 227, 108, 87;
+
+  --panel-bg: rgba(255, 255, 255, 0.15);
+  --panel-border: rgba(39, 169, 161, 0.3);
+  --panel-shadow: rgba(0, 0, 0, 0.25);
+  --overlay-dark: rgba(0, 0, 0, 0.2);
+  --glow-shadow: rgba(39, 169, 161, 0.35);
+  --glow-shadow-strong: rgba(39, 169, 161, 0.6);
 }

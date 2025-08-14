@@ -4,7 +4,8 @@ const safeLocalStorage = {
       if (typeof localStorage === 'undefined') return fallback;
       const value = localStorage.getItem(key);
       return value === null ? fallback : value;
-    } catch {
+    } catch (error) {
+      console.error('Failed to get localStorage item', key, error);
       return fallback;
     }
   },
@@ -13,8 +14,8 @@ const safeLocalStorage = {
     try {
       if (typeof localStorage === 'undefined') return;
       localStorage.setItem(key, value);
-    } catch {
-      // ignore
+    } catch (error) {
+      console.error('Failed to set localStorage item', key, error);
     }
   },
 
@@ -22,8 +23,8 @@ const safeLocalStorage = {
     try {
       if (typeof localStorage === 'undefined') return;
       localStorage.removeItem(key);
-    } catch {
-      // ignore
+    } catch (error) {
+      console.error('Failed to remove localStorage item', key, error);
     }
   },
 };

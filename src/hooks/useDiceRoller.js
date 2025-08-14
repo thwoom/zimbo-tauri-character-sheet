@@ -1,4 +1,3 @@
-/* global autoXpOnMiss */
 import { useState, useEffect } from 'react';
 import { debilityTypes } from '../state/character';
 import * as diceUtils from '../utils/dice.js';
@@ -114,6 +113,7 @@ export default function useDiceRoller(character, setCharacter) {
 
   const rollDice = (formula, description = '') => {
     const desc = description.toLowerCase();
+    const xpOnMiss = globalThis.autoXpOnMiss ?? false;
     let result = '';
     let total = 0;
     let interpretation = '';
@@ -207,7 +207,7 @@ export default function useDiceRoller(character, setCharacter) {
 
       originalInterpretation = interpretation;
 
-      if (originalTotal < 7 && autoXpOnMiss) {
+      if (originalTotal < 7 && xpOnMiss) {
         setCharacter((prev) => ({
           ...prev,
           xp: prev.xp + 1,

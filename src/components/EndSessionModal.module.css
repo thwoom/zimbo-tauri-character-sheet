@@ -92,12 +92,12 @@
 .button {
   background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: var(--hud-transition);
   margin: 5px;
 }
 

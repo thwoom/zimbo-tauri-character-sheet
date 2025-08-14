@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
   color: var(--color-text);
-  padding: 20px;
+  padding: var(--hud-spacing);
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-body);
@@ -16,11 +16,11 @@
 .header {
   text-align: center;
   margin-bottom: 30px;
-  padding: 20px;
+  padding: var(--hud-spacing);
   border-radius: 15px;
   border: 2px solid var(--color-accent);
   box-shadow: 0 0 20px var(--glow-shadow);
-  transition: all 0.5s ease;
+  transition: var(--hud-transition-slow);
 }
 
 .headerTop {
@@ -77,12 +77,12 @@
 .button {
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
-  border-radius: 6px;
+  border-radius: var(--hud-radius-sm);
   color: white;
   padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: var(--hud-transition);
   margin: 5px;
   display: flex;
   align-items: center;

@@ -1,5 +1,6 @@
-import { invoke } from '@tauri-apps/api/core';
 import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
 import {
   FaClipboard,
   FaCalendarDays,
@@ -12,6 +13,17 @@ import {
 import styles from './SessionNotes.module.css';
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
+  const [warning, setWarning] = useState('');
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('__test', '1');
+      localStorage.removeItem('__test');
+    } catch {
+      setWarning('Persistence unavailable; notes may not be saved.');
+    }
+  }, []);
+
   return (
     <div className={`${styles.panel} ${compactMode ? '' : styles.fullWidth}`}>
       <h3 className={styles.title}>
@@ -23,6 +35,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
         onChange={(e) => setSessionNotes(e.target.value)}
         placeholder="Track important events, NPCs, plot threads, and campaign notes here..."
       />
+      {warning && <div className={styles.warning}>{warning}</div>}
       <div className={styles.buttons}>
         <button
           className={styles.button}
@@ -36,10 +49,11 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
         <button
           className={styles.button}
           onClick={async () => {
-            await invoke('write_file', {
-              path: 'session_notes.txt',
-              contents: sessionNotes,
-            });
+            try {
+              await saveFile('session_notes.txt', sessionNotes);
+            } catch {
+              setWarning('Persistence unavailable; notes may not be saved.');
+            }
           }}
         >
           <FaFloppyDisk className={styles.icon} /> Save
@@ -47,10 +61,12 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
         <button
           className={styles.button}
           onClick={async () => {
-            const contents = await invoke('read_file', {
-              path: 'session_notes.txt',
-            }).catch(() => '');
-            setSessionNotes(contents);
+            try {
+              const contents = await loadFile('session_notes.txt');
+              setSessionNotes(contents);
+            } catch {
+              setWarning('Persistence unavailable; notes may not be loaded.');
+            }
           }}
         >
           <FaFolderOpen className={styles.icon} /> Load

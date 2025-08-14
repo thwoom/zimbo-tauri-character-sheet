@@ -1,10 +1,5 @@
 import { headerGradients } from '../styles/colorMap.js';
 
-export const statusEffectImageMap = {
-  default: '/avatars/default.svg',
-  poisoned: '/avatars/poisoned.svg',
-};
-
 export default function useStatusEffects(character, setCharacter) {
   const statusEffects = character.statusEffects;
   const debilities = character.debilities;
@@ -15,6 +10,9 @@ export default function useStatusEffects(character, setCharacter) {
     shocked: 'shocked-overlay',
     frozen: 'frozen-overlay',
     blessed: 'blessed-overlay',
+    lowHp: 'low-hp-overlay',
+    stunned: 'stunned-overlay',
+    shielded: 'shielded-overlay',
   };
 
   const getActiveVisualEffects = () => {
@@ -51,21 +49,11 @@ export default function useStatusEffects(character, setCharacter) {
     return headerGradients.default;
   };
 
-  const getStatusEffectImage = () => {
-    for (const effect of Object.keys(statusEffectImageMap)) {
-      if (effect !== 'default' && statusEffects.includes(effect)) {
-        return statusEffectImageMap[effect];
-      }
-    }
-    return statusEffectImageMap.default;
-  };
-
   return {
     statusEffects,
     debilities,
     getActiveVisualEffects,
     getHeaderColor,
-    getStatusEffectImage,
     toggleStatusEffect,
     toggleDebility,
   };

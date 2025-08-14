@@ -1,23 +1,35 @@
 /* eslint-env jest */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import CharacterAvatar from './CharacterAvatar.jsx';
 
 describe('CharacterAvatar', () => {
-  it('applies poisoned overlay and image when status effect active', () => {
+  it('applies poisoned overlay when status effect active', () => {
     const character = { statusEffects: ['poisoned'], debilities: [] };
     render(<CharacterAvatar character={character} />);
-    const img = screen.getByRole('img', { name: /character avatar/i });
-    expect(img.parentElement).toHaveClass('poisoned-overlay');
-    expect(img.getAttribute('src')).toBe('/avatars/poisoned.svg');
-    expect(img.parentElement).toHaveClass('poisoned-overlay');
+    const svg = screen.getByRole('img', { name: /character avatar/i });
+    expect(svg.parentElement).toHaveClass('poisoned-overlay');
+    expect(svg.querySelector('path')).toBeInTheDocument();
   });
 
-  it('uses default image when no status effects', () => {
+  it('renders silhouette without overlays when no status effects', () => {
     const character = { statusEffects: [], debilities: [] };
     render(<CharacterAvatar character={character} />);
-    const img = screen.getByRole('img', { name: /character avatar/i });
-    expect(img.getAttribute('src')).toBe('/avatars/default.svg');
+    const svg = screen.getByRole('img', { name: /character avatar/i });
+    expect(svg.parentElement).not.toHaveClass('poisoned-overlay');
+  });
+
+  it('calls onPortraitClick when activated', async () => {
+    const character = { statusEffects: [], debilities: [] };
+    const handleClick = vi.fn();
+    const user = userEvent.setup();
+    render(<CharacterAvatar character={character} onPortraitClick={handleClick} />);
+    const svg = screen.getByRole('img', { name: /character avatar/i });
+    await user.click(svg);
+    expect(handleClick).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(svg, { key: 'Enter' });
+    expect(handleClick).toHaveBeenCalledTimes(2);
   });
 });

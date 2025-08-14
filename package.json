@@ -1,7 +1,7 @@
 {
   "name": "zimbo-panel",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -16,7 +16,8 @@
     "format:check": "prettier --check .",
     "sync": "bash git-sync-ask.sh",
     "fix-prs": "node fix-prs.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version": "node update-version.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

@@ -55,7 +55,7 @@ Start Vite's dev server in the browser without Tauri:
 npm run dev
 ```
 
-Features that rely on Tauri APIs, such as local file I/O, are limited in this mode.
+Use this for UI work—features that depend on Tauri APIs (like reading or writing local files) won't function in this mode.
 
 ### Build web assets
 

@@ -46,7 +46,7 @@ Thank you for your interest in contributing to Zimbo Tauri Character Sheet.
    npm run dev
    ```
 
-   This mode lacks Tauri features like local file I/O.
+   This is useful for UI work, but features that depend on Tauri APIs—such as reading or writing local files—won't function in this mode.
 
 ## Common Pitfalls
 

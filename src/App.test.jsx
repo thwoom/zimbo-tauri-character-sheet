@@ -161,6 +161,29 @@ describe('End session flow', () => {
   });
 });
 
+describe('Rulebook display', () => {
+  const Wrapper = ({ children }) => {
+    const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
+    return (
+      <ThemeProvider>
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          {children}
+        </CharacterContext.Provider>
+      </ThemeProvider>
+    );
+  };
+
+  it('renders the rulebook name in the header', () => {
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText(/Rulebook: Dungeon World/i)).toBeInTheDocument();
+  });
+});
+
 // Skipped in Vitest environment due to jsdom localStorage limitations
 describe.skip('localStorage persistence', () => {
   const Wrapper = ({ children }) => {

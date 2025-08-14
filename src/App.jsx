@@ -20,7 +20,7 @@ import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
 import useStatusEffects from './hooks/useStatusEffects.js';
 import useUndo from './hooks/useUndo.js';
-import { statusEffectTypes, debilityTypes } from './state/character';
+import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import styles from './styles/AppStyles.module.css';
 
@@ -111,6 +111,7 @@ function App() {
               <h1 className={styles.title}>ZIMBO – The Time-Bound Juggernaut</h1>
               <div className={styles.subHeader}>
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
+                <p>Rulebook: {RULEBOOK}</p>
                 {character.statusEffects.length > 0 && (
                   <div className={styles.statusEffectsContainer}>
                     {character.statusEffects.map((effect) => {

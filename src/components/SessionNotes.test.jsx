@@ -5,6 +5,12 @@ import React from 'react';
 import { vi } from 'vitest';
 import SessionNotes from './SessionNotes.jsx';
 import styles from './SessionNotes.module.css';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
+
+vi.mock('../utils/fileStorage.js', () => ({
+  saveFile: vi.fn(),
+  loadFile: vi.fn(),
+}));
 
 describe('SessionNotes', () => {
   it('updates notes when typing', async () => {
@@ -68,5 +74,58 @@ describe('SessionNotes', () => {
     );
     const container = screen.getByText(/Session Notes/).parentElement;
     expect(container).toHaveClass(styles.fullWidth);
+  });
+
+  it('saves notes using fileStorage', async () => {
+    const user = userEvent.setup();
+    const setSessionNotes = vi.fn();
+    render(
+      <SessionNotes
+        sessionNotes="hello"
+        setSessionNotes={setSessionNotes}
+        compactMode
+        setCompactMode={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /Save/i }));
+    expect(saveFile).toHaveBeenCalledWith('session_notes.txt', 'hello');
+  });
+
+  it('loads notes using fileStorage', async () => {
+    const user = userEvent.setup();
+    const setSessionNotes = vi.fn();
+    loadFile.mockResolvedValueOnce('loaded');
+    render(
+      <SessionNotes
+        sessionNotes=""
+        setSessionNotes={setSessionNotes}
+        compactMode
+        setCompactMode={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /Load/i }));
+    expect(loadFile).toHaveBeenCalledWith('session_notes.txt');
+    expect(setSessionNotes).toHaveBeenCalledWith('loaded');
+  });
+
+  it('shows warning when persistence unavailable', async () => {
+    const originalStorage = window.localStorage;
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      value: undefined,
+    });
+    render(
+      <SessionNotes
+        sessionNotes=""
+        setSessionNotes={() => {}}
+        compactMode
+        setCompactMode={() => {}}
+      />,
+    );
+    expect(await screen.findByText(/Persistence unavailable/)).toBeInTheDocument();
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      value: originalStorage,
+    });
   });
 });

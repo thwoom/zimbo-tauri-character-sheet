@@ -14,6 +14,8 @@ import {
   FaFaceFrownOpen,
 } from 'react-icons/fa6';
 
+export const RULEBOOK = 'Dungeon World';
+
 export const INITIAL_CHARACTER_DATA = {
   // Basic Info
   level: 4,

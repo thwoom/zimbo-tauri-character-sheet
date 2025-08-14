@@ -52,7 +52,7 @@ export const INITIAL_CHARACTER_DATA = {
   ],
 
   // Status Conditions
-  statusEffects: [], // Keys: poisoned, shocked, burning, frozen, confused, weakened, blessed, invisible
+  statusEffects: [], // Keys: poisoned, burning, shocked, frozen, blessed, confused, weakened, invisible
   debilities: [], // Keys: weak, shaky, sick, stunned, confused, scarred
 
   // Equipment & Items

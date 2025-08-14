@@ -70,6 +70,9 @@
   --overlay-shocked-gold: rgba(169, 142, 98, 0.1);
   --overlay-frozen: rgba(var(--color-accent-rgb), 0.1);
   --overlay-blessed: rgba(251, 191, 36, 0.1);
+  --overlay-confused: rgba(110, 90, 163, 0.1);
+  --overlay-weakened: rgba(var(--color-neutral-rgb), 0.1);
+  --overlay-invisible: rgba(255, 255, 255, 0.05);
   --overlay-dark: rgba(0, 0, 0, 0.2);
   --overlay-darker: rgba(0, 0, 0, 0.3);
   --overlay-success: rgba(var(--color-success-rgb), 0.2);
@@ -185,6 +188,9 @@
   --overlay-shocked-gold: rgba(234, 179, 8, 0.1);
   --overlay-frozen: rgba(var(--color-accent-rgb), 0.1);
   --overlay-blessed: rgba(251, 191, 36, 0.1);
+  --overlay-confused: rgba(124, 58, 237, 0.1);
+  --overlay-weakened: rgba(var(--color-neutral-rgb), 0.1);
+  --overlay-invisible: rgba(255, 255, 255, 0.05);
   --overlay-dark: rgba(0, 0, 0, 0.2);
   --overlay-darker: rgba(0, 0, 0, 0.3);
   --overlay-success: rgba(var(--color-success-rgb), 0.2);
@@ -283,6 +289,9 @@
   --panel-bg: rgba(255, 255, 255, 0.15);
   --panel-border: rgba(39, 169, 161, 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.25);
+  --overlay-confused: rgba(143, 111, 214, 0.1);
+  --overlay-weakened: rgba(123, 123, 123, 0.1);
+  --overlay-invisible: rgba(255, 255, 255, 0.05);
   --overlay-dark: rgba(0, 0, 0, 0.2);
   --glow-shadow: rgba(39, 169, 161, 0.35);
   --glow-shadow-strong: rgba(39, 169, 161, 0.6);

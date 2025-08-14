@@ -15,9 +15,9 @@ export default function useStatusEffects(character, setCharacter) {
     shocked: 'shocked-overlay',
     frozen: 'frozen-overlay',
     blessed: 'blessed-overlay',
-    lowHp: 'low-hp-overlay',
-    stunned: 'stunned-overlay',
-    shielded: 'shielded-overlay',
+    confused: 'confused-overlay',
+    weakened: 'weakened-overlay',
+    invisible: 'invisible-overlay',
   };
 
   const getActiveVisualEffects = () => {

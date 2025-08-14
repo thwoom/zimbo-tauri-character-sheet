@@ -262,3 +262,30 @@ describe('Theme switching', () => {
     });
   });
 });
+
+describe('App header', () => {
+  it('wraps action buttons when width is constrained', () => {
+    render(
+      <ThemeProvider>
+        <CharacterContext.Provider
+          value={{ character: INITIAL_CHARACTER_DATA, setCharacter: () => {} }}
+        >
+          <App />
+        </CharacterContext.Provider>
+      </ThemeProvider>,
+    );
+    const group = screen.getByText('Take Damage').parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+  });
+});

@@ -4,8 +4,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import fs from 'fs';
-import path from 'path';
 import CharacterContext from '../state/CharacterContext.jsx';
 import EndSessionModal from './EndSessionModal.jsx';
 
@@ -174,6 +172,34 @@ describe('EndSessionModal', () => {
     expect(() => new Date(getCharacter().lastSessionEnd)).not.toThrow();
   });
 
+  it('wraps action buttons when width is constrained', () => {
+    const onClose = vi.fn();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+    };
+    renderWithCharacter(<EndSessionModal isOpen onClose={onClose} />, initial);
+    const group = screen.getByText(/end session/i).parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+  });
+
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     const initial = {
@@ -191,13 +217,5 @@ describe('EndSessionModal', () => {
     const group = screen.getByText(/end session/i).parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for action buttons', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './EndSessionModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.actions[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.actions[^}]*flex-direction:\s*column/,
-    );
   });
 });

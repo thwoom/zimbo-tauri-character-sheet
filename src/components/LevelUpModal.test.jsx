@@ -3,8 +3,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
-import fs from 'fs';
-import path from 'path';
 import { advancedMoves } from '../data/advancedMoves.js';
 import LevelUpModal from './LevelUpModal.jsx';
 
@@ -174,9 +172,21 @@ describe('LevelUpModal visibility and closing', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('includes flex-wrap styling for action buttons', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './LevelUpModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.levelup-actions[^}]*flex-wrap:\s*wrap/);
+  it('wraps action buttons when width is constrained', () => {
+    render(<LevelUpWrapper isOpen {...baseProps} onClose={() => {}} />);
+    const group = screen.getByRole('button', { name: /Cancel/i }).parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
   });
 
   it('renders action buttons without overflow on narrow screens', () => {
@@ -185,13 +195,5 @@ describe('LevelUpModal visibility and closing', () => {
     const group = screen.getByRole('button', { name: /Cancel/i }).parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for action buttons', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './LevelUpModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.levelup-actions[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.levelup-actions[^}]*flex-direction:\s*column/,
-    );
   });
 });

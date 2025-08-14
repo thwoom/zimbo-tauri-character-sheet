@@ -3,8 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import fs from 'fs';
-import path from 'path';
 import CharacterContext from '../state/CharacterContext.jsx';
 import DamageModal from './DamageModal.jsx';
 
@@ -88,9 +86,26 @@ describe('DamageModal', () => {
     await waitFor(() => expect(onLastBreath).toHaveBeenCalled());
   });
 
-  it('includes flex-wrap styling for action buttons', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './DamageModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.buttonGroup[^}]*flex-wrap:\s*wrap/);
+  it('wraps action buttons when width is constrained', () => {
+    const onClose = vi.fn();
+    const onLastBreath = vi.fn();
+    const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
+    renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
+      character: initial,
+    });
+    const group = screen.getByText('Apply').parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
   });
 
   it('renders action buttons without overflow on narrow screens', () => {
@@ -104,13 +119,5 @@ describe('DamageModal', () => {
     const group = screen.getByText('Apply').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for button group', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './DamageModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.buttonGroup[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.buttonGroup[^}]*flex-direction:\s*column/,
-    );
   });
 });

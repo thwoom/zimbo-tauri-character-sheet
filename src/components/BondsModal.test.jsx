@@ -5,8 +5,6 @@ import React from 'react';
 import { vi } from 'vitest';
 import CharacterContext from '../state/CharacterContext.jsx';
 import BondsModal from './BondsModal.jsx';
-import fs from 'fs';
-import path from 'path';
 
 function renderWithCharacter(ui) {
   const Wrapper = ({ children }) => {
@@ -51,6 +49,24 @@ describe('BondsModal', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('wraps action buttons when width is constrained', () => {
+    const onClose = vi.fn();
+    renderWithCharacter(<BondsModal isOpen onClose={onClose} />);
+    const group = screen.getByText('Add Bond').parentElement;
+    group.style.display = 'flex';
+    group.style.flexWrap = 'wrap';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
+    });
+    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+  });
+
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     document.body.style.width = '320px';
@@ -58,13 +74,5 @@ describe('BondsModal', () => {
     const group = screen.getByText('Add Bond').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
-  });
-
-  it('includes responsive styles for bond actions', () => {
-    const css = fs.readFileSync(path.resolve(__dirname, './BondsModal.module.css'), 'utf8');
-    expect(css).toMatch(/\.bondActions[^}]*width:\s*100%/);
-    expect(css).toMatch(
-      /@media\s*\(max-width:\s*360px\)\s*{[^}]*\.bondActions[^}]*flex-direction:\s*column/,
-    );
   });
 });

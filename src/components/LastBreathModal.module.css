@@ -44,8 +44,8 @@
   background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   border-radius: 6px;
-  color: var(--color-text);
-  padding: 8px 15px;
+  color: white;
+  padding: var(--space-sm) 15px;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;

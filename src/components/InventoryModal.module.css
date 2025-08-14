@@ -53,7 +53,7 @@
   position: absolute;
   background: var(--color-gray-800);
   color: var(--color-white);
-  padding: 4px 8px;
+  padding: 4px var(--space-sm);
   border-radius: 4px;
   top: 100%;
   left: 0;

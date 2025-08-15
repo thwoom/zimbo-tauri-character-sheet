@@ -36,7 +36,19 @@ export async function loadFile(name) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
-    input.onchange = () => {
+
+    const cleanup = () => {
+      input.removeEventListener('change', onChange);
+      input.removeEventListener('cancel', onCancel);
+    };
+
+    const onCancel = () => {
+      cleanup();
+      reject(new Error('File selection cancelled'));
+    };
+
+    const onChange = () => {
+      cleanup();
       const file = input.files && input.files[0];
       if (!file) {
         reject(new Error('No file selected'));
@@ -47,6 +59,9 @@ export async function loadFile(name) {
       reader.onerror = () => reject(reader.error);
       reader.readAsText(file);
     };
+
+    input.addEventListener('change', onChange);
+    input.addEventListener('cancel', onCancel);
     input.click();
   });
 }

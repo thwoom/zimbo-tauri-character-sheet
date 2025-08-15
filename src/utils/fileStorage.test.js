@@ -63,14 +63,21 @@ describe('fileStorage browser fallback', () => {
       type: 'application/json',
     });
 
-    const input = document.createElement('input');
-    Object.defineProperty(input, 'files', { value: [file] });
-    input.click = () => input.onchange();
+    const handlers = {};
+    const input = {
+      type: 'file',
+      accept: '',
+      addEventListener: vi.fn((event, handler) => {
+        handlers[event] = handler;
+      }),
+      removeEventListener: vi.fn(),
+      click: vi.fn(() => {
+        handlers.change();
+      }),
+      files: [file],
+    };
 
-    const createSpy = vi.spyOn(document, 'createElement').mockImplementation((tag) => {
-      if (tag === 'input') return input;
-      return document.createElement(tag);
-    });
+    const createSpy = vi.spyOn(document, 'createElement').mockReturnValue(input);
 
     const originalReader = global.FileReader;
     class MockReader {
@@ -86,5 +93,32 @@ describe('fileStorage browser fallback', () => {
     global.localStorage = originalStorage;
     createSpy.mockRestore();
     global.FileReader = originalReader;
+  });
+
+  it('rejects when file input dialog is cancelled', async () => {
+    const originalStorage = global.localStorage;
+    global.localStorage = { getItem: () => null };
+
+    const handlers = {};
+    const input = {
+      type: 'file',
+      accept: '',
+      addEventListener: vi.fn((event, handler) => {
+        handlers[event] = handler;
+      }),
+      removeEventListener: vi.fn(),
+      click: vi.fn(() => {
+        handlers.cancel();
+      }),
+    };
+
+    const createSpy = vi.spyOn(document, 'createElement').mockReturnValue(input);
+
+    await expect(loadFile('key')).rejects.toThrow('File selection cancelled');
+    expect(input.removeEventListener).toHaveBeenCalledWith('change', handlers.change);
+    expect(input.removeEventListener).toHaveBeenCalledWith('cancel', handlers.cancel);
+
+    global.localStorage = originalStorage;
+    createSpy.mockRestore();
   });
 });

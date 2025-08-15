@@ -4,6 +4,8 @@ import { FaMeteor } from 'react-icons/fa6';
 import useInventory from '../hooks/useInventory';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
+import Button from './common/Button.jsx';
+import ButtonGroup from './common/ButtonGroup.jsx';
 
 export default function DamageModal({ isOpen, onClose, onLastBreath }) {
   const { character, setCharacter } = useCharacter();
@@ -52,14 +54,12 @@ export default function DamageModal({ isOpen, onClose, onLastBreath }) {
           className={styles.input}
         />
         <div className={styles.summary}>After armor: {effectiveDamage()}</div>
-        <div className={styles.buttonGroup}>
-          <button onClick={applyDamage} className={`${styles.button} ${styles.applyButton}`}>
+        <ButtonGroup>
+          <Button onClick={applyDamage} className={styles.applyButton}>
             Apply
-          </button>
-          <button onClick={onClose} className={styles.button}>
-            Cancel
-          </button>
-        </div>
+          </Button>
+          <Button onClick={onClose}>Cancel</Button>
+        </ButtonGroup>
       </div>
     </div>
   );

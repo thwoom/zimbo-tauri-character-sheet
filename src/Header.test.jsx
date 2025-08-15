@@ -49,7 +49,7 @@ describe('Header responsiveness', () => {
     );
 
     const headerTop = container.querySelector(`.${styles.headerTop}`);
-    const buttonRow = container.querySelector(`.${styles.buttonRow}`);
+    const buttonRow = headerTop.querySelector('button').parentElement;
     const buttons = buttonRow.querySelectorAll('button');
     const lastButton = buttons[buttons.length - 1];
 

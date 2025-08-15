@@ -121,15 +121,14 @@ describe('DamageModal', () => {
       character: initial,
     });
     const group = screen.getByText('Apply').parentElement;
-    group.style.display = 'flex';
-    group.style.flexWrap = 'wrap';
+    group.style.display = 'grid';
     Object.defineProperty(group, 'clientHeight', {
       configurable: true,
       get() {
         return group.style.width === '120px' ? 60 : 30;
       },
     });
-    expect(getComputedStyle(group).flexWrap).toBe('wrap');
+    expect(getComputedStyle(group).display).toBe('grid');
     const initialHeight = group.clientHeight;
     group.style.width = '120px';
     expect(group.clientHeight).toBeGreaterThan(initialHeight);

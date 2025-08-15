@@ -1,50 +1,36 @@
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect, useRef } from 'react';
 import { INITIAL_CHARACTER_DATA } from './character';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
+
+const STORAGE_FILE = 'character.json';
 
 const CharacterContext = createContext();
 
 const createDefaultCharacter = () => ({ id: crypto.randomUUID(), ...INITIAL_CHARACTER_DATA });
 
 export const CharacterProvider = ({ children }) => {
-  const [characters, setCharacters] = useState([createDefaultCharacter()]);
-  const [selectedId, setSelectedId] = useState(characters[0].id);
+  const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
+  const initializedRef = useRef(false);
 
-  const character = useMemo(
-    () => characters.find((c) => c.id === selectedId),
-    [characters, selectedId],
-  );
-
-  const setCharacter = useCallback(
-    (update) => {
-      setCharacters((prev) =>
-        prev.map((c) => {
-          if (c.id !== selectedId) return c;
-          const updated = typeof update === 'function' ? update(c) : update;
-          return { ...updated, id: selectedId };
-        }),
-      );
-    },
-    [selectedId],
-  );
-
-  const addCharacter = useCallback((char) => {
-    const id = char.id || crypto.randomUUID();
-    setCharacters((prev) => [...prev, { ...char, id }]);
-    setSelectedId(id);
+  useEffect(() => {
+    loadFile(STORAGE_FILE)
+      .then((data) => {
+        if (data) {
+          setCharacter(JSON.parse(data));
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        initializedRef.current = true;
+      });
   }, []);
 
-  const value = useMemo(
-    () => ({
-      characters,
-      selectedId,
-      setSelectedId,
-      character,
-      setCharacter,
-      addCharacter,
-    }),
-    [characters, selectedId, character, setCharacter, addCharacter],
-  );
+  useEffect(() => {
+    if (!initializedRef.current) return;
+    saveFile(STORAGE_FILE, JSON.stringify(character)).catch(() => {});
+  }, [character]);
 
+  const value = useMemo(() => ({ character, setCharacter }), [character]);
   return <CharacterContext.Provider value={value}>{children}</CharacterContext.Provider>;
 };
 

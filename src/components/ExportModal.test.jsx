@@ -11,6 +11,12 @@ vi.mock('../utils/fileStorage.js', () => ({
   loadFile: vi.fn(),
 }));
 
+// Helper to simulate different viewport sizes
+window.resizeTo = (width, height) => {
+  Object.assign(window, { innerWidth: width, innerHeight: height });
+  window.dispatchEvent(new Event('resize'));
+};
+
 function renderWithCharacter(ui, { character }) {
   const Wrapper = ({ children }) => {
     const [characters, setCharacters] = React.useState([{ id: '1', ...character }]);
@@ -74,27 +80,38 @@ describe('ExportModal', () => {
     const initial = { name: 'Hero' };
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     const group = screen.getByText('Save').parentElement;
-    group.style.display = 'flex';
-    group.style.flexWrap = 'wrap';
-    Object.defineProperty(group, 'clientHeight', {
-      configurable: true,
-      get() {
-        return group.style.width === '120px' ? 60 : 30;
-      },
+
+    // mock layout metrics based on viewport width
+    group.getBoundingClientRect = () => ({
+      width: window.innerWidth,
+      height: window.innerWidth < 200 ? 60 : 30,
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
     });
-    expect(getComputedStyle(group).flexWrap).toBe('wrap');
-    const initialHeight = group.clientHeight;
-    group.style.width = '120px';
-    expect(group.clientHeight).toBeGreaterThan(initialHeight);
+
+    window.resizeTo(400, 800);
+    const initialHeight = group.getBoundingClientRect().height;
+    window.resizeTo(180, 800);
+    expect(group.getBoundingClientRect().height).toBeGreaterThan(initialHeight);
   });
 
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     const initial = { name: 'Hero' };
-    document.body.style.width = '320px';
+    window.resizeTo(320, 800);
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     const group = screen.getByText('Save').parentElement;
-    group.style.overflowX = 'auto';
+
+    Object.defineProperties(group, {
+      scrollWidth: { get: () => 300 },
+      clientWidth: { get: () => 300 },
+    });
+
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
   });
 });

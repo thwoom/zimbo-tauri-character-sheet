@@ -8,7 +8,12 @@ export default function Portrait() {
   const { getStatusEffectImage, getActiveVisualEffects } = useStatusEffects(character, () => {});
   return (
     <div className={`${styles.avatarContainer} ${getActiveVisualEffects()}`}>
-      <img src={getStatusEffectImage()} alt="Character portrait" className={styles.avatar} />
+      <img
+        src={getStatusEffectImage()}
+        alt="Character avatar"
+        className={styles.avatar}
+        tabIndex={2}
+      />
     </div>
   );
 }

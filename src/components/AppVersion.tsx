@@ -2,21 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { getVersion } from '@tauri-apps/api/app';
 
 function AppVersion() {
-  const [version, setVersion] = useState<string>('');
+  const [version, setVersion] = useState<string>('Version unavailable');
 
   useEffect(() => {
     let isMounted = true;
-    getVersion().then((v) => {
-      if (isMounted) setVersion(v);
-    });
+    const fetchVersion = async () => {
+      try {
+        const v = await getVersion();
+        if (isMounted) setVersion(v);
+      } catch {
+        if (isMounted) setVersion('Version unavailable');
+      }
+    };
+    fetchVersion();
     return () => {
       isMounted = false;
     };
   }, []);
-
-  if (!version) {
-    return null;
-  }
 
   return <div>Version: {version}</div>;
 }

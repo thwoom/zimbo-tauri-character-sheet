@@ -9,7 +9,16 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['node_modules', 'dist', 'build', 'coverage', '.next', '.out', 'storybook-static'],
+    ignores: [
+      'node_modules',
+      'dist',
+      'build',
+      'coverage',
+      '.next',
+      '.out',
+      'storybook-static',
+      'tests',
+    ],
   },
   js.configs.recommended,
   reactPlugin.configs.flat.recommended,
@@ -28,7 +37,6 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.vitest,
       },
     },
     settings: {
@@ -55,6 +63,9 @@ export default [
     files: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
     plugins: {
       vitest: vitestPlugin,
+    },
+    languageOptions: {
+      globals: vitestPlugin.configs.env.languageOptions.globals,
     },
     rules: {
       ...vitestPlugin.configs.recommended.rules,

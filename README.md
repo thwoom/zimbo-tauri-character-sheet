@@ -95,16 +95,10 @@ npm test
 
 ### End-to-end tests
 
-Build a debug bundle for Playwright to target:
+Build a debug bundle for end-to-end tests:
 
 ```bash
 npx tauri build --debug
-```
-
-Ensure Playwright's browsers are installed:
-
-```bash
-npx playwright install
 ```
 
 Run the end-to-end suite:

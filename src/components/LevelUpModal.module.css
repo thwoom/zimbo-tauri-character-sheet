@@ -16,7 +16,7 @@
 
 .modal {
   background: linear-gradient(135deg, var(--color-modal-bg), var(--color-modal-bg-secondary));
-  border: 2px solid var(--color-neon);
+  border: 2px solid var(--color-accent);
   border-radius: 15px;
   max-width: 700px;
   width: 100%;
@@ -26,7 +26,7 @@
 }
 
 .header {
-  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   padding: var(--hud-spacing);
   border-radius: 13px 13px 0 0;
   text-align: center;
@@ -78,7 +78,7 @@
 }
 
 .progressStep.complete {
-  color: var(--color-neon);
+  color: var(--color-accent);
 }
 
 .progressIcon {
@@ -94,7 +94,7 @@
 }
 
 .stepTitle {
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin-bottom: 10px;
   font-size: 1.2rem;
 }
@@ -125,9 +125,9 @@
 }
 
 .statButton.selected {
-  border-color: var(--color-neon);
+  border-color: var(--color-accent);
   background: rgba(0, 255, 136, 0.2);
-  color: var(--color-neon);
+  color: var(--color-accent);
 }
 
 .statButton.maxed {
@@ -163,7 +163,7 @@
   border: 1px solid rgba(0, 255, 136, 0.3);
   border-radius: var(--hud-radius-sm);
   font-size: 14px;
-  color: var(--color-neon);
+  color: var(--color-accent);
 }
 
 .selectedMove {
@@ -195,7 +195,7 @@
 }
 
 .moveButton.selected {
-  border-color: var(--color-neon);
+  border-color: var(--color-accent);
   background: rgba(0, 255, 136, 0.2);
 }
 
@@ -211,7 +211,7 @@
 
 .moveName {
   margin: 0;
-  color: var(--color-neon);
+  color: var(--color-accent);
   font-size: 14px;
   font-weight: bold;
 }
@@ -226,7 +226,7 @@
 .detailsButton {
   background: none;
   border: none;
-  color: var(--color-neon);
+  color: var(--color-accent);
   cursor: pointer;
   font-size: var(--font-size-sm);
   margin-left: var(--space-sm);
@@ -262,7 +262,7 @@
 }
 
 .button {
-  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   color: var(--color-white);
   padding: 10px 20px;
@@ -274,7 +274,7 @@
 }
 
 .buttonRolled {
-  background: linear-gradient(45deg, var(--color-neon-dark), var(--color-neon-darker));
+  background: linear-gradient(45deg, var(--color-accent-dark), var(--color-accent-darker));
 }
 
 .buttonCancel {
@@ -282,7 +282,7 @@
 }
 
 .buttonComplete {
-  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   font-size: 16px;
   padding: 12px 24px;
 }
@@ -299,7 +299,7 @@
 }
 
 .hpResult {
-  color: var(--color-neon);
+  color: var(--color-accent);
   font-weight: bold;
   margin-top: 4px;
 }
@@ -321,7 +321,7 @@
 }
 
 .summaryTitle {
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin: 0 0 10px;
   font-size: 1.1rem;
 }

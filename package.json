@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "test": "vitest run --exclude tests",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test tests/app.e2e.spec.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

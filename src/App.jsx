@@ -19,6 +19,8 @@ import Settings from './components/Settings.jsx';
 import CharacterSwitcher from './components/CharacterSwitcher.jsx';
 import AppVersion from './components/AppVersion.tsx';
 import DiagnosticOverlay from './components/DiagnosticOverlay.jsx';
+import Button from './components/common/Button.jsx';
+import ButtonGroup from './components/common/ButtonGroup.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
@@ -154,55 +156,43 @@ function App() {
                 )}
               </div>
             </div>
-            <div className={styles.buttonRow}>
-              <button
+            <ButtonGroup>
+              <Button
                 onClick={undoLastAction}
                 disabled={character.actionHistory.length === 0}
-                className={`${styles.button} ${styles.undoButton}`}
+                className={styles.undoButton}
                 title="Undo last action"
               >
                 <FaArrowRotateLeft className={styles.icon} /> Undo
-              </button>
-              <button
-                onClick={() => setShowDamageModal(true)}
-                className={`${styles.button} ${styles.damageButton}`}
-              >
+              </Button>
+              <Button onClick={() => setShowDamageModal(true)} className={styles.damageButton}>
                 <FaMeteor className={styles.icon} /> Take Damage
-              </button>
-              <button
-                onClick={() => setShowStatusModal(true)}
-                className={`${styles.button} ${styles.statusButton}`}
-              >
+              </Button>
+              <Button onClick={() => setShowStatusModal(true)} className={styles.statusButton}>
                 <FaRadiation className={styles.icon} /> Effects (
                 {statusEffects.length + debilities.length})
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setShowInventoryModal(true)}
-                className={`${styles.button} ${styles.inventoryButton}`}
+                className={styles.inventoryButton}
               >
                 <FaBoxOpen className={styles.icon} /> Inventory
-              </button>
-              <button
-                onClick={bondsModal.open}
-                className={`${styles.button} ${styles.bondsButton}`}
-              >
+              </Button>
+              <Button onClick={bondsModal.open} className={styles.bondsButton}>
                 <FaUserAstronaut className={styles.icon} /> Bonds (
                 {character.bonds.filter((b) => !b.resolved).length})
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setShowEndSessionModal(true)}
-                className={`${styles.button} ${styles.endSessionButton}`}
+                className={styles.endSessionButton}
               >
                 <FaFlagCheckered className={styles.icon} /> End Session
-              </button>
-              <button
-                onClick={() => setShowExportModal(true)}
-                className={`${styles.button} ${styles.exportButton}`}
-              >
+              </Button>
+              <Button onClick={() => setShowExportModal(true)} className={styles.exportButton}>
                 <FaSatellite className={styles.icon} /> Export/Save
-              </button>
+              </Button>
               <Settings />
-            </div>
+            </ButtonGroup>
           </div>
         </div>
 

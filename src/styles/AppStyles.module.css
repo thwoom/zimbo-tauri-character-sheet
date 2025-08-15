@@ -72,32 +72,11 @@
   vertical-align: middle;
 }
 
-.buttonRow {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
-}
-
-.button {
-  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
-  border: none;
-  border-radius: var(--hud-radius-sm);
-  color: white;
-  padding: var(--space-sm) 15px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: var(--hud-transition);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex: 1 1 150px;
 }
 
 .undoButton {
@@ -137,11 +116,6 @@
 @media (max-width: 768px) {
   .headerTop {
     flex-direction: column;
-  }
-
-  .buttonRow {
-    width: 100%;
-    justify-content: center;
   }
 }
 

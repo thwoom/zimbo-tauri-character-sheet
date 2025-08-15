@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './ExportModal.module.css';
+import Button from './common/Button.jsx';
+import ButtonGroup from './common/ButtonGroup.jsx';
 
 export default function ExportModal({ isOpen, onClose }) {
   const { character, addCharacter, selectedId } = useCharacter();
@@ -54,17 +56,11 @@ export default function ExportModal({ isOpen, onClose }) {
           className={styles.input}
         />
         {message && <div className={styles.message}>{message}</div>}
-        <div className={styles.buttonGroup}>
-          <button onClick={handleSave} className={styles.button}>
-            Save
-          </button>
-          <button onClick={handleLoad} className={styles.button}>
-            Load
-          </button>
-          <button onClick={onClose} className={styles.button}>
-            Close
-          </button>
-        </div>
+        <ButtonGroup>
+          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleLoad}>Load</Button>
+          <Button onClick={onClose}>Close</Button>
+        </ButtonGroup>
       </div>
     </div>
   );

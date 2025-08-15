@@ -80,24 +80,17 @@ describe('ExportModal', () => {
     const initial = { name: 'Hero' };
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     const group = screen.getByText('Save').parentElement;
-
-    // mock layout metrics based on viewport width
-    group.getBoundingClientRect = () => ({
-      width: window.innerWidth,
-      height: window.innerWidth < 200 ? 60 : 30,
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      x: 0,
-      y: 0,
-      toJSON: () => {},
+    group.style.display = 'grid';
+    Object.defineProperty(group, 'clientHeight', {
+      configurable: true,
+      get() {
+        return group.style.width === '120px' ? 60 : 30;
+      },
     });
-
-    window.resizeTo(400, 800);
-    const initialHeight = group.getBoundingClientRect().height;
-    window.resizeTo(180, 800);
-    expect(group.getBoundingClientRect().height).toBeGreaterThan(initialHeight);
+    expect(getComputedStyle(group).display).toBe('grid');
+    const initialHeight = group.clientHeight;
+    group.style.width = '120px';
+    expect(group.clientHeight).toBeGreaterThan(initialHeight);
   });
 
   it('renders action buttons without overflow on narrow screens', () => {

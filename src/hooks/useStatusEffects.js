@@ -51,6 +51,11 @@ export default function useStatusEffects(character, setCharacter) {
       .join(' ');
   };
 
+  const getStatusEffectImageLocal = () => {
+    const effect = statusEffects.find((e) => statusEffectImageMap[e]);
+    return statusEffectImageMap[effect] || statusEffectImageMap.default;
+  };
+
   const toggleStatusEffect = (effect) => {
     setCharacter((prev) => ({
       ...prev,
@@ -82,7 +87,7 @@ export default function useStatusEffects(character, setCharacter) {
     statusEffects,
     debilities,
     getActiveVisualEffects,
-    getStatusEffectImage: () => getStatusEffectImage(statusEffects),
+    getStatusEffectImage: getStatusEffectImageLocal,
     getHeaderColor,
     toggleStatusEffect,
     toggleDebility,

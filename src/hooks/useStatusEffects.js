@@ -3,6 +3,25 @@ import { headerGradients } from '../styles/colorMap.js';
 export const statusEffectImageMap = {
   default: '/avatars/default.svg',
   poisoned: '/avatars/poisoned.svg',
+  burning: '/avatars/default.svg',
+  shocked: '/avatars/default.svg',
+  frozen: '/avatars/default.svg',
+  blessed: '/avatars/default.svg',
+  lowHp: '/avatars/default.svg',
+  stunned: '/avatars/default.svg',
+  shielded: '/avatars/default.svg',
+};
+
+export const getStatusEffectImage = (statusEffects = []) => {
+  if (statusEffects.includes('poisoned')) return statusEffectImageMap.poisoned;
+  if (statusEffects.includes('burning')) return statusEffectImageMap.burning;
+  if (statusEffects.includes('shocked')) return statusEffectImageMap.shocked;
+  if (statusEffects.includes('frozen')) return statusEffectImageMap.frozen;
+  if (statusEffects.includes('blessed')) return statusEffectImageMap.blessed;
+  if (statusEffects.includes('lowHp')) return statusEffectImageMap.lowHp;
+  if (statusEffects.includes('stunned')) return statusEffectImageMap.stunned;
+  if (statusEffects.includes('shielded')) return statusEffectImageMap.shielded;
+  return statusEffectImageMap.default;
 };
 
 export default function useStatusEffects(character, setCharacter) {
@@ -68,5 +87,6 @@ export default function useStatusEffects(character, setCharacter) {
     getStatusEffectImage,
     toggleStatusEffect,
     toggleDebility,
+    getStatusEffectImage: () => getStatusEffectImage(statusEffects),
   };
 }

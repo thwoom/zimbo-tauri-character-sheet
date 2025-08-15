@@ -51,9 +51,14 @@
   color: var(--color-white);
   padding: 5px 10px;
   cursor: pointer;
-  margin-top: 10px;
+  flex: 1 1 150px;
 }
 
 .statusFooter {
   text-align: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }

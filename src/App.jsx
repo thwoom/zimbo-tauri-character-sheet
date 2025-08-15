@@ -27,6 +27,7 @@ import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
 import { useSettings } from './state/SettingsContext.jsx';
 import styles from './styles/AppStyles.module.css';
+import safeLocalStorage from './utils/safeLocalStorage.js';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -39,8 +40,8 @@ function App() {
 
   // UI State
   const bondsModal = useModal();
-  const [sessionNotes, setSessionNotes] = useState(
-    () => localStorage.getItem('sessionNotes') ?? 'My session note',
+  const [sessionNotes, setSessionNotes] = useState(() =>
+    safeLocalStorage.getItem('sessionNotes', 'My session note'),
   );
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -95,9 +96,9 @@ function App() {
   // Persist session notes
   useEffect(() => {
     if (sessionNotes) {
-      localStorage.setItem('sessionNotes', sessionNotes);
+      safeLocalStorage.setItem('sessionNotes', sessionNotes);
     } else {
-      localStorage.removeItem('sessionNotes');
+      safeLocalStorage.removeItem('sessionNotes');
     }
   }, [sessionNotes]);
 

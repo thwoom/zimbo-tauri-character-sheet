@@ -1,12 +1,12 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import App from './App.jsx';
-import styles from './styles/AppStyles.module.css';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
-import { ThemeProvider } from './state/ThemeContext.jsx';
 import { SettingsProvider } from './state/SettingsContext.jsx';
+import { ThemeProvider } from './state/ThemeContext.jsx';
+import styles from './styles/AppStyles.module.css';
 
 const Wrapper = ({ children }) => {
   const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);

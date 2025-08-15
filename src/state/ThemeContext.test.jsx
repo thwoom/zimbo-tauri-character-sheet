@@ -1,7 +1,9 @@
-/* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
+import safeLocalStorage from '../utils/safeLocalStorage.js';
+import { DEFAULT_THEME } from './theme.js';
+import { ThemeProvider, useTheme } from './ThemeContext.jsx';
 
 vi.mock('../utils/safeLocalStorage.js', () => ({
   default: {
@@ -9,10 +11,6 @@ vi.mock('../utils/safeLocalStorage.js', () => ({
     setItem: vi.fn(),
   },
 }));
-
-import safeLocalStorage from '../utils/safeLocalStorage.js';
-import { ThemeProvider, useTheme } from './ThemeContext.jsx';
-import { DEFAULT_THEME } from './theme.js';
 
 describe('ThemeContext', () => {
   let originalDocumentElement;

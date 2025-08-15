@@ -1,10 +1,9 @@
-/* eslint-env jest */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import InventoryPanel from './InventoryPanel.jsx';
 import useUndo from '../hooks/useUndo.js';
+import InventoryPanel from './InventoryPanel.jsx';
 
 describe('InventoryPanel', () => {
   it('uses consumable items and calls handlers', async () => {

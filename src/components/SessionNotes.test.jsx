@@ -1,11 +1,10 @@
-/* eslint-env jest */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
 import SessionNotes from './SessionNotes.jsx';
 import styles from './SessionNotes.module.css';
-import { saveFile, loadFile } from '../utils/fileStorage.js';
 
 vi.mock('../utils/fileStorage.js', () => ({
   saveFile: vi.fn(),

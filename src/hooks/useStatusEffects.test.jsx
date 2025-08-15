@@ -1,4 +1,3 @@
-/* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
 import { useState } from 'react';
 import useStatusEffects from './useStatusEffects.js';

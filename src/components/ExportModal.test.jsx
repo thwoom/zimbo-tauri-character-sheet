@@ -1,11 +1,10 @@
-/* eslint-env jest */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import CharacterContext from '../state/CharacterContext.jsx';
-import ExportModal from './ExportModal.jsx';
 import { loadFile } from '../utils/fileStorage.js';
+import ExportModal from './ExportModal.jsx';
 
 vi.mock('../utils/fileStorage.js', () => ({
   saveFile: vi.fn(),

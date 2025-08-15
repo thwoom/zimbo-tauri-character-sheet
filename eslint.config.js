@@ -4,6 +4,7 @@ import importPlugin from 'eslint-plugin-import';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
 
 export default [
@@ -27,7 +28,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.jest,
+        ...globals.vitest,
       },
     },
     settings: {
@@ -48,6 +49,15 @@ export default [
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    plugins: {
+      vitest: vitestPlugin,
+    },
+    rules: {
+      ...vitestPlugin.configs.recommended.rules,
     },
   },
   prettierConfig,

@@ -17,6 +17,7 @@ import SessionNotes from './components/SessionNotes.jsx';
 import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
 import AppVersion from './components/AppVersion.tsx';
+import DiagnosticOverlay from './components/DiagnosticOverlay.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
@@ -24,6 +25,7 @@ import useStatusEffects from './hooks/useStatusEffects.js';
 import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext.jsx';
+import { useSettings } from './state/SettingsContext.jsx';
 import styles from './styles/AppStyles.module.css';
 
 const PerformanceHud =
@@ -33,6 +35,7 @@ const PerformanceHud =
 
 function App() {
   const { character, setCharacter } = useCharacter();
+  const { showDiagnostics } = useSettings();
 
   // UI State
   const bondsModal = useModal();
@@ -47,6 +50,7 @@ function App() {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
+  const [hudMounted, setHudMounted] = useState(false);
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -202,7 +206,7 @@ function App() {
         {/* Main Grid Layout */}
         <div className={styles.grid}>
           {/* Avatar Panel */}
-          <CharacterHUD />
+          <CharacterHUD onMountChange={setHudMounted} />
 
           {/* Stats Panel */}
           <CharacterStats
@@ -246,6 +250,8 @@ function App() {
           />
         </div>
       </div>
+
+      {import.meta.env.DEV && showDiagnostics && <DiagnosticOverlay hudMounted={hudMounted} />}
 
       <GameModals
         character={character}

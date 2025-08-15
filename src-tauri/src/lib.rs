@@ -16,6 +16,7 @@ fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
         .ok_or_else(|| "failed to resolve application data directory".to_string())?
         .data_dir()
         .to_path_buf();
+    fs::create_dir_all(&base).map_err(|e| format!("failed to create data directory: {}", e))?;
     let joined = base.join(relative);
     let canonical_base = base.canonicalize().map_err(|e| e.to_string())?;
     let canonical = match joined.canonicalize() {
@@ -77,6 +78,7 @@ pub fn run() -> Result<(), tauri::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serial_test::serial;
 
     fn canonical_base() -> PathBuf {
         let base = ProjectDirs::from("", "", "zimbo-panel")
@@ -84,10 +86,12 @@ mod tests {
             .data_dir()
             .to_path_buf();
         fs::create_dir_all(&base).expect("failed to create data directory");
-        base.canonicalize().expect("failed to canonicalize base path")
+        base.canonicalize()
+            .expect("failed to canonicalize base path")
     }
 
     #[test]
+    #[serial]
     fn relative_paths_resolve() {
         let base = canonical_base();
         let file = base.join("exists.txt");
@@ -99,12 +103,14 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn invalid_paths_error() {
         assert!(resolve_app_path("/etc/passwd").is_err());
         assert!(resolve_app_path("foo/../bar.txt").is_err());
     }
 
     #[test]
+    #[serial]
     fn nonexistent_paths_resolve_parent() {
         let base = canonical_base();
         let subdir = base.join("subdir");
@@ -116,6 +122,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn write_and_read_file_roundtrip() {
         let base = canonical_base();
         let target = base.join("integration/test.txt");
@@ -128,5 +135,22 @@ mod tests {
         assert_eq!(contents, "hello");
 
         fs::remove_file(target).unwrap();
+    }
+
+    #[test]
+    #[serial]
+    fn creates_base_directory_if_missing() {
+        let base = ProjectDirs::from("", "", "zimbo-panel")
+            .expect("failed to resolve application data directory")
+            .data_dir()
+            .to_path_buf();
+        if base.exists() {
+            fs::remove_dir_all(&base).unwrap();
+        }
+
+        let expected = base.join("newfile.txt");
+        let resolved = resolve_app_path("newfile.txt").unwrap();
+        assert_eq!(resolved, expected);
+        assert!(base.exists());
     }
 }

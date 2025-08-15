@@ -82,7 +82,7 @@ export default function useStatusEffects(character, setCharacter) {
     statusEffects,
     debilities,
     getActiveVisualEffects,
-    getStatusEffectImage,
+    getStatusEffectImage: () => getStatusEffectImage(statusEffects),
     getHeaderColor,
     toggleStatusEffect,
     toggleDebility,

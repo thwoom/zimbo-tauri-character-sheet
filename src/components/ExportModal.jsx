@@ -1,14 +1,18 @@
 import { saveFile, loadFile } from '../utils/fileStorage.js';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './ExportModal.module.css';
 
 export default function ExportModal({ isOpen, onClose }) {
-  const { character, setCharacter } = useCharacter();
-  const [fileName, setFileName] = useState('character.json');
+  const { character, addCharacter, selectedId } = useCharacter();
+  const [fileName, setFileName] = useState(`character-${selectedId}.json`);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setFileName(`character-${selectedId}.json`);
+  }, [selectedId]);
 
   if (!isOpen) return null;
 
@@ -25,7 +29,11 @@ export default function ExportModal({ isOpen, onClose }) {
     try {
       const contents = await loadFile(fileName);
       const data = JSON.parse(contents);
-      setCharacter(data);
+      if (data.id) {
+        addCharacter(data);
+      } else {
+        addCharacter({ ...data });
+      }
       setMessage('Character loaded!');
     } catch (err) {
       setMessage('Failed to load.');

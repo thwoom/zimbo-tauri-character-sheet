@@ -9,9 +9,16 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 - **Inventory System** – Equip, consume, or drop items; calculates total armor and weapon damage.
 - **Session Notes** – Take persistent notes, switch between compact and full modes.
 - **Undo/History** – Reverse recent actions with a built-in undo system.
+- **Import/Export** – Save or load characters with the `ExportModal`.
 - **Visual Effects** – Status-based overlays (poisoned, burning, shocked, etc.).
-- **Theme Switching** – Select from cosmic, classic, or moebius themes.
+- **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
+
+## Saving and Loading a Character
+
+1. Click **Export/Import** in the toolbar.
+2. Choose **Export** to save the current character, for example `my-hero.json`.
+3. To load it later, reopen **Export/Import**, select **Import**, and pick the saved file.
 
 ## Settings
 

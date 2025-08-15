@@ -2,7 +2,7 @@
   "name": "zimbo-panel",
   "private": true,
   "version": "0.1.1",
-  "license": "MIT",
+  "license": "SEE LICENSE",
   "type": "module",
   "scripts": {
     "dev": "vite",

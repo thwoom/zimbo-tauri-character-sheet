@@ -15,7 +15,7 @@
 
 .modal {
   background: linear-gradient(135deg, var(--color-modal-bg), var(--color-modal-bg-secondary));
-  border: 2px solid var(--color-neon);
+  border: 2px solid var(--color-accent);
   border-radius: 15px;
   max-width: 500px;
   width: 100%;
@@ -37,7 +37,7 @@
 
 .title {
   font-size: 1.5rem;
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin: 0;
 }
 
@@ -65,7 +65,7 @@
 .result {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin-bottom: 15px;
 }
 
@@ -87,7 +87,7 @@
 }
 
 .button {
-  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   border-radius: var(--hud-radius-sm);
   color: var(--color-white);

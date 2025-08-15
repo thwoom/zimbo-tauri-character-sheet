@@ -8,7 +8,7 @@
 }
 
 .title {
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin-bottom: 15px;
   font-size: 1.3rem;
 }
@@ -23,11 +23,11 @@
   padding: var(--space-sm) 12px;
   margin: 5px 0;
   border-radius: var(--hud-radius-sm);
-  border-left: 3px solid var(--color-neon);
+  border-left: 3px solid var(--color-accent);
 }
 
 .equipped {
-  border-left-color: var(--color-emerald);
+  border-left-color: var(--color-success);
 }
 
 .itemRow {
@@ -73,7 +73,7 @@
 }
 
 .equippedMark {
-  color: var(--color-emerald);
+  color: var(--color-success);
   font-size: 0.7rem;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .useButton {
-  background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
+  background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
   border: none;
   color: var(--color-white);
   padding: 4px var(--space-sm);

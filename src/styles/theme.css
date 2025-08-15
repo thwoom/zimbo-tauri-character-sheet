@@ -135,6 +135,11 @@
   --accent-shadow: var(--glow-shadow);
 }
 :root[data-theme='classic'] {
+  --font-heading: 'Georgia', serif;
+  --font-body: 'Times New Roman', serif;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+
   --color-bg-start: #f0f0f0;
   --color-bg-end: #dcdcdc;
   --color-text: #222222;
@@ -249,6 +254,11 @@
 }
 
 :root[data-theme='moebius'] {
+  --font-heading: 'Trebuchet MS', sans-serif;
+  --font-body: 'Verdana', sans-serif;
+  --space-sm: 0.75rem;
+  --space-md: 1.5rem;
+
   --color-bg-start: #f2e9e4;
   --color-bg-end: #e4d2cc;
   --color-text: #2d2a26;

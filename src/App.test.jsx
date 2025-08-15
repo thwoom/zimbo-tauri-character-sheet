@@ -9,23 +9,17 @@ import { SettingsProvider } from './state/SettingsContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
 import './styles/theme.css';
 
-beforeEach(() => {
-  vi.spyOn(window, 'confirm').mockReturnValue(false);
-  vi.spyOn(window, 'prompt').mockReturnValue('0');
-});
-
-afterEach(() => {
-  window.confirm.mockRestore();
-  window.prompt.mockRestore();
-});
-
 let confirmSpy;
+let promptSpy;
+
 beforeEach(() => {
   confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+  promptSpy = vi.spyOn(window, 'prompt').mockReturnValue('0');
 });
 
 afterEach(() => {
   confirmSpy.mockRestore();
+  promptSpy.mockRestore();
 });
 
 const createWrapper = (initialCharacter, autoXpOnMiss) =>

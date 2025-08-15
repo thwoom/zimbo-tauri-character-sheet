@@ -16,7 +16,21 @@ This document provides a condensed, structured prompt for use with OpenAI’s **
   - Modals accept `character`, `setCharacter` and `onClose` props. They must open and close cleanly and handle escape key and outside clicks.
   - No external dependencies beyond React and Tauri APIs. Use built‑in hooks and modules only.
   - Test for edge cases: empty values, maximum values, invalid inputs and rapid user actions. Provide helpful error messages.
-- **Existing Components:** The main shell (`App.jsx`) implements character state management, dice rolling (2d6 + modifiers with Dungeon World rules), resource management, status effects framework, inventory system, undo/redo history, visual effects and roll history. Completed modals include `DiceRoller`, `ResourceTracker`, `StatBlock` and session notes. Future work includes `LevelUpModal`, `StatusEffectsModal`, `InventoryModal`, `DamageModal`, `BondsModal`, `ExportModal` and auto‑save.
+- **Existing Components:** The main shell (`App.jsx`) implements character state management, dice rolling (2d6 + modifiers with Dungeon World rules), resource management, status effects framework, inventory system, undo/redo history, visual effects and roll history. Completed modals include `DiceRoller`, `ResourceTracker`, `StatBlock`, session notes, `LevelUpModal`, `InventoryModal` and `StatusModal`. Future work includes `DamageModal`, `BondsModal`, `ExportModal` and auto‑save.
+
+## Completed Features
+
+### LevelUpModal
+
+Enables character advancement when experience reaches the required threshold. Players can boost attributes, pick an advanced move and roll for additional hit points. Level and experience values update automatically after saving.
+
+### InventoryModal
+
+Provides a full inventory management interface. Users can equip gear, consume items or drop them, with all changes reflected immutably in the character state.
+
+### StatusModal
+
+Offers controls for adding or clearing status effects. It integrates with the existing status effects framework and supports closing via escape key or outside clicks.
 
 ## Task Instruction Template
 
@@ -41,16 +55,14 @@ When asking Codex to implement a new feature or component, provide a concise des
 - [ ] No console errors during use.
 - [ ] Mobile responsive — scales gracefully on smaller window sizes.
 
-### Example: LevelUpModal
+### Example: DamageModal
 
-> **Current Task:** Build `LevelUpModal.jsx` for the ZIMBO Tauri App.  
-> **Purpose:** Implements character advancement when the player gains a level.  
-> **Requirements:**  
-> • Allow the user to increase one or two attribute scores and automatically recalculate their modifiers.  
-> • Present a list of available advanced moves (from `advancedMoves`) and let the user select one.  
-> • Roll new hit points (1d10 + CON modifier); update both `maxHp` and current `hp` accordingly.  
-> • Increment `level`, reset `xp` to 0 and recalc `xpNeeded` using `level + 7`.
-> • Include Save and Cancel buttons; update the main character state on save and close the modal on either action.  
-> **Acceptance Criteria:** The modal opens when triggered, performs all calculations correctly, updates the state immutably, provides clear feedback for invalid selections (e.g. no stat chosen), and closes gracefully.
+> **Current Task:** Build `DamageModal.jsx` for the ZIMBO Tauri App.
+> **Purpose:** Records damage taken and updates the character's hit points.
+> **Requirements:**
+> • Allow the user to input a damage value and optional notes.
+> • Subtract damage from `hp` without dropping below zero; flag when `hp` reaches zero.
+> • Provide Save and Cancel buttons; update the main character state on save and close the modal on either action.
+> **Acceptance Criteria:** The modal opens when triggered, applies damage immutably, handles invalid inputs gracefully and closes without errors.
 
 Use this template for each new component or feature you ask Codex to help implement.

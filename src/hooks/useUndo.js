@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import cloneDeep from '../utils/cloneDeep.js';
 
 export default function useUndo(character, setCharacter, setRollResult) {
   const timeoutRef = useRef(null);
@@ -15,7 +16,7 @@ export default function useUndo(character, setCharacter, setRollResult) {
     setCharacter((prev) => ({
       ...prev,
       actionHistory: [
-        { action, state: structuredClone(prev), timestamp: Date.now() },
+        { action, state: cloneDeep(prev), timestamp: Date.now() },
         ...prev.actionHistory.slice(0, 4),
       ],
     }));
@@ -24,7 +25,7 @@ export default function useUndo(character, setCharacter, setRollResult) {
   const undoLastAction = () => {
     if (character.actionHistory.length > 0) {
       const lastAction = character.actionHistory[0];
-      setCharacter(structuredClone(lastAction.state));
+      setCharacter(cloneDeep(lastAction.state));
       if (setRollResult) {
         setRollResult(`\u21B6 Undid: ${lastAction.action}`);
         timeoutRef.current = setTimeout(() => setRollResult('Ready to roll!'), 2000);

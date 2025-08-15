@@ -13,11 +13,34 @@ vi.mock('../utils/fileStorage.js', () => ({
 
 function renderWithCharacter(ui, { character }) {
   const Wrapper = ({ children }) => {
-    const [charState, setCharState] = React.useState(character);
+    const [characters, setCharacters] = React.useState([{ id: '1', ...character }]);
+    const [selectedId, setSelectedId] = React.useState('1');
+    const setCharacter = (update) => {
+      setCharacters((prev) =>
+        prev.map((c) => {
+          if (c.id !== selectedId) return c;
+          const next = typeof update === 'function' ? update(c) : update;
+          return { ...next, id: selectedId };
+        }),
+      );
+    };
+    const addCharacter = (char) => {
+      const id = char.id || String(characters.length + 1);
+      setCharacters((prev) => [...prev, { ...char, id }]);
+      setSelectedId(id);
+    };
+    const value = {
+      characters,
+      selectedId,
+      setSelectedId,
+      character: characters.find((c) => c.id === selectedId),
+      setCharacter,
+      addCharacter,
+    };
     return (
-      <CharacterContext.Provider value={{ character: charState, setCharacter: setCharState }}>
+      <CharacterContext.Provider value={value}>
         {children}
-        <div data-testid="name">{charState.name}</div>
+        <div data-testid="name">{value.character.name}</div>
       </CharacterContext.Provider>
     );
   };

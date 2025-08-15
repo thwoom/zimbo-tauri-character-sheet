@@ -16,6 +16,7 @@ import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
 import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
+import CharacterSwitcher from './components/CharacterSwitcher.jsx';
 import AppVersion from './components/AppVersion.tsx';
 import DiagnosticOverlay from './components/DiagnosticOverlay.jsx';
 import useDiceRoller from './hooks/useDiceRoller';
@@ -122,6 +123,7 @@ function App() {
         {/* Header */}
         <div className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
+            <CharacterSwitcher />
             <div>
               {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
               <h1 className={styles.title} tabIndex={1}>

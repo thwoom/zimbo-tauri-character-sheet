@@ -6,10 +6,10 @@ export default function ResourceBars({ primary, secondary, shield }) {
   const [showPercent, setShowPercent] = useState(false);
 
   const prevPrimary = useRef(primary.current);
-  const prevSecondary = useRef(secondary.current);
+  const prevSecondary = useRef(secondary?.current ?? 0);
 
   const primaryPercent = Math.min(100, (primary.current / primary.max) * 100);
-  const secondaryPercent = Math.min(100, (secondary.current / secondary.max) * 100);
+  const secondaryPercent = secondary ? Math.min(100, (secondary.current / secondary.max) * 100) : 0;
   const shieldPercent = shield ? Math.min(100, (shield.current / primary.max) * 100) : 0;
 
   const [primaryChip, setPrimaryChip] = useState(primaryPercent);
@@ -29,6 +29,8 @@ export default function ResourceBars({ primary, secondary, shield }) {
   }, [primary.current, primary.max, primaryPercent]);
 
   useEffect(() => {
+    if (!secondary) return;
+
     if (secondary.current < prevSecondary.current) {
       setSecondaryChip((prevSecondary.current / secondary.max) * 100);
       requestAnimationFrame(() => setSecondaryChip(secondaryPercent));
@@ -39,7 +41,7 @@ export default function ResourceBars({ primary, secondary, shield }) {
       setSecondaryChip(secondaryPercent);
     }
     prevSecondary.current = secondary.current;
-  }, [secondary.current, secondary.max, secondaryPercent]);
+  }, [secondary?.current, secondary?.max, secondaryPercent, secondary]);
 
   const renderBar = (percent, chip, prev, current, max, type, includeShield) => (
     <div
@@ -85,15 +87,16 @@ export default function ResourceBars({ primary, secondary, shield }) {
         'primary',
         true,
       )}
-      {renderBar(
-        secondaryPercent,
-        secondaryChip,
-        prevSecondary,
-        secondary.current,
-        secondary.max,
-        'secondary',
-        false,
-      )}
+      {secondary &&
+        renderBar(
+          secondaryPercent,
+          secondaryChip,
+          prevSecondary,
+          secondary.current,
+          secondary.max,
+          'secondary',
+          false,
+        )}
     </div>
   );
 }
@@ -106,7 +109,7 @@ ResourceBars.propTypes = {
   secondary: PropTypes.shape({
     current: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
-  }).isRequired,
+  }),
   shield: PropTypes.shape({
     current: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
@@ -114,5 +117,6 @@ ResourceBars.propTypes = {
 };
 
 ResourceBars.defaultProps = {
+  secondary: null,
   shield: null,
 };

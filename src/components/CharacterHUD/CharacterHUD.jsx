@@ -21,11 +21,15 @@ export default function CharacterHUD({ onMountChange = () => {} }) {
       <Portrait />
       <ResourceBars
         primary={{ current: character.hp, max: character.maxHp }}
-        secondary={{
-          current: character.secondaryResource,
-          max: character.maxSecondaryResource,
-        }}
-        shield={{ current: character.shield, max: character.maxHp }}
+        secondary={
+          character.maxSecondaryResource > 0
+            ? {
+                current: character.secondaryResource,
+                max: character.maxSecondaryResource,
+              }
+            : null
+        }
+        shield={character.shield > 0 ? { current: character.shield, max: character.maxHp } : null}
       />
       <StatusTray />
       <CastIndicator />

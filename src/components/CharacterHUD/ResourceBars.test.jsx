@@ -29,4 +29,10 @@ describe('ResourceBars', () => {
     render(<ResourceBars {...defaultProps} />);
     expect(screen.getByTestId('shield-bar')).toBeInTheDocument();
   });
+
+  it('renders without NaN when secondary resource is absent', () => {
+    render(<ResourceBars primary={{ current: 50, max: 100 }} />);
+    expect(screen.getAllByRole('progressbar')).toHaveLength(1);
+    expect(screen.queryByText(/NaN/)).toBeNull();
+  });
 });

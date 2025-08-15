@@ -1,9 +1,18 @@
 /* eslint-env jest */
-import { renderHook, act, render } from '@testing-library/react';
+import { renderHook, act, render, waitFor } from '@testing-library/react';
 import React from 'react';
-import { vi } from 'vitest';
+import { vi, afterEach } from 'vitest';
 import { INITIAL_CHARACTER_DATA } from './character.js';
 import { CharacterProvider, useCharacter } from './CharacterContext.jsx';
+
+vi.mock('../utils/fileStorage.js', () => ({
+  saveFile: vi.fn(() => Promise.resolve()),
+  loadFile: vi.fn(() => Promise.resolve(null)),
+}));
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('CharacterContext', () => {
   const wrapper = ({ children }) => <CharacterProvider>{children}</CharacterProvider>;
@@ -44,5 +53,34 @@ describe('CharacterContext', () => {
     expect(childRender).toHaveBeenCalledTimes(1);
     rerender(<Parent count={1} />);
     expect(childRender).toHaveBeenCalledTimes(1);
+  });
+
+  it('loads saved character on mount', async () => {
+    const saved = { ...INITIAL_CHARACTER_DATA, hp: 5 };
+    const { loadFile } = await import('../utils/fileStorage.js');
+    loadFile.mockResolvedValueOnce(JSON.stringify(saved));
+
+    const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => expect(result.current.character).toEqual(saved));
+    expect(loadFile).toHaveBeenCalledWith('character.json');
+  });
+
+  it('saves character to disk when it changes', async () => {
+    const { loadFile, saveFile } = await import('../utils/fileStorage.js');
+    loadFile.mockRejectedValueOnce(new Error('missing'));
+
+    const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => expect(loadFile).toHaveBeenCalled());
+
+    act(() => {
+      result.current.setCharacter((prev) => ({ ...prev, hp: 42 }));
+    });
+
+    await waitFor(() => {
+      expect(saveFile).toHaveBeenCalledWith(
+        'character.json',
+        JSON.stringify({ ...INITIAL_CHARACTER_DATA, hp: 42 }),
+      );
+    });
   });
 });

@@ -1,10 +1,33 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect, useRef } from 'react';
 import { INITIAL_CHARACTER_DATA } from './character';
+import { saveFile, loadFile } from '../utils/fileStorage.js';
+
+const STORAGE_FILE = 'character.json';
 
 const CharacterContext = createContext();
 
 export const CharacterProvider = ({ children }) => {
   const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    loadFile(STORAGE_FILE)
+      .then((data) => {
+        if (data) {
+          setCharacter(JSON.parse(data));
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        initializedRef.current = true;
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!initializedRef.current) return;
+    saveFile(STORAGE_FILE, JSON.stringify(character)).catch(() => {});
+  }, [character]);
+
   const value = useMemo(() => ({ character, setCharacter }), [character]);
   return <CharacterContext.Provider value={value}>{children}</CharacterContext.Provider>;
 };

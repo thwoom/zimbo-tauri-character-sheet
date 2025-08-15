@@ -4,7 +4,7 @@ import { useSettings } from '../state/SettingsContext.jsx';
 
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();
-  const { autoXpOnMiss, setAutoXpOnMiss } = useSettings();
+  const { autoXpOnMiss, setAutoXpOnMiss, showDiagnostics, setShowDiagnostics } = useSettings();
 
   return (
     <div>
@@ -25,6 +25,17 @@ const Settings = () => {
         />{' '}
         Auto XP on miss
       </label>
+      {import.meta.env.DEV && (
+        <label htmlFor="show-diagnostics">
+          <input
+            id="show-diagnostics"
+            type="checkbox"
+            checked={showDiagnostics}
+            onChange={(e) => setShowDiagnostics(e.target.checked)}
+          />{' '}
+          Show diagnostics overlay
+        </label>
+      )}
     </div>
   );
 };

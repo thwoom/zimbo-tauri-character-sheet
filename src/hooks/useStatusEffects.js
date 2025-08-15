@@ -5,6 +5,11 @@ export const statusEffectImageMap = {
   poisoned: '/avatars/poisoned.svg',
 };
 
+export const getStatusEffectImage = (statusEffects = []) => {
+  const effect = statusEffects.find((e) => statusEffectImageMap[e]);
+  return statusEffectImageMap[effect] || statusEffectImageMap.default;
+};
+
 export default function useStatusEffects(character, setCharacter) {
   const statusEffects = character.statusEffects;
   const debilities = character.debilities;
@@ -25,11 +30,6 @@ export default function useStatusEffects(character, setCharacter) {
       .filter(([effect]) => statusEffects.includes(effect))
       .map(([, cssClass]) => cssClass)
       .join(' ');
-  };
-
-  const getStatusEffectImage = () => {
-    const effect = statusEffects.find((e) => statusEffectImageMap[e]);
-    return statusEffectImageMap[effect] || statusEffectImageMap.default;
   };
 
   const toggleStatusEffect = (effect) => {
@@ -65,7 +65,6 @@ export default function useStatusEffects(character, setCharacter) {
     getActiveVisualEffects,
     getStatusEffectImage: () => getStatusEffectImage(statusEffects),
     getHeaderColor,
-    getStatusEffectImage,
     toggleStatusEffect,
     toggleDebility,
   };

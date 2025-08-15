@@ -11,10 +11,20 @@ describe('Settings', () => {
     const user = userEvent.setup();
     const setTheme = vi.fn();
     const setAutoXpOnMiss = vi.fn();
+    const setShowDiagnostics = vi.fn();
+
+    import.meta.env.DEV = 'true';
 
     render(
       <ThemeContext.Provider value={{ theme: 'light', setTheme, themes: ['light', 'dark'] }}>
-        <SettingsContext.Provider value={{ autoXpOnMiss: false, setAutoXpOnMiss }}>
+        <SettingsContext.Provider
+          value={{
+            autoXpOnMiss: false,
+            setAutoXpOnMiss,
+            showDiagnostics: false,
+            setShowDiagnostics,
+          }}
+        >
           <Settings />
         </SettingsContext.Provider>
       </ThemeContext.Provider>,
@@ -25,5 +35,10 @@ describe('Settings', () => {
 
     await user.click(screen.getByLabelText(/Auto XP on miss/i));
     expect(setAutoXpOnMiss).toHaveBeenCalledWith(true);
+
+    await user.click(screen.getByLabelText(/Show diagnostics overlay/i));
+    expect(setShowDiagnostics).toHaveBeenCalledWith(true);
+
+    delete import.meta.env.DEV;
   });
 });

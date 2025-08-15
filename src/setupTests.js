@@ -7,6 +7,10 @@ if (!globalThis.crypto) {
   globalThis.crypto = webcrypto;
 }
 
+if (!globalThis.requestAnimationFrame) {
+  globalThis.requestAnimationFrame = (cb) => setTimeout(cb, 0);
+}
+
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn().mockResolvedValue('0.0.0'),
 }));

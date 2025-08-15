@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
-import './LevelUpModal.module.css';
+import styles from './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
 import { scoreToMod } from '../utils/score.js';
 import Message from './Message.jsx';
@@ -191,10 +191,10 @@ const LevelUpModal = ({
         isSelected);
 
     return [
-      'levelup-stat-button',
-      isSelected && 'selected',
-      isMaxed && 'maxed',
-      !isSelected && !canSelect && 'disabled',
+      styles.statButton,
+      isSelected && styles.selected,
+      isMaxed && styles.maxed,
+      !isSelected && !canSelect && styles.disabled,
     ]
       .filter(Boolean)
       .join(' ');
@@ -202,7 +202,7 @@ const LevelUpModal = ({
 
   const moveButtonClass = (moveId) => {
     const isSelected = levelUpState.selectedMove === moveId;
-    return ['levelup-move-button', isSelected && 'selected'].filter(Boolean).join(' ');
+    return [styles.moveButton, isSelected && styles.selected].filter(Boolean).join(' ');
   };
 
   const handleOverlayClick = (e) => {
@@ -224,7 +224,7 @@ const LevelUpModal = ({
   return (
     /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
     <div
-      className="levelup-overlay"
+      className={styles.overlay}
       onClick={handleOverlayClick}
       onKeyDown={handleOverlayKeyDown}
       aria-label="Close"
@@ -232,56 +232,56 @@ const LevelUpModal = ({
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
         ref={modalRef}
-        className="levelup-modal"
+        className={styles.modal}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
       >
         {/* Header */}
-        <div className="levelup-header">
-          <h2 className="levelup-header-title">LEVEL UP!</h2>
-          <p className="levelup-header-text">
+        <div className={styles.header}>
+          <h2 className={styles.headerTitle}>LEVEL UP!</h2>
+          <p className={styles.headerText}>
             {character.name} advances to Level {levelUpState.newLevel}
           </p>
-          <button onClick={onClose} className="levelup-close-button" aria-label="Close modal">
+          <button onClick={onClose} className={styles.closeButton} aria-label="Close modal">
             ×
           </button>
         </div>
 
-        <div className="levelup-content">
+        <div className={styles.content}>
           {/* Progress Indicator */}
-          <div className="levelup-progress">
+          <div className={styles.progress}>
             <div
-              className={`levelup-progress-step ${levelUpState.selectedStats.length > 0 ? 'complete' : ''}`}
+              className={`${styles.progressStep} ${levelUpState.selectedStats.length > 0 ? styles.complete : ''}`}
             >
-              <div className="levelup-progress-icon">
+              <div className={styles.progressIcon}>
                 {levelUpState.selectedStats.length > 0 ? '✅' : '1️⃣'}
               </div>
-              <div className="levelup-progress-label">Stats</div>
-            </div>
-            <div className={`levelup-progress-step ${levelUpState.selectedMove ? 'complete' : ''}`}>
-              <div className="levelup-progress-icon">{levelUpState.selectedMove ? '✅' : '2️⃣'}</div>
-              <div className="levelup-progress-label">Move</div>
+              <div className={styles.progressLabel}>Stats</div>
             </div>
             <div
-              className={`levelup-progress-step ${levelUpState.hpIncrease > 0 ? 'complete' : ''}`}
+              className={`${styles.progressStep} ${levelUpState.selectedMove ? styles.complete : ''}`}
             >
-              <div className="levelup-progress-icon">
-                {levelUpState.hpIncrease > 0 ? '✅' : '3️⃣'}
-              </div>
-              <div className="levelup-progress-label">HP</div>
+              <div className={styles.progressIcon}>{levelUpState.selectedMove ? '✅' : '2️⃣'}</div>
+              <div className={styles.progressLabel}>Move</div>
+            </div>
+            <div
+              className={`${styles.progressStep} ${levelUpState.hpIncrease > 0 ? styles.complete : ''}`}
+            >
+              <div className={styles.progressIcon}>{levelUpState.hpIncrease > 0 ? '✅' : '3️⃣'}</div>
+              <div className={styles.progressLabel}>HP</div>
             </div>
           </div>
 
           {/* Step 1: Stat Selection */}
-          <div className="levelup-step">
-            <h3 className="levelup-step-title">📊 Step 1: Increase Ability Scores</h3>
-            <p className="levelup-step-desc">
+          <div className={styles.step}>
+            <h3 className={styles.stepTitle}>📊 Step 1: Increase Ability Scores</h3>
+            <p className={styles.stepDesc}>
               Choose 1 stat (max 18) or 2 stats if both are under 16:
             </p>
 
-            <div className="levelup-stat-grid">
+            <div className={styles.statGrid}>
               {Object.entries(character.stats).map(([stat, data]) => (
                 <button
                   key={stat}
@@ -293,12 +293,12 @@ const LevelUpModal = ({
                       levelUpState.selectedStats.length >= 2)
                   }
                 >
-                  <div className="levelup-stat-name">{stat}</div>
-                  <div className="levelup-stat-score">
+                  <div className={styles.statName}>{stat}</div>
+                  <div className={styles.statScore}>
                     {data.score} → {data.score >= 18 ? data.score : data.score + 1}
                     {data.score >= 18 && ' (MAX)'}
                   </div>
-                  <div className="levelup-stat-mod">
+                  <div className={styles.statMod}>
                     ({data.mod >= 0 ? '+' : ''}
                     {data.mod} →{' '}
                     {Math.floor((Math.min(18, data.score + 1) - 10) / 2) >= 0 ? '+' : ''}
@@ -309,20 +309,20 @@ const LevelUpModal = ({
             </div>
 
             {levelUpState.selectedStats.length > 0 && (
-              <div className="levelup-selected-box">
+              <div className={styles.selectedBox}>
                 Selected: {levelUpState.selectedStats.join(', ')}
               </div>
             )}
           </div>
 
           {/* Step 2: Advanced Move Selection */}
-          <div className="levelup-step">
-            <h3 className="levelup-step-title">⚔️ Step 2: Choose Advanced Move</h3>
-            <div className="levelup-move-list">
+          <div className={styles.step}>
+            <h3 className={styles.stepTitle}>⚔️ Step 2: Choose Advanced Move</h3>
+            <div className={styles.moveList}>
               {Object.entries(advancedMoves)
                 .filter(([id]) => !character.selectedMoves.includes(id))
                 .map(([id, move]) => (
-                  <div key={id} className="levelup-move-wrapper">
+                  <div key={id} className={styles.moveWrapper}>
                     <div
                       onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
                       className={moveButtonClass(id)}
@@ -333,10 +333,10 @@ const LevelUpModal = ({
                         setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
                       }
                     >
-                      <div className="levelup-move-header">
-                        <div className="levelup-move-text">
-                          <h4 className="levelup-move-name">{move.name}</h4>
-                          <p className="levelup-move-desc">{move.desc}</p>
+                      <div className={styles.moveHeader}>
+                        <div className={styles.moveText}>
+                          <h4 className={styles.moveName}>{move.name}</h4>
+                          <p className={styles.moveDesc}>{move.desc}</p>
                         </div>
                         <button
                           type="button"
@@ -344,7 +344,7 @@ const LevelUpModal = ({
                             e.stopPropagation();
                             setShowMoveDetails(showMoveDetails === id ? '' : id);
                           }}
-                          className="levelup-details-button"
+                          className={styles.detailsButton}
                         >
                           {showMoveDetails === id ? '▲' : '▼'}
                         </button>
@@ -353,9 +353,9 @@ const LevelUpModal = ({
 
                     {/* Expanded move details */}
                     {showMoveDetails === id && (
-                      <div className="levelup-move-details">
-                        <p className="levelup-move-expanded">{move.expanded}</p>
-                        <div className="levelup-move-examples">
+                      <div className={styles.moveDetails}>
+                        <p className={styles.moveExpanded}>{move.expanded}</p>
+                        <div className={styles.moveExamples}>
                           <strong>Examples:</strong>
                           <br />
                           {move.examples}
@@ -367,38 +367,38 @@ const LevelUpModal = ({
             </div>
 
             {levelUpState.selectedMove && (
-              <div className="levelup-selected-box levelup-selected-move">
+              <div className={`${styles.selectedBox} ${styles.selectedMove}`}>
                 Selected: {advancedMoves[levelUpState.selectedMove].name}
               </div>
             )}
           </div>
 
           {/* Step 3: HP Rolling */}
-          <div className="levelup-step">
-            <h3 className="levelup-step-title">❤️ Step 3: Roll for Hit Points</h3>
-            <div className="levelup-hp-container">
+          <div className={styles.step}>
+            <h3 className={styles.stepTitle}>❤️ Step 3: Roll for Hit Points</h3>
+            <div className={styles.hpContainer}>
               <button
                 onClick={rollHPIncrease}
-                className={`levelup-button ${levelUpState.hpIncrease > 0 ? 'levelup-button-rolled' : ''}`}
+                className={`${styles.button} ${levelUpState.hpIncrease > 0 ? styles.buttonRolled : ''}`}
                 disabled={levelUpState.hpIncrease > 0}
               >
                 {levelUpState.hpIncrease > 0 ? '✅ HP Rolled' : '🎲 Roll d10 + CON'}
               </button>
 
-              <div className="levelup-hp-text">
+              <div className={styles.hpText}>
                 Roll d10 + CON ({character.stats.CON.mod >= 0 ? '+' : ''}
                 {character.stats.CON.mod}) for HP increase
                 {levelUpState.hpIncrease > 0 && (
-                  <div className="levelup-hp-result">Result: +{levelUpState.hpIncrease} HP</div>
+                  <div className={styles.hpResult}>Result: +{levelUpState.hpIncrease} HP</div>
                 )}
               </div>
             </div>
           </div>
 
           {/* Summary & Complete Button */}
-          <div className={`levelup-summary ${isComplete ? 'complete' : 'incomplete'}`}>
-            <h4 className="levelup-summary-title">Level Up Summary</h4>
-            <div className="levelup-summary-details">
+          <div className={`${styles.summary} ${isComplete ? styles.complete : styles.incomplete}`}>
+            <h4 className={styles.summaryTitle}>Level Up Summary</h4>
+            <div className={styles.summaryDetails}>
               <div>
                 Level: {character.level} → {levelUpState.newLevel}
               </div>
@@ -419,15 +419,15 @@ const LevelUpModal = ({
               </div>
             </div>
 
-            <div className="levelup-actions">
-              <button onClick={onClose} className="levelup-button levelup-button-cancel">
+            <div className={styles.actions}>
+              <button onClick={onClose} className={`${styles.button} ${styles.buttonCancel}`}>
                 Cancel
               </button>
 
               <button
                 onClick={completeLevelUp}
                 disabled={!isComplete}
-                className={`levelup-button levelup-button-complete ${!isComplete ? 'levelup-button-disabled' : ''}`}
+                className={`${styles.button} ${styles.buttonComplete} ${!isComplete ? styles.buttonDisabled : ''}`}
               >
                 🚀 Complete Level Up!
               </button>

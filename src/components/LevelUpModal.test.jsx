@@ -1,10 +1,12 @@
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+import React, { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { advancedMoves } from '../data/advancedMoves.js';
+import CharacterStats from './CharacterStats.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
+import styles from './LevelUpModal.module.css';
 
 function LevelUpWrapper({ isOpen, ...props }) {
   return isOpen ? <LevelUpModal {...props} /> : null;
@@ -248,5 +250,69 @@ describe('LevelUpModal visibility and closing', () => {
     const group = screen.getByRole('button', { name: /Cancel/i }).parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('opens via level up trigger with overlay and modal styles', async () => {
+    const character = {
+      name: 'Test',
+      level: 1,
+      stats: {
+        STR: { score: 10, mod: 0 },
+        DEX: { score: 10, mod: 0 },
+        CON: { score: 10, mod: 0 },
+        INT: { score: 10, mod: 0 },
+        WIS: { score: 10, mod: 0 },
+        CHA: { score: 10, mod: 0 },
+      },
+      hp: 10,
+      maxHp: 10,
+      xp: 8,
+      xpNeeded: 8,
+      resources: { chronoUses: 0 },
+      selectedMoves: [],
+    };
+
+    const levelUpState = {
+      selectedStats: [],
+      selectedMove: '',
+      hpIncrease: 0,
+      newLevel: 2,
+      expandedMove: '',
+    };
+
+    function Wrapper() {
+      const [showLevelUpModal, setShowLevelUpModal] = useState(false);
+      return (
+        <>
+          <CharacterStats
+            character={character}
+            setCharacter={() => {}}
+            saveToHistory={() => {}}
+            totalArmor={0}
+            setShowLevelUpModal={setShowLevelUpModal}
+            setRollResult={() => {}}
+          />
+          {showLevelUpModal && (
+            <LevelUpModal
+              character={character}
+              setCharacter={() => {}}
+              levelUpState={levelUpState}
+              setLevelUpState={() => {}}
+              onClose={() => setShowLevelUpModal(false)}
+              rollDie={() => 1}
+              setRollResult={() => {}}
+            />
+          )}
+        </>
+      );
+    }
+
+    const user = userEvent.setup();
+    render(<Wrapper />);
+    await user.click(screen.getByRole('button', { name: /LEVEL UP AVAILABLE!/i }));
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
+    expect(modal).toHaveClass(styles.modal);
+    expect(modal.parentElement).toHaveClass(styles.overlay);
   });
 });

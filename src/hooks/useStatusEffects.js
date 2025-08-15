@@ -13,18 +13,6 @@ export const statusEffectImageMap = {
 };
 
 export const getStatusEffectImage = (statusEffects = []) => {
-  if (statusEffects.includes('poisoned')) return statusEffectImageMap.poisoned;
-  if (statusEffects.includes('burning')) return statusEffectImageMap.burning;
-  if (statusEffects.includes('shocked')) return statusEffectImageMap.shocked;
-  if (statusEffects.includes('frozen')) return statusEffectImageMap.frozen;
-  if (statusEffects.includes('blessed')) return statusEffectImageMap.blessed;
-  if (statusEffects.includes('lowHp')) return statusEffectImageMap.lowHp;
-  if (statusEffects.includes('stunned')) return statusEffectImageMap.stunned;
-  if (statusEffects.includes('shielded')) return statusEffectImageMap.shielded;
-  return statusEffectImageMap.default;
-};
-
-export const getStatusEffectImage = (statusEffects = []) => {
   const effect = statusEffects.find((e) => statusEffectImageMap[e]);
   return statusEffectImageMap[effect] || statusEffectImageMap.default;
 };

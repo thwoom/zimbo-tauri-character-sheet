@@ -1,15 +1,13 @@
-/* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
-import useDiceRoller from './useDiceRoller.js';
 import { SettingsProvider } from '../state/SettingsContext.jsx';
 import * as diceUtils from '../utils/dice.js';
+import useDiceRoller from './useDiceRoller.js';
 
-const getWrapper =
-  (autoXpOnMiss) =>
-  ({ children }) => (
-    <SettingsProvider initialAutoXpOnMiss={autoXpOnMiss}>{children}</SettingsProvider>
-  );
+const getWrapper = (autoXpOnMiss) =>
+  function Wrapper({ children }) {
+    return <SettingsProvider initialAutoXpOnMiss={autoXpOnMiss}>{children}</SettingsProvider>;
+  };
 const wrapper = getWrapper(false);
 
 beforeEach(() => {

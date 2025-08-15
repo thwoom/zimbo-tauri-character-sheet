@@ -5,8 +5,8 @@ import App from './App.jsx';
 import Settings from './components/Settings.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
-import { ThemeProvider } from './state/ThemeContext.jsx';
 import { SettingsProvider } from './state/SettingsContext.jsx';
+import { ThemeProvider } from './state/ThemeContext.jsx';
 import './styles/theme.css';
 
 beforeEach(() => {
@@ -28,9 +28,8 @@ afterEach(() => {
   confirmSpy.mockRestore();
 });
 
-const createWrapper =
-  (initialCharacter, autoXpOnMiss) =>
-  ({ children }) => {
+const createWrapper = (initialCharacter, autoXpOnMiss) =>
+  function Wrapper({ children }) {
     const [character, setCharacter] = React.useState(initialCharacter);
     return (
       <ThemeProvider>

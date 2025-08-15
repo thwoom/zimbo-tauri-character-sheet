@@ -1,9 +1,8 @@
-/* eslint-env jest */
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
+import { SettingsProvider } from '../state/SettingsContext.jsx';
 import * as diceUtils from '../utils/dice.js';
 import useDiceRoller from './useDiceRoller.js';
-import { SettingsProvider } from '../state/SettingsContext.jsx';
 
 const wrapper = ({ children }) => (
   <SettingsProvider initialAutoXpOnMiss={false}>{children}</SettingsProvider>

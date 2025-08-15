@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { render, waitFor } from '@testing-library/react';
+import React, { useEffect, useState } from 'react';
 import usePerformanceMetrics from './usePerformanceMetrics.js';
 
 function TestComponent({ onUpdate }) {
@@ -9,7 +9,7 @@ function TestComponent({ onUpdate }) {
   useEffect(() => {
     onUpdate({ ...metrics.current });
     if (count === 0) setCount(1);
-  });
+  }, [onUpdate, metrics, count]);
 
   return null;
 }

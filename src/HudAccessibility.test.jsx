@@ -5,8 +5,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
-import { ThemeProvider } from './state/ThemeContext.jsx';
 import { SettingsProvider } from './state/SettingsContext.jsx';
+import { ThemeProvider } from './state/ThemeContext.jsx';
 
 function renderApp(overrides = {}) {
   const initialCharacter = { ...INITIAL_CHARACTER_DATA, ...overrides };

@@ -1,11 +1,10 @@
-/* eslint-env jest */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import StatusModal from './StatusModal.jsx';
-import useUndo from '../hooks/useUndo.js';
 import useStatusEffects from '../hooks/useStatusEffects.js';
+import useUndo from '../hooks/useUndo.js';
+import StatusModal from './StatusModal.jsx';
 
 function StatusWrapper({ isOpen, ...props }) {
   return isOpen ? <StatusModal {...props} /> : null;

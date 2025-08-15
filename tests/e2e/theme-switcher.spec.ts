@@ -1,7 +1,7 @@
-import { _electron as electron, test, expect } from '@playwright/test';
-import path from 'path';
 import { spawnSync } from 'child_process';
+import path from 'path';
 import { fileURLToPath } from 'url';
+import { _electron as electron, test, expect } from '@playwright/test';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

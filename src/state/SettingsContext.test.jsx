@@ -1,6 +1,5 @@
-/* eslint-env jest */
-import React from 'react';
 import { renderHook, act } from '@testing-library/react';
+import React from 'react';
 import { SettingsProvider, useSettings } from './SettingsContext.jsx';
 
 describe('SettingsContext', () => {

@@ -6,3 +6,8 @@ if (!globalThis.crypto) {
 }
 
 import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
+
+vi.mock('@tauri-apps/api/app', () => ({
+  getVersion: vi.fn().mockResolvedValue('0.0.0'),
+}));

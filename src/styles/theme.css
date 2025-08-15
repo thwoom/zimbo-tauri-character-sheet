@@ -38,6 +38,8 @@
   --color-neutral: #6b7280;
   --color-neutral-dark: #374151;
   --color-neutral-rgb: 107, 114, 128;
+  --color-gray-800: #1f2937;
+  --color-white: #ffffff;
 
   /* semantic tokens */
   --color-danger: #b84f5e;
@@ -156,6 +158,8 @@
   --color-neutral: #6b7280;
   --color-neutral-dark: #4b5563;
   --color-neutral-rgb: 107, 114, 128;
+  --color-gray-800: #4b5563;
+  --color-white: #ffffff;
 
   /* semantic tokens */
   --color-danger: #b91c1c;
@@ -248,6 +252,8 @@
   --color-bg-start: #f2e9e4;
   --color-bg-end: #e4d2cc;
   --color-text: #2d2a26;
+  --color-gray-800: #4a4a4a;
+  --color-white: #ffffff;
 
   /* HUD layout tokens */
   --hud-radius: 0.75rem;

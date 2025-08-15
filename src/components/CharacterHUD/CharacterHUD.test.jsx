@@ -33,6 +33,29 @@ describe('CharacterHUD', () => {
     expect(screen.getByText('Fireball')).toBeInTheDocument();
   });
 
+  it('omits secondary resource bar when secondary values are zero', () => {
+    const character = {
+      name: 'Zimbo',
+      hp: 10,
+      maxHp: 20,
+      secondaryResource: 0,
+      maxSecondaryResource: 0,
+      shield: 0,
+      statusEffects: [],
+      castName: '',
+      castProgress: 0,
+    };
+
+    render(
+      <CharacterContext.Provider value={{ character, setCharacter: () => {} }}>
+        <CharacterHUD />
+      </CharacterContext.Provider>,
+    );
+
+    expect(screen.getAllByRole('progressbar')).toHaveLength(1);
+    expect(screen.queryByText(/NaN/)).toBeNull();
+  });
+
   it('calls onMountChange when mounted', async () => {
     const onMountChange = vi.fn();
     const character = {

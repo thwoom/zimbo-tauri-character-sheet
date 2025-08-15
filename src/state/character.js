@@ -25,6 +25,8 @@ export const INITIAL_CHARACTER_DATA = {
   xpNeeded: 11, // Formula: level + 7
   levelUpPending: false,
   armor: 0,
+  secondaryResource: 0,
+  maxSecondaryResource: 0,
 
   // Attributes
   stats: {

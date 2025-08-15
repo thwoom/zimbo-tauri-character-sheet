@@ -14,6 +14,9 @@ Run these checks before submitting changes:
 
 - `npm run lint` – lint all source files.
 - `npm test` – execute the test suite with Vitest when code changes.
+- `npm run format:check` – verify Prettier formatting.
+- `npm run test:e2e` – run end-to-end tests.
+- `npm run build` – confirm the app builds successfully.
 
 ## Pull Request Conventions
 

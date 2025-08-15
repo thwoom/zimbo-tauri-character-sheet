@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
+import useUndo from '../hooks/useUndo.js';
 import CharacterContext from '../state/CharacterContext.jsx';
 import DamageModal from './DamageModal.jsx';
 
@@ -84,6 +85,32 @@ describe('DamageModal', () => {
     await user.click(screen.getByText('Apply'));
 
     await waitFor(() => expect(onLastBreath).toHaveBeenCalled());
+  });
+
+  it('undo restores hp after damage', async () => {
+    const user = userEvent.setup();
+    function Wrapper() {
+      const [character, setCharacter] = React.useState({
+        hp: 10,
+        armor: 0,
+        inventory: [],
+        actionHistory: [],
+      });
+      const { undoLastAction } = useUndo(character, setCharacter);
+      return (
+        <CharacterContext.Provider value={{ character, setCharacter }}>
+          <DamageModal isOpen onClose={() => {}} onLastBreath={() => {}} />
+          <div data-testid="hp">{character.hp}</div>
+          <button onClick={undoLastAction}>Undo</button>
+        </CharacterContext.Provider>
+      );
+    }
+    render(<Wrapper />);
+    await user.type(screen.getByPlaceholderText('Incoming damage'), '3');
+    await user.click(screen.getByText('Apply'));
+    await waitFor(() => expect(screen.getByTestId('hp')).toHaveTextContent('7'));
+    await user.click(screen.getByText('Undo'));
+    expect(screen.getByTestId('hp')).toHaveTextContent('10');
   });
 
   it('wraps action buttons when width is constrained', () => {

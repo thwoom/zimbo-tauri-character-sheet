@@ -25,7 +25,7 @@ export default function DamageModal({ isOpen, onClose, onLastBreath }) {
     setCharacter((prev) => ({
       ...prev,
       actionHistory: [
-        { action: 'HP Change', state: prev, timestamp: Date.now() },
+        { action: 'HP Change', state: structuredClone(prev), timestamp: Date.now() },
         ...prev.actionHistory.slice(0, 4),
       ],
       hp: newHp,

@@ -1,14 +1,14 @@
 .panel {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--panel-bg);
   backdrop-filter: blur(10px);
   border-radius: var(--hud-radius);
   padding: var(--hud-spacing);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 32px var(--panel-shadow);
 }
 
 .title {
-  color: var(--color-neon);
+  color: var(--color-accent);
   margin-bottom: 15px;
   font-size: 1.3rem;
 }
@@ -19,15 +19,15 @@
 }
 
 .item {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--overlay-darker);
   padding: var(--space-sm) 12px;
   margin: 5px 0;
   border-radius: var(--hud-radius-sm);
-  border-left: 3px solid var(--color-neon);
+  border-left: 3px solid var(--color-accent);
 }
 
 .equipped {
-  border-left-color: var(--color-emerald);
+  border-left-color: var(--color-success);
 }
 
 .itemRow {
@@ -73,7 +73,7 @@
 }
 
 .equippedMark {
-  color: var(--color-emerald);
+  color: var(--color-success);
   font-size: 0.7rem;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .useButton {
-  background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
+  background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
   border: none;
   color: var(--color-white);
   padding: 4px var(--space-sm);
@@ -95,7 +95,7 @@
 .debilitiesSection {
   margin-top: 15px;
   padding-top: var(--hud-spacing-sm);
-  border-top: 1px solid rgba(0, 255, 136, 0.3);
+  border-top: 1px solid var(--panel-border);
 }
 
 .debilitiesTitle {

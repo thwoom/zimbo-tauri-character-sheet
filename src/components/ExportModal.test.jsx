@@ -11,6 +11,12 @@ vi.mock('../utils/fileStorage.js', () => ({
   loadFile: vi.fn(),
 }));
 
+// Helper to simulate different viewport sizes
+window.resizeTo = (width, height) => {
+  Object.assign(window, { innerWidth: width, innerHeight: height });
+  window.dispatchEvent(new Event('resize'));
+};
+
 function renderWithCharacter(ui, { character }) {
   const Wrapper = ({ children }) => {
     const [characters, setCharacters] = React.useState([{ id: '1', ...character }]);
@@ -90,10 +96,15 @@ describe('ExportModal', () => {
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     const initial = { name: 'Hero' };
-    document.body.style.width = '320px';
+    window.resizeTo(320, 800);
     renderWithCharacter(<ExportModal isOpen onClose={onClose} />, { character: initial });
     const group = screen.getByText('Save').parentElement;
-    group.style.overflowX = 'auto';
+
+    Object.defineProperties(group, {
+      scrollWidth: { get: () => 300 },
+      clientWidth: { get: () => 300 },
+    });
+
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
   });
 });

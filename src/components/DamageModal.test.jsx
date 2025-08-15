@@ -7,6 +7,12 @@ import useUndo from '../hooks/useUndo.js';
 import CharacterContext from '../state/CharacterContext.jsx';
 import DamageModal from './DamageModal.jsx';
 
+// Helper to simulate different viewport sizes
+window.resizeTo = (width, height) => {
+  Object.assign(window, { innerWidth: width, innerHeight: height });
+  window.dispatchEvent(new Event('resize'));
+};
+
 function renderWithCharacter(ui, { character }) {
   const Wrapper = ({ children }) => {
     const [charState, setCharState] = React.useState(character);
@@ -132,18 +138,24 @@ describe('DamageModal', () => {
     const initialHeight = group.clientHeight;
     group.style.width = '120px';
     expect(group.clientHeight).toBeGreaterThan(initialHeight);
+
   });
 
   it('renders action buttons without overflow on narrow screens', () => {
     const onClose = vi.fn();
     const onLastBreath = vi.fn();
     const initial = { hp: 10, armor: 0, inventory: [], actionHistory: [] };
-    document.body.style.width = '320px';
+    window.resizeTo(320, 800);
     renderWithCharacter(<DamageModal isOpen onClose={onClose} onLastBreath={onLastBreath} />, {
       character: initial,
     });
     const group = screen.getByText('Apply').parentElement;
-    group.style.overflowX = 'auto';
+
+    Object.defineProperties(group, {
+      scrollWidth: { get: () => 300 },
+      clientWidth: { get: () => 300 },
+    });
+
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
   });
 });

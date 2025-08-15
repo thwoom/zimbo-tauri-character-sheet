@@ -13,7 +13,7 @@
 
 .modal {
   background: var(--color-modal-bg);
-  border: 2px solid var(--color-neon);
+  border: 2px solid var(--color-accent);
   border-radius: 15px;
   padding: 30px;
   text-align: center;
@@ -23,7 +23,7 @@
 }
 
 .title {
-  color: var(--color-neon);
+  color: var(--color-accent);
 }
 
 .empty {
@@ -66,7 +66,7 @@
 }
 
 .button {
-  background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
   border: none;
   border-radius: var(--hud-radius-sm);
   color: var(--color-white);
@@ -78,7 +78,7 @@
 }
 
 .resolveButton {
-  background: linear-gradient(45deg, var(--color-emerald), var(--color-emerald-dark));
+  background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
 }
 
 .unresolveButton {
@@ -91,7 +91,7 @@
 
 .input {
   background: var(--color-modal-bg-dark);
-  border: 1px solid var(--color-neon);
+  border: 1px solid var(--color-accent);
   border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   padding: var(--space-sm);

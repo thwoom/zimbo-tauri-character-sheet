@@ -11,7 +11,7 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 - **Undo/History** – Reverse recent actions with a built-in undo system.
 - **Import/Export** – Save or load characters with the `ExportModal`.
 - **Visual Effects** – Status-based overlays (poisoned, burning, shocked, etc.).
-- **Theme Switching** – Select from cosmic, classic, or moebius themes.
+- **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
 
 ## Saving and Loading a Character

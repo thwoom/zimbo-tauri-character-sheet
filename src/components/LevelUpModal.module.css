@@ -271,6 +271,7 @@
   font-weight: bold;
   transition: var(--hud-transition);
   font-size: 14px;
+  flex: 1 1 150px;
 }
 
 .buttonRolled {

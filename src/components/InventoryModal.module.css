@@ -73,6 +73,7 @@
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
+  gap: 6px;
 }
 
 @media (max-width: 360px) {
@@ -88,7 +89,7 @@
   color: var(--color-white);
   padding: 5px 10px;
   cursor: pointer;
-  margin: 3px;
+  flex: 1 1 150px;
 }
 
 .inventoryClose {

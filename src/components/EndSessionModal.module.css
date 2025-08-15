@@ -76,6 +76,7 @@
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
+  gap: 10px;
 }
 
 @media (max-width: 360px) {
@@ -98,7 +99,7 @@
   cursor: pointer;
   font-weight: bold;
   transition: var(--hud-transition);
-  margin: 5px;
+  flex: 1 1 150px;
 }
 
 .cancelButton {

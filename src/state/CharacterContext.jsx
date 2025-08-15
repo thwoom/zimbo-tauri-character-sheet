@@ -6,6 +6,8 @@ const STORAGE_FILE = 'character.json';
 
 const CharacterContext = createContext();
 
+const createDefaultCharacter = () => ({ id: crypto.randomUUID(), ...INITIAL_CHARACTER_DATA });
+
 export const CharacterProvider = ({ children }) => {
   const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
   const initializedRef = useRef(false);

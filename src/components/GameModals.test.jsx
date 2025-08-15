@@ -50,6 +50,7 @@ const baseProps = {
   showEndSessionModal: false,
   setShowEndSessionModal: () => {},
   bondsModal: { isOpen: false, close: () => {} },
+  saveToHistory: () => {},
 };
 
 const renderModals = (props) =>

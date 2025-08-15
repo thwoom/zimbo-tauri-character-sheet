@@ -5,7 +5,11 @@ import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';
 
-export default function useDiceRoller(character, setCharacter) {
+export default function useDiceRoller(
+  character,
+  setCharacter,
+  saveToHistoryRef = { current: () => {} },
+) {
   const { autoXpOnMiss } = useSettings();
   const [rollResult, setRollResult] = useState('Ready to roll!');
   const [rollModalData, setRollModalData] = useState({});
@@ -230,6 +234,7 @@ export default function useDiceRoller(character, setCharacter) {
       originalInterpretation = interpretation;
 
       if (originalTotal < 7 && xpOnMiss) {
+        saveToHistoryRef.current('XP Change');
         setCharacter((prev) => ({
           ...prev,
           xp: prev.xp + 1,

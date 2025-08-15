@@ -34,9 +34,9 @@ export default function useStatusEffects(character, setCharacter) {
     shocked: 'shocked-overlay',
     frozen: 'frozen-overlay',
     blessed: 'blessed-overlay',
-    lowHp: 'low-hp-overlay',
-    stunned: 'stunned-overlay',
-    shielded: 'shielded-overlay',
+    confused: 'confused-overlay',
+    weakened: 'weakened-overlay',
+    invisible: 'invisible-overlay',
   };
 
   const getActiveVisualEffects = () => {
@@ -44,6 +44,11 @@ export default function useStatusEffects(character, setCharacter) {
       .filter(([effect]) => statusEffects.includes(effect))
       .map(([, cssClass]) => cssClass)
       .join(' ');
+  };
+
+  const getStatusEffectImage = () => {
+    const effect = statusEffects.find((e) => statusEffectImageMap[e]);
+    return statusEffectImageMap[effect] || statusEffectImageMap.default;
   };
 
   const toggleStatusEffect = (effect) => {
@@ -77,7 +82,9 @@ export default function useStatusEffects(character, setCharacter) {
     statusEffects,
     debilities,
     getActiveVisualEffects,
+    getStatusEffectImage: () => getStatusEffectImage(statusEffects),
     getHeaderColor,
+    getStatusEffectImage,
     toggleStatusEffect,
     toggleDebility,
     getStatusEffectImage: () => getStatusEffectImage(statusEffects),

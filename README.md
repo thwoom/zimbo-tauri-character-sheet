@@ -10,7 +10,24 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 - **Session Notes** – Take persistent notes, switch between compact and full modes.
 - **Undo/History** – Reverse recent actions with a built-in undo system.
 - **Visual Effects** – Status-based overlays (poisoned, burning, shocked, etc.).
+- **Theme Switching** – Select from cosmic, classic, or moebius themes.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
+
+## Settings
+
+Open the Settings panel from the toolbar to customize your experience:
+
+- **Theme** – Switch between cosmic, classic, or moebius. The choice is saved for future sessions.
+- **Auto XP on miss** – Enable this checkbox to automatically gain XP when a roll misses. Uncheck to track XP manually.
+
+## Performance HUD (development only)
+
+To display render metrics in the bottom-right corner while developing:
+
+1. Create a `.env` file with `VITE_SHOW_PERFORMANCE_HUD=true`.
+2. Run `npm run dev`.
+
+The overlay appears during development builds only and is ignored in production.
 
 ## Getting Started
 

@@ -10,6 +10,7 @@ const StatusModal = ({
   onToggleStatusEffect,
   onToggleDebility,
   onClose,
+  saveToHistory,
 }) => {
   return (
     <div className={styles.statusOverlay}>
@@ -24,7 +25,10 @@ const StatusModal = ({
                   <input
                     type="checkbox"
                     checked={statusEffects.includes(key)}
-                    onChange={() => onToggleStatusEffect(key)}
+                    onChange={() => {
+                      saveToHistory('Status Change');
+                      onToggleStatusEffect(key);
+                    }}
                   />{' '}
                   {statusEffectTypes[key].name}
                 </label>
@@ -41,7 +45,10 @@ const StatusModal = ({
                   <input
                     type="checkbox"
                     checked={debilities.includes(key)}
-                    onChange={() => onToggleDebility(key)}
+                    onChange={() => {
+                      saveToHistory('Debility Change');
+                      onToggleDebility(key);
+                    }}
                   />{' '}
                   {debilityTypes[key].name}
                 </label>
@@ -67,6 +74,7 @@ StatusModal.propTypes = {
   onToggleStatusEffect: PropTypes.func.isRequired,
   onToggleDebility: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  saveToHistory: PropTypes.func.isRequired,
 };
 
 export default StatusModal;

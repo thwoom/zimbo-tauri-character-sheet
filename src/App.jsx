@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import './App.css';
 import {
   FaMeteor,
@@ -16,6 +16,7 @@ import InventoryPanel from './components/InventoryPanel.jsx';
 import SessionNotes from './components/SessionNotes.jsx';
 import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
 import Settings from './components/Settings.jsx';
+import AppVersion from './components/AppVersion.tsx';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
@@ -56,6 +57,7 @@ function App() {
   });
   const [levelUpState, setLevelUpState] = useState(getDefaultLevelUpState);
 
+  const saveToHistoryRef = useRef(() => {});
   const {
     rollResult,
     setRollResult,
@@ -66,7 +68,7 @@ function App() {
     aidModal,
     rollDie,
     clearRollHistory,
-  } = useDiceRoller(character, setCharacter);
+  } = useDiceRoller(character, setCharacter, saveToHistoryRef);
 
   const { totalArmor, equippedWeaponDamage, handleEquipItem, handleConsumeItem, handleDropItem } =
     useInventory(character, setCharacter);
@@ -96,6 +98,7 @@ function App() {
   }, [sessionNotes]);
 
   const { saveToHistory, undoLastAction } = useUndo(character, setCharacter, setRollResult);
+  saveToHistoryRef.current = saveToHistory;
 
   const {
     statusEffects,
@@ -231,6 +234,7 @@ function App() {
             setCharacter={setCharacter}
             rollDie={rollDie}
             setRollResult={setRollResult}
+            saveToHistory={saveToHistory}
           />
 
           {/* Session Notes Panel */}
@@ -273,12 +277,14 @@ function App() {
         showEndSessionModal={showEndSessionModal}
         setShowEndSessionModal={setShowEndSessionModal}
         bondsModal={bondsModal}
+        saveToHistory={saveToHistory}
       />
       {PerformanceHud && (
         <Suspense fallback={null}>
           <PerformanceHud />
         </Suspense>
       )}
+      <AppVersion />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
 import useDiceRoller from './useDiceRoller.js';
 import { SettingsProvider } from '../state/SettingsContext.jsx';
+import * as diceUtils from '../utils/dice.js';
 
 const getWrapper =
   (autoXpOnMiss) =>
@@ -147,7 +148,9 @@ describe('useDiceRoller aid/interfere', () => {
       .mockReturnValueOnce(3)
       .mockReturnValueOnce(3)
       .mockReturnValueOnce(4);
-    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter));
+    const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), {
+      wrapper,
+    });
     await act(async () => {
       const p = result.current.rollDice('2d6', 'test');
       await Promise.resolve();

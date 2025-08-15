@@ -299,3 +299,59 @@ describe('App header', () => {
     expect(group.clientHeight).toBeGreaterThan(initialHeight);
   });
 });
+
+describe('storage resilience', () => {
+  it('falls back to default session note if getItem fails', () => {
+    localStorage.removeItem('sessionNotes');
+    const getItemMock = vi.spyOn(window.localStorage, 'getItem').mockImplementation(() => {
+      throw new Error('fail');
+    });
+    const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.getByPlaceholderText(/Track important events/i).value).toBe('My session note');
+
+    getItemMock.mockRestore();
+  });
+
+  it('ignores storage errors when saving session notes', () => {
+    localStorage.removeItem('sessionNotes');
+    const setItemMock = vi.spyOn(window.localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('fail');
+    });
+    const removeItemMock = vi.spyOn(window.localStorage, 'removeItem').mockImplementation(() => {
+      throw new Error('fail');
+    });
+    const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+
+    render(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const textarea = screen.getByPlaceholderText(/Track important events/i);
+
+    expect(() => {
+      act(() => {
+        fireEvent.change(textarea, { target: { value: 'New note' } });
+      });
+    }).not.toThrow();
+    expect(textarea.value).toBe('New note');
+
+    expect(() => {
+      act(() => {
+        fireEvent.change(textarea, { target: { value: '' } });
+      });
+    }).not.toThrow();
+    expect(textarea.value).toBe('');
+
+    setItemMock.mockRestore();
+    removeItemMock.mockRestore();
+  });
+});

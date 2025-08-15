@@ -103,6 +103,59 @@ describe('LevelUpModal XP calculation', () => {
   });
 });
 
+describe('LevelUpModal stat modifier', () => {
+  it('sets modifier to +3 when increasing score from 17 to 18', () => {
+    let character = {
+      name: 'Test',
+      level: 1,
+      stats: {
+        STR: { score: 17, mod: 2 },
+        DEX: { score: 10, mod: 0 },
+        CON: { score: 10, mod: 0 },
+        INT: { score: 10, mod: 0 },
+        WIS: { score: 10, mod: 0 },
+        CHA: { score: 10, mod: 0 },
+      },
+      maxHp: 10,
+      hp: 10,
+      xp: 8,
+      xpNeeded: 8,
+      selectedMoves: [],
+      actionHistory: [],
+      levelUpPending: true,
+    };
+
+    const levelUpState = {
+      selectedStats: ['STR'],
+      selectedMove: 'appetite',
+      hpIncrease: 1,
+      newLevel: 2,
+      expandedMove: '',
+    };
+
+    const setCharacter = (fn) => {
+      character = fn(character);
+    };
+
+    render(
+      <LevelUpModal
+        character={character}
+        setCharacter={setCharacter}
+        levelUpState={levelUpState}
+        setLevelUpState={() => {}}
+        onClose={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+      />,
+    );
+
+    const completeButton = screen.getByRole('button', { name: /Complete Level Up/i });
+    fireEvent.click(completeButton);
+
+    expect(character.stats.STR.mod).toBe(3);
+  });
+});
+
 describe('LevelUpModal visibility and closing', () => {
   const character = {
     name: 'Test',

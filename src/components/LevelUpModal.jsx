@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
+import { scoreToMod } from '../utils/score.js';
 import Message from './Message.jsx';
 
 const LevelUpModal = ({
@@ -127,7 +128,7 @@ const LevelUpModal = ({
     levelUpState.selectedStats.forEach((stat) => {
       newStats[stat] = {
         score: newStats[stat].score + 1,
-        mod: Math.floor((newStats[stat].score + 1 - 10) / 2),
+        mod: scoreToMod(newStats[stat].score + 1),
       };
     });
 

@@ -25,6 +25,7 @@ export default function useDiceRoller(
   });
   const rollModal = useModal();
   const aidModalState = useModal();
+  const closeAidModal = aidModalState.close;
   const aidResolverRef = useRef(null);
 
   const openAidModal = () =>
@@ -52,6 +53,16 @@ export default function useDiceRoller(
       safeLocalStorage.removeItem('rollHistory');
     }
   }, [rollHistory]);
+
+  useEffect(() => {
+    return () => {
+      if (aidResolverRef.current) {
+        aidResolverRef.current(null);
+        aidResolverRef.current = null;
+      }
+      closeAidModal();
+    };
+  }, [closeAidModal]);
 
   const getStatusModifiers = (rollType = 'general') => {
     let modifier = 0;

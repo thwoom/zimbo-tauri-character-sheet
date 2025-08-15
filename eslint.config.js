@@ -70,9 +70,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: { jsx: true },
+        project: true,
       },
       globals: {
         ...globals.browser,
@@ -80,7 +78,7 @@ export default [
       },
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
+      ...tseslint.configs['flat/recommended-type-checked'].rules,
     },
   },
   {

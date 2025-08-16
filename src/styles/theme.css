@@ -38,7 +38,15 @@
   --color-neutral: #6b7280;
   --color-neutral-dark: #374151;
   --color-neutral-rgb: 107, 114, 128;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
   --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
   --color-white: #ffffff;
 
   /* semantic tokens */
@@ -163,7 +171,15 @@
   --color-neutral: #6b7280;
   --color-neutral-dark: #4b5563;
   --color-neutral-rgb: 107, 114, 128;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
   --color-gray-800: #4b5563;
+  --color-gray-900: #111827;
   --color-white: #ffffff;
 
   /* semantic tokens */
@@ -262,7 +278,15 @@
   --color-bg-start: #f2e9e4;
   --color-bg-end: #e4d2cc;
   --color-text: #2d2a26;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #d4d4d4;
+  --color-gray-400: #a3a3a3;
+  --color-gray-500: #737373;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
   --color-gray-800: #4a4a4a;
+  --color-gray-900: #262626;
   --color-white: #ffffff;
 
   /* HUD layout tokens */
@@ -274,10 +298,10 @@
   --hud-transition: all 350ms ease-in-out;
   --hud-transition-slow: all 600ms ease-in-out;
 
-  --color-accent: #27a9a1;
-  --color-accent-dark: #1e827c;
-  --color-accent-darker: #155b58;
-  --color-accent-rgb: 39, 169, 161;
+  --color-accent: #1e827c;
+  --color-accent-dark: #155b58;
+  --color-accent-darker: #0d423e;
+  --color-accent-rgb: 30, 130, 124;
 
   --color-info: #d2666f;
   --color-info-dark: #a74e55;

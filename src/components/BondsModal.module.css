@@ -80,6 +80,11 @@
   flex: 1 1 150px;
 }
 
+.button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .resolveButton {
   background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
 }
@@ -108,4 +113,9 @@
 
 .closeButton {
   margin-top: var(--space-md);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

@@ -18,7 +18,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'"
+      "csp": "default-src 'self'; script-src 'self'; frame-ancestors 'self'"
     }
   },
   "bundle": {

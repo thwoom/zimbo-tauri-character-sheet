@@ -104,15 +104,7 @@ npm test
 
 ### End-to-end tests
 
-The E2E suite uses [WebdriverIO](https://webdriver.io/) with
-[`@crabnebula/tauri-driver`](https://github.com/crabnebula-dev/tauri-driver).
-Build a debug bundle for the tests to target:
-
-```bash
-npx tauri build --debug
-```
-
-Run the end-to-end suite (this will launch `tauri-driver` automatically):
+Run the end-to-end suite, which builds a debug bundle and drives the app using WebdriverIO and the Tauri driver:
 
 ```bash
 npm run test:e2e

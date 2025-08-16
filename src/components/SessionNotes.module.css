@@ -79,7 +79,8 @@
 }
 
 .panelExpanded {
-  max-height: 1000px;
+  max-height: calc(100vh - var(--header-height) - 2 * var(--space-lg));
+  overflow: auto;
   opacity: 1;
 }
 

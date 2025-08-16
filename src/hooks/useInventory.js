@@ -14,6 +14,23 @@ export default function useInventory(character, setCharacter) {
     return weapon ? weapon.damage || 'd6' : 'd6';
   }, [character.inventory]);
 
+  const handleAddItem = useCallback(
+    (item) => {
+      setCharacter((prev) => ({
+        ...prev,
+        inventory: [
+          ...prev.inventory,
+          {
+            ...item,
+            addedAt: new Date().toISOString(),
+            notes: item.notes || '',
+          },
+        ],
+      }));
+    },
+    [setCharacter],
+  );
+
   const handleEquipItem = useCallback(
     (id) => {
       setCharacter((prev) => ({
@@ -61,6 +78,7 @@ export default function useInventory(character, setCharacter) {
   return {
     totalArmor,
     equippedWeaponDamage,
+    handleAddItem,
     handleEquipItem,
     handleConsumeItem,
     handleDropItem,

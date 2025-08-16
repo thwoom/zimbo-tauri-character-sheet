@@ -17,20 +17,22 @@ afterEach(() => {
 describe('CharacterContext', () => {
   const wrapper = ({ children }) => <CharacterProvider>{children}</CharacterProvider>;
 
-  it('provides initial character data', () => {
+  it('provides initial character data', async () => {
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     expect(result.current.character).toMatchObject(INITIAL_CHARACTER_DATA);
   });
 
-  it('updates character state', () => {
+  it('updates character state', async () => {
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     act(() => {
       result.current.setCharacter((prev) => ({ ...prev, hp: 20 }));
     });
     expect(result.current.character.hp).toBe(20);
   });
 
-  it("doesn't re-render children when setCharacter is stable", () => {
+  it("doesn't re-render children when setCharacter is stable", async () => {
     const childRender = vi.fn();
     const Child = () => {
       const { setCharacter } = useCharacter();
@@ -50,8 +52,10 @@ describe('CharacterContext', () => {
     );
 
     const { rerender } = render(<Parent count={0} />);
+    await waitFor(() => {});
     expect(childRender).toHaveBeenCalledTimes(1);
     rerender(<Parent count={1} />);
+    await waitFor(() => {});
     expect(childRender).toHaveBeenCalledTimes(1);
   });
 
@@ -61,6 +65,7 @@ describe('CharacterContext', () => {
     loadFile.mockResolvedValueOnce(JSON.stringify(saved));
 
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     await waitFor(() => expect(result.current.character).toEqual(saved));
     expect(loadFile).toHaveBeenCalledWith('character.json');
   });
@@ -70,6 +75,7 @@ describe('CharacterContext', () => {
     loadFile.mockRejectedValueOnce(new Error('missing'));
 
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     await waitFor(() => expect(loadFile).toHaveBeenCalled());
 
     act(() => {
@@ -89,6 +95,7 @@ describe('CharacterContext', () => {
 
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     await waitFor(() => expect(result.current.character).toMatchObject(INITIAL_CHARACTER_DATA));
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
@@ -98,6 +105,7 @@ describe('CharacterContext', () => {
     loadFile.mockRejectedValueOnce(new Error('missing'));
 
     const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => {});
     await waitFor(() => expect(result.current.character).toMatchObject(INITIAL_CHARACTER_DATA));
     expect(loadFile).toHaveBeenCalledWith('character.json');
   });

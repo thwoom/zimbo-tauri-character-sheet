@@ -26,6 +26,9 @@ export default defineConfig(async () => ({
     port: 1420,
     strictPort: true,
     host: host || false,
+    headers: {
+      'X-Frame-Options': 'DENY',
+    },
     hmr: host
       ? {
           protocol: 'ws',
@@ -36,6 +39,11 @@ export default defineConfig(async () => ({
     watch: {
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
+    },
+  },
+  preview: {
+    headers: {
+      'X-Frame-Options': 'DENY',
     },
   },
 }));

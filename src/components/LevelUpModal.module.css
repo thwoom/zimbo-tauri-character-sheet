@@ -239,6 +239,8 @@
   border-radius: var(--hud-radius-sm);
   margin-left: 10px;
   font-size: var(--font-size-sm);
+  overflow: hidden;
+  animation: expandSection 0.3s ease forwards;
 }
 
 .moveExpanded {
@@ -249,6 +251,23 @@
 
 .moveExamples {
   color: var(--color-gray-400);
+}
+
+@keyframes expandSection {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 1000px;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moveDetails {
+    animation: none;
+  }
 }
 
 .hpContainer {

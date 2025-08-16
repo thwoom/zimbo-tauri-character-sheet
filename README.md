@@ -95,19 +95,7 @@ npm test
 
 ### End-to-end tests
 
-Build a debug bundle for Playwright to target:
-
-```bash
-npx tauri build --debug
-```
-
-Ensure Playwright's browsers are installed:
-
-```bash
-npx playwright install
-```
-
-Run the end-to-end suite:
+Run the end-to-end suite, which builds a debug bundle and drives the app using WebdriverIO and the Tauri driver:
 
 ```bash
 npm run test:e2e

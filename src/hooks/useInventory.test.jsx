@@ -111,4 +111,21 @@ describe('useInventory actions', () => {
     act(() => result.current.handleDropItem('rock'));
     expect(result.current.character.inventory).toEqual([{ id: 'coin' }]);
   });
+
+  it('adds items with handleAddItem and assigns unique id', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({ inventory: [] });
+      const inventory = useInventory(character, setCharacter);
+      return { ...inventory, character };
+    });
+
+    act(() => result.current.handleAddItem({ name: 'Potion' }));
+    expect(result.current.character.inventory).toHaveLength(1);
+    const firstId = result.current.character.inventory[0].id;
+    expect(firstId).toBeDefined();
+
+    act(() => result.current.handleAddItem({ name: 'Sword' }));
+    const ids = result.current.character.inventory.map((i) => i.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });

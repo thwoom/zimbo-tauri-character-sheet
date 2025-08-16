@@ -14,6 +14,19 @@ export default function useInventory(character, setCharacter) {
     return weapon ? weapon.damage || 'd6' : 'd6';
   }, [character.inventory]);
 
+  const handleAddItem = useCallback(
+    (newItem) => {
+      const id = globalThis.crypto?.randomUUID
+        ? globalThis.crypto.randomUUID()
+        : Date.now().toString();
+      setCharacter((prev) => ({
+        ...prev,
+        inventory: [...prev.inventory, { ...newItem, id }],
+      }));
+    },
+    [setCharacter],
+  );
+
   const handleEquipItem = useCallback(
     (id) => {
       setCharacter((prev) => ({
@@ -61,6 +74,7 @@ export default function useInventory(character, setCharacter) {
   return {
     totalArmor,
     equippedWeaponDamage,
+    handleAddItem,
     handleEquipItem,
     handleConsumeItem,
     handleDropItem,

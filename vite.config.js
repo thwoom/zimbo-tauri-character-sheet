@@ -17,6 +17,16 @@ export default defineConfig(async () => ({
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   },
 
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash][extname]',
+      },
+    },
+  },
+
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent Vite from obscuring rust errors
@@ -26,6 +36,9 @@ export default defineConfig(async () => ({
     port: 1420,
     strictPort: true,
     host: host || false,
+    headers: {
+      'X-Frame-Options': 'DENY',
+    },
     hmr: host
       ? {
           protocol: 'ws',
@@ -33,9 +46,27 @@ export default defineConfig(async () => ({
           port: 1421,
         }
       : undefined,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+    },
     watch: {
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
+    },
+    headers: {
+      'Cache-Control': 'no-store',
+      Expires: '0',
+    },
+  },
+  preview: {
+    headers: {
+      'Cache-Control': 'no-store',
+      Expires: '0',
+    },
+  },
+  preview: {
+    headers: {
+      'X-Frame-Options': 'DENY',
     },
   },
 }));

@@ -74,8 +74,47 @@
 
 .grid {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-md);
   margin-bottom: var(--space-md);
+  grid-template-areas:
+    'hud'
+    'stats'
+    'dice'
+    'inventory'
+    'notes';
+}
+
+.hud {
+  grid-area: hud;
+}
+
+.stats {
+  grid-area: stats;
+}
+
+.dice {
+  grid-area: dice;
+}
+
+.inventory {
+  grid-area: inventory;
+}
+
+.notes {
+  grid-area: notes;
+}
+
+@media (max-width: 1199px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .undoButton {

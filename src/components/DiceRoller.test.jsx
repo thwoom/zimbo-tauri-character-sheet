@@ -60,6 +60,23 @@ describe('DiceRoller', () => {
     expect(screen.getByText(/2d6: 7 = 7/)).toBeInTheDocument();
   });
 
+  it('announces results politely', () => {
+    const rollDice = vi.fn();
+    render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        equippedWeaponDamage="d8"
+        rollResult="d20: 9 = 9"
+        rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+      />,
+    );
+    expect(screen.getByText('d20: 9 = 9')).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('updates displayed roll result when prop changes', () => {
     const rollDice = vi.fn();
     const { rerender } = render(

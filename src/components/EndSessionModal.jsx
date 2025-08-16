@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './EndSessionModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 const defaultAnswers = { q1: false, q2: false, q3: false, alignment: false };
 
@@ -18,8 +19,9 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const [shareRecap, setShareRecap] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [error, setError] = useState('');
+  const [isVisible, isActive] = useModalTransition(isOpen);
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   const toggleAnswer = (key) => {
     setAnswers((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -100,7 +102,9 @@ export default function EndSessionModal({ isOpen, onClose }) {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>
           <FaFlagCheckered style={{ marginRight: '4px' }} /> End of Session
         </h2>

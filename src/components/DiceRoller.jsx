@@ -137,6 +137,7 @@ const DiceRoller = ({
         <div
           className={`${styles.resultBox} ${animate ? styles.pop : ''}`}
           onAnimationEnd={() => setAnimate(false)}
+          aria-live="polite"
         >
           {isRolling ? 'rolling…' : rollResult}
         </div>

@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { FaSkull } from 'react-icons/fa6';
 import styles from './LastBreathModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function LastBreathModal({ isOpen, onClose, rollDie }) {
   const [result, setResult] = useState(null);
+  const [isVisible, isActive] = useModalTransition(isOpen && !!result);
 
   useEffect(() => {
     if (isOpen) {
@@ -20,11 +22,13 @@ export default function LastBreathModal({ isOpen, onClose, rollDie }) {
     }
   }, [isOpen, rollDie]);
 
-  if (!isOpen || !result) return null;
+  if (!isVisible) return null;
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>
           <FaSkull style={{ marginRight: '4px' }} /> Last Breath
         </h2>

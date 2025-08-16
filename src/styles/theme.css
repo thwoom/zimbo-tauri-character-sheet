@@ -14,6 +14,9 @@
 
   --space-sm: 0.5rem;
   --space-md: 1rem;
+  --space-lg: 1.5rem;
+
+  --header-height: 0px;
 
   /* HUD layout tokens */
   --hud-radius: 0.75rem;
@@ -147,6 +150,7 @@
   --font-body: 'Times New Roman', serif;
   --space-sm: 0.5rem;
   --space-md: 1rem;
+  --space-lg: 1.5rem;
 
   --color-bg-start: #f0f0f0;
   --color-bg-end: #dcdcdc;
@@ -274,6 +278,7 @@
   --font-body: 'Verdana', sans-serif;
   --space-sm: 0.75rem;
   --space-md: 1.5rem;
+  --space-lg: 2.25rem;
 
   --color-bg-start: #f2e9e4;
   --color-bg-end: #e4d2cc;

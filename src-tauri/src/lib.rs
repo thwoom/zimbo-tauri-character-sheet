@@ -1,6 +1,7 @@
 use directories::ProjectDirs;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
+use tauri::http::header::HeaderValue;
 
 fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
     let relative = Path::new(path);
@@ -71,6 +72,11 @@ pub fn run() -> Result<(), tauri::Error> {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![write_file, read_file, get_os])
+        .on_web_resource_request(|_, response| {
+            response
+                .headers_mut()
+                .insert("X-Frame-Options", HeaderValue::from_static("DENY"));
+        })
         .run(tauri::generate_context!())?;
     Ok(())
 }

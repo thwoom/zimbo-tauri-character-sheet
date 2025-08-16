@@ -158,8 +158,8 @@ describe('useDiceRoller aid/interfere', () => {
       await p;
     });
     expect(alertSpy).toHaveBeenCalled();
-    const { originalResult, result: finalResult } = result.current.rollModalData;
-    expect(originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
+    const { initialResult, result: finalResult } = result.current.rollModalData;
+    expect(initialResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
     expect(finalResult).toBe('2d6: 3 + 3 +1 = 7 (Helper Consequences) ⚠️ Partial Success');
     expect(result.current.rollHistory[0].result).toContain('Helper Consequences');
     alertSpy.mockRestore();
@@ -186,14 +186,8 @@ describe('useDiceRoller aid/interfere', () => {
       await p;
     });
     const data = result.current.rollModalData;
-    const { unmount } = render(
-      <RollModal
-        isOpen
-        data={{ ...data, initialResult: data.originalResult }}
-        onClose={() => {}}
-      />,
-    );
-    expect(screen.getByText(`Original Roll: ${data.originalResult}`)).toBeInTheDocument();
+    const { unmount } = render(<RollModal isOpen data={data} onClose={() => {}} />);
+    expect(screen.getByText(`Original Roll: ${data.initialResult}`)).toBeInTheDocument();
     unmount();
     unmountHook();
     rollSpy.mockRestore();

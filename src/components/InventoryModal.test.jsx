@@ -16,6 +16,7 @@ describe('InventoryModal', () => {
       onEquip: () => {},
       onConsume: () => {},
       onDrop: () => {},
+      onUpdateNotes: () => {},
       onClose: () => {},
     };
     const { rerender } = render(<InventoryWrapper isOpen={false} {...props} />);
@@ -31,6 +32,7 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
@@ -42,6 +44,7 @@ describe('InventoryModal', () => {
       {
         id: 1,
         name: 'Lantern',
+        quantity: 3,
         description: 'Lights up dark places',
       },
     ];
@@ -51,10 +54,38 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
     expect(screen.getByText('Lights up dark places')).toBeInTheDocument();
+    expect(screen.getByText('Lantern x3')).toBeInTheDocument();
+  });
+
+  it('allows toggling equipment state', async () => {
+    const user = userEvent.setup();
+    function Wrapper() {
+      const [inventory, setInventory] = React.useState([
+        { id: 1, name: 'Sword', type: 'weapon', equipped: false },
+      ]);
+      return (
+        <InventoryModal
+          inventory={inventory}
+          onEquip={(id) =>
+            setInventory((items) =>
+              items.map((i) => (i.id === id ? { ...i, equipped: !i.equipped } : i)),
+            )
+          }
+          onConsume={() => {}}
+          onDrop={() => {}}
+          onClose={() => {}}
+        />
+      );
+    }
+    render(<Wrapper />);
+    const button = screen.getByText('Equip');
+    await user.click(button);
+    expect(screen.getByText('Unequip')).toBeInTheDocument();
   });
 
   it('calls handlers on user actions', async () => {
@@ -75,6 +106,7 @@ describe('InventoryModal', () => {
         onEquip={onEquip}
         onConsume={onConsume}
         onDrop={onDrop}
+        onUpdateNotes={() => {}}
         onClose={onClose}
       />,
     );
@@ -101,6 +133,7 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
@@ -128,11 +161,34 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
     const group = screen.getByText('Drop').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('renders added date and edits notes', async () => {
+    const user = userEvent.setup();
+    const onUpdateNotes = vi.fn();
+    const addedAt = new Date('2024-01-01').toISOString();
+    const inventory = [{ id: 1, name: 'Sword', type: 'weapon', addedAt, notes: 'old' }];
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onUpdateNotes={onUpdateNotes}
+        onClose={() => {}}
+      />,
+    );
+    const dateString = new Date(addedAt).toLocaleDateString();
+    expect(screen.getByText(new RegExp(dateString))).toBeInTheDocument();
+    const textarea = screen.getByPlaceholderText('Notes');
+    await user.type(textarea, '!');
+    expect(onUpdateNotes).toHaveBeenLastCalledWith(1, 'old!');
   });
 });

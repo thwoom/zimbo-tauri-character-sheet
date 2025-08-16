@@ -60,6 +60,12 @@ test('character flow with save and load', async () => {
   const inventoryButton = await browser.$('button=Inventory');
   await inventoryButton.click();
   await expect(await browser.$('h2*=Inventory').isExisting()).resolves.toBe(true);
+  await expect(await browser.$('div=Phases through time occasionally').isExisting()).resolves.toBe(
+    true,
+  );
+  const unequipBtn = await browser.$('button=Unequip');
+  await unequipBtn.click();
+  await expect(await browser.$('button=Equip').isExisting()).resolves.toBe(true);
   await (await browser.$('button=Close')).click();
 
   // Settings

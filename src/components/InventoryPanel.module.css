@@ -89,6 +89,16 @@
   color: var(--color-gray-400);
 }
 
+.itemNotes {
+  margin-top: var(--space-sm);
+  color: var(--color-gray-300);
+}
+
+.itemAddedAt {
+  margin-top: var(--space-sm);
+  color: var(--color-gray-500);
+}
+
 .useButton {
   background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
   border: none;

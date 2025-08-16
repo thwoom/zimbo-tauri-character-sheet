@@ -9,6 +9,7 @@ import AddItemModal from './AddItemModal.jsx';
 import LastBreathModal from './LastBreathModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
 import StatusModal from './StatusModal.jsx';
+import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const GameModals = ({
   character,
@@ -89,6 +90,7 @@ const GameModals = ({
         onEquip={handleEquipItem}
         onConsume={handleConsumeItem}
         onDrop={handleDropItem}
+        onUpdateNotes={handleUpdateNotes}
         onClose={() => setShowInventoryModal(false)}
       />
     )}

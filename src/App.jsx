@@ -79,8 +79,14 @@ function App() {
     clearRollHistory,
   } = useDiceRoller(character, setCharacter, saveToHistoryRef);
 
-  const { totalArmor, equippedWeaponDamage, handleEquipItem, handleConsumeItem, handleDropItem } =
-    useInventory(character, setCharacter);
+  const {
+    totalArmor,
+    equippedWeaponDamage,
+    handleEquipItem,
+    handleConsumeItem,
+    handleDropItem,
+    handleUpdateNotes,
+  } = useInventory(character, setCharacter);
 
   const handleAddItem = React.useCallback(
     (item) => {

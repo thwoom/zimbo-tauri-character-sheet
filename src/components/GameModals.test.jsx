@@ -29,6 +29,7 @@ function Wrapper(props) {
       handleEquipItem={() => {}}
       handleConsumeItem={() => {}}
       handleDropItem={() => {}}
+      handleUpdateNotes={() => {}}
       {...props}
     />
   );

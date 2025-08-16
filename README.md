@@ -14,6 +14,20 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 - **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
 
+## Inventory Item Schema
+
+Inventory items are objects with the following fields:
+
+- `id` – unique identifier.
+- `name` – display name.
+- `type` – one of `weapon`, `armor`, `consumable`, `magic`, `material`, or `gear`.
+- `damage` – damage dice string for weapons (e.g. `d8`).
+- `armor` – armor bonus for protective gear.
+- `quantity` – stack count for consumables and materials.
+- `description` – optional text shown in the UI.
+- `equipped` – whether the item is currently equipped.
+- `tags` – optional array of descriptive strings.
+
 ## Saving and Loading a Character
 
 1. Click **Export/Import** in the toolbar.

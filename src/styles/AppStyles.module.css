@@ -15,7 +15,7 @@
 
 .header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--space-md);
   padding: var(--hud-spacing);
   border-radius: 15px;
   border: 2px solid var(--color-accent);
@@ -34,7 +34,7 @@
   font-family: var(--font-heading);
   font-size: var(--font-size-heading);
   font-weight: var(--font-weight-heading);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
   text-shadow: 0 0 10px var(--color-accent);
 }
 
@@ -75,54 +75,7 @@
 .grid {
   display: grid;
   gap: var(--space-md);
-  margin-bottom: 20px;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    'hud'
-    'stats'
-    'dice'
-    'inventory'
-    'notes';
-}
-
-.hud {
-  grid-area: hud;
-}
-
-.stats {
-  grid-area: stats;
-}
-
-.dice {
-  grid-area: dice;
-}
-
-.inventory {
-  grid-area: inventory;
-}
-
-.notes {
-  grid-area: notes;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      'hud   stats'
-      'dice  inventory'
-      'notes notes';
-  }
-}
-
-@media (min-width: 1200px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-areas:
-      'hud   stats stats'
-      'hud   dice  inventory'
-      'notes notes notes';
-  }
+  margin-bottom: var(--space-md);
 }
 
 .undoButton {

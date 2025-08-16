@@ -9,7 +9,7 @@
 
 .title {
   color: var(--color-accent);
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
   font-size: 1.3rem;
 }
 
@@ -28,12 +28,12 @@
 
 .warning {
   color: var(--color-danger);
-  margin-top: 10px;
+  margin-top: var(--space-md);
   font-size: 0.9rem;
 }
 
 .buttons {
-  margin-top: 10px;
+  margin-top: var(--space-md);
   display: flex;
   gap: 10px;
 }
@@ -80,14 +80,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: var(--hud-spacing);
 }
 
 .modal {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   border-radius: var(--hud-radius);
-  padding: 20px;
+  padding: var(--hud-spacing);
   color: var(--color-gray-100);
   text-align: center;
 }

@@ -38,7 +38,7 @@
 .title {
   font-size: 1.5rem;
   color: var(--color-accent);
-  margin: 0;
+  margin: 0 0 var(--space-md);
 }
 
 .closeButton {
@@ -52,38 +52,38 @@
 }
 
 .body {
-  padding: 30px;
+  padding: var(--hud-spacing);
   text-align: center;
 }
 
 .initialResult {
   font-size: 0.9rem;
   color: var(--color-gray-300);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
 }
 
 .result {
   font-size: 1.5rem;
   font-weight: bold;
   color: var(--color-accent);
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
 }
 
 .description {
   color: var(--color-gray-100);
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
 }
 
 .context {
   color: var(--color-gray-400);
   font-size: 0.9rem;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .original {
   font-size: 1rem;
   color: var(--color-gray-400);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
 }
 
 .button {

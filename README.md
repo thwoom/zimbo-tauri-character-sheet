@@ -43,6 +43,13 @@ The overlay appears during development builds only and is ignored in production.
 - [Node.js](https://nodejs.org/) >=20 and npm
 - [Rust](https://www.rust-lang.org/tools/install) and Cargo
 - Tauri CLI (`npm install` or `cargo install tauri-cli`)
+- `glib-2.0` headers and a WebKitWebDriver binary. On Debian/Ubuntu:
+
+  ```bash
+  sudo apt install libglib2.0-dev webkit2gtk-driver
+  ```
+
+  Install these before running `npm run test:e2e` or `npm run build`.
 
 ### Install dependencies
 
@@ -83,6 +90,8 @@ Use this for UI work—features that depend on Tauri APIs (like reading or writi
 
 ### Build web assets
 
+Ensure `glib-2.0` and `webkit2gtk-driver` are installed (see [Prerequisites](#prerequisites)):
+
 ```bash
 npm run build
 ```
@@ -95,13 +104,15 @@ npm test
 
 ### End-to-end tests
 
-Build a debug bundle for end-to-end tests:
+WebdriverIO drives the Tauri app through `@crabnebula/tauri-driver`.
+
+Install the required system packages if you haven't already:
 
 ```bash
-npx tauri build --debug
+sudo apt install libglib2.0-dev webkit2gtk-driver
 ```
 
-Run the end-to-end suite:
+The script builds a debug bundle and launches the driver automatically:
 
 ```bash
 npm run test:e2e

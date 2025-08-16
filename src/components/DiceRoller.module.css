@@ -102,6 +102,13 @@
   font-size: 0.8rem;
 }
 
+@media (max-width: 767px) {
+  .history {
+    max-height: 50vh;
+    overflow: auto;
+  }
+}
+
 .historyTitle {
   color: var(--color-accent);
   margin-bottom: var(--space-md);

@@ -43,6 +43,13 @@ The overlay appears during development builds only and is ignored in production.
 - [Node.js](https://nodejs.org/) >=20 and npm
 - [Rust](https://www.rust-lang.org/tools/install) and Cargo
 - Tauri CLI (`npm install` or `cargo install tauri-cli`)
+- glib-2.0 development headers and a WebKitWebDriver binary – for example:
+
+  ```bash
+  sudo apt install libglib2.0-dev webkit2gtk-driver
+  ```
+
+  These packages must be installed before running `npm run test:e2e` or `npm run build`.
 
 ### Install dependencies
 
@@ -95,19 +102,15 @@ npm test
 
 ### End-to-end tests
 
-Build a debug bundle for Playwright to target:
+The E2E suite uses [WebdriverIO](https://webdriver.io/) with
+[`@crabnebula/tauri-driver`](https://github.com/crabnebula-dev/tauri-driver).
+Build a debug bundle for the tests to target:
 
 ```bash
 npx tauri build --debug
 ```
 
-Ensure Playwright's browsers are installed:
-
-```bash
-npx playwright install
-```
-
-Run the end-to-end suite:
+Run the end-to-end suite (this will launch `tauri-driver` automatically):
 
 ```bash
 npm run test:e2e

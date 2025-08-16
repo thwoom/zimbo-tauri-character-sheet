@@ -202,8 +202,8 @@ export default function useDiceRoller(
     const mods = [baseModifier, statusMods.modifier];
     let notes = [...statusMods.notes];
 
-    const originalTotal = total;
-    let originalInterpretation = '';
+    const initialTotal = total;
+    let initialInterpretation = '';
     let initialResult;
 
     const resolveAidOrInterfere = async () => {
@@ -242,9 +242,9 @@ export default function useDiceRoller(
         context = getFailureContext(desc);
       }
 
-      originalInterpretation = interpretation;
+      initialInterpretation = interpretation;
 
-      if (originalTotal < 7 && xpOnMiss) {
+      if (initialTotal < 7 && xpOnMiss) {
         saveToHistoryRef.current('XP Change');
         setCharacter((prev) => ({
           ...prev,
@@ -256,7 +256,7 @@ export default function useDiceRoller(
       if (!isAidMove) {
         const aid = await resolveAidOrInterfere();
         if (aid) {
-          initialResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
+          initialResult = buildResultString(mods, initialTotal, notes) + initialInterpretation;
           if (aid.modifier !== 0) {
             mods.push(aid.modifier);
             total += aid.modifier;

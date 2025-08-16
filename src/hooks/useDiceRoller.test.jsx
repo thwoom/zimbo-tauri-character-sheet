@@ -138,6 +138,7 @@ describe('useDiceRoller aid/interfere', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
 
   it('applies modifiers and enforces helper consequences on 7-9', async () => {
+    localStorage.clear();
     const setCharacter = vi.fn();
     const alertSpy = vi.spyOn(window, 'alert');
     const rollSpy = vi.spyOn(diceUtils, 'rollDie');
@@ -156,9 +157,10 @@ describe('useDiceRoller aid/interfere', () => {
       await p;
     });
     expect(alertSpy).toHaveBeenCalled();
-    const { initialResult, result: finalResult } = result.current.rollModalData;
-    expect(initialResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
+    const { originalResult, result: finalResult } = result.current.rollModalData;
+    expect(originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
     expect(finalResult).toBe('2d6: 3 + 3 +1 = 7 (Helper Consequences) ⚠️ Partial Success');
+    expect(result.current.rollHistory[0].result).toContain('Helper Consequences');
     alertSpy.mockRestore();
     rollSpy.mockRestore();
   });

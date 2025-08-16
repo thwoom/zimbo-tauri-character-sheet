@@ -33,6 +33,9 @@ export default defineConfig(async () => ({
           port: 1421,
         }
       : undefined,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+    },
     watch: {
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],

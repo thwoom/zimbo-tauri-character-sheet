@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, render, screen, cleanup } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
+import RollModal from '../components/RollModal.jsx';
 import { SettingsProvider } from '../state/SettingsContext.jsx';
 import * as diceUtils from '../utils/dice.js';
 import useDiceRoller from './useDiceRoller.js';
@@ -156,11 +157,45 @@ describe('useDiceRoller aid/interfere', () => {
       await p;
     });
     expect(alertSpy).toHaveBeenCalled();
-    const { initialResult, result: finalResult } = result.current.rollModalData;
-    expect(initialResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
+    const { originalResult, result: finalResult } = result.current.rollModalData;
+    expect(originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
     expect(finalResult).toBe('2d6: 3 + 3 +1 = 7 (Helper Consequences) ⚠️ Partial Success');
     alertSpy.mockRestore();
     rollSpy.mockRestore();
+  });
+
+  it('renders the initial roll in RollModal when aided', async () => {
+    localStorage.clear();
+    const setCharacter = () => {};
+    const rollSpy = vi.spyOn(diceUtils, 'rollDie');
+    rollSpy
+      .mockReturnValueOnce(3)
+      .mockReturnValueOnce(3)
+      .mockReturnValueOnce(3)
+      .mockReturnValueOnce(4);
+    const { result, unmount: unmountHook } = renderHook(
+      () => useDiceRoller(baseCharacter, setCharacter),
+      { wrapper },
+    );
+    await act(async () => {
+      const p = result.current.rollDice('2d6', 'test');
+      await Promise.resolve();
+      result.current.aidModal.onConfirm({ action: 'aid', bond: 2 });
+      await p;
+    });
+    const data = result.current.rollModalData;
+    const { unmount } = render(
+      <RollModal
+        isOpen
+        data={{ ...data, initialResult: data.originalResult }}
+        onClose={() => {}}
+      />,
+    );
+    expect(screen.getByText(`Original Roll: ${data.originalResult}`)).toBeInTheDocument();
+    unmount();
+    unmountHook();
+    rollSpy.mockRestore();
+    cleanup();
   });
 });
 

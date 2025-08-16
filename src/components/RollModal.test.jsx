@@ -34,7 +34,7 @@ describe('RollModal', () => {
   it('renders original and help results when provided', () => {
     const data = {
       result: '2d6: 3 + 5 = 8',
-      originalResult: '2d6: 1 + 2 = 3 ❌ Failure',
+      initialResult: '2d6: 1 + 2 = 3 ❌ Failure',
     };
     render(<RollModal isOpen data={data} onClose={() => {}} />);
     expect(screen.getByText('Original Roll: 2d6: 1 + 2 = 3 ❌ Failure')).toBeInTheDocument();

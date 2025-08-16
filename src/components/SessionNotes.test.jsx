@@ -47,8 +47,6 @@ describe('SessionNotes', () => {
 
   it('clears notes when confirmed', async () => {
     const user = userEvent.setup();
-    const originalConfirm = window.confirm;
-    window.confirm = vi.fn(() => true);
     const setSessionNotes = vi.fn();
     render(
       <SessionNotes
@@ -59,9 +57,24 @@ describe('SessionNotes', () => {
       />,
     );
     await user.click(screen.getByRole('button', { name: /Clear/i }));
-    expect(window.confirm).toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
     expect(setSessionNotes).toHaveBeenCalledWith('');
-    window.confirm = originalConfirm;
+  });
+
+  it('does not clear notes when cancelled', async () => {
+    const user = userEvent.setup();
+    const setSessionNotes = vi.fn();
+    render(
+      <SessionNotes
+        sessionNotes="some"
+        setSessionNotes={setSessionNotes}
+        compactMode
+        setCompactMode={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /Clear/i }));
+    await user.click(screen.getByRole('button', { name: /Cancel/i }));
+    expect(setSessionNotes).not.toHaveBeenCalled();
   });
 
   it('applies fullWidth class when not in compact mode', () => {

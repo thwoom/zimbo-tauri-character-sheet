@@ -108,7 +108,6 @@ select:focus {
 
 /* Modal Backdrop Blur */
 .modal-backdrop {
-  background-color: var(--color-modal-bg-dark);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
@@ -149,7 +148,7 @@ select:focus {
 }
 
 .glass-panel {
-  background-color: var(--panel-bg);
+  background: var(--panel-bg);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: var(--hud-radius);

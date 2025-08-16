@@ -1,5 +1,6 @@
 .panel {
   background: var(--panel-bg);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: var(--hud-radius);
   padding: var(--hud-spacing);

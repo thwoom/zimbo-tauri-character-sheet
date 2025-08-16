@@ -19,7 +19,11 @@ const DiceRoller = ({
 
   const handleRoll = (expr, label) => {
     setIsRolling(true);
-    rollDice(expr, label);
+    if (label) {
+      rollDice(expr, label);
+    } else {
+      rollDice(expr);
+    }
     setTimeout(() => {
       setIsRolling(false);
       setAnimate(true);
@@ -40,6 +44,7 @@ const DiceRoller = ({
                 key={stat}
                 onClick={() => handleRoll(`2d6+${data.mod}`, `${stat} Check`)}
                 className={`${styles.button} ${styles.purple} ${styles.small}`}
+                aria-label={`Roll ${stat} Check`}
               >
                 {stat} ({data.mod >= 0 ? '+' : ''}
                 {data.mod})
@@ -55,84 +60,35 @@ const DiceRoller = ({
             <button
               onClick={() => handleRoll(equippedWeaponDamage, 'Weapon Damage')}
               className={`${styles.button} ${styles.red} ${styles.small}`}
+              aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
             >
               Weapon ({equippedWeaponDamage})
             </button>
             <button
               onClick={() => handleRoll('2d6+3', 'Hack & Slash')}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
-              aria-label={`Roll ${stat} Check`}
+              aria-label="Roll Hack & Slash"
             >
               Hack & Slash
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Combat Rolls */}
-      <div className={styles.section}>
-        <h4 className={styles.subtitle}>Combat Rolls</h4>
-        <div className={styles.combatGrid}>
-          <button
-            onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
-            className={`${styles.button} ${styles.red} ${styles.small}`}
-            aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
-          >
-            Weapon ({equippedWeaponDamage})
-          </button>
-          <button
-            onClick={() => rollDice('2d6+3', 'Hack & Slash')}
-            className={`${styles.button} ${styles.purple} ${styles.small}`}
-            aria-label="Roll Hack & Slash"
-          >
-            Hack & Slash
-          </button>
-          <button
-            onClick={() => rollDice('d4', 'Upper Hand')}
-            className={`${styles.button} ${styles.orange} ${styles.small}`}
-            aria-label="Roll Upper Hand d4"
-          >
-            Upper Hand d4
-          </button>
-          <button
-            onClick={() => rollDice('2d6-1', 'Taunt')}
-            className={`${styles.button} ${styles.amber} ${styles.small}`}
-            aria-label="Roll Taunt Enemy"
-          >
-            Taunt Enemy
-          </button>
-          <button
-            onClick={() => rollDice('2d6', 'Aid/Interfere')}
-            className={`${styles.button} ${styles.purple} ${styles.small}`}
-            aria-label="Roll Aid or Interfere"
-          >
-            Aid/Interfere
-          </button>
-        </div>
-      </div>
-
-      {/* Basic Dice */}
-      <div className={styles.section}>
-        <h4 className={styles.subtitle}>Basic Dice</h4>
-        <div className={styles.basicGrid}>
-          {[4, 6, 8, 10, 12, 20].map((sides) => (
             <button
-              key={sides}
-              onClick={() => rollDice(`d${sides}`)}
-              className={`${styles.button} ${styles.cyan} ${styles.tiny}`}
-              aria-label={`Roll d${sides}`}
+              onClick={() => handleRoll('d4', 'Upper Hand')}
+              className={`${styles.button} ${styles.orange} ${styles.small}`}
+              aria-label="Roll Upper Hand d4"
             >
               Upper Hand d4
             </button>
             <button
               onClick={() => handleRoll('2d6-1', 'Taunt')}
               className={`${styles.button} ${styles.amber} ${styles.small}`}
+              aria-label="Roll Taunt Enemy"
             >
               Taunt Enemy
             </button>
             <button
               onClick={() => handleRoll('2d6', 'Aid/Interfere')}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label="Roll Aid or Interfere"
             >
               Aid/Interfere
             </button>
@@ -148,8 +104,9 @@ const DiceRoller = ({
                 key={sides}
                 onClick={() => handleRoll(`d${sides}`)}
                 className={`${styles.button} ${styles.cyan} ${styles.tiny}`}
+                aria-label={`Roll d${sides}`}
               >
-                d{sides}
+                {`d${sides}`}
               </button>
             ))}
           </div>
@@ -188,6 +145,7 @@ const DiceRoller = ({
     </>
   );
 };
+
 DiceRoller.propTypes = {
   character: PropTypes.shape({
     stats: PropTypes.object.isRequired,

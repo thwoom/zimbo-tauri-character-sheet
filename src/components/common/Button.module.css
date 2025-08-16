@@ -3,7 +3,10 @@
   border: none;
   border-radius: var(--hud-radius-sm);
   color: var(--color-white);
-  padding: var(--space-sm) 15px;
+  font-size: var(--font-size-body);
+  line-height: 1.2;
+  padding: var(--space-md) 15px;
+  min-height: calc(var(--space-md) * 2 + 1.2em);
   cursor: pointer;
   font-weight: bold;
   transition: var(--hud-transition);

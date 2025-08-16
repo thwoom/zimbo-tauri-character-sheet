@@ -1,5 +1,6 @@
 .avatarContainer {
   background: var(--panel-bg);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: var(--hud-spacing);

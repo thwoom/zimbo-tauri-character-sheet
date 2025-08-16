@@ -1,7 +1,6 @@
 use directories::ProjectDirs;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
-use tauri::http::header::HeaderValue;
 use tauri::webview::WebviewWindowBuilder;
 
 fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
@@ -78,12 +77,6 @@ pub fn run() -> Result<(), tauri::Error> {
                 app,
                 app.config().app.windows.get(0).unwrap(),
             )?
-            .on_web_resource_request(|_, response| {
-                response.headers_mut().insert(
-                    "X-Frame-Options",
-                    HeaderValue::from_static("DENY"),
-                );
-            })
             .build()?;
             Ok(())
         })

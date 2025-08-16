@@ -56,7 +56,7 @@
   text-align: center;
 }
 
-.originalResult {
+.initialResult {
   font-size: 0.9rem;
   color: var(--color-gray-300);
   margin-bottom: 10px;

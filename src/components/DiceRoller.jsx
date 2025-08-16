@@ -71,6 +71,27 @@ const DiceRoller = ({
             >
               Hack & Slash
             </button>
+          </div>
+        </div>
+
+        {/* Combat Rolls */}
+        <div className={styles.section}>
+          <h4 className={styles.subtitle}>Combat Rolls</h4>
+          <div className={styles.combatGrid}>
+            <button
+              onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
+              className={`${styles.button} ${styles.red} ${styles.small}`}
+              aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
+            >
+              Weapon ({equippedWeaponDamage})
+            </button>
+            <button
+              onClick={() => rollDice('2d6+3', 'Hack & Slash')}
+              className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label="Roll Hack & Slash"
+            >
+              Hack & Slash
+            </button>
             <button
               onClick={() => rollDice('d4', 'Upper Hand')}
               className={`${styles.button} ${styles.orange} ${styles.small}`}

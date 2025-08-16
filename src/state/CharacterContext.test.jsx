@@ -83,4 +83,14 @@ describe('CharacterContext', () => {
       );
     });
   });
+  it('falls back to a default character on invalid JSON', async () => {
+    const { loadFile } = await import('../utils/fileStorage.js');
+    loadFile.mockResolvedValueOnce('not json');
+
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => expect(result.current.character).toMatchObject(INITIAL_CHARACTER_DATA));
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
 });

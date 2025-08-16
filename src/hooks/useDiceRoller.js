@@ -290,7 +290,6 @@ export default function useDiceRoller(
       timestamp: Date.now(),
       ...(originalResult && { originalResult }),
     };
-    if (originalResult) rollData.originalResult = originalResult;
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);
     setRollModalData(rollData);

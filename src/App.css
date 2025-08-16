@@ -113,17 +113,7 @@ select:focus {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr !important;
-  }
-
+@media (max-width: 767px) {
   .header h1 {
     font-size: 1.8rem !important;
   }

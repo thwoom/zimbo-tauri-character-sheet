@@ -19,7 +19,7 @@ const DiceRoller = ({
 
   const handleRoll = (expr, label) => {
     setIsRolling(true);
-    if (label) {
+    if (label !== undefined) {
       rollDice(expr, label);
     } else {
       rollDice(expr);
@@ -58,35 +58,35 @@ const DiceRoller = ({
           <h4 className={styles.subtitle}>Combat Rolls</h4>
           <div className={styles.combatGrid}>
             <button
-              onClick={() => handleRoll(equippedWeaponDamage, 'Weapon Damage')}
+              onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
               className={`${styles.button} ${styles.red} ${styles.small}`}
               aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
             >
               Weapon ({equippedWeaponDamage})
             </button>
             <button
-              onClick={() => handleRoll('2d6+3', 'Hack & Slash')}
+              onClick={() => rollDice('2d6+3', 'Hack & Slash')}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
               aria-label="Roll Hack & Slash"
             >
               Hack & Slash
             </button>
             <button
-              onClick={() => handleRoll('d4', 'Upper Hand')}
+              onClick={() => rollDice('d4', 'Upper Hand')}
               className={`${styles.button} ${styles.orange} ${styles.small}`}
               aria-label="Roll Upper Hand d4"
             >
               Upper Hand d4
             </button>
             <button
-              onClick={() => handleRoll('2d6-1', 'Taunt')}
+              onClick={() => rollDice('2d6-1', 'Taunt')}
               className={`${styles.button} ${styles.amber} ${styles.small}`}
               aria-label="Roll Taunt Enemy"
             >
               Taunt Enemy
             </button>
             <button
-              onClick={() => handleRoll('2d6', 'Aid/Interfere')}
+              onClick={() => rollDice('2d6', 'Aid/Interfere')}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
               aria-label="Roll Aid or Interfere"
             >

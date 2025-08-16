@@ -5,6 +5,10 @@
   padding: var(--hud-spacing);
   border: 1px solid var(--panel-border);
   box-shadow: 0 8px 32px var(--panel-shadow);
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .title {
@@ -66,6 +70,22 @@
 
 .fullWidth {
   grid-column: 1 / -1;
+}
+
+.panelCompact {
+  max-height: 0;
+  opacity: 0;
+}
+
+.panelExpanded {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
 }
 
 .overlay {

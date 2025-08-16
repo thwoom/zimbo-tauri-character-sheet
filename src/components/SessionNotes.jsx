@@ -60,7 +60,11 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
 
   return (
     <>
-      <div className={`${styles.panel} ${compactMode ? '' : styles.fullWidth}`}>
+      <div
+        className={`${styles.panel} ${
+          compactMode ? styles.panelCompact : styles.panelExpanded
+        } ${compactMode ? '' : styles.fullWidth}`}
+      >
         <h3 className={styles.title}>
           <FaClipboard className={styles.icon} /> Session Notes
         </h3>

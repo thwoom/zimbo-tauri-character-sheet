@@ -44,6 +44,7 @@ describe('InventoryModal', () => {
       {
         id: 1,
         name: 'Lantern',
+        quantity: 3,
         description: 'Lights up dark places',
       },
     ];
@@ -58,6 +59,33 @@ describe('InventoryModal', () => {
       />,
     );
     expect(screen.getByText('Lights up dark places')).toBeInTheDocument();
+    expect(screen.getByText('Lantern x3')).toBeInTheDocument();
+  });
+
+  it('allows toggling equipment state', async () => {
+    const user = userEvent.setup();
+    function Wrapper() {
+      const [inventory, setInventory] = React.useState([
+        { id: 1, name: 'Sword', type: 'weapon', equipped: false },
+      ]);
+      return (
+        <InventoryModal
+          inventory={inventory}
+          onEquip={(id) =>
+            setInventory((items) =>
+              items.map((i) => (i.id === id ? { ...i, equipped: !i.equipped } : i)),
+            )
+          }
+          onConsume={() => {}}
+          onDrop={() => {}}
+          onClose={() => {}}
+        />
+      );
+    }
+    render(<Wrapper />);
+    const button = screen.getByText('Equip');
+    await user.click(button);
+    expect(screen.getByText('Unequip')).toBeInTheDocument();
   });
 
   it('calls handlers on user actions', async () => {

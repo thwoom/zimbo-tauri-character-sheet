@@ -61,12 +61,66 @@ const DiceRoller = ({
             <button
               onClick={() => handleRoll('2d6+3', 'Hack & Slash')}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label={`Roll ${stat} Check`}
             >
               Hack & Slash
             </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Combat Rolls */}
+      <div className={styles.section}>
+        <h4 className={styles.subtitle}>Combat Rolls</h4>
+        <div className={styles.combatGrid}>
+          <button
+            onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
+            className={`${styles.button} ${styles.red} ${styles.small}`}
+            aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
+          >
+            Weapon ({equippedWeaponDamage})
+          </button>
+          <button
+            onClick={() => rollDice('2d6+3', 'Hack & Slash')}
+            className={`${styles.button} ${styles.purple} ${styles.small}`}
+            aria-label="Roll Hack & Slash"
+          >
+            Hack & Slash
+          </button>
+          <button
+            onClick={() => rollDice('d4', 'Upper Hand')}
+            className={`${styles.button} ${styles.orange} ${styles.small}`}
+            aria-label="Roll Upper Hand d4"
+          >
+            Upper Hand d4
+          </button>
+          <button
+            onClick={() => rollDice('2d6-1', 'Taunt')}
+            className={`${styles.button} ${styles.amber} ${styles.small}`}
+            aria-label="Roll Taunt Enemy"
+          >
+            Taunt Enemy
+          </button>
+          <button
+            onClick={() => rollDice('2d6', 'Aid/Interfere')}
+            className={`${styles.button} ${styles.purple} ${styles.small}`}
+            aria-label="Roll Aid or Interfere"
+          >
+            Aid/Interfere
+          </button>
+        </div>
+      </div>
+
+      {/* Basic Dice */}
+      <div className={styles.section}>
+        <h4 className={styles.subtitle}>Basic Dice</h4>
+        <div className={styles.basicGrid}>
+          {[4, 6, 8, 10, 12, 20].map((sides) => (
             <button
-              onClick={() => handleRoll('d4', 'Upper Hand')}
-              className={`${styles.button} ${styles.orange} ${styles.small}`}
+              key={sides}
+              onClick={() => rollDice(`d${sides}`)}
+              className={`${styles.button} ${styles.cyan} ${styles.tiny}`}
+              aria-label={`Roll d${sides}`}
             >
               Upper Hand d4
             </button>

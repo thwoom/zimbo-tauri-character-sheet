@@ -31,13 +31,13 @@ describe('DiceRoller', () => {
       />,
     );
 
-    await user.click(screen.getByText('STR (+1)'));
+    await user.click(screen.getByRole('button', { name: 'Roll STR Check' }));
     expect(rollDice).toHaveBeenCalledWith('2d6+1', 'STR Check');
 
-    await user.click(screen.getByText('d6'));
-    expect(rollDice).toHaveBeenCalledWith('d6', undefined);
+    await user.click(screen.getByRole('button', { name: 'Roll d6' }));
+    expect(rollDice).toHaveBeenCalledWith('d6');
 
-    await user.click(screen.getByText('Aid/Interfere'));
+    await user.click(screen.getByRole('button', { name: 'Roll Aid or Interfere' }));
     expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
   });
 

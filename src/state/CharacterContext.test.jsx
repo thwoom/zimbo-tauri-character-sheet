@@ -53,11 +53,10 @@ describe('CharacterContext', () => {
 
     const { rerender } = render(<Parent count={0} />);
     await waitFor(() => {});
-    const initialCalls = childRender.mock.calls.length;
-    expect(initialCalls).toBeGreaterThan(0);
+    expect(childRender).toHaveBeenCalledTimes(2);
     rerender(<Parent count={1} />);
     await waitFor(() => {});
-    expect(childRender).toHaveBeenCalledTimes(initialCalls);
+    expect(childRender).toHaveBeenCalledTimes(2);
   });
 
   it('loads saved character on mount', async () => {

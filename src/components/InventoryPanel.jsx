@@ -62,6 +62,7 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveT
                       handleConsumeItem(item.id);
                     }
                   }}
+                  aria-label={`Use ${item.name}`}
                 >
                   Use
                 </button>

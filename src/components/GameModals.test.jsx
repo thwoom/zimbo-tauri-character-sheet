@@ -29,6 +29,7 @@ function Wrapper(props) {
       handleEquipItem={() => {}}
       handleConsumeItem={() => {}}
       handleDropItem={() => {}}
+      handleUpdateNotes={() => {}}
       {...props}
     />
   );
@@ -51,6 +52,7 @@ const baseProps = {
   setShowEndSessionModal: () => {},
   bondsModal: { isOpen: false, close: () => {} },
   saveToHistory: () => {},
+  handleUpdateNotes: () => {},
 };
 
 const renderModals = (props) =>

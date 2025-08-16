@@ -78,8 +78,14 @@ function App() {
     clearRollHistory,
   } = useDiceRoller(character, setCharacter, saveToHistoryRef);
 
-  const { totalArmor, equippedWeaponDamage, handleEquipItem, handleConsumeItem, handleDropItem } =
-    useInventory(character, setCharacter);
+  const {
+    totalArmor,
+    equippedWeaponDamage,
+    handleEquipItem,
+    handleConsumeItem,
+    handleDropItem,
+    handleUpdateNotes,
+  } = useInventory(character, setCharacter);
 
   // Auto-detect level up opportunity
   useEffect(() => {
@@ -281,6 +287,7 @@ function App() {
         handleEquipItem={handleEquipItem}
         handleConsumeItem={handleConsumeItem}
         handleDropItem={handleDropItem}
+        handleUpdateNotes={handleUpdateNotes}
         showExportModal={showExportModal}
         setShowExportModal={setShowExportModal}
         showEndSessionModal={showEndSessionModal}

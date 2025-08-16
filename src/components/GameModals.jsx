@@ -8,6 +8,7 @@ import InventoryModal from './InventoryModal.jsx';
 import LastBreathModal from './LastBreathModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
 import StatusModal from './StatusModal.jsx';
+import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const GameModals = ({
   character,
@@ -34,6 +35,7 @@ const GameModals = ({
   handleEquipItem,
   handleConsumeItem,
   handleDropItem,
+  handleUpdateNotes,
   showExportModal,
   setShowExportModal,
   showEndSessionModal,
@@ -85,6 +87,7 @@ const GameModals = ({
         onEquip={handleEquipItem}
         onConsume={handleConsumeItem}
         onDrop={handleDropItem}
+        onUpdateNotes={handleUpdateNotes}
         onClose={() => setShowInventoryModal(false)}
       />
     )}
@@ -122,10 +125,11 @@ GameModals.propTypes = {
   setShowLastBreathModal: PropTypes.func.isRequired,
   showInventoryModal: PropTypes.bool.isRequired,
   setShowInventoryModal: PropTypes.func.isRequired,
-  inventory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  inventory: PropTypes.arrayOf(inventoryItemType).isRequired,
   handleEquipItem: PropTypes.func.isRequired,
   handleConsumeItem: PropTypes.func.isRequired,
   handleDropItem: PropTypes.func.isRequired,
+  handleUpdateNotes: PropTypes.func.isRequired,
   showExportModal: PropTypes.bool.isRequired,
   setShowExportModal: PropTypes.func.isRequired,
   showEndSessionModal: PropTypes.bool.isRequired,

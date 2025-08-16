@@ -11,6 +11,7 @@ import {
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
+import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveToHistory }) => {
   const { handleConsumeItem } = useInventory(character, setCharacter);
@@ -44,6 +45,12 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveT
                   {item.damage && `${item.damage} damage`}
                   {item.armor && `+${item.armor} armor`}
                   {item.quantity > 1 && ` x${item.quantity}`}
+                  {item.addedAt && (
+                    <div className={styles.itemAddedAt}>
+                      Added {new Date(item.addedAt).toLocaleDateString()}
+                    </div>
+                  )}
+                  {item.notes && <div className={styles.itemNotes}>{item.notes}</div>}
                 </div>
               </div>
               {item.type === 'consumable' && item.quantity > 0 && (
@@ -91,7 +98,10 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveT
 };
 
 InventoryPanel.propTypes = {
-  character: PropTypes.object.isRequired,
+  character: PropTypes.shape({
+    inventory: PropTypes.arrayOf(inventoryItemType).isRequired,
+    debilities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
   setCharacter: PropTypes.func.isRequired,
   rollDie: PropTypes.func.isRequired,
   setRollResult: PropTypes.func.isRequired,

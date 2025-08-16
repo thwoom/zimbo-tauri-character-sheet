@@ -16,6 +16,7 @@ describe('InventoryModal', () => {
       onEquip: () => {},
       onConsume: () => {},
       onDrop: () => {},
+      onUpdateNotes: () => {},
       onClose: () => {},
     };
     const { rerender } = render(<InventoryWrapper isOpen={false} {...props} />);
@@ -31,6 +32,7 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
@@ -51,6 +53,7 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
@@ -75,6 +78,7 @@ describe('InventoryModal', () => {
         onEquip={onEquip}
         onConsume={onConsume}
         onDrop={onDrop}
+        onUpdateNotes={() => {}}
         onClose={onClose}
       />,
     );
@@ -101,6 +105,7 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
@@ -128,11 +133,34 @@ describe('InventoryModal', () => {
         onEquip={() => {}}
         onConsume={() => {}}
         onDrop={() => {}}
+        onUpdateNotes={() => {}}
         onClose={() => {}}
       />,
     );
     const group = screen.getByText('Drop').parentElement;
     group.style.overflowX = 'auto';
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  });
+
+  it('renders added date and edits notes', async () => {
+    const user = userEvent.setup();
+    const onUpdateNotes = vi.fn();
+    const addedAt = new Date('2024-01-01').toISOString();
+    const inventory = [{ id: 1, name: 'Sword', type: 'weapon', addedAt, notes: 'old' }];
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onUpdateNotes={onUpdateNotes}
+        onClose={() => {}}
+      />,
+    );
+    const dateString = new Date(addedAt).toLocaleDateString();
+    expect(screen.getByText(new RegExp(dateString))).toBeInTheDocument();
+    const textarea = screen.getByPlaceholderText('Notes');
+    await user.type(textarea, '!');
+    expect(onUpdateNotes).toHaveBeenLastCalledWith(1, 'old!');
   });
 });

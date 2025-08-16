@@ -69,6 +69,26 @@ describe('InventoryPanel', () => {
     expect(screen.getByText('A sharp blade')).toBeInTheDocument();
   });
 
+  it('displays notes and added date', () => {
+    const addedAt = new Date('2024-01-01').toISOString();
+    const character = {
+      inventory: [{ id: 1, name: 'Sword', notes: 'gift', addedAt }],
+      debilities: [],
+    };
+    render(
+      <InventoryPanel
+        character={character}
+        setCharacter={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+        saveToHistory={() => {}}
+      />,
+    );
+    expect(screen.getByText('gift')).toBeInTheDocument();
+    const dateString = new Date(addedAt).toLocaleDateString();
+    expect(screen.getByText(new RegExp(dateString))).toBeInTheDocument();
+  });
+
   it('undo restores consumed item', async () => {
     const user = userEvent.setup();
     function Wrapper() {

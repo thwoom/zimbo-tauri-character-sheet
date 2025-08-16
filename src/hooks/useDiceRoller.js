@@ -204,7 +204,7 @@ export default function useDiceRoller(
 
     const originalTotal = total;
     let originalInterpretation = '';
-    let originalResult;
+    let originalResultString;
 
     const resolveAidOrInterfere = async () => {
       const response = await openAidModal();
@@ -256,7 +256,8 @@ export default function useDiceRoller(
       if (!isAidMove) {
         const aid = await resolveAidOrInterfere();
         if (aid) {
-          originalResult = buildResultString(mods, originalTotal, notes) + originalInterpretation;
+          originalResultString =
+            buildResultString(mods, originalTotal, notes) + originalInterpretation;
           if (aid.modifier !== 0) {
             mods.push(aid.modifier);
             total += aid.modifier;
@@ -288,7 +289,7 @@ export default function useDiceRoller(
       rolls,
       modifier: totalModifier,
       timestamp: Date.now(),
-      ...(originalResult && { originalResult }),
+      ...(originalResultString && { originalResult: originalResultString }),
     };
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);

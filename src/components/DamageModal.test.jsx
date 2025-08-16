@@ -138,7 +138,6 @@ describe('DamageModal', () => {
     const initialHeight = group.clientHeight;
     group.style.width = '120px';
     expect(group.clientHeight).toBeGreaterThan(initialHeight);
-
   });
 
   it('renders action buttons without overflow on narrow screens', () => {

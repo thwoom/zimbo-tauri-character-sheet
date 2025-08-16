@@ -6,7 +6,8 @@ export async function saveFile(name, contents) {
 
   try {
     localStorage.setItem(name, contents);
-  } catch {
+  } catch (error) {
+    console.error('Failed to save file to localStorage', name, error);
     const blob = new Blob([contents], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -28,8 +29,8 @@ export async function loadFile(name) {
   try {
     const item = localStorage.getItem(name);
     if (item !== null) return item;
-  } catch {
-    // ignore
+  } catch (error) {
+    console.error('Failed to load file from localStorage', name, error);
   }
 
   return new Promise((resolve, reject) => {
@@ -56,7 +57,7 @@ export async function loadFile(name) {
       }
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error);
+      reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
       reader.readAsText(file);
     };
 

@@ -74,9 +74,55 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--space-md);
   margin-bottom: 20px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'hud'
+    'stats'
+    'dice'
+    'inventory'
+    'notes';
+}
+
+.hud {
+  grid-area: hud;
+}
+
+.stats {
+  grid-area: stats;
+}
+
+.dice {
+  grid-area: dice;
+}
+
+.inventory {
+  grid-area: inventory;
+}
+
+.notes {
+  grid-area: notes;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'hud   stats'
+      'dice  inventory'
+      'notes notes';
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      'hud   stats stats'
+      'hud   dice  inventory'
+      'notes notes notes';
+  }
 }
 
 .undoButton {

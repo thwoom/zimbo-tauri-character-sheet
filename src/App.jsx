@@ -53,7 +53,7 @@ function App() {
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
-  const [compactMode, setCompactMode] = useState(false);
+  const [compactMode, setCompactMode] = useState(() => window.innerWidth < 768);
   const [hudMounted, setHudMounted] = useState(false);
 
   const getDefaultLevelUpState = () => ({

@@ -31,7 +31,7 @@ const wrapper = ({ children }) => (
   <SettingsProvider initialAutoXpOnMiss={false}>{children}</SettingsProvider>
 );
 
-describe('useDiceRoller cleanup', () => {
+describe('useDiceRoller help modal cleanup', () => {
   const baseCharacter = { statusEffects: [], debilities: [], xp: 0 };
 
   it('closes aid modal and resolves pending promise on unmount', async () => {

@@ -156,10 +156,9 @@ describe('useDiceRoller aid/interfere', () => {
       await p;
     });
     expect(alertSpy).toHaveBeenCalled();
-    expect(result.current.rollModalData.originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
-    expect(result.current.rollModalData.result).toBe(
-      '2d6: 3 + 3 +1 = 7 (Helper Consequences) ⚠️ Partial Success',
-    );
+    const { originalResult, result: finalResult } = result.current.rollModalData;
+    expect(originalResult).toBe('2d6: 3 + 3 = 6 ❌ Failure');
+    expect(finalResult).toBe('2d6: 3 + 3 +1 = 7 (Helper Consequences) ⚠️ Partial Success');
     alertSpy.mockRestore();
     rollSpy.mockRestore();
   });

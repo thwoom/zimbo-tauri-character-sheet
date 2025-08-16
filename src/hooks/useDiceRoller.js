@@ -287,7 +287,7 @@ export default function useDiceRoller(
       total,
       rolls,
       modifier: totalModifier,
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: Date.now(),
       ...(originalResult && { originalResult }),
     };
     if (originalResult) rollData.originalResult = originalResult;

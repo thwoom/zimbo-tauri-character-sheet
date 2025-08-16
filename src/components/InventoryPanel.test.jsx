@@ -69,6 +69,43 @@ describe('InventoryPanel', () => {
     expect(screen.getByText('A sharp blade')).toBeInTheDocument();
   });
 
+  it('shows item details like damage, armor, quantity and equipped marker', () => {
+    const character = {
+      inventory: [
+        {
+          id: 1,
+          name: 'Axe',
+          type: 'weapon',
+          damage: 'd8',
+          equipped: true,
+          description: 'Chops well',
+        },
+        {
+          id: 2,
+          name: 'Mail',
+          type: 'armor',
+          armor: 1,
+          quantity: 2,
+        },
+      ],
+      debilities: [],
+    };
+    render(
+      <InventoryPanel
+        character={character}
+        setCharacter={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+        saveToHistory={() => {}}
+      />,
+    );
+    expect(screen.getByText('d8 damage')).toBeInTheDocument();
+    expect(screen.getByText((text) => text.includes('+1 armor'))).toBeInTheDocument();
+    expect(screen.getByText('Mail')).toBeInTheDocument();
+    expect(screen.getByText((text) => text.includes('x2'))).toBeInTheDocument();
+    expect(screen.getByText('✓')).toBeInTheDocument();
+  });
+
   it('undo restores consumed item', async () => {
     const user = userEvent.setup();
     function Wrapper() {

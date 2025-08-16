@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import {
   FaBoxOpen,
   FaMeteor,
@@ -11,23 +12,20 @@ import {
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
-import { inventoryItemType } from './common/inventoryItemPropTypes.js';
+import AddItemModal from './AddItemModal.jsx';
 
-const InventoryPanel = ({
-  character,
-  setCharacter,
-  rollDie,
-  setRollResult,
-  saveToHistory,
-  setShowAddItemModal,
-}) => {
-  const { handleConsumeItem } = useInventory(character, setCharacter);
+const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveToHistory }) => {
+  const { handleConsumeItem, handleAddItem } = useInventory(character, setCharacter);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   return (
     <div className={styles.panel}>
       <h3 className={styles.title}>
         <FaBoxOpen className={styles.itemIcon} /> Equipment
       </h3>
+      <button className={styles.useButton} onClick={() => setShowAddModal(true)}>
+        Add Item
+      </button>
       <div className={styles.items}>
         {character.inventory.slice(0, 5).map((item) => (
           <div key={item.id} className={`${styles.item} ${item.equipped ? styles.equipped : ''}`}>
@@ -100,11 +98,15 @@ const InventoryPanel = ({
           </div>
         </div>
       )}
-      <div className={styles.addItemSection}>
-        <button className={styles.addButton} onClick={() => setShowAddItemModal(true)}>
-          Add Item
-        </button>
-      </div>
+      {showAddModal && (
+        <AddItemModal
+          handleAddItem={(item) => {
+            saveToHistory('Inventory Change');
+            handleAddItem(item);
+          }}
+          onClose={() => setShowAddModal(false)}
+        />
+      )}
     </div>
   );
 };

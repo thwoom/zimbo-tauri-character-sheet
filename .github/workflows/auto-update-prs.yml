@@ -2,9 +2,9 @@ name: Auto-update PR branches
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "17 3 * * *"
+    - cron: '17 3 * * *'
   push:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   pull-requests: write
@@ -33,4 +33,3 @@ jobs:
             echo "Updating PR #$num"
             gh api -X PUT "repos/${{ github.repository }}/pulls/$num/update-branch" -f expected_head_sha= || true
           done
-

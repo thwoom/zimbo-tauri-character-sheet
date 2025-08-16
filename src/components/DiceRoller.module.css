@@ -115,3 +115,36 @@
 .historyTime {
   color: var(--color-accent);
 }
+
+@keyframes resultPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pop {
+  animation: resultPop 0.3s ease;
+}
+
+@keyframes criticalShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+.critical {
+  animation: criticalShake 0.4s ease-in-out;
+}

@@ -35,7 +35,7 @@ describe('DiceRoller', () => {
     expect(rollDice).toHaveBeenCalledWith('2d6+1', 'STR Check');
 
     await user.click(screen.getByText('d6'));
-    expect(rollDice).toHaveBeenCalledWith('d6');
+    expect(rollDice).toHaveBeenCalledWith('d6', undefined);
 
     await user.click(screen.getByText('Aid/Interfere'));
     expect(rollDice).toHaveBeenCalledWith('2d6', 'Aid/Interfere');
@@ -88,5 +88,41 @@ describe('DiceRoller', () => {
       />,
     );
     expect(screen.getByText('d20: 10 = 10')).toBeInTheDocument();
+  });
+
+  it('shows rolling state before displaying result', async () => {
+    const user = userEvent.setup();
+    const rollDice = vi.fn();
+    const { rerender } = render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        equippedWeaponDamage="d8"
+        rollResult=""
+        rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+      />,
+    );
+
+    await user.click(screen.getByText('d6'));
+
+    rerender(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        equippedWeaponDamage="d8"
+        rollResult="d6: 4 = 4"
+        rollHistory={rollHistory}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+      />,
+    );
+
+    expect(screen.getByText(/rolling/i)).toBeInTheDocument();
+    await screen.findByText('d6: 4 = 4');
+    expect(screen.queryByText(/rolling/i)).not.toBeInTheDocument();
   });
 });

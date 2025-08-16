@@ -36,9 +36,6 @@ export default defineConfig(async () => ({
     port: 1420,
     strictPort: true,
     host: host || false,
-    headers: {
-      'X-Frame-Options': 'DENY',
-    },
     hmr: host
       ? {
           protocol: 'ws',
@@ -47,25 +44,20 @@ export default defineConfig(async () => ({
         }
       : undefined,
     headers: {
+      'X-Frame-Options': 'DENY',
       'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      Expires: '0',
     },
     watch: {
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
     },
-    headers: {
-      'Cache-Control': 'no-store',
-      Expires: '0',
-    },
   },
   preview: {
     headers: {
       'Cache-Control': 'no-store',
       Expires: '0',
-    },
-  },
-  preview: {
-    headers: {
       'X-Frame-Options': 'DENY',
     },
   },

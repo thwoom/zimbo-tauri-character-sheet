@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { FaUserAstronaut } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './BondsModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function BondsModal({ isOpen, onClose }) {
   const { character, setCharacter } = useCharacter();
   const [name, setName] = useState('');
   const [relationship, setRelationship] = useState('');
+  const [isVisible, isActive] = useModalTransition(isOpen);
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   const addBond = () => {
     if (name.trim() && relationship.trim()) {
@@ -43,7 +45,9 @@ export default function BondsModal({ isOpen, onClose }) {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>
           <FaUserAstronaut style={{ marginRight: '4px' }} /> Character Bonds
         </h2>

@@ -4,6 +4,7 @@ import styles from './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
 import { scoreToMod } from '../utils/score.js';
 import Message from './Message.jsx';
+import useModalTransition from './common/useModalTransition.js';
 
 const LevelUpModal = ({
   character,
@@ -17,6 +18,7 @@ const LevelUpModal = ({
   const [showMoveDetails, setShowMoveDetails] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
   const modalRef = useRef(null);
+  const [isVisible, isActive] = useModalTransition(true);
 
   useEffect(() => {
     if (!modalRef.current) return;
@@ -221,6 +223,8 @@ const LevelUpModal = ({
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
+  if (!isVisible) return null;
+
   return (
     /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
     <div
@@ -232,7 +236,7 @@ const LevelUpModal = ({
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
         ref={modalRef}
-        className={styles.modal}
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

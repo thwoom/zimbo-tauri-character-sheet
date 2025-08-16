@@ -6,13 +6,15 @@ import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './DamageModal.module.css';
 import Button from './common/Button.jsx';
 import ButtonGroup from './common/ButtonGroup.jsx';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function DamageModal({ isOpen, onClose, onLastBreath }) {
   const { character, setCharacter } = useCharacter();
   const [damage, setDamage] = useState('');
   const { totalArmor } = useInventory(character, setCharacter);
+  const [isVisible, isActive] = useModalTransition(isOpen);
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   const effectiveDamage = () => {
     const dmg = parseInt(damage, 10);
@@ -41,7 +43,9 @@ export default function DamageModal({ isOpen, onClose, onLastBreath }) {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>
           <FaMeteor style={{ marginRight: '4px' }} /> Damage Calculator
         </h2>

@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from './AidInterfereModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function AidInterfereModal({ isOpen, onConfirm, onCancel }) {
   const [action, setAction] = useState('aid');
   const [bond, setBond] = useState(0);
+  const [isVisible, isActive] = useModalTransition(isOpen);
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   const handleConfirm = () => {
     const bondValue = Math.max(0, Math.min(3, parseInt(bond, 10) || 0));
@@ -15,7 +17,9 @@ export default function AidInterfereModal({ isOpen, onConfirm, onCancel }) {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>Aid or Interfere</h2>
         <div className={styles.formRow}>
           <label className={styles.radioLabel}>

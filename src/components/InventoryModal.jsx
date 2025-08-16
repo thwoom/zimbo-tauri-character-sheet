@@ -2,11 +2,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './InventoryModal.module.css';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
+import useModalTransition from './common/useModalTransition.js';
 
 const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onUpdateNotes, onClose }) => {
+  const [isVisible, isActive] = useModalTransition(true);
+
+  if (!isVisible) return null;
+
   return (
     <div className={styles.inventoryOverlay}>
-      <div className={styles.inventoryModal}>
+      <div
+        className={`${styles.inventoryModal} ${styles.modalEnter} ${
+          isActive ? styles.modalEnterActive : ''
+        }`}
+      >
         <h2 className={styles.inventoryTitle}>🎒 Inventory</h2>
 
         {inventory.length === 0 ? (

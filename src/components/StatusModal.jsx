@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './StatusModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 const StatusModal = ({
   statusEffects,
@@ -12,9 +13,17 @@ const StatusModal = ({
   onClose,
   saveToHistory,
 }) => {
+  const [isVisible, isActive] = useModalTransition(true);
+
+  if (!isVisible) return null;
+
   return (
     <div className={styles.statusOverlay}>
-      <div className={styles.statusModal}>
+      <div
+        className={`${styles.statusModal} ${styles.modalEnter} ${
+          isActive ? styles.modalEnterActive : ''
+        }`}
+      >
         <h2 className={styles.statusTitle}>💀 Status & Debilities</h2>
         <div>
           <h3 className={styles.statusSubtitle}>Status Effects</h3>

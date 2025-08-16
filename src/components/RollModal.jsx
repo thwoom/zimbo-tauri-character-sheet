@@ -2,12 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FaDiceD20 } from 'react-icons/fa6';
 import styles from './RollModal.module.css';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function RollModal({ isOpen, data, onClose }) {
-  if (!isOpen || !data) return null;
+  const [isVisible, isActive] = useModalTransition(isOpen && !!data);
+  if (!isVisible) return null;
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <div className={styles.header}>
           <div className={styles.headerRow}>
             <h2 className={styles.title}>

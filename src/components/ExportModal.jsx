@@ -6,17 +6,19 @@ import { useCharacter } from '../state/CharacterContext.jsx';
 import styles from './ExportModal.module.css';
 import Button from './common/Button.jsx';
 import ButtonGroup from './common/ButtonGroup.jsx';
+import useModalTransition from './common/useModalTransition.js';
 
 export default function ExportModal({ isOpen, onClose }) {
   const { character, addCharacter, selectedId } = useCharacter();
   const [fileName, setFileName] = useState(`character-${selectedId}.json`);
   const [message, setMessage] = useState('');
+  const [isVisible, isActive] = useModalTransition(isOpen);
 
   useEffect(() => {
     setFileName(`character-${selectedId}.json`);
   }, [selectedId]);
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   const handleSave = async () => {
     try {
@@ -44,7 +46,9 @@ export default function ExportModal({ isOpen, onClose }) {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div
+        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
+      >
         <h2 className={styles.title}>
           <FaSatellite style={{ marginRight: '4px' }} /> Export / Import
         </h2>

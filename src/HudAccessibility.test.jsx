@@ -8,7 +8,11 @@ import CharacterContext from './state/CharacterContext.jsx';
 import { SettingsProvider } from './state/SettingsContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
 
-function renderApp(overrides = {}) {
+vi.mock('@tauri-apps/api/app', () => ({
+  getVersion: vi.fn().mockResolvedValue('1.0.0'),
+}));
+
+async function renderApp(overrides = {}) {
   const initialCharacter = { ...INITIAL_CHARACTER_DATA, ...overrides };
   const Wrapper = ({ children }) => {
     const [character, setCharacter] = React.useState(initialCharacter);
@@ -20,11 +24,13 @@ function renderApp(overrides = {}) {
       </ThemeProvider>
     );
   };
-  return render(
+  const result = render(
     <Wrapper>
       <App />
     </Wrapper>,
   );
+  await screen.findByText(/Version:/);
+  return result;
 }
 
 beforeEach(() => {
@@ -33,13 +39,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  window.confirm.mockRestore();
-  window.prompt.mockRestore();
+  vi.restoreAllMocks();
 });
 
 describe('HUD accessibility', () => {
   it('provides keyboard navigation through HUD elements', async () => {
-    renderApp({ statusEffects: ['poisoned', 'burning'] });
+    await renderApp({ statusEffects: ['poisoned', 'burning'] });
     const user = userEvent.setup();
 
     await user.tab();
@@ -58,8 +63,8 @@ describe('HUD accessibility', () => {
     expect(screen.getByRole('status', { name: /poisoned/i })).toHaveFocus();
   });
 
-  it('exposes ARIA attributes for bars and status chips', () => {
-    renderApp({
+  it('exposes ARIA attributes for bars and status chips', async () => {
+    await renderApp({
       hp: 5,
       maxHp: 10,
       xp: 2,

@@ -1,12 +1,16 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import App from './App.jsx';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
 import CharacterContext from './state/CharacterContext.jsx';
 import { SettingsProvider } from './state/SettingsContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
 import styles from './styles/AppStyles.module.css';
+
+vi.mock('@tauri-apps/api/app', () => ({
+  getVersion: vi.fn().mockResolvedValue('1.0.0'),
+}));
 
 const Wrapper = ({ children }) => {
   const [character, setCharacter] = React.useState(INITIAL_CHARACTER_DATA);
@@ -41,12 +45,18 @@ describe('Header responsiveness', () => {
       }));
   });
 
-  it('keeps the last header button within bounds', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('keeps the last header button within bounds', async () => {
     const { container } = render(
       <Wrapper>
         <App />
       </Wrapper>,
     );
+
+    await screen.findByText(/Version:/);
 
     const headerTop = container.querySelector(`.${styles.headerTop}`);
     const buttonRow = headerTop.querySelector('button').parentElement;

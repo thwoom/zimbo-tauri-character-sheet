@@ -1,3 +1,5 @@
+import logger from './logger.js';
+
 const safeLocalStorage = {
   getItem(key, fallback = null) {
     try {
@@ -5,7 +7,7 @@ const safeLocalStorage = {
       const value = localStorage.getItem(key);
       return value === null ? fallback : value;
     } catch (error) {
-      console.error('Failed to get localStorage item', key, error);
+      logger.error('Failed to get localStorage item', { key, error });
       return fallback;
     }
   },
@@ -15,7 +17,7 @@ const safeLocalStorage = {
       if (typeof localStorage === 'undefined') return;
       localStorage.setItem(key, value);
     } catch (error) {
-      console.error('Failed to set localStorage item', key, error);
+      logger.error('Failed to set localStorage item', { key, error });
     }
   },
 
@@ -24,7 +26,7 @@ const safeLocalStorage = {
       if (typeof localStorage === 'undefined') return;
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('Failed to remove localStorage item', key, error);
+      logger.error('Failed to remove localStorage item', { key, error });
     }
   },
 };

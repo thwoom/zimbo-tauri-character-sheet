@@ -45,12 +45,15 @@ const baseProps = {
   setShowLastBreathModal: () => {},
   showInventoryModal: false,
   setShowInventoryModal: () => {},
+  showAddItemModal: false,
+  setShowAddItemModal: () => {},
   showExportModal: false,
   setShowExportModal: () => {},
   showEndSessionModal: false,
   setShowEndSessionModal: () => {},
   bondsModal: { isOpen: false, close: () => {} },
   saveToHistory: () => {},
+  handleAddItem: () => {},
 };
 
 const renderModals = (props) =>
@@ -144,6 +147,23 @@ describe('GameModals', () => {
       </CharacterProvider>,
     );
     expect(screen.queryByRole('heading', { name: /inventory/i })).not.toBeInTheDocument();
+  });
+
+  it('toggles AddItemModal with showAddItemModal', () => {
+    const { rerender } = renderModals();
+    expect(screen.queryByText(/add item/i)).not.toBeInTheDocument();
+    rerender(
+      <CharacterProvider>
+        <Wrapper {...baseProps} showAddItemModal />
+      </CharacterProvider>,
+    );
+    expect(screen.getByText(/add item/i)).toBeInTheDocument();
+    rerender(
+      <CharacterProvider>
+        <Wrapper {...baseProps} />
+      </CharacterProvider>,
+    );
+    expect(screen.queryByText(/add item/i)).not.toBeInTheDocument();
   });
 
   it('toggles BondsModal with bondsModal.isOpen', () => {

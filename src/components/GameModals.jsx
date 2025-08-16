@@ -5,6 +5,7 @@ import DamageModal from './DamageModal.jsx';
 import ExportModal from './ExportModal.jsx';
 import EndSessionModal from './EndSessionModal.jsx';
 import InventoryModal from './InventoryModal.jsx';
+import AddItemModal from './AddItemModal.jsx';
 import LastBreathModal from './LastBreathModal.jsx';
 import LevelUpModal from './LevelUpModal.jsx';
 import StatusModal from './StatusModal.jsx';
@@ -30,10 +31,13 @@ const GameModals = ({
   setShowLastBreathModal,
   showInventoryModal,
   setShowInventoryModal,
+  showAddItemModal,
+  setShowAddItemModal,
   inventory,
   handleEquipItem,
   handleConsumeItem,
   handleDropItem,
+  handleAddItem,
   showExportModal,
   setShowExportModal,
   showEndSessionModal,
@@ -89,6 +93,10 @@ const GameModals = ({
       />
     )}
 
+    {showAddItemModal && (
+      <AddItemModal onAdd={handleAddItem} onClose={() => setShowAddItemModal(false)} />
+    )}
+
     <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
 
     <EndSessionModal
@@ -122,10 +130,13 @@ GameModals.propTypes = {
   setShowLastBreathModal: PropTypes.func.isRequired,
   showInventoryModal: PropTypes.bool.isRequired,
   setShowInventoryModal: PropTypes.func.isRequired,
+  showAddItemModal: PropTypes.bool.isRequired,
+  setShowAddItemModal: PropTypes.func.isRequired,
   inventory: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleEquipItem: PropTypes.func.isRequired,
   handleConsumeItem: PropTypes.func.isRequired,
   handleDropItem: PropTypes.func.isRequired,
+  handleAddItem: PropTypes.func.isRequired,
   showExportModal: PropTypes.bool.isRequired,
   setShowExportModal: PropTypes.func.isRequired,
   showEndSessionModal: PropTypes.bool.isRequired,

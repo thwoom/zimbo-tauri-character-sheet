@@ -20,7 +20,7 @@ export default function RollModal({ isOpen, data, onClose }) {
         </div>
         <div className={styles.body}>
           {data.initialResult && (
-            <div className={styles.initialResult}>Original Roll: {data.initialResult}</div>
+            <div className={styles.originalResult}>Original Roll: {data.initialResult}</div>
           )}
           {Array.isArray(data.result) ? (
             <div className={styles.result}>

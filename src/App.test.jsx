@@ -87,7 +87,7 @@ describe('XP gain on miss', () => {
       </Wrapper>,
     );
 
-    const button = screen.getByRole('button', { name: 'INT (+0)' });
+    const button = screen.getByRole('button', { name: 'Roll INT Check' });
 
     act(() => {
       fireEvent.click(button);
@@ -110,7 +110,7 @@ describe('XP gain on miss', () => {
       </Wrapper>,
     );
 
-    const button = screen.getByRole('button', { name: 'INT (+0)' });
+    const button = screen.getByRole('button', { name: 'Roll INT Check' });
     act(() => {
       fireEvent.click(button);
     });
@@ -177,11 +177,11 @@ describe.skip('localStorage persistence', () => {
       fireEvent.change(screen.getByPlaceholderText(/Track important events/i), {
         target: { value: 'My session note' },
       });
-      fireEvent.click(screen.getByRole('button', { name: 'INT (+0)' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Roll INT Check' }));
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'INT (+0)' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Roll INT Check' })).toBeInTheDocument();
     });
 
     unmount();
@@ -212,7 +212,7 @@ describe.skip('localStorage persistence', () => {
       fireEvent.change(screen.getByPlaceholderText(/Track important events/i), {
         target: { value: 'My session note' },
       });
-      fireEvent.click(screen.getByRole('button', { name: 'INT (+0)' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Roll INT Check' }));
     });
 
     const resetButton = screen.getAllByRole('button', { name: /Reset/i }).pop();

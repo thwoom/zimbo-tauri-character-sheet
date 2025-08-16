@@ -78,6 +78,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
               const timestamp = new Date().toLocaleString();
               setSessionNotes((prev) => prev + (prev ? '\n\n' : '') + `--- ${timestamp} ---\n`);
             }}
+            aria-label="Insert timestamp"
           >
             <FaCalendarDays className={styles.icon} /> Timestamp
           </button>
@@ -90,6 +91,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
                 setWarning('Persistence unavailable; notes may not be saved.');
               }
             }}
+            aria-label="Save notes"
           >
             <FaFloppyDisk className={styles.icon} /> Save
           </button>
@@ -103,15 +105,22 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
                 setWarning('Persistence unavailable; notes may not be loaded.');
               }
             }}
+            aria-label="Load notes"
           >
             <FaFolderOpen className={styles.icon} /> Load
           </button>
-          <button className={`${styles.button} ${styles.danger}`} onClick={handleClear}>
+          <button
+            className={`${styles.button} ${styles.danger}`}
+            onClick={handleClear}
+            aria-label="Clear notes"
+          >
             <FaTrash className={styles.icon} /> Clear
           </button>
           <button
             className={`${styles.button} ${styles.compact}`}
             onClick={() => setCompactMode(!compactMode)}
+            aria-expanded={!compactMode}
+            aria-label={compactMode ? 'Expand notes panel' : 'Compact notes panel'}
           >
             {compactMode ? <FaLaptop /> : <FaMobileScreen />} {compactMode ? 'Expand' : 'Compact'}
           </button>

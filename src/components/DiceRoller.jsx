@@ -27,6 +27,7 @@ const DiceRoller = ({
               key={stat}
               onClick={() => rollDice(`2d6+${data.mod}`, `${stat} Check`)}
               className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label={`Roll ${stat} Check`}
             >
               {stat} ({data.mod >= 0 ? '+' : ''}
               {data.mod})
@@ -42,30 +43,35 @@ const DiceRoller = ({
           <button
             onClick={() => rollDice(equippedWeaponDamage, 'Weapon Damage')}
             className={`${styles.button} ${styles.red} ${styles.small}`}
+            aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
           >
             Weapon ({equippedWeaponDamage})
           </button>
           <button
             onClick={() => rollDice('2d6+3', 'Hack & Slash')}
             className={`${styles.button} ${styles.purple} ${styles.small}`}
+            aria-label="Roll Hack & Slash"
           >
             Hack & Slash
           </button>
           <button
             onClick={() => rollDice('d4', 'Upper Hand')}
             className={`${styles.button} ${styles.orange} ${styles.small}`}
+            aria-label="Roll Upper Hand d4"
           >
             Upper Hand d4
           </button>
           <button
             onClick={() => rollDice('2d6-1', 'Taunt')}
             className={`${styles.button} ${styles.amber} ${styles.small}`}
+            aria-label="Roll Taunt Enemy"
           >
             Taunt Enemy
           </button>
           <button
             onClick={() => rollDice('2d6', 'Aid/Interfere')}
             className={`${styles.button} ${styles.purple} ${styles.small}`}
+            aria-label="Roll Aid or Interfere"
           >
             Aid/Interfere
           </button>
@@ -81,6 +87,7 @@ const DiceRoller = ({
               key={sides}
               onClick={() => rollDice(`d${sides}`)}
               className={`${styles.button} ${styles.cyan} ${styles.tiny}`}
+              aria-label={`Roll d${sides}`}
             >
               d{sides}
             </button>

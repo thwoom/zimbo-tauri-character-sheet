@@ -9,13 +9,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--hud-spacing);
 }
 
 .modal {
   background: var(--color-modal-bg);
   border: 2px solid var(--color-accent);
   border-radius: 15px;
-  padding: 30px;
+  padding: var(--hud-spacing);
   text-align: center;
   width: 400px;
   max-height: 80%;
@@ -24,11 +25,12 @@
 
 .title {
   color: var(--color-accent);
+  margin-bottom: var(--space-md);
 }
 
 .section {
   text-align: left;
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
 }
 
 .bondList {
@@ -37,12 +39,12 @@
 }
 
 .bondItem {
-  margin-bottom: 5px;
+  margin-bottom: var(--space-sm);
 }
 
 .bondInput {
   width: 100%;
-  margin-top: 5px;
+  margin-top: var(--space-sm);
   padding: 5px;
   border-radius: 4px;
   border: 1px solid var(--color-accent);
@@ -52,7 +54,7 @@
 
 .recapInput {
   width: 100%;
-  margin-top: 5px;
+  margin-top: var(--space-sm);
   padding: 5px;
   border-radius: 4px;
   border: 1px solid var(--color-accent);
@@ -61,17 +63,17 @@
 }
 
 .total {
-  margin-top: 10px;
+  margin-top: var(--space-md);
   color: var(--color-white);
 }
 
 .error {
   color: var(--color-danger);
-  margin-top: 10px;
+  margin-top: var(--space-md);
 }
 
 .actions {
-  margin-top: 20px;
+  margin-top: var(--space-md);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -87,7 +89,7 @@
 
 .error {
   color: var(--color-danger);
-  margin-top: 10px;
+  margin-top: var(--space-md);
 }
 
 .button {

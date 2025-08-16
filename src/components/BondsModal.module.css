@@ -9,13 +9,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--hud-spacing);
 }
 
 .modal {
   background: var(--color-modal-bg);
   border: 2px solid var(--color-accent);
   border-radius: 15px;
-  padding: 30px;
+  padding: var(--hud-spacing);
   text-align: center;
   width: 400px;
   max-height: 80%;
@@ -24,21 +25,22 @@
 
 .title {
   color: var(--color-accent);
+  margin-bottom: var(--space-md);
 }
 
 .empty {
   color: var(--color-gray-400);
-  margin: 20px 0;
+  margin: var(--space-md) 0;
 }
 
 .bondList {
   list-style: none;
   padding: 0;
-  margin: 20px 0;
+  margin: var(--space-md) 0;
 }
 
 .bondItem {
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
   text-align: left;
 }
 
@@ -52,7 +54,7 @@
 }
 
 .bondActions {
-  margin-top: 5px;
+  margin-top: var(--space-md);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -97,7 +99,7 @@
   color: var(--color-white);
   padding: var(--space-sm);
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
 }
 
 .form {
@@ -105,5 +107,5 @@
 }
 
 .closeButton {
-  margin-top: 20px;
+  margin-top: var(--space-md);
 }

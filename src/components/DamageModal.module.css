@@ -9,23 +9,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--hud-spacing);
 }
 
 .modal {
   background: var(--color-modal-bg);
   border: 2px solid var(--color-accent);
   border-radius: 15px;
-  padding: 30px;
+  padding: var(--hud-spacing);
   text-align: center;
   width: 300px;
 }
 
 .title {
   color: var(--color-accent);
+  margin-bottom: var(--space-md);
 }
 
 .info {
-  margin: 15px 0;
+  margin: var(--space-md) 0;
   color: var(--color-white);
 }
 
@@ -36,12 +38,12 @@
   color: var(--color-white);
   padding: var(--space-sm);
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
 }
 
 .summary {
   color: var(--color-gray-400);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .applyButton {

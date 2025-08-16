@@ -102,7 +102,7 @@ const LevelUpModal = ({
           rolls: [roll],
           modifier: conMod,
           total: increase,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: Date.now(),
         },
         ...(prev.rollHistory ? prev.rollHistory.slice(0, 9) : []),
       ],

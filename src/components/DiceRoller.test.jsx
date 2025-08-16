@@ -12,7 +12,7 @@ const minimalCharacter = {
   },
 };
 
-const rollHistory = [{ timestamp: '10:00', result: '2d6: 7 = 7' }];
+const rollHistory = [{ timestamp: 1697040000000, result: '2d6: 7 = 7' }];
 
 describe('DiceRoller', () => {
   it('calls rollDice when buttons clicked', async () => {

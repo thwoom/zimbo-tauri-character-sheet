@@ -43,6 +43,13 @@ The overlay appears during development builds only and is ignored in production.
 - [Node.js](https://nodejs.org/) >=20 and npm
 - [Rust](https://www.rust-lang.org/tools/install) and Cargo
 - Tauri CLI (`npm install` or `cargo install tauri-cli`)
+- glib-2.0 development headers and a WebKitWebDriver binary – for example:
+
+  ```bash
+  sudo apt install libglib2.0-dev webkit2gtk-driver
+  ```
+
+  These packages must be installed before running `npm run test:e2e` or `npm run build`.
 
 ### Install dependencies
 
@@ -82,6 +89,8 @@ npm run dev
 Use this for UI work—features that depend on Tauri APIs (like reading or writing local files) won't function in this mode.
 
 ### Build web assets
+
+Ensure `glib-2.0` and `webkit2gtk-driver` are installed (see [Prerequisites](#prerequisites)):
 
 ```bash
 npm run build

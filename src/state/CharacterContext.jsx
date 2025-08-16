@@ -6,8 +6,6 @@ const STORAGE_FILE = 'character.json';
 
 const CharacterContext = createContext();
 
-const createDefaultCharacter = () => ({ id: crypto.randomUUID(), ...INITIAL_CHARACTER_DATA });
-
 export const CharacterProvider = ({ children }) => {
   const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
   const initializedRef = useRef(false);
@@ -16,10 +14,19 @@ export const CharacterProvider = ({ children }) => {
     loadFile(STORAGE_FILE)
       .then((data) => {
         if (data) {
-          setCharacter(JSON.parse(data));
+          try {
+            setCharacter(JSON.parse(data));
+            return;
+          } catch (error) {
+            console.error('Failed to parse character file:', error);
+          }
         }
+        setCharacter(createDefaultCharacter());
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error('Failed to load character file:', error);
+        setCharacter(createDefaultCharacter());
+      })
       .finally(() => {
         initializedRef.current = true;
       });
@@ -27,7 +34,9 @@ export const CharacterProvider = ({ children }) => {
 
   useEffect(() => {
     if (!initializedRef.current) return;
-    saveFile(STORAGE_FILE, JSON.stringify(character)).catch(() => {});
+    saveFile(STORAGE_FILE, JSON.stringify(character)).catch((error) => {
+      console.error('Failed to save character file:', error);
+    });
   }, [character]);
 
   const value = useMemo(() => ({ character, setCharacter }), [character]);

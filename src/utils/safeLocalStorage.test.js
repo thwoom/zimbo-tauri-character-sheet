@@ -1,5 +1,6 @@
 /* eslint-env jest */
 import { describe, it, expect, vi } from 'vitest';
+import logger from './logger.js';
 import safeLocalStorage from './safeLocalStorage.js';
 
 describe('safeLocalStorage', () => {
@@ -14,7 +15,7 @@ describe('safeLocalStorage', () => {
 
   it('returns fallback and logs error when getItem throws', () => {
     const original = global.localStorage;
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
     const err = new Error('fail');
     global.localStorage = {
       getItem: vi.fn(() => {
@@ -22,14 +23,17 @@ describe('safeLocalStorage', () => {
       }),
     };
     expect(safeLocalStorage.getItem('key', 'fallback')).toBe('fallback');
-    expect(errorSpy).toHaveBeenCalledWith('Failed to get localStorage item', 'key', err);
+    expect(errorSpy).toHaveBeenCalledWith('Failed to get localStorage item', {
+      key: 'key',
+      error: err,
+    });
     errorSpy.mockRestore();
     global.localStorage = original;
   });
 
   it('logs errors from setItem and removeItem without throwing', () => {
     const original = global.localStorage;
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
     const setErr = new Error('fail set');
     const removeErr = new Error('fail remove');
     global.localStorage = {
@@ -43,13 +47,14 @@ describe('safeLocalStorage', () => {
     };
     expect(() => safeLocalStorage.setItem('key', 'value')).not.toThrow();
     expect(() => safeLocalStorage.removeItem('key')).not.toThrow();
-    expect(errorSpy).toHaveBeenNthCalledWith(1, 'Failed to set localStorage item', 'key', setErr);
-    expect(errorSpy).toHaveBeenNthCalledWith(
-      2,
-      'Failed to remove localStorage item',
-      'key',
-      removeErr,
-    );
+    expect(errorSpy).toHaveBeenNthCalledWith(1, 'Failed to set localStorage item', {
+      key: 'key',
+      error: setErr,
+    });
+    expect(errorSpy).toHaveBeenNthCalledWith(2, 'Failed to remove localStorage item', {
+      key: 'key',
+      error: removeErr,
+    });
     errorSpy.mockRestore();
     global.localStorage = original;
   });

@@ -121,4 +121,40 @@ describe('fileStorage browser fallback', () => {
     global.localStorage = originalStorage;
     createSpy.mockRestore();
   });
+
+  it('rejects with an error when file reading fails', async () => {
+    const originalStorage = global.localStorage;
+    global.localStorage = { getItem: () => null };
+
+    const handlers = {};
+    const input = {
+      type: 'file',
+      accept: '',
+      addEventListener: vi.fn((event, handler) => {
+        handlers[event] = handler;
+      }),
+      removeEventListener: vi.fn(),
+      click: vi.fn(() => {
+        handlers.change();
+      }),
+      files: [{}],
+    };
+
+    const createSpy = vi.spyOn(document, 'createElement').mockReturnValue(input);
+
+    const originalReader = global.FileReader;
+    class MockReader {
+      readAsText() {
+        this.error = new Error('read error');
+        this.onerror();
+      }
+    }
+    global.FileReader = MockReader;
+
+    await expect(loadFile('key')).rejects.toThrow('read error');
+
+    global.localStorage = originalStorage;
+    createSpy.mockRestore();
+    global.FileReader = originalReader;
+  });
 });

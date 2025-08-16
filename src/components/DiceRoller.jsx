@@ -95,9 +95,13 @@ const DiceRoller = ({
       {rollHistory.length > 0 && (
         <div className={styles.history}>
           <div className={styles.historyTitle}>Recent Rolls:</div>
-          {rollHistory.slice(0, 3).map((roll, index) => (
-            <div key={index} className={styles.historyItem}>
-              <span className={styles.historyTime}>{roll.timestamp}</span> - {roll.result}
+          {rollHistory.slice(0, 3).map((roll) => (
+            <div key={roll.timestamp} className={styles.historyItem}>
+              <span className={styles.historyTime}>
+                {new Date(roll.timestamp).toLocaleTimeString()}
+              </span>
+              {' - '}
+              {roll.result}
             </div>
           ))}
         </div>

@@ -90,6 +90,8 @@ Use this for UI work—features that depend on Tauri APIs (like reading or writi
 
 ### Build web assets
 
+Ensure `glib-2.0` and `webkit2gtk-driver` are installed (see [Prerequisites](#prerequisites)):
+
 ```bash
 npm run build
 ```

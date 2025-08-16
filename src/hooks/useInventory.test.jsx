@@ -172,4 +172,17 @@ describe('useInventory actions', () => {
       { id: 'coin', name: 'Coin', description: 'Shiny coin' },
     ]);
   });
+
+  it('updates item notes with handleUpdateNotes', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({
+        inventory: [{ id: 'rock', notes: '' }],
+      });
+      const inventory = useInventory(character, setCharacter);
+      return { ...inventory, character };
+    });
+
+    act(() => result.current.handleUpdateNotes('rock', 'A simple stone'));
+    expect(result.current.character.inventory[0].notes).toBe('A simple stone');
+  });
 });

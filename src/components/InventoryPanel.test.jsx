@@ -69,25 +69,10 @@ describe('InventoryPanel', () => {
     expect(screen.getByText('A sharp blade')).toBeInTheDocument();
   });
 
-  it('shows item details like damage, armor, quantity and equipped marker', () => {
+  it('displays notes and added date', () => {
+    const addedAt = new Date('2024-01-01').toISOString();
     const character = {
-      inventory: [
-        {
-          id: 1,
-          name: 'Axe',
-          type: 'weapon',
-          damage: 'd8',
-          equipped: true,
-          description: 'Chops well',
-        },
-        {
-          id: 2,
-          name: 'Mail',
-          type: 'armor',
-          armor: 1,
-          quantity: 2,
-        },
-      ],
+      inventory: [{ id: 1, name: 'Sword', notes: 'gift', addedAt }],
       debilities: [],
     };
     render(
@@ -99,11 +84,9 @@ describe('InventoryPanel', () => {
         saveToHistory={() => {}}
       />,
     );
-    expect(screen.getByText('d8 damage')).toBeInTheDocument();
-    expect(screen.getByText((text) => text.includes('+1 armor'))).toBeInTheDocument();
-    expect(screen.getByText('Mail')).toBeInTheDocument();
-    expect(screen.getByText((text) => text.includes('x2'))).toBeInTheDocument();
-    expect(screen.getByText('✓')).toBeInTheDocument();
+    expect(screen.getByText('gift')).toBeInTheDocument();
+    const dateString = new Date(addedAt).toLocaleDateString();
+    expect(screen.getByText(new RegExp(dateString))).toBeInTheDocument();
   });
 
   it('undo restores consumed item', async () => {

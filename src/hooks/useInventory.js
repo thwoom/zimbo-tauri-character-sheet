@@ -75,6 +75,16 @@ export default function useInventory(character, setCharacter) {
     [setCharacter],
   );
 
+  const handleUpdateNotes = useCallback(
+    (id, notes) => {
+      setCharacter((prev) => ({
+        ...prev,
+        inventory: prev.inventory.map((item) => (item.id === id ? { ...item, notes } : item)),
+      }));
+    },
+    [setCharacter],
+  );
+
   return {
     totalArmor,
     equippedWeaponDamage,
@@ -82,5 +92,6 @@ export default function useInventory(character, setCharacter) {
     handleEquipItem,
     handleConsumeItem,
     handleDropItem,
+    handleUpdateNotes,
   };
 }

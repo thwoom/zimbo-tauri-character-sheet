@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './InventoryModal.module.css';
+import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
-const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
+const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onUpdateNotes, onClose }) => {
   return (
     <div className={styles.inventoryOverlay}>
       <div className={styles.inventoryModal}>
@@ -20,6 +21,19 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
                   {item.description && (
                     <div className={styles.inventoryItemDescription}>{item.description}</div>
                   )}
+                </div>
+                <div className={styles.inventoryItemMeta}>
+                  {item.addedAt && (
+                    <div className={styles.inventoryAddedAt}>
+                      Added {new Date(item.addedAt).toLocaleDateString()}
+                    </div>
+                  )}
+                  <textarea
+                    className={styles.inventoryNotesInput}
+                    placeholder="Notes"
+                    value={item.notes || ''}
+                    onChange={(e) => onUpdateNotes(item.id, e.target.value)}
+                  />
                 </div>
                 <div className={styles.inventoryItemActions}>
                   {'equipped' in item && (
@@ -51,10 +65,11 @@ const InventoryModal = ({ inventory, onEquip, onConsume, onDrop, onClose }) => {
 };
 
 InventoryModal.propTypes = {
-  inventory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  inventory: PropTypes.arrayOf(inventoryItemType).isRequired,
   onEquip: PropTypes.func.isRequired,
   onConsume: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
+  onUpdateNotes: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

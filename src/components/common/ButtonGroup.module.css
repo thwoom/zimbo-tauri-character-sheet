@@ -1,12 +1,10 @@
 .group {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  justify-content: center;
 }
 
-@media (max-width: 360px) {
-  .group {
-    grid-template-columns: 1fr;
-  }
+.group > * {
+  width: auto;
 }

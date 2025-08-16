@@ -65,3 +65,22 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.modalEnter {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.modalEnterActive {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modalEnterActive {
+    transition: none;
+  }
+}

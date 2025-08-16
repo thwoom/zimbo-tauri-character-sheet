@@ -13,7 +13,14 @@ import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
-const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveToHistory }) => {
+const InventoryPanel = ({
+  character,
+  setCharacter,
+  rollDie,
+  setRollResult,
+  saveToHistory,
+  setShowAddItemModal,
+}) => {
   const { handleConsumeItem } = useInventory(character, setCharacter);
 
   return (
@@ -93,6 +100,11 @@ const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveT
           </div>
         </div>
       )}
+      <div className={styles.addItemSection}>
+        <button className={styles.addButton} onClick={() => setShowAddItemModal(true)}>
+          Add Item
+        </button>
+      </div>
     </div>
   );
 };
@@ -106,6 +118,7 @@ InventoryPanel.propTypes = {
   rollDie: PropTypes.func.isRequired,
   setRollResult: PropTypes.func.isRequired,
   saveToHistory: PropTypes.func.isRequired,
+  setShowAddItemModal: PropTypes.func.isRequired,
 };
 
 export default InventoryPanel;

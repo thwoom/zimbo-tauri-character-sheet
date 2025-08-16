@@ -135,3 +135,18 @@
   border-radius: 4px;
   font-size: 0.7rem;
 }
+
+.addItemSection {
+  margin-top: var(--space-md);
+  text-align: center;
+}
+
+.addButton {
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
+  border: none;
+  color: var(--color-white);
+  padding: 4px var(--space-sm);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}

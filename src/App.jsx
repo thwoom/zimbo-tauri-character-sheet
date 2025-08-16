@@ -51,6 +51,7 @@ function App() {
   const [showDamageModal, setShowDamageModal] = useState(false);
   const [showLastBreathModal, setShowLastBreathModal] = useState(false);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [compactMode, setCompactMode] = useState(() => window.innerWidth < 768);
@@ -86,6 +87,17 @@ function App() {
     handleDropItem,
     handleUpdateNotes,
   } = useInventory(character, setCharacter);
+
+  const handleAddItem = React.useCallback(
+    (item) => {
+      setCharacter((prev) => ({
+        ...prev,
+        inventory: [...prev.inventory, { id: Date.now().toString(), ...item }],
+      }));
+      saveToHistory('Inventory Change');
+    },
+    [setCharacter, saveToHistory],
+  );
 
   // Auto-detect level up opportunity
   useEffect(() => {
@@ -245,6 +257,7 @@ function App() {
               rollDie={rollDie}
               setRollResult={setRollResult}
               saveToHistory={saveToHistory}
+              setShowAddItemModal={setShowAddItemModal}
             />
           </div>
 
@@ -287,13 +300,15 @@ function App() {
         handleEquipItem={handleEquipItem}
         handleConsumeItem={handleConsumeItem}
         handleDropItem={handleDropItem}
-        handleUpdateNotes={handleUpdateNotes}
+        handleAddItem={handleAddItem}
         showExportModal={showExportModal}
         setShowExportModal={setShowExportModal}
         showEndSessionModal={showEndSessionModal}
         setShowEndSessionModal={setShowEndSessionModal}
         bondsModal={bondsModal}
         saveToHistory={saveToHistory}
+        showAddItemModal={showAddItemModal}
+        setShowAddItemModal={setShowAddItemModal}
       />
       {PerformanceHud && (
         <Suspense fallback={null}>

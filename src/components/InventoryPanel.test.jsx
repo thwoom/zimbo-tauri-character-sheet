@@ -22,6 +22,7 @@ describe('InventoryPanel', () => {
         rollDie={rollDie}
         setRollResult={setRollResult}
         saveToHistory={() => {}}
+        setShowAddItemModal={() => {}}
       />,
     );
     const useBtn = screen.getByText('Use');
@@ -40,6 +41,7 @@ describe('InventoryPanel', () => {
         rollDie={() => 1}
         setRollResult={() => {}}
         saveToHistory={() => {}}
+        setShowAddItemModal={() => {}}
       />,
     );
     expect(screen.getByText(/Active Debilities:/i)).toBeInTheDocument();
@@ -64,6 +66,7 @@ describe('InventoryPanel', () => {
         rollDie={() => 1}
         setRollResult={() => {}}
         saveToHistory={() => {}}
+        setShowAddItemModal={() => {}}
       />,
     );
     expect(screen.getByText('A sharp blade')).toBeInTheDocument();
@@ -106,6 +109,7 @@ describe('InventoryPanel', () => {
             rollDie={() => 1}
             setRollResult={() => {}}
             saveToHistory={saveToHistory}
+            setShowAddItemModal={() => {}}
           />
           <button onClick={undoLastAction}>Undo</button>
         </>
@@ -116,5 +120,23 @@ describe('InventoryPanel', () => {
     expect(screen.queryByText('Potion')).not.toBeInTheDocument();
     await user.click(screen.getByText('Undo'));
     expect(screen.getByText('Potion')).toBeInTheDocument();
+  });
+
+  it('calls setShowAddItemModal when Add Item clicked', async () => {
+    const user = userEvent.setup();
+    const setShowAddItemModal = vi.fn();
+    const character = { inventory: [], debilities: [] };
+    render(
+      <InventoryPanel
+        character={character}
+        setCharacter={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+        saveToHistory={() => {}}
+        setShowAddItemModal={setShowAddItemModal}
+      />,
+    );
+    await user.click(screen.getByText(/add item/i));
+    expect(setShowAddItemModal).toHaveBeenCalledWith(true);
   });
 });

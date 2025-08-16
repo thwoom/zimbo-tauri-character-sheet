@@ -15,17 +15,13 @@ export default function useInventory(character, setCharacter) {
   }, [character.inventory]);
 
   const handleAddItem = useCallback(
-    (item) => {
+    (newItem) => {
+      const id = globalThis.crypto?.randomUUID
+        ? globalThis.crypto.randomUUID()
+        : Date.now().toString();
       setCharacter((prev) => ({
         ...prev,
-        inventory: [
-          ...prev.inventory,
-          {
-            ...item,
-            addedAt: new Date().toISOString(),
-            notes: item.notes || '',
-          },
-        ],
+        inventory: [...prev.inventory, { ...newItem, id }],
       }));
     },
     [setCharacter],
@@ -75,6 +71,16 @@ export default function useInventory(character, setCharacter) {
     [setCharacter],
   );
 
+  const handleUpdateNotes = useCallback(
+    (id, notes) => {
+      setCharacter((prev) => ({
+        ...prev,
+        inventory: prev.inventory.map((item) => (item.id === id ? { ...item, notes } : item)),
+      }));
+    },
+    [setCharacter],
+  );
+
   return {
     totalArmor,
     equippedWeaponDamage,
@@ -82,5 +88,6 @@ export default function useInventory(character, setCharacter) {
     handleEquipItem,
     handleConsumeItem,
     handleDropItem,
+    handleUpdateNotes,
   };
 }

@@ -19,7 +19,11 @@ const DiceRoller = ({
 
   const handleRoll = (expr, label) => {
     setIsRolling(true);
-    rollDice(expr, label);
+    if (label) {
+      rollDice(expr, label);
+    } else {
+      rollDice(expr);
+    }
     setTimeout(() => {
       setIsRolling(false);
       setAnimate(true);
@@ -40,6 +44,7 @@ const DiceRoller = ({
                 key={stat}
                 onClick={() => handleRoll(`2d6+${data.mod}`, `${stat} Check`)}
                 className={`${styles.button} ${styles.purple} ${styles.small}`}
+                aria-label={`Roll ${stat} Check`}
               >
                 {stat} ({data.mod >= 0 ? '+' : ''}
                 {data.mod})
@@ -55,6 +60,7 @@ const DiceRoller = ({
             <button
               onClick={() => handleRoll(equippedWeaponDamage, 'Weapon Damage')}
               className={`${styles.button} ${styles.red} ${styles.small}`}
+              aria-label={`Roll weapon damage ${equippedWeaponDamage}`}
             >
               Weapon ({equippedWeaponDamage})
             </button>
@@ -119,8 +125,9 @@ const DiceRoller = ({
                 key={sides}
                 onClick={() => handleRoll(`d${sides}`)}
                 className={`${styles.button} ${styles.cyan} ${styles.tiny}`}
+                aria-label={`Roll d${sides}`}
               >
-                d{sides}
+                {`d${sides}`}
               </button>
             ))}
           </div>
@@ -159,6 +166,7 @@ const DiceRoller = ({
     </>
   );
 };
+
 DiceRoller.propTypes = {
   character: PropTypes.shape({
     stats: PropTypes.object.isRequired,

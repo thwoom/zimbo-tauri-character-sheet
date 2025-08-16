@@ -9,8 +9,14 @@ describe('useInventory calculations', () => {
       const [character, setCharacter] = useState({
         armor: 1,
         inventory: [
-          { id: 'helmet', armor: 2, equipped: true },
-          { id: 'boots', armor: 1, equipped: false },
+          {
+            id: 'helmet',
+            name: 'Helmet',
+            armor: 2,
+            equipped: true,
+            description: 'Protects the head',
+          },
+          { id: 'boots', name: 'Boots', armor: 1, equipped: false, description: 'Sturdy footwear' },
         ],
       });
       const inventory = useInventory(character, setCharacter);
@@ -27,7 +33,15 @@ describe('useInventory calculations', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({
         armor: 2,
-        inventory: [{ id: 'helmet', armor: 2, equipped: false }],
+        inventory: [
+          {
+            id: 'helmet',
+            name: 'Helmet',
+            armor: 2,
+            equipped: false,
+            description: 'Protects the head',
+          },
+        ],
       });
       return useInventory(character, setCharacter);
     });
@@ -88,14 +102,26 @@ describe('useInventory actions', () => {
   it('toggles item equipment state with handleEquipItem', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({
-        inventory: [{ id: 'shield', equipped: false, addedAt: '2024-01-01', notes: '' }],
+        inventory: [
+          {
+            id: 'shield',
+            name: 'Shield',
+            type: 'armor',
+            description: 'Protective gear',
+            equipped: false,
+          },
+        ],
       });
       const inventory = useInventory(character, setCharacter);
       return { ...inventory, character };
     });
 
     act(() => result.current.handleEquipItem('shield'));
-    expect(result.current.character.inventory[0].equipped).toBe(true);
+    expect(result.current.character.inventory[0]).toMatchObject({
+      equipped: true,
+      name: 'Shield',
+      description: 'Protective gear',
+    });
 
     act(() => result.current.handleEquipItem('shield'));
     expect(result.current.character.inventory[0].equipped).toBe(false);
@@ -104,7 +130,15 @@ describe('useInventory actions', () => {
   it('reduces quantity or removes items with handleConsumeItem', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({
-        inventory: [{ id: 'potion', quantity: 2, addedAt: '2024-01-01', notes: 'healing' }],
+        inventory: [
+          {
+            id: 'potion',
+            name: 'Healing Potion',
+            type: 'consumable',
+            quantity: 2,
+            description: 'Restore HP',
+          },
+        ],
       });
       const inventory = useInventory(character, setCharacter);
       return { ...inventory, character };
@@ -113,8 +147,8 @@ describe('useInventory actions', () => {
     act(() => result.current.handleConsumeItem('potion'));
     expect(result.current.character.inventory[0]).toMatchObject({
       quantity: 1,
-      addedAt: '2024-01-01',
-      notes: 'healing',
+      name: 'Healing Potion',
+      description: 'Restore HP',
     });
 
     act(() => result.current.handleConsumeItem('potion'));
@@ -125,8 +159,8 @@ describe('useInventory actions', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({
         inventory: [
-          { id: 'rock', addedAt: '2024-01-01', notes: '' },
-          { id: 'coin', addedAt: '2024-01-02', notes: 'shiny' },
+          { id: 'rock', name: 'Rock', description: 'A small rock' },
+          { id: 'coin', name: 'Coin', description: 'Shiny coin' },
         ],
       });
       const inventory = useInventory(character, setCharacter);
@@ -135,7 +169,37 @@ describe('useInventory actions', () => {
 
     act(() => result.current.handleDropItem('rock'));
     expect(result.current.character.inventory).toEqual([
-      { id: 'coin', addedAt: '2024-01-02', notes: 'shiny' },
+      { id: 'coin', name: 'Coin', description: 'Shiny coin' },
     ]);
+  });
+
+  it('updates item notes with handleUpdateNotes', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({
+        inventory: [{ id: 'rock', notes: '' }],
+      });
+      const inventory = useInventory(character, setCharacter);
+      return { ...inventory, character };
+    });
+
+    act(() => result.current.handleUpdateNotes('rock', 'A simple stone'));
+    expect(result.current.character.inventory[0].notes).toBe('A simple stone');
+  });
+
+  it('adds items with handleAddItem and assigns unique id', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({ inventory: [] });
+      const inventory = useInventory(character, setCharacter);
+      return { ...inventory, character };
+    });
+
+    act(() => result.current.handleAddItem({ name: 'Potion' }));
+    expect(result.current.character.inventory).toHaveLength(1);
+    const firstId = result.current.character.inventory[0].id;
+    expect(firstId).toBeDefined();
+
+    act(() => result.current.handleAddItem({ name: 'Sword' }));
+    const ids = result.current.character.inventory.map((i) => i.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

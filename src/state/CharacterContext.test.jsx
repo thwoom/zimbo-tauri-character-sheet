@@ -93,4 +93,12 @@ describe('CharacterContext', () => {
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
   });
+  it('creates a default character when loading fails', async () => {
+    const { loadFile } = await import('../utils/fileStorage.js');
+    loadFile.mockRejectedValueOnce(new Error('missing'));
+
+    const { result } = renderHook(() => useCharacter(), { wrapper });
+    await waitFor(() => expect(result.current.character).toMatchObject(INITIAL_CHARACTER_DATA));
+    expect(loadFile).toHaveBeenCalledWith('character.json');
+  });
 });

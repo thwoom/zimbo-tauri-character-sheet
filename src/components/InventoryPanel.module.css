@@ -9,7 +9,7 @@
 
 .title {
   color: var(--color-accent);
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
   font-size: 1.3rem;
 }
 
@@ -18,10 +18,17 @@
   overflow-y: auto;
 }
 
+@media (max-width: 767px) {
+  .items {
+    max-height: 50vh;
+    overflow: auto;
+  }
+}
+
 .item {
   background: var(--overlay-darker);
   padding: var(--space-sm) 12px;
-  margin: 5px 0;
+  margin: var(--space-sm) 0;
   border-radius: var(--hud-radius-sm);
   border-left: 3px solid var(--color-accent);
 }
@@ -93,7 +100,7 @@
 }
 
 .debilitiesSection {
-  margin-top: 15px;
+  margin-top: var(--space-md);
   padding-top: var(--hud-spacing-sm);
   border-top: 1px solid var(--panel-border);
 }
@@ -101,7 +108,7 @@
 .debilitiesTitle {
   font-size: 0.8rem;
   color: var(--color-danger);
-  margin-bottom: 5px;
+  margin-bottom: var(--space-md);
 }
 
 .debilitiesList {

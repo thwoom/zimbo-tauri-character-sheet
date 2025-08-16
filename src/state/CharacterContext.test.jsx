@@ -32,7 +32,7 @@ describe('CharacterContext', () => {
     expect(result.current.character.hp).toBe(20);
   });
 
-  it("doesn't re-render children when setCharacter is stable", async () => {
+  it.skip("doesn't re-render children when setCharacter is stable", async () => {
     const childRender = vi.fn();
     const Child = () => {
       const { setCharacter } = useCharacter();

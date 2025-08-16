@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: var(--hud-spacing);
 }
 
 .modal {
@@ -21,18 +21,18 @@
   width: 100%;
   box-shadow: 0 0 30px rgba(var(--color-accent-rgb), 0.5);
   text-align: center;
-  padding: 20px;
+  padding: var(--hud-spacing);
   color: var(--color-text);
 }
 
 .title {
   font-size: 1.5rem;
   color: var(--color-accent);
-  margin: 0 0 20px 0;
+  margin: 0 0 var(--space-md) 0;
 }
 
 .formRow {
-  margin-bottom: 15px;
+  margin-bottom: var(--space-md);
   display: flex;
   justify-content: center;
   gap: 20px;

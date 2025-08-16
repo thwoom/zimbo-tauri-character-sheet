@@ -53,7 +53,7 @@ function App() {
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
-  const [compactMode, setCompactMode] = useState(false);
+  const [compactMode, setCompactMode] = useState(() => window.innerWidth < 768);
   const [hudMounted, setHudMounted] = useState(false);
 
   const getDefaultLevelUpState = () => ({
@@ -199,48 +199,58 @@ function App() {
         {/* Main Grid Layout */}
         <div className={styles.grid}>
           {/* Avatar Panel */}
-          <CharacterHUD onMountChange={setHudMounted} />
+          <div className={styles.hud}>
+            <CharacterHUD onMountChange={setHudMounted} />
+          </div>
 
           {/* Stats Panel */}
-          <CharacterStats
-            character={character}
-            setCharacter={setCharacter}
-            saveToHistory={saveToHistory}
-            totalArmor={totalArmor}
-            setShowLevelUpModal={setShowLevelUpModal}
-            setRollResult={setRollResult}
-            setSessionNotes={setSessionNotes}
-            clearRollHistory={clearRollHistory}
-          />
+          <div className={styles.stats}>
+            <CharacterStats
+              character={character}
+              setCharacter={setCharacter}
+              saveToHistory={saveToHistory}
+              totalArmor={totalArmor}
+              setShowLevelUpModal={setShowLevelUpModal}
+              setRollResult={setRollResult}
+              setSessionNotes={setSessionNotes}
+              clearRollHistory={clearRollHistory}
+            />
+          </div>
 
           {/* Dice Roller Panel (component-based, main branch design) */}
-          <DiceRoller
-            character={character}
-            rollDice={rollDice}
-            rollResult={rollResult}
-            rollHistory={rollHistory}
-            equippedWeaponDamage={equippedWeaponDamage}
-            rollModal={rollModal}
-            rollModalData={rollModalData}
-            aidModal={aidModal}
-          />
+          <div className={styles.dice}>
+            <DiceRoller
+              character={character}
+              rollDice={rollDice}
+              rollResult={rollResult}
+              rollHistory={rollHistory}
+              equippedWeaponDamage={equippedWeaponDamage}
+              rollModal={rollModal}
+              rollModalData={rollModalData}
+              aidModal={aidModal}
+            />
+          </div>
 
           {/* Quick Inventory Panel */}
-          <InventoryPanel
-            character={character}
-            setCharacter={setCharacter}
-            rollDie={rollDie}
-            setRollResult={setRollResult}
-            saveToHistory={saveToHistory}
-          />
+          <div className={styles.inventory}>
+            <InventoryPanel
+              character={character}
+              setCharacter={setCharacter}
+              rollDie={rollDie}
+              setRollResult={setRollResult}
+              saveToHistory={saveToHistory}
+            />
+          </div>
 
           {/* Session Notes Panel */}
-          <SessionNotes
-            sessionNotes={sessionNotes}
-            setSessionNotes={setSessionNotes}
-            compactMode={compactMode}
-            setCompactMode={setCompactMode}
-          />
+          <div className={styles.notes}>
+            <SessionNotes
+              sessionNotes={sessionNotes}
+              setSessionNotes={setSessionNotes}
+              compactMode={compactMode}
+              setCompactMode={setCompactMode}
+            />
+          </div>
         </div>
       </div>
 

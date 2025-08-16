@@ -15,7 +15,7 @@
 
 .header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--space-md);
   padding: var(--hud-spacing);
   border-radius: 15px;
   border: 2px solid var(--color-accent);
@@ -34,7 +34,7 @@
   font-family: var(--font-heading);
   font-size: var(--font-size-heading);
   font-weight: var(--font-weight-heading);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
   text-shadow: 0 0 10px var(--color-accent);
 }
 
@@ -74,9 +74,8 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--space-md);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .undoButton {

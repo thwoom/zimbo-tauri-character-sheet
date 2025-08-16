@@ -14,6 +14,11 @@ vi.mock('@tauri-apps/api/app', () => ({
 }));
 
 beforeEach(() => {
+  Object.defineProperty(window, 'innerWidth', {
+    configurable: true,
+    writable: true,
+    value: 1024,
+  });
   vi.spyOn(window, 'confirm').mockReturnValue(false);
   vi.spyOn(window, 'prompt').mockReturnValue('0');
 });
@@ -139,6 +144,26 @@ describe('End session flow', () => {
     });
 
     expect(screen.getByText(/End of Session/i)).toBeInTheDocument();
+  });
+});
+
+describe('compact mode initialization', () => {
+  it('defaults to compact mode on small screens', async () => {
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 500,
+    });
+
+    const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    expect(screen.getByRole('button', { name: /Expand/i })).toBeInTheDocument();
   });
 });
 

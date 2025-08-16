@@ -312,3 +312,19 @@
   --glow-shadow: rgba(39, 169, 161, 0.35);
   --glow-shadow-strong: rgba(39, 169, 161, 0.6);
 }
+
+@media (max-width: 767px) {
+  :root {
+    --font-size-heading: 2.25rem;
+    --font-size-body: 0.9rem;
+    --hud-spacing: 1.125rem;
+  }
+
+  :root[data-theme='classic'] {
+    --hud-spacing: 0.9rem;
+  }
+
+  :root[data-theme='moebius'] {
+    --hud-spacing: 1.35rem;
+  }
+}

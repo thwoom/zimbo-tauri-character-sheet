@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useState, useMemo, useEffect, useRef } from 'react';
 import { INITIAL_CHARACTER_DATA } from './character';
 import { saveFile, loadFile } from '../utils/fileStorage.js';
+import cloneDeep from '../utils/cloneDeep.js';
 
 const STORAGE_FILE = 'character.json';
+
+const createDefaultCharacter = () => cloneDeep(INITIAL_CHARACTER_DATA);
 
 const CharacterContext = createContext();
 
 export const CharacterProvider = ({ children }) => {
-  const [character, setCharacter] = useState(INITIAL_CHARACTER_DATA);
+  const [character, setCharacter] = useState(createDefaultCharacter);
   const initializedRef = useRef(false);
 
   useEffect(() => {

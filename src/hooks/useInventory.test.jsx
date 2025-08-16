@@ -81,6 +81,24 @@ describe('useInventory equippedWeaponDamage', () => {
 });
 
 describe('useInventory actions', () => {
+  it('adds items with handleAddItem including timestamp and notes', () => {
+    const { result } = renderHook(() => {
+      const [character, setCharacter] = useState({ inventory: [] });
+      const inventory = useInventory(character, setCharacter);
+      return { ...inventory, character };
+    });
+
+    act(() => result.current.handleAddItem({ id: 'potion', name: 'Potion', quantity: 1 }));
+
+    expect(result.current.character.inventory[0]).toMatchObject({
+      id: 'potion',
+      name: 'Potion',
+      quantity: 1,
+      notes: '',
+    });
+    expect(result.current.character.inventory[0].addedAt).toBeDefined();
+  });
+
   it('toggles item equipment state with handleEquipItem', () => {
     const { result } = renderHook(() => {
       const [character, setCharacter] = useState({

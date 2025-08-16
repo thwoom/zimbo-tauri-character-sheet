@@ -67,6 +67,8 @@ export const INITIAL_CHARACTER_DATA = {
       equipped: true,
       description: 'Phases through time occasionally',
       tags: ['melee', 'forceful', 'messy'],
+      addedAt: new Date().toISOString(),
+      notes: '',
     },
     {
       id: 2,
@@ -74,6 +76,8 @@ export const INITIAL_CHARACTER_DATA = {
       type: 'magic',
       equipped: true,
       description: 'Grants Chrono-Retcon ability',
+      addedAt: new Date().toISOString(),
+      notes: '',
     },
     {
       id: 3,
@@ -81,6 +85,8 @@ export const INITIAL_CHARACTER_DATA = {
       type: 'material',
       quantity: 1,
       description: "Crafting material for Sar's companion Kumquat",
+      addedAt: new Date().toISOString(),
+      notes: '',
     },
     {
       id: 4,
@@ -88,6 +94,8 @@ export const INITIAL_CHARACTER_DATA = {
       type: 'consumable',
       quantity: 2,
       description: 'Restore 1d8 HP',
+      addedAt: new Date().toISOString(),
+      notes: '',
     },
     {
       id: 5,
@@ -96,6 +104,8 @@ export const INITIAL_CHARACTER_DATA = {
       armor: 1,
       equipped: false,
       description: 'Light armor with energy dispersal',
+      addedAt: new Date().toISOString(),
+      notes: '',
     },
   ],
 

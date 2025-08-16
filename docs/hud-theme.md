@@ -17,6 +17,7 @@ radius and animation speeds consistent across components. These tokens live in
 | `--font-body`           | Typeface used for body text                    | `'Inter', sans-serif`      | `'Times New Roman', serif` | `'Verdana', sans-serif`      |
 | `--space-sm`            | General small spacing                          | `0.5rem`                   | `0.5rem`                   | `0.75rem`                    |
 | `--space-md`            | General medium spacing                         | `1rem`                     | `1rem`                     | `1.5rem`                     |
+| `--space-lg`            | General large spacing                          | `1.5rem`                   | `1.5rem`                   | `2.25rem`                    |
 
 Use these tokens within HUD components to guarantee visual consistency:
 

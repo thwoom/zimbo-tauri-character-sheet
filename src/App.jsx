@@ -67,6 +67,7 @@ function App() {
   const [levelUpState, setLevelUpState] = useState(getDefaultLevelUpState);
 
   const saveToHistoryRef = useRef(() => {});
+  const headerRef = useRef(null);
   const {
     rollResult,
     setRollResult,
@@ -123,6 +124,20 @@ function App() {
     }
   }, [sessionNotes]);
 
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        document.documentElement.style.setProperty(
+          '--header-height',
+          `${headerRef.current.offsetHeight}px`,
+        );
+      }
+    };
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, []);
+
   const { saveToHistory, undoLastAction } = useUndo(character, setCharacter, setRollResult);
   saveToHistoryRef.current = saveToHistory;
 
@@ -141,7 +156,7 @@ function App() {
     <div className={`${styles.container} ${getActiveVisualEffects()}`}>
       <div className={styles.innerContainer}>
         {/* Header */}
-        <div className={styles.header} style={{ background: getHeaderColor() }}>
+        <div ref={headerRef} className={styles.header} style={{ background: getHeaderColor() }}>
           <div className={styles.headerTop}>
             <CharacterSwitcher />
             <div>

@@ -145,6 +145,7 @@ const DiceRoller = ({
     </>
   );
 };
+
 DiceRoller.propTypes = {
   character: PropTypes.shape({
     stats: PropTypes.object.isRequired,

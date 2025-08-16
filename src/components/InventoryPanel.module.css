@@ -89,6 +89,16 @@
   color: var(--color-gray-400);
 }
 
+.itemNotes {
+  margin-top: var(--space-sm);
+  color: var(--color-gray-300);
+}
+
+.itemAddedAt {
+  margin-top: var(--space-sm);
+  color: var(--color-gray-500);
+}
+
 .useButton {
   background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
   border: none;
@@ -124,4 +134,19 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.7rem;
+}
+
+.addItemSection {
+  margin-top: var(--space-md);
+  text-align: center;
+}
+
+.addButton {
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
+  border: none;
+  color: var(--color-white);
+  padding: 4px var(--space-sm);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
 }

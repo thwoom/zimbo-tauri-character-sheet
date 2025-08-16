@@ -9,17 +9,17 @@ import { SettingsProvider } from './state/SettingsContext.jsx';
 import { ThemeProvider } from './state/ThemeContext.jsx';
 import './styles/theme.css';
 
-let confirmSpy;
-let promptSpy;
+vi.mock('@tauri-apps/api/app', () => ({
+  getVersion: vi.fn().mockResolvedValue('1.0.0'),
+}));
 
 beforeEach(() => {
-  confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
-  promptSpy = vi.spyOn(window, 'prompt').mockReturnValue('0');
+  vi.spyOn(window, 'confirm').mockReturnValue(false);
+  vi.spyOn(window, 'prompt').mockReturnValue('0');
 });
 
 afterEach(() => {
-  confirmSpy.mockRestore();
-  promptSpy.mockRestore();
+  vi.restoreAllMocks();
 });
 
 const createWrapper = (initialCharacter, autoXpOnMiss) =>
@@ -33,6 +33,12 @@ const createWrapper = (initialCharacter, autoXpOnMiss) =>
       </ThemeProvider>
     );
   };
+
+const renderWithVersion = async (ui) => {
+  const result = render(ui);
+  await screen.findByText(/Version:/);
+  return result;
+};
 
 describe('App level up auto-detection', () => {
   it('opens LevelUpModal when xp exceeds xpNeeded', async () => {
@@ -51,7 +57,7 @@ describe('App level up auto-detection', () => {
       );
     };
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -68,14 +74,14 @@ describe('App level up auto-detection', () => {
 });
 
 describe('XP gain on miss', () => {
-  it('increments XP when roll total is less than 7', () => {
+  it('increments XP when roll total is less than 7', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
 
     const Wrapper = createWrapper(initialCharacter, true);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -91,14 +97,14 @@ describe('XP gain on miss', () => {
 
     Math.random.mockRestore();
   });
-  it('does not increment XP when auto XP toggle is off', () => {
+  it('does not increment XP when auto XP toggle is off', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5 };
 
     const Wrapper = createWrapper(initialCharacter, false);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -116,11 +122,11 @@ describe('XP gain on miss', () => {
 });
 
 describe('End session flow', () => {
-  it('opens EndSessionModal when End Session button is clicked', () => {
+  it('opens EndSessionModal when End Session button is clicked', async () => {
     const initialCharacter = { ...INITIAL_CHARACTER_DATA, xp: 0, xpNeeded: 5, bonds: [] };
     const Wrapper = createWrapper(initialCharacter, true);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -139,8 +145,8 @@ describe('End session flow', () => {
 describe('Rulebook display', () => {
   const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
 
-  it('renders the rulebook name in the header', () => {
-    render(
+  it('renders the rulebook name in the header', async () => {
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -161,7 +167,7 @@ describe.skip('localStorage persistence', () => {
   it('persists session notes and roll history across remounts', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
-    const { unmount } = render(
+    const { unmount } = await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -180,7 +186,7 @@ describe.skip('localStorage persistence', () => {
 
     unmount();
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -196,7 +202,7 @@ describe.skip('localStorage persistence', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
     vi.spyOn(window, 'confirm').mockReturnValue(true);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -266,8 +272,8 @@ describe('Theme switching', () => {
 });
 
 describe('App header', () => {
-  it('wraps action buttons when width is constrained', () => {
-    render(
+  it('wraps action buttons when width is constrained', async () => {
+    await renderWithVersion(
       <ThemeProvider>
         <CharacterContext.Provider
           value={{ character: INITIAL_CHARACTER_DATA, setCharacter: () => {} }}
@@ -294,14 +300,14 @@ describe('App header', () => {
 });
 
 describe('storage resilience', () => {
-  it('falls back to default session note if getItem fails', () => {
+  it('falls back to default session note if getItem fails', async () => {
     localStorage.removeItem('sessionNotes');
     const getItemMock = vi.spyOn(window.localStorage, 'getItem').mockImplementation(() => {
       throw new Error('fail');
     });
     const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,
@@ -312,7 +318,7 @@ describe('storage resilience', () => {
     getItemMock.mockRestore();
   });
 
-  it('ignores storage errors when saving session notes', () => {
+  it('ignores storage errors when saving session notes', async () => {
     localStorage.removeItem('sessionNotes');
     const setItemMock = vi.spyOn(window.localStorage, 'setItem').mockImplementation(() => {
       throw new Error('fail');
@@ -322,7 +328,7 @@ describe('storage resilience', () => {
     });
     const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
 
-    render(
+    await renderWithVersion(
       <Wrapper>
         <App />
       </Wrapper>,

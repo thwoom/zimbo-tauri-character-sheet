@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import LastBreathModal from './LastBreathModal.jsx';
+import LastBreathModal from './LastBreathModal';
 
 describe('LastBreathModal', () => {
   it('rolls 2d6 and shows outcome', () => {

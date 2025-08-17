@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import DiceRoller from './DiceRoller.jsx';
+import DiceRoller from './DiceRoller';
 
 const minimalCharacter = {
   stats: {

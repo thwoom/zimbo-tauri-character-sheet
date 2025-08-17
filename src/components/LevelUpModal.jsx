@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './LevelUpModal.module.css';
 import { advancedMoves } from '../data/advancedMoves.js';
 import { scoreToMod } from '../utils/score.js';
-import Message from './Message.jsx';
+import Message from './Message';
 import useModalTransition from './common/useModalTransition.js';
 
 const LevelUpModal = ({

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTheme } from '../state/ThemeContext.jsx';
-import { useSettings } from '../state/SettingsContext.jsx';
+import { useTheme } from '../state/ThemeContext';
+import { useSettings } from '../state/SettingsContext';
 
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();

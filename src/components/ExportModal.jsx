@@ -2,10 +2,10 @@ import { saveFile, loadFile } from '../utils/fileStorage.js';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
-import { useCharacter } from '../state/CharacterContext.jsx';
+import { useCharacter } from '../state/CharacterContext';
 import styles from './ExportModal.module.css';
-import Button from './common/Button.jsx';
-import ButtonGroup from './common/ButtonGroup.jsx';
+import Button from './common/Button';
+import ButtonGroup from './common/ButtonGroup';
 import useModalTransition from './common/useModalTransition.js';
 
 export default function ExportModal({ isOpen, onClose }) {

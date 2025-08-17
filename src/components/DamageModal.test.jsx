@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import useUndo from '../hooks/useUndo.js';
-import CharacterContext from '../state/CharacterContext.jsx';
-import DamageModal from './DamageModal.jsx';
+import CharacterContext from '../state/CharacterContext';
+import DamageModal from './DamageModal';
 
 // Helper to simulate different viewport sizes
 window.resizeTo = (width, height) => {

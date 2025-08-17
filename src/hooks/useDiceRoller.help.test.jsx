@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
-import { SettingsProvider } from '../state/SettingsContext.jsx';
+import { SettingsProvider } from '../state/SettingsContext';
 import useDiceRoller from './useDiceRoller.js';
 
 const aidModal = {

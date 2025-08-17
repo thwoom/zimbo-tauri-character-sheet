@@ -2,7 +2,7 @@ import { getVersion } from '@tauri-apps/api/app';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import AppVersion from './AppVersion.tsx';
+import AppVersion from './AppVersion';
 
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn(),

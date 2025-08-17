@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import App from './App.jsx';
+import App from './App';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
-import CharacterContext from './state/CharacterContext.jsx';
-import { SettingsProvider } from './state/SettingsContext.jsx';
-import { ThemeProvider } from './state/ThemeContext.jsx';
+import CharacterContext from './state/CharacterContext';
+import { SettingsProvider } from './state/SettingsContext';
+import { ThemeProvider } from './state/ThemeContext';
 import styles from './styles/AppStyles.module.css';
 
 vi.mock('@tauri-apps/api/app', () => ({

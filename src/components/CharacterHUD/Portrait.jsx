@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCharacter } from '../../state/CharacterContext.jsx';
+import { useCharacter } from '../../state/CharacterContext';
 import useStatusEffects from '../../hooks/useStatusEffects.js';
 import styles from './Portrait.module.css';
 

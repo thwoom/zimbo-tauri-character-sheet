@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import CharacterStats from './CharacterStats.jsx';
+import CharacterStats from './CharacterStats';
 
 function makeCharacter(overrides = {}) {
   return {

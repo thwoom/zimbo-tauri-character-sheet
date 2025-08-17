@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import CharacterContext from '../state/CharacterContext.jsx';
-import BondsModal from './BondsModal.jsx';
+import CharacterContext from '../state/CharacterContext';
+import BondsModal from './BondsModal';
 
 function renderWithCharacter(ui) {
   const Wrapper = ({ children }) => {

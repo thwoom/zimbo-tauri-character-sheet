@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import DiagnosticOverlay from './DiagnosticOverlay.jsx';
+import DiagnosticOverlay from './DiagnosticOverlay';
 
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn().mockResolvedValue('1.2.3'),

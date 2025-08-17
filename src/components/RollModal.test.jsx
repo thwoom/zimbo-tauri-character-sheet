@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import RollModal from './RollModal.jsx';
+import RollModal from './RollModal';
 
 describe('RollModal', () => {
   it('toggles visibility with isOpen prop', () => {

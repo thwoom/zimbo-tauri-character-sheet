@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import AidInterfereModal from './AidInterfereModal.jsx';
+import AidInterfereModal from './AidInterfereModal';
 
 describe('AidInterfereModal', () => {
   it('toggles visibility with isOpen', () => {

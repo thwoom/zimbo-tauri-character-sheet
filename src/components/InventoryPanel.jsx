@@ -12,7 +12,7 @@ import {
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
 import styles from './InventoryPanel.module.css';
-import AddItemModal from './AddItemModal.jsx';
+import AddItemModal from './AddItemModal';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const InventoryPanel = ({ character, setCharacter, rollDie, setRollResult, saveToHistory }) => {

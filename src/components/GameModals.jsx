@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import BondsModal from './BondsModal.jsx';
-import DamageModal from './DamageModal.jsx';
-import ExportModal from './ExportModal.jsx';
-import EndSessionModal from './EndSessionModal.jsx';
-import InventoryModal from './InventoryModal.jsx';
-import AddItemModal from './AddItemModal.jsx';
-import LastBreathModal from './LastBreathModal.jsx';
-import LevelUpModal from './LevelUpModal.jsx';
-import StatusModal from './StatusModal.jsx';
+import BondsModal from './BondsModal';
+import DamageModal from './DamageModal';
+import ExportModal from './ExportModal';
+import EndSessionModal from './EndSessionModal';
+import InventoryModal from './InventoryModal';
+import AddItemModal from './AddItemModal';
+import LastBreathModal from './LastBreathModal';
+import LevelUpModal from './LevelUpModal';
+import StatusModal from './StatusModal';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const GameModals = ({

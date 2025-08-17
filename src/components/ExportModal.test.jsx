@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import CharacterContext from '../state/CharacterContext.jsx';
+import CharacterContext from '../state/CharacterContext';
 import { loadFile } from '../utils/fileStorage.js';
-import ExportModal from './ExportModal.jsx';
+import ExportModal from './ExportModal';
 
 vi.mock('../utils/fileStorage.js', () => ({
   saveFile: vi.fn(),

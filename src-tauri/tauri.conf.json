@@ -19,12 +19,9 @@
     ],
     "security": {
       "csp": "default-src 'self'; script-src 'self'; frame-ancestors 'self'",
-      "headers": [
-        {
-          "source": "**/*",
-          "headers": [{ "name": "X-Frame-Options", "value": "DENY" }]
-        }
-      ]
+      "headers": {
+        "X-Frame-Options": "DENY"
+      }
     }
   },
   "bundle": {

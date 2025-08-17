@@ -1,4 +1,6 @@
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+assets
+src-tauri/target
 

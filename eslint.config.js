@@ -19,6 +19,7 @@ export default [
       '.next',
       '.out',
       'storybook-static',
+      'assets',
       'tests',
       'eslint.config.js',
     ],

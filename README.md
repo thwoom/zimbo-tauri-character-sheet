@@ -110,6 +110,14 @@ Ensure `glib-2.0` and `webkit2gtk-driver` are installed (see [Prerequisites](#pr
 npm run build
 ```
 
+### Preview production build
+
+Serve the compiled assets locally to verify the build output:
+
+```bash
+npm run preview
+```
+
 ### Run tests
 
 ```bash

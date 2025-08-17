@@ -14,7 +14,12 @@ without changing component markup.
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
-- `--glow-shadow`: glow shadow
+- `--color-tauri-yellow` / `--color-tauri-cyan`: Tauri brand colors
+- `--color-vite-blue` / `--color-vite-purple` / `--color-vite-yellow-light` / `--color-vite-yellow` / `--color-vite-orange`: Vite brand gradient colors
+- `--color-react`: React brand color
+- `--color-status-poison`: poison status green
+- `--color-avatar-default`: default avatar gray
+- `--color-black`: base black tone
 
 ## Tailwind Mapping
 

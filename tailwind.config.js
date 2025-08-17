@@ -1,12 +1,18 @@
 /** @type {import('tailwindcss').Config} */
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const forms = require('@tailwindcss/forms');
+
 export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        fg: 'var(--fg)',
-        bg: 'var(--bg)',
-        accent: 'var(--accent)',
+        fg: 'hsl(var(--fg) / <alpha-value>)',
+        bg: 'hsl(var(--bg) / <alpha-value>)',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
+        muted: 'hsl(var(--muted) / <alpha-value>)',
+        card: 'hsl(var(--card) / <alpha-value>)',
       },
       spacing: {
         sm: 'var(--spacing-sm)',
@@ -19,8 +25,9 @@ export default {
       },
       boxShadow: {
         DEFAULT: 'var(--shadow)',
+        glow: '0 0 8px var(--glow-shadow)',
       },
     },
   },
-  plugins: [],
+  plugins: [forms],
 };

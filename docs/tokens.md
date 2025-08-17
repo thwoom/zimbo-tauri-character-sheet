@@ -9,17 +9,12 @@ without changing component markup.
 - `--fg`: foreground text color
 - `--bg`: background color
 - `--accent`: primary accent color
-- `--muted`: muted foreground color
-- `--card`: card background color
+- `--muted` / `--muted-foreground`: muted surfaces and their text color
+- `--card` / `--card-foreground`: card surfaces and their text color
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
-- `--color-tauri-yellow` / `--color-tauri-cyan`: Tauri brand colors
-- `--color-vite-blue` / `--color-vite-purple` / `--color-vite-yellow-light` / `--color-vite-yellow` / `--color-vite-orange`: Vite brand gradient colors
-- `--color-react`: React brand color
-- `--color-status-poison`: poison status green
-- `--color-avatar-default`: default avatar gray
-- `--color-black`: base black tone
+- `--glow-shadow`: accent glow shadow
 
 ## Tailwind Mapping
 
@@ -28,11 +23,11 @@ Tailwind reads the variables and exposes them as semantic utilities:
 ```js
 // tailwind.config.js
 colors: {
-  fg: 'hsl(var(--fg) / <alpha-value>)',
-  bg: 'hsl(var(--bg) / <alpha-value>)',
-  accent: 'hsl(var(--accent) / <alpha-value>)',
-  muted: 'hsl(var(--muted) / <alpha-value>)',
-  card: 'hsl(var(--card) / <alpha-value>)'
+  fg: 'var(--fg)',
+  bg: 'var(--bg)',
+  accent: 'var(--accent)',
+  muted: 'var(--muted)',
+  card: 'var(--card)'
 },
 spacing: {
   sm: 'var(--spacing-sm)',
@@ -45,7 +40,7 @@ borderRadius: {
 },
 boxShadow: {
   DEFAULT: 'var(--shadow)',
-  glow: '0 0 8px var(--glow-shadow)'
+  glow: 'var(--glow-shadow)'
 }
 ```
 

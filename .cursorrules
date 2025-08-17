@@ -1,0 +1,219 @@
+# ZimboMate Development Rules
+
+## Project Overview
+ZimboMate is a Tauri + React desktop application for Dungeon World character management. It uses modern tooling including PandaCSS for styling, Vitest for testing, and follows accessibility-first development practices.
+
+## Technology Stack
+- **Frontend**: React 18 with TypeScript/JSX
+- **Desktop**: Tauri 2.0 with Rust backend
+- **Styling**: PandaCSS with CSS-in-JS approach
+- **Testing**: Vitest with React Testing Library
+- **Linting**: ESLint with TypeScript support
+- **Formatting**: Prettier
+- **UI Components**: Radix UI primitives + Arwes animations
+- **Build**: Vite
+
+## File Organization & Naming
+
+### Component Structure
+- Components go in `src/components/`
+- Each component should have its own directory or be co-located with related files
+- Component files use `.jsx` for React components, `.tsx` for TypeScript components
+- Test files use `.test.jsx` or `.test.tsx` and are co-located with components
+- CSS modules use `.module.css` naming convention
+
+### File Naming Conventions
+- React components: PascalCase (e.g., `DiceRoller.jsx`, `ErrorBoundary.tsx`)
+- Test files: Same name as component + `.test.jsx` (e.g., `DiceRoller.test.jsx`)
+- CSS modules: Same name as component + `.module.css` (e.g., `DiceRoller.module.css`)
+- Utility files: camelCase (e.g., `update-version.mjs`)
+
+## Code Style & Patterns
+
+### React Components
+- Use functional components with hooks
+- Prefer TypeScript for new components, especially those with complex props
+- Use PropTypes for JSX components, TypeScript interfaces for TSX components
+- Implement error boundaries for critical components
+- Use React.memo() for performance optimization when needed
+
+### Styling with PandaCSS
+- Use the `css()` function from `../styled-system/css` for inline styles
+- Leverage the Arwes-inspired design system tokens:
+  - Colors: `primary`, `secondary`, `accent`, `background`, `surface`, `text`, `muted`
+  - Spacing: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`
+  - Border radius: `none`, `sm`, `md`, `lg`, `full`
+- Prefer PandaCSS over CSS modules for new components
+- Use CSS modules only for complex animations or when CSS-in-JS is insufficient
+
+### Tauri Integration
+- Import Tauri APIs from `@tauri-apps/api/*` packages
+- Handle async operations with proper error boundaries
+- Use `getVersion()` from `@tauri-apps/api/app` for version display
+- Implement proper cleanup in useEffect hooks for Tauri operations
+
+### State Management
+- Use React hooks (useState, useEffect, useContext) for state management
+- Keep state as local as possible
+- Use context for global state that needs to be shared across components
+- Implement proper cleanup in useEffect hooks
+
+## Testing Standards
+
+### Test File Structure
+- Co-locate test files with components
+- Use descriptive test names that explain the behavior being tested
+- Test both success and error scenarios
+- Mock external dependencies (Tauri APIs, etc.)
+
+### Testing Patterns
+- Use React Testing Library for component testing
+- Test user interactions, not implementation details
+- Use `@testing-library/user-event` for user interactions
+- Mock Tauri APIs in tests using `vi.mock()`
+
+### Test Coverage
+- Aim for comprehensive coverage of component logic
+- Test accessibility features (ARIA attributes, keyboard navigation)
+- Test error states and edge cases
+- Test integration with Tauri APIs
+
+## Accessibility (A11y)
+
+### Core Principles
+- Follow WCAG 2.1 AA standards
+- Use semantic HTML elements
+- Implement proper ARIA attributes
+- Ensure keyboard navigation works
+- Support screen readers
+
+### Implementation
+- Use Radix UI primitives for accessible components
+- Test with screen readers and keyboard-only navigation
+- Implement proper focus management
+- Use `role` attributes appropriately
+- Ensure sufficient color contrast (Arwes theme provides this)
+
+## Performance Considerations
+
+### Animation & Motion
+- Respect `prefers-reduced-motion` user preference
+- Implement performance-aware animations using Arwes
+- Reduce animation complexity on low-performance devices
+- Use `Animator` component for coordinated animations
+
+### Code Splitting
+- Use dynamic imports for large components
+- Lazy load non-critical features
+- Implement proper loading states
+
+### Memory Management
+- Clean up event listeners in useEffect cleanup functions
+- Implement proper component unmounting
+- Use React.memo() for expensive components
+
+## Error Handling
+
+### Error Boundaries
+- Implement error boundaries for critical components
+- Provide user-friendly error messages
+- Log errors for debugging
+- Gracefully degrade functionality when possible
+
+### Async Operations
+- Handle Tauri API errors gracefully
+- Implement proper loading states
+- Use try-catch blocks for async operations
+- Provide fallback values for failed operations
+
+## Git & Development Workflow
+
+### Commit Standards
+- Use conventional commit messages
+- Run linting and tests before committing
+- Use pre-commit hooks for code quality
+- Keep commits focused and atomic
+
+### Branch Strategy
+- Use feature branches for new development
+- Sync branches regularly with main
+- Use the provided scripts for PR management:
+  - `fix-prs.mjs` for individual PR fixes
+  - `git-sync-ask.sh` for branch synchronization
+
+### Code Review
+- Ensure all tests pass
+- Check for accessibility compliance
+- Verify Tauri integration works
+- Review for performance implications
+
+## Dependencies & Imports
+
+### Import Organization
+- Group imports by type: external libraries, internal components, utilities
+- Use alphabetical ordering within groups
+- Use absolute imports for internal modules
+- Prefer named imports over default imports
+
+### Dependency Management
+- Keep dependencies up to date
+- Use exact versions in package.json
+- Document any dependency overrides
+- Prefer stable, well-maintained packages
+
+## Build & Deployment
+
+### Development
+- Use `npm run dev` for browser-only development
+- Use `npm run tauri dev` for full desktop development
+- Set `TAURI_DEV_HOST=0.0.0.0` for container/remote development
+
+### Production
+- Use `npm run build` for production builds
+- Test desktop builds thoroughly
+- Verify all Tauri features work in packaged app
+- Check performance in production builds
+
+## Security Considerations
+
+### Tauri Security
+- Follow Tauri security best practices
+- Use capabilities system for file system access
+- Validate all user inputs
+- Implement proper error handling for file operations
+
+### Data Handling
+- Validate character data on import/export
+- Implement proper data sanitization
+- Use secure file handling practices
+- Backup user data appropriately
+
+## Documentation
+
+### Code Documentation
+- Use JSDoc comments for complex functions
+- Document component props and interfaces
+- Explain complex business logic
+- Keep README and CONTRIBUTING files updated
+
+### User Documentation
+- Document feature usage in README
+- Provide clear setup instructions
+- Include troubleshooting guides
+- Document keyboard shortcuts and accessibility features
+
+## Future Considerations
+
+### Scalability
+- Plan for multiple character support
+- Consider plugin architecture for extensibility
+- Design for potential multiplayer features
+- Plan for data migration between versions
+
+### Maintenance
+- Regular dependency updates
+- Performance monitoring
+- User feedback collection
+- Accessibility audits
+
+This rules file should be updated as the project evolves and new patterns emerge.

@@ -85,6 +85,18 @@
 
   --color-purple: #6e5aa3;
   --color-purple-dark: #59458c;
+  /* brand colors */
+  --color-tauri-yellow: #ffc131;
+  --color-tauri-cyan: #24c8db;
+  --color-vite-blue: #41d1ff;
+  --color-vite-purple: #bd34fe;
+  --color-vite-yellow-light: #ffea83;
+  --color-vite-yellow: #ffdd35;
+  --color-vite-orange: #ffa800;
+  --color-react: #00d8ff;
+  --color-status-poison: #2f9e44;
+  --color-avatar-default: #ccc;
+  --color-black: #000000;
 
   /* overlays */
   --overlay-poison: rgba(var(--color-accent-rgb), 0.1);

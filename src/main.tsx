@@ -6,7 +6,13 @@ import { CharacterProvider } from './state/CharacterContext';
 import { SettingsProvider } from './state/SettingsContext';
 import { ThemeProvider } from './state/ThemeContext';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error("Root element with id 'root' not found");
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <ThemeProvider>

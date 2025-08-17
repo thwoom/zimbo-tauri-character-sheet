@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect } from 'vitest';
-import ResourceBars from './ResourceBars.jsx';
+import ResourceBars from './ResourceBars';
 
 describe('ResourceBars', () => {
   const defaultProps = {

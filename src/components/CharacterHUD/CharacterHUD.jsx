@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import Nameplate from './Nameplate.jsx';
-import Portrait from './Portrait.jsx';
-import ResourceBars from './ResourceBars.jsx';
-import StatusTray from './StatusTray.jsx';
-import CastIndicator from './CastIndicator.jsx';
+import Nameplate from './Nameplate';
+import Portrait from './Portrait';
+import ResourceBars from './ResourceBars';
+import StatusTray from './StatusTray';
+import CastIndicator from './CastIndicator';
 import styles from './CharacterHUD.module.css';
-import { useCharacter } from '../../state/CharacterContext.jsx';
+import { useCharacter } from '../../state/CharacterContext';
 
 export default function CharacterHUD({ onMountChange = () => {} }) {
   const { character } = useCharacter();

@@ -9,32 +9,32 @@ import {
   FaArrowRotateLeft,
   FaFlagCheckered,
 } from 'react-icons/fa6';
-import CharacterStats from './components/CharacterStats.jsx';
-import DiceRoller from './components/DiceRoller.jsx';
-import GameModals from './components/GameModals.jsx';
-import InventoryPanel from './components/InventoryPanel.jsx';
-import SessionNotes from './components/SessionNotes.jsx';
-import CharacterHUD from './components/CharacterHUD/CharacterHUD.jsx';
-import Settings from './components/Settings.jsx';
-import CharacterSwitcher from './components/CharacterSwitcher.jsx';
-import AppVersion from './components/AppVersion.tsx';
-import DiagnosticOverlay from './components/DiagnosticOverlay.jsx';
-import Button from './components/common/Button.jsx';
-import ButtonGroup from './components/common/ButtonGroup.jsx';
+import CharacterStats from './components/CharacterStats';
+import DiceRoller from './components/DiceRoller';
+import GameModals from './components/GameModals';
+import InventoryPanel from './components/InventoryPanel';
+import SessionNotes from './components/SessionNotes';
+import CharacterHUD from './components/CharacterHUD/CharacterHUD';
+import Settings from './components/Settings';
+import CharacterSwitcher from './components/CharacterSwitcher';
+import AppVersion from './components/AppVersion';
+import DiagnosticOverlay from './components/DiagnosticOverlay';
+import Button from './components/common/Button';
+import ButtonGroup from './components/common/ButtonGroup';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
 import useStatusEffects from './hooks/useStatusEffects.js';
 import useUndo from './hooks/useUndo.js';
 import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
-import { useCharacter } from './state/CharacterContext.jsx';
-import { useSettings } from './state/SettingsContext.jsx';
+import { useCharacter } from './state/CharacterContext';
+import { useSettings } from './state/SettingsContext';
 import styles from './styles/AppStyles.module.css';
 import safeLocalStorage from './utils/safeLocalStorage.js';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
-    ? lazy(() => import('./components/PerformanceHud.jsx'))
+    ? lazy(() => import('./components/PerformanceHud'))
     : null;
 
 function App() {

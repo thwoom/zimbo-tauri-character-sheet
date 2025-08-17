@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import InventoryModal from './InventoryModal.jsx';
+import InventoryModal from './InventoryModal';
 
 function InventoryWrapper({ isOpen, ...props }) {
   return isOpen ? <InventoryModal {...props} /> : null;

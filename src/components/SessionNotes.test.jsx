@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import { saveFile, loadFile } from '../utils/fileStorage.js';
-import SessionNotes from './SessionNotes.jsx';
+import SessionNotes from './SessionNotes';
 import styles from './SessionNotes.module.css';
 
 vi.mock('../utils/fileStorage.js', () => ({

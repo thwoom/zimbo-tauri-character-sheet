@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
-import { useCharacter } from '../state/CharacterContext.jsx';
+import { useCharacter } from '../state/CharacterContext';
 import styles from './EndSessionModal.module.css';
 import useModalTransition from './common/useModalTransition.js';
 

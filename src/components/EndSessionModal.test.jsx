@@ -3,8 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
-import CharacterContext from '../state/CharacterContext.jsx';
-import EndSessionModal from './EndSessionModal.jsx';
+import CharacterContext from '../state/CharacterContext';
+import EndSessionModal from './EndSessionModal';
 
 function renderWithCharacter(ui, initialCharacter) {
   let currentCharacter;

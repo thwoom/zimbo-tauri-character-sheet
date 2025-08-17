@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from './DiceRoller.module.css';
-import RollModal from './RollModal.jsx';
-import AidInterfereModal from './AidInterfereModal.jsx';
+import RollModal from './RollModal';
+import AidInterfereModal from './AidInterfereModal';
 
 const DiceRoller = ({
   character,

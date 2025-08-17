@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
-import PerformanceHud from './PerformanceHud.jsx';
+import PerformanceHud from './PerformanceHud';
 
 vi.mock('../hooks/usePerformanceMetrics.js', () => ({
   default: () => ({

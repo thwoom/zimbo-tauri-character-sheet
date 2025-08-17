@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { advancedMoves } from '../data/advancedMoves.js';
-import CharacterStats from './CharacterStats.jsx';
-import LevelUpModal from './LevelUpModal.jsx';
+import CharacterStats from './CharacterStats';
+import LevelUpModal from './LevelUpModal';
 import styles from './LevelUpModal.module.css';
 
 function LevelUpWrapper({ isOpen, ...props }) {

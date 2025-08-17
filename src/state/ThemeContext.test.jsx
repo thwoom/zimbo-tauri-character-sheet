@@ -3,7 +3,7 @@ import React from 'react';
 import { vi } from 'vitest';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import { DEFAULT_THEME } from './theme.js';
-import { ThemeProvider, useTheme } from './ThemeContext.jsx';
+import { ThemeProvider, useTheme } from './ThemeContext';
 
 vi.mock('../utils/safeLocalStorage.js', () => ({
   default: {

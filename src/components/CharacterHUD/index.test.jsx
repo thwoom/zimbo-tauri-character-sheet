@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect } from 'vitest';
-import CharacterHUD, { LOW_HP_THRESHOLD } from './index.jsx';
 import styles from './index.module.css';
+import CharacterHUD, { LOW_HP_THRESHOLD } from './index';
 
 describe('CharacterHUD', () => {
   it('applies casting and progress classes', () => {

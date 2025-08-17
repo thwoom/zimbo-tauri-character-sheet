@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { statusEffectTypes, debilityTypes } from '../state/character.js';
-import { CharacterProvider, useCharacter } from '../state/CharacterContext.jsx';
-import GameModals from './GameModals.jsx';
+import { CharacterProvider, useCharacter } from '../state/CharacterContext';
+import GameModals from './GameModals';
 
 function Wrapper(props) {
   const { character, setCharacter } = useCharacter();

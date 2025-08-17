@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCharacter } from '../../state/CharacterContext.jsx';
+import { useCharacter } from '../../state/CharacterContext';
 import { statusEffectTypes } from '../../state/character.js';
 import styles from './StatusTray.module.css';
 

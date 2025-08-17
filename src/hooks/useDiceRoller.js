@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { debilityTypes } from '../state/character';
-import { useSettings } from '../state/SettingsContext.jsx';
+import { useSettings } from '../state/SettingsContext';
 import * as diceUtils from '../utils/dice.js';
 import safeLocalStorage from '../utils/safeLocalStorage.js';
 import useModal from './useModal';

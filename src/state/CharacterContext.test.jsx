@@ -3,7 +3,7 @@ import { renderHook, act, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi, afterEach } from 'vitest';
 import { INITIAL_CHARACTER_DATA } from './character.js';
-import { CharacterProvider, useCharacter } from './CharacterContext.jsx';
+import { CharacterProvider, useCharacter } from './CharacterContext';
 
 vi.mock('../utils/fileStorage.js', () => ({
   saveFile: vi.fn(() => Promise.resolve()),

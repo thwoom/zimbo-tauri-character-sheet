@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { FaMeteor } from 'react-icons/fa6';
 import useInventory from '../hooks/useInventory';
-import { useCharacter } from '../state/CharacterContext.jsx';
+import { useCharacter } from '../state/CharacterContext';
 import styles from './DamageModal.module.css';
-import Button from './common/Button.jsx';
-import ButtonGroup from './common/ButtonGroup.jsx';
+import Button from './common/Button';
+import ButtonGroup from './common/ButtonGroup';
 import useModalTransition from './common/useModalTransition.js';
 
 export default function DamageModal({ isOpen, onClose, onLastBreath }) {

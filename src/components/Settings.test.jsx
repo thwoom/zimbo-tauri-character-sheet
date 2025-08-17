@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import SettingsContext from '../state/SettingsContext.jsx';
-import ThemeContext from '../state/ThemeContext.jsx';
-import Settings from './Settings.jsx';
+import SettingsContext from '../state/SettingsContext';
+import ThemeContext from '../state/ThemeContext';
+import Settings from './Settings';
 
 describe('Settings', () => {
   it('updates theme and auto XP on miss setting', async () => {

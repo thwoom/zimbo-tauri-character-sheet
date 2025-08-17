@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCharacter } from '../state/CharacterContext.jsx';
+import { useCharacter } from '../state/CharacterContext';
 
 export default function CharacterSwitcher() {
   const ctx = useCharacter();

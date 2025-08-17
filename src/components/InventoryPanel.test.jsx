@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 import useUndo from '../hooks/useUndo.js';
-import InventoryPanel from './InventoryPanel.jsx';
+import InventoryPanel from './InventoryPanel';
 
 describe('InventoryPanel', () => {
   it('uses consumable items and calls handlers', async () => {

@@ -2,8 +2,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 import { statusEffectTypes } from '../../state/character.js';
-import CharacterContext from '../../state/CharacterContext.jsx';
-import CharacterHUD from './CharacterHUD.jsx';
+import CharacterContext from '../../state/CharacterContext';
+import CharacterHUD from './CharacterHUD';
 
 describe('CharacterHUD', () => {
   it('displays character data from context', () => {

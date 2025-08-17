@@ -1,7 +1,7 @@
 import { renderHook, act, render, screen, cleanup } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
-import RollModal from '../components/RollModal.jsx';
-import { SettingsProvider } from '../state/SettingsContext.jsx';
+import RollModal from '../components/RollModal';
+import { SettingsProvider } from '../state/SettingsContext';
 import * as diceUtils from '../utils/dice.js';
 import useDiceRoller from './useDiceRoller.js';
 

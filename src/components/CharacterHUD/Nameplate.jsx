@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCharacter } from '../../state/CharacterContext.jsx';
+import { useCharacter } from '../../state/CharacterContext';
 import styles from './Nameplate.module.css';
 
 export default function Nameplate() {

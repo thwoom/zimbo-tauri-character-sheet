@@ -1,7 +1,7 @@
 /* eslint-env jest */
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import StatusTray from './StatusTray.jsx';
+import StatusTray from './StatusTray';
 
 vi.useFakeTimers();
 

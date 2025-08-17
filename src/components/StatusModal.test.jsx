@@ -4,7 +4,7 @@ import React from 'react';
 import { vi } from 'vitest';
 import useStatusEffects from '../hooks/useStatusEffects.js';
 import useUndo from '../hooks/useUndo.js';
-import StatusModal from './StatusModal.jsx';
+import StatusModal from './StatusModal';
 
 function StatusWrapper({ isOpen, ...props }) {
   return isOpen ? <StatusModal {...props} /> : null;

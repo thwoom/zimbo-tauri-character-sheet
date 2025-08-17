@@ -28,7 +28,7 @@ if (!globalThis.__E2E_BROWSER_PROMISE__) {
     });
     await waitTauriDriverReady();
 
-    const appPath = path.resolve(tauriDir, 'target/debug/zimbo-panel');
+    const appPath = path.resolve(tauriDir, 'target/debug/zimbomate');
     const browser = await remote({
       hostname: '127.0.0.1',
       port: 4444,

@@ -80,6 +80,9 @@ function App() {
     clearRollHistory,
   } = useDiceRoller(character, setCharacter, saveToHistoryRef);
 
+  const { saveToHistory, undoLastAction } = useUndo(character, setCharacter, setRollResult);
+  saveToHistoryRef.current = saveToHistory;
+
   const {
     totalArmor,
     equippedWeaponDamage,
@@ -137,9 +140,6 @@ function App() {
     window.addEventListener('resize', updateHeaderHeight);
     return () => window.removeEventListener('resize', updateHeaderHeight);
   }, []);
-
-  const { saveToHistory, undoLastAction } = useUndo(character, setCharacter, setRollResult);
-  saveToHistoryRef.current = saveToHistory;
 
   const {
     statusEffects,

@@ -1,8 +1,8 @@
 import { spawn, spawnSync } from 'child_process';
-import path from 'path';
 import { waitTauriDriverReady } from '@crabnebula/tauri-driver';
 import { beforeAll, afterAll, test, expect } from 'vitest';
 import { remote } from 'webdriverio';
+import { tauriDir, appPath } from './setup.js';
 
 let browser;
 let tauriDriver;
@@ -13,7 +13,6 @@ const parseXp = (text) => {
 };
 
 beforeAll(async () => {
-  const tauriDir = path.resolve(__dirname, '../src-tauri');
   spawnSync('npx', ['tauri', 'build', '--debug'], {
     cwd: tauriDir,
     stdio: 'inherit',
@@ -24,8 +23,6 @@ beforeAll(async () => {
     shell: true,
   });
   await waitTauriDriverReady();
-
-  const appPath = path.resolve(tauriDir, 'target/debug/zimbo-panel');
   browser = await remote({
     hostname: '127.0.0.1',
     port: 4444,

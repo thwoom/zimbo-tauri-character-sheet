@@ -9,9 +9,12 @@ without changing component markup.
 - `--fg`: foreground text color
 - `--bg`: background color
 - `--accent`: primary accent color
+- `--muted` / `--muted-foreground`: muted surfaces and their text color
+- `--card` / `--card-foreground`: card surfaces and their text color
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
+- `--glow-shadow`: accent glow shadow
 
 ## Tailwind Mapping
 
@@ -22,7 +25,9 @@ Tailwind reads the variables and exposes them as semantic utilities:
 colors: {
   fg: 'var(--fg)',
   bg: 'var(--bg)',
-  accent: 'var(--accent)'
+  accent: 'var(--accent)',
+  muted: 'var(--muted)',
+  card: 'var(--card)'
 },
 spacing: {
   sm: 'var(--spacing-sm)',
@@ -34,7 +39,8 @@ borderRadius: {
   sm: 'var(--radius-sm)'
 },
 boxShadow: {
-  DEFAULT: 'var(--shadow)'
+  DEFAULT: 'var(--shadow)',
+  glow: 'var(--glow-shadow)'
 }
 ```
 

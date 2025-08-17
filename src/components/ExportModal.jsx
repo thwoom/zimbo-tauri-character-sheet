@@ -3,22 +3,25 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { durations, easings, fadeScale } from '../motion/tokens';
 import styles from './ExportModal.module.css';
 import Button from './common/Button';
 import ButtonGroup from './common/ButtonGroup';
-import useModalTransition from './common/useModalTransition.js';
 
 export default function ExportModal({ isOpen, onClose }) {
   const { character, addCharacter, selectedId } = useCharacter();
   const [fileName, setFileName] = useState(`character-${selectedId}.json`);
   const [message, setMessage] = useState('');
-  const [isVisible, isActive] = useModalTransition(isOpen);
+  const reduce = useReducedMotion();
+  const transition = reduce ? { duration: 0 } : { duration: durations.md, ease: easings.standard };
+  const variants = reduce
+    ? { hidden: { opacity: 0 }, visible: { opacity: 1 }, exit: { opacity: 0 } }
+    : fadeScale;
 
   useEffect(() => {
     setFileName(`character-${selectedId}.json`);
   }, [selectedId]);
-
-  if (!isVisible) return null;
 
   const handleSave = async () => {
     try {
@@ -45,28 +48,43 @@ export default function ExportModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div
-        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
-      >
-        <h2 className={styles.title}>
-          <FaSatellite style={{ marginRight: '4px' }} /> Export / Import
-        </h2>
-        <input
-          type="text"
-          value={fileName}
-          onChange={(e) => setFileName(e.target.value)}
-          placeholder="filename.json"
-          className={styles.input}
-        />
-        {message && <div className={styles.message}>{message}</div>}
-        <ButtonGroup>
-          <Button onClick={handleSave}>Save</Button>
-          <Button onClick={handleLoad}>Load</Button>
-          <Button onClick={onClose}>Close</Button>
-        </ButtonGroup>
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className={styles.overlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+        >
+          <motion.div
+            className={styles.modal}
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={transition}
+          >
+            <h2 className={styles.title}>
+              <FaSatellite style={{ marginRight: '4px' }} /> Export / Import
+            </h2>
+            <input
+              type="text"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              placeholder="filename.json"
+              className={styles.input}
+            />
+            {message && <div className={styles.message}>{message}</div>}
+            <ButtonGroup>
+              <Button onClick={handleSave}>Save</Button>
+              <Button onClick={handleLoad}>Load</Button>
+              <Button onClick={onClose}>Close</Button>
+            </ButtonGroup>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

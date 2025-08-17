@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
+import DevComponents from './dev/DevComponents';
 import { CharacterProvider } from './state/CharacterContext';
 import { SettingsProvider } from './state/SettingsContext';
 import { ThemeProvider } from './state/ThemeContext';
@@ -12,16 +13,26 @@ if (!rootElement) {
   throw new Error("Root element with id 'root' not found");
 }
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <ErrorBoundary>
+if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <ThemeProvider>
-        <CharacterProvider>
-          <SettingsProvider>
-            <App />
-          </SettingsProvider>
-        </CharacterProvider>
+        <DevComponents />
       </ThemeProvider>
-    </ErrorBoundary>
-  </React.StrictMode>,
-);
+    </React.StrictMode>,
+  );
+} else {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <CharacterProvider>
+            <SettingsProvider>
+              <App />
+            </SettingsProvider>
+          </CharacterProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </React.StrictMode>,
+  );
+}

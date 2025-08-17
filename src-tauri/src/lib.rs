@@ -26,7 +26,15 @@ fn resolve_app_path(path: &str) -> Result<PathBuf, String> {
             let parent = joined
                 .parent()
                 .ok_or_else(|| "failed to determine parent directory".to_string())?;
-            let canonical_parent = parent.canonicalize().map_err(|e| e.to_string())?;
+            let canonical_parent = match parent.canonicalize() {
+                Ok(p) => p,
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+                    fs::create_dir_all(parent)
+                        .map_err(|e| format!("failed to create parent directory: {}", e))?;
+                    parent.canonicalize().map_err(|e| e.to_string())?
+                }
+                Err(e) => return Err(e.to_string()),
+            };
             canonical_parent.join(
                 joined
                     .file_name()
@@ -73,11 +81,8 @@ pub fn run() -> Result<(), tauri::Error> {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![write_file, read_file, get_os])
         .setup(|app| {
-            WebviewWindowBuilder::from_config(
-                app,
-                app.config().app.windows.get(0).unwrap(),
-            )?
-            .build()?;
+            WebviewWindowBuilder::from_config(app, app.config().app.windows.get(0).unwrap())?
+                .build()?;
             Ok(())
         })
         .run(tauri::generate_context!())?;
@@ -161,5 +166,43 @@ mod tests {
         let resolved = resolve_app_path("newfile.txt").unwrap();
         assert_eq!(resolved, expected);
         assert!(base.exists());
+    }
+
+    #[test]
+    #[serial]
+    fn resolve_app_path_creates_missing_intermediate_dirs() {
+        let base = canonical_base();
+        let parent = base.join("missing/intermediate");
+        if parent.exists() {
+            fs::remove_dir_all(&parent).unwrap();
+        }
+
+        let expected = parent.join("file.txt");
+        let resolved = resolve_app_path("missing/intermediate/file.txt").unwrap();
+        assert_eq!(resolved, expected);
+        assert!(parent.exists());
+
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    #[serial]
+    fn write_creates_missing_intermediate_dirs() {
+        let base = canonical_base();
+        let target = base.join("write/missing/dir/test.txt");
+        if let Some(parent) = target.parent() {
+            if parent.exists() {
+                fs::remove_dir_all(parent).unwrap();
+            }
+        }
+
+        write_file("write/missing/dir/test.txt", "hello").unwrap();
+        let contents = read_file("write/missing/dir/test.txt").unwrap();
+        assert_eq!(contents, "hello");
+
+        fs::remove_file(&target).unwrap();
+        if let Some(parent) = target.parent() {
+            fs::remove_dir_all(parent).unwrap();
+        }
     }
 }

@@ -16,6 +16,16 @@
   --space-md: 1rem;
   --space-lg: 1.5rem;
 
+  --fg: var(--color-text);
+  --bg: var(--color-bg-start);
+  --accent: var(--color-accent);
+  --radius: var(--hud-radius);
+  --radius-sm: var(--hud-radius-sm);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --shadow: 0 0 10px var(--panel-shadow);
+
   --header-height: 0px;
 
   /* HUD layout tokens */
@@ -279,6 +289,16 @@
   --space-sm: 0.75rem;
   --space-md: 1.5rem;
   --space-lg: 2.25rem;
+
+  --fg: var(--color-text);
+  --bg: var(--color-bg-start);
+  --accent: var(--color-accent);
+  --radius: var(--hud-radius);
+  --radius-sm: var(--hud-radius-sm);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --shadow: 0 0 10px var(--panel-shadow);
 
   --color-bg-start: #f2e9e4;
   --color-bg-end: #e4d2cc;

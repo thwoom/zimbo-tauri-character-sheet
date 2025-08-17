@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { FaSatellite } from 'react-icons/fa6';
 import { useCharacter } from '../state/CharacterContext';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { durations, easings, fadeScale } from '../motion/tokens';
+import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import styles from './ExportModal.module.css';
 import Button from './common/Button';
 import ButtonGroup from './common/ButtonGroup';
@@ -13,11 +14,8 @@ export default function ExportModal({ isOpen, onClose }) {
   const { character, addCharacter, selectedId } = useCharacter();
   const [fileName, setFileName] = useState(`character-${selectedId}.json`);
   const [message, setMessage] = useState('');
-  const reduce = useReducedMotion();
-  const transition = reduce ? { duration: 0 } : { duration: durations.md, ease: easings.standard };
-  const variants = reduce
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1 }, exit: { opacity: 0 } }
-    : fadeScale;
+  const transition = useMotionTransition(durations.md, easings.standard);
+  const variants = useMotionVariants(fadeScale);
 
   useEffect(() => {
     setFileName(`character-${selectedId}.json`);

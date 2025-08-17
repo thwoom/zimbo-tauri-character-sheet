@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { FaFlagCheckered } from 'react-icons/fa6';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCharacter } from '../state/CharacterContext';
+import { durations, easings, fadeScale } from '../motion/tokens';
+import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import styles from './EndSessionModal.module.css';
-import useModalTransition from './common/useModalTransition.js';
 
 const defaultAnswers = { q1: false, q2: false, q3: false, alignment: false };
 
@@ -19,9 +21,8 @@ export default function EndSessionModal({ isOpen, onClose }) {
   const [shareRecap, setShareRecap] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [error, setError] = useState('');
-  const [isVisible, isActive] = useModalTransition(isOpen);
-
-  if (!isVisible) return null;
+  const transition = useMotionTransition(durations.lg, easings.standard);
+  const variants = useMotionVariants(fadeScale);
 
   const toggleAnswer = (key) => {
     setAnswers((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -101,183 +102,198 @@ export default function EndSessionModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div
-        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
-      >
-        <h2 className={styles.title}>
-          <FaFlagCheckered style={{ marginRight: '4px' }} /> End of Session
-        </h2>
-        <div className={styles.section}>
-          <label>
-            <input type="checkbox" checked={answers.q1} onChange={() => toggleAnswer('q1')} /> Did
-            we learn something new and important about the world?
-          </label>
-        </div>
-        <div className={styles.section}>
-          <label>
-            <input type="checkbox" checked={answers.q2} onChange={() => toggleAnswer('q2')} /> Did
-            we overcome a notable monster or enemy?
-          </label>
-        </div>
-        <div className={styles.section}>
-          <label>
-            <input type="checkbox" checked={answers.q3} onChange={() => toggleAnswer('q3')} /> Did
-            we loot a memorable treasure?
-          </label>
-        </div>
-        <div className={styles.section}>
-          <label>
-            <input
-              type="checkbox"
-              checked={answers.alignment}
-              onChange={() => toggleAnswer('alignment')}
-            />{' '}
-            Did you fulfill your alignment/drive?
-          </label>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className={styles.overlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+        >
+          <motion.div
+            className={styles.modal}
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={transition}
+          >
+            <h2 className={styles.title}>
+              <FaFlagCheckered style={{ marginRight: '4px' }} /> End of Session
+            </h2>
+            <div className={styles.section}>
+              <label>
+                <input type="checkbox" checked={answers.q1} onChange={() => toggleAnswer('q1')} />{' '}
+                Did we learn something new and important about the world?
+              </label>
+            </div>
+            <div className={styles.section}>
+              <label>
+                <input type="checkbox" checked={answers.q2} onChange={() => toggleAnswer('q2')} />{' '}
+                Did we overcome a notable monster or enemy?
+              </label>
+            </div>
+            <div className={styles.section}>
+              <label>
+                <input type="checkbox" checked={answers.q3} onChange={() => toggleAnswer('q3')} />{' '}
+                Did we loot a memorable treasure?
+              </label>
+            </div>
+            <div className={styles.section}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={answers.alignment}
+                  onChange={() => toggleAnswer('alignment')}
+                />{' '}
+                Did you fulfill your alignment/drive?
+              </label>
+            </div>
 
-        {character.bonds.length > 0 && (
-          <div className={styles.section}>
-            <h3 className={styles.title}>Bonds Resolved</h3>
-            <ul className={styles.bondList}>
-              {character.bonds.map((bond, idx) => (
-                <li key={idx} className={styles.bondItem}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={resolvedBonds.includes(idx)}
-                      onChange={() => toggleBond(idx)}
-                    />{' '}
-                    {bond.name}: {bond.relationship}
-                  </label>
-                  {resolvedBonds.includes(idx) && (
-                    <input
-                      type="text"
-                      placeholder="New bond text"
-                      value={replacementBonds[idx] || ''}
-                      onChange={(e) => handleBondTextChange(idx, e.target.value)}
-                      className={styles.bondInput}
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {character.bonds.length > 0 && (
+              <div className={styles.section}>
+                <h3 className={styles.title}>Bonds Resolved</h3>
+                <ul className={styles.bondList}>
+                  {character.bonds.map((bond, idx) => (
+                    <li key={idx} className={styles.bondItem}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={resolvedBonds.includes(idx)}
+                          onChange={() => toggleBond(idx)}
+                        />{' '}
+                        {bond.name}: {bond.relationship}
+                      </label>
+                      {resolvedBonds.includes(idx) && (
+                        <input
+                          type="text"
+                          placeholder="New bond text"
+                          value={replacementBonds[idx] || ''}
+                          onChange={(e) => handleBondTextChange(idx, e.target.value)}
+                          className={styles.bondInput}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-        {character.inventory.length > 0 && (
-          <div className={styles.section}>
-            <h3 className={styles.title}>Item Usage</h3>
-            <ul className={styles.bondList}>
-              {character.inventory.map((item) => (
-                <li key={item.id} className={styles.bondItem}>
-                  {item.quantity != null ? (
-                    <label>
-                      {item.name} used:{' '}
-                      <input
-                        type="number"
-                        min="0"
-                        max={item.quantity}
-                        value={inventoryChanges[item.id] || 0}
-                        onChange={(e) => handleInventoryChange(item.id, e.target.value)}
-                        aria-label={`Used ${item.name}`}
-                        className={styles.bondInput}
-                      />
-                    </label>
-                  ) : (
+            {character.inventory.length > 0 && (
+              <div className={styles.section}>
+                <h3 className={styles.title}>Item Usage</h3>
+                <ul className={styles.bondList}>
+                  {character.inventory.map((item) => (
+                    <li key={item.id} className={styles.bondItem}>
+                      {item.quantity != null ? (
+                        <label>
+                          {item.name} used:{' '}
+                          <input
+                            type="number"
+                            min="0"
+                            max={item.quantity}
+                            value={inventoryChanges[item.id] || 0}
+                            onChange={(e) => handleInventoryChange(item.id, e.target.value)}
+                            aria-label={`Used ${item.name}`}
+                            className={styles.bondInput}
+                          />
+                        </label>
+                      ) : (
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={inventoryChanges[item.id] || false}
+                            onChange={(e) => handleInventoryChange(item.id, e.target.checked)}
+                          />{' '}
+                          {item.name} used up
+                        </label>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className={styles.section}>
+              <label htmlFor="session-recap">Session Recap</label>
+              <textarea
+                id="session-recap"
+                className={styles.recapTextarea}
+                placeholder="What happened this session?"
+                value={recap}
+                onChange={(e) => setRecap(e.target.value)}
+              />
+              <label className={styles.shareLabel}>
+                <input
+                  type="checkbox"
+                  checked={shareRecap}
+                  onChange={(e) => setShareRecap(e.target.checked)}
+                />{' '}
+                Share recap publicly
+              </label>
+            </div>
+
+            {(character.statusEffects.length > 0 || character.debilities.length > 0) && (
+              <div className={styles.section}>
+                <h3 className={styles.title}>Clear Temporary Effects</h3>
+                {character.statusEffects.map((effect) => (
+                  <div key={effect}>
                     <label>
                       <input
                         type="checkbox"
-                        checked={inventoryChanges[item.id] || false}
-                        onChange={(e) => handleInventoryChange(item.id, e.target.checked)}
+                        checked={clearedStatus.includes(effect)}
+                        onChange={() => toggleStatus(effect)}
                       />{' '}
-                      {item.name} used up
+                      {effect}
                     </label>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div className={styles.section}>
-          <label htmlFor="session-recap">Session Recap</label>
-          <textarea
-            id="session-recap"
-            className={styles.recapTextarea}
-            placeholder="What happened this session?"
-            value={recap}
-            onChange={(e) => setRecap(e.target.value)}
-          />
-          <label className={styles.shareLabel}>
-            <input
-              type="checkbox"
-              checked={shareRecap}
-              onChange={(e) => setShareRecap(e.target.checked)}
-            />{' '}
-            Share recap publicly
-          </label>
-        </div>
-
-        {(character.statusEffects.length > 0 || character.debilities.length > 0) && (
-          <div className={styles.section}>
-            <h3 className={styles.title}>Clear Temporary Effects</h3>
-            {character.statusEffects.map((effect) => (
-              <div key={effect}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={clearedStatus.includes(effect)}
-                    onChange={() => toggleStatus(effect)}
-                  />{' '}
-                  {effect}
-                </label>
+                  </div>
+                ))}
+                {character.debilities.map((debility) => (
+                  <div key={debility}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={clearedDebilities.includes(debility)}
+                        onChange={() => toggleDebility(debility)}
+                      />{' '}
+                      {debility}
+                    </label>
+                  </div>
+                ))}
               </div>
-            ))}
-            {character.debilities.map((debility) => (
-              <div key={debility}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={clearedDebilities.includes(debility)}
-                    onChange={() => toggleDebility(debility)}
-                  />{' '}
-                  {debility}
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        <div className={styles.total}>Total XP Gained: {totalXP}</div>
-        {error && <div className={styles.error}>{error}</div>}
+            <div className={styles.total}>Total XP Gained: {totalXP}</div>
+            {error && <div className={styles.error}>{error}</div>}
 
-        {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
+            {saveError && <div className={styles.error}>Failed to save. Retry?</div>}
 
-        <div className={styles.actions}>
-          {saveError ? (
-            <>
-              <button onClick={handleEnd} className={styles.button}>
-                Retry
-              </button>
-              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-                Cancel
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={handleEnd} className={styles.button}>
-                End Session
-              </button>
-              <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
-                Cancel
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+            <div className={styles.actions}>
+              {saveError ? (
+                <>
+                  <button onClick={handleEnd} className={styles.button}>
+                    Retry
+                  </button>
+                  <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={handleEnd} className={styles.button}>
+                    End Session
+                  </button>
+                  <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

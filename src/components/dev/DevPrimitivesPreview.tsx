@@ -1,16 +1,14 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
+import { useMotionTransition, useMotionVariants } from '../../motion/reduced';
 import { durations, easings, fadeScale } from '../../motion/tokens';
 import { Dialog, Tooltip, DropdownMenu, Separator, Slider } from '../ui/primitives';
 
 export default function DevPrimitivesPreview() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const reduce = useReducedMotion();
-  const transition = reduce ? { duration: 0 } : { duration: durations.sm, ease: easings.standard };
-  const variants = reduce
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1 }, exit: { opacity: 0 } }
-    : fadeScale;
+  const transition = useMotionTransition(durations.sm, easings.standard);
+  const variants = useMotionVariants(fadeScale);
 
   return (
     <div className="min-h-screen bg-bg p-md text-fg space-y-md">

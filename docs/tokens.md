@@ -62,3 +62,8 @@ JavaScript animations use centralized timing and easing presets defined in
 - `spring` preset for interactive elements
 
 Always reference these tokens instead of hardcoding values.
+
+Use Framer Motion's `AnimatePresence` with the shared `fadeScale` variants and the
+`useMotionTransition`/`useMotionVariants` helpers from
+`src/motion/reduced.ts` to automatically drop durations to `0ms` when users
+prefer reduced motion.

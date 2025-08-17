@@ -22,6 +22,11 @@ export const ThemeProvider = ({ children }) => {
       accent: styles.getPropertyValue('--accent').trim(),
       radius: styles.getPropertyValue('--radius').trim(),
       shadow: styles.getPropertyValue('--shadow').trim(),
+      glassBg: styles.getPropertyValue('--glass-bg').trim(),
+      glassBorder: styles.getPropertyValue('--glass-border').trim(),
+      shadowGlass: styles.getPropertyValue('--shadow-glass').trim(),
+      colorNeon: styles.getPropertyValue('--color-neon').trim(),
+      shadowNeon: styles.getPropertyValue('--shadow-neon').trim(),
       spacing: {
         sm: styles.getPropertyValue('--spacing-sm').trim(),
         md: styles.getPropertyValue('--spacing-md').trim(),

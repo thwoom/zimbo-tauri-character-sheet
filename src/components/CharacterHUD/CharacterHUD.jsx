@@ -4,8 +4,8 @@ import Portrait from './Portrait';
 import ResourceBars from './ResourceBars';
 import StatusTray from './StatusTray';
 import CastIndicator from './CastIndicator';
-import styles from './CharacterHUD.module.css';
 import { useCharacter } from '../../state/CharacterContext';
+import Card from '../ui/Card';
 
 export default function CharacterHUD({ onMountChange = () => {} }) {
   const { character } = useCharacter();
@@ -16,7 +16,7 @@ export default function CharacterHUD({ onMountChange = () => {} }) {
   }, [onMountChange]);
 
   return (
-    <div className={styles.hud}>
+    <Card className="flex flex-col items-center gap-sm">
       <Nameplate />
       <Portrait />
       <ResourceBars
@@ -33,6 +33,6 @@ export default function CharacterHUD({ onMountChange = () => {} }) {
       />
       <StatusTray />
       <CastIndicator />
-    </div>
+    </Card>
   );
 }

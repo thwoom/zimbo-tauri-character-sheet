@@ -13,6 +13,8 @@ without changing component markup.
 - `--card` / `--card-foreground`: card surfaces and their text color
 - `--color-neon` / `--color-neon-dark`: neon accent pair
 - `--shadow-neon`: neon glow
+- `--glass-bg` / `--glass-border`: translucent panel surfaces
+- `--shadow-glass`: depth for glass backdrops
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
@@ -29,7 +31,9 @@ colors: {
   bg: 'var(--bg)',
   accent: 'var(--accent)',
   muted: 'var(--muted)',
-  card: 'var(--card)'
+  card: 'var(--card)',
+  glass: 'var(--glass-bg)',
+  neon: 'var(--color-neon)'
 },
 spacing: {
   sm: 'var(--spacing-sm)',
@@ -42,7 +46,9 @@ borderRadius: {
 },
 boxShadow: {
   DEFAULT: 'var(--shadow)',
-  glow: '0 0 8px var(--glow-shadow)'
+  glow: '0 0 8px var(--glow-shadow)',
+  glass: 'var(--shadow-glass)',
+  neon: 'var(--shadow-neon)'
 }
 ```
 

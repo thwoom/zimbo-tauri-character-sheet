@@ -13,6 +13,8 @@ export default {
         accent: 'hsl(var(--accent) / <alpha-value>)',
         muted: 'hsl(var(--muted) / <alpha-value>)',
         card: 'hsl(var(--card) / <alpha-value>)',
+        glass: 'var(--glass-bg)',
+        neon: 'var(--color-neon)',
       },
       spacing: {
         sm: 'var(--spacing-sm)',
@@ -26,6 +28,8 @@ export default {
       boxShadow: {
         DEFAULT: 'var(--shadow)',
         glow: '0 0 8px var(--glow-shadow)',
+        glass: 'var(--shadow-glass)',
+        neon: 'var(--shadow-neon)',
       },
     },
   },

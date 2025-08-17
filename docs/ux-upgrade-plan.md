@@ -4,6 +4,11 @@ Version: 0.2.0
 
 This plan outlines the staged approach for upgrading the project's UX. Each PR should reference this document and note the plan version.
 
+## Theme Migration
+
+- Default theme is now **cosmic-v2**, introducing glass backdrops and neon accents.
+- The previous cosmic theme is available as **legacy** and can be selected in Settings.
+
 # UX Modernization Plan
 
 ## Current UI Gaps

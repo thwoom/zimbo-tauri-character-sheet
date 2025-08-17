@@ -120,6 +120,10 @@
   --panel-bg: rgba(255, 255, 255, 0.1);
   --panel-border: rgba(var(--color-accent-rgb), 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.3);
+  --glass-bg: var(--panel-bg);
+  --glass-border: var(--panel-border);
+  --shadow-glass: 0 8px 32px var(--panel-shadow);
+  --shadow-neon: 0 0 10px var(--color-neon);
   --color-bg-primary: var(--panel-bg);
   --color-modal-bg: var(--panel-bg);
   --color-modal-bg-secondary: rgba(255, 255, 255, 0.05);
@@ -168,6 +172,15 @@
   --text-color: var(--color-text);
   --accent-color: var(--color-accent);
   --accent-shadow: var(--glow-shadow);
+}
+:root[data-theme='legacy'] {
+}
+:root[data-theme='cosmic-v2'] {
+  --glass-bg: hsla(0, 0%, 100%, 0.06);
+  --glass-border: hsla(0, 0%, 100%, 0.15);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --color-neon: #64f1e1;
+  --shadow-neon: 0 0 12px var(--color-neon);
 }
 :root[data-theme='classic'] {
   --font-heading: 'Georgia', serif;
@@ -259,6 +272,9 @@
   --color-modal-bg: var(--panel-bg);
   --color-modal-bg-secondary: rgba(255, 255, 255, 0.5);
   --color-modal-bg-dark: rgba(0, 0, 0, 0.1);
+  --glass-bg: var(--panel-bg);
+  --glass-border: var(--panel-border);
+  --shadow-glass: 0 8px 32px var(--panel-shadow);
 
   --glow-shadow: rgba(var(--color-accent-rgb), 0.3);
   --glow-shadow-strong: rgba(var(--color-accent-rgb), 0.6);
@@ -372,6 +388,9 @@
   --panel-bg: rgba(255, 255, 255, 0.15);
   --panel-border: rgba(39, 169, 161, 0.3);
   --panel-shadow: rgba(0, 0, 0, 0.25);
+  --glass-bg: var(--panel-bg);
+  --glass-border: var(--panel-border);
+  --shadow-glass: 0 8px 32px var(--panel-shadow);
   --overlay-confused: rgba(143, 111, 214, 0.1);
   --overlay-weakened: rgba(123, 123, 123, 0.1);
   --overlay-invisible: rgba(255, 255, 255, 0.05);

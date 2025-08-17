@@ -269,7 +269,7 @@ describe('Theme switching', () => {
     const select = screen.getByLabelText(/Theme:/i);
 
     return waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
     }).then(() => {
       fireEvent.change(select, { target: { value: 'classic' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('classic');
@@ -288,7 +288,7 @@ describe('Theme switching', () => {
     const select = screen.getByLabelText(/Theme:/i);
 
     return waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
     }).then(() => {
       fireEvent.change(select, { target: { value: 'moebius' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');

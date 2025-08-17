@@ -12,7 +12,7 @@ const Settings = () => {
       <select id="theme-select" value={theme} onChange={(e) => setTheme(e.target.value)}>
         {themes.map((t) => (
           <option key={t} value={t}>
-            {t}
+            {t.replace('-', ' ')}
           </option>
         ))}
       </select>

@@ -31,6 +31,7 @@ import { useCharacter } from './state/CharacterContext';
 import { useSettings } from './state/SettingsContext';
 import styles from './styles/AppStyles.module.css';
 import safeLocalStorage from './utils/safeLocalStorage.js';
+import { isCompactWidth } from './utils/responsive.js';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -54,7 +55,9 @@ function App() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
-  const [compactMode, setCompactMode] = useState(() => window.innerWidth < 768);
+  // Default to false when `window` is unavailable (e.g., during SSR)
+  // to prevent reference errors.
+  const [compactMode, setCompactMode] = useState(isCompactWidth);
   const [hudMounted, setHudMounted] = useState(false);
 
   const getDefaultLevelUpState = () => ({

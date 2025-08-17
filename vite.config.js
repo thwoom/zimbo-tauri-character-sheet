@@ -45,7 +45,6 @@ export default defineConfig(async () => ({
       : undefined,
     headers: {
       'X-Frame-Options': 'DENY',
-      // Allow Vite to set the correct Content-Type per response
       'Cache-Control': 'no-store',
       Expires: '0',
     },

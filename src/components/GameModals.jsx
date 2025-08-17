@@ -47,30 +47,28 @@ const GameModals = ({
   saveToHistory,
 }) => (
   <>
-    {showLevelUpModal && (
-      <LevelUpModal
-        character={character}
-        setCharacter={setCharacter}
-        levelUpState={levelUpState}
-        setLevelUpState={setLevelUpState}
-        onClose={() => setShowLevelUpModal(false)}
-        rollDie={rollDie}
-        setRollResult={setRollResult}
-      />
-    )}
+    <LevelUpModal
+      isOpen={showLevelUpModal}
+      character={character}
+      setCharacter={setCharacter}
+      levelUpState={levelUpState}
+      setLevelUpState={setLevelUpState}
+      onClose={() => setShowLevelUpModal(false)}
+      rollDie={rollDie}
+      setRollResult={setRollResult}
+    />
 
-    {showStatusModal && (
-      <StatusModal
-        statusEffects={character.statusEffects}
-        debilities={character.debilities}
-        statusEffectTypes={statusEffectTypes}
-        debilityTypes={debilityTypes}
-        onToggleStatusEffect={handleToggleStatusEffect}
-        onToggleDebility={handleToggleDebility}
-        onClose={() => setShowStatusModal(false)}
-        saveToHistory={saveToHistory}
-      />
-    )}
+    <StatusModal
+      isOpen={showStatusModal}
+      statusEffects={character.statusEffects}
+      debilities={character.debilities}
+      statusEffectTypes={statusEffectTypes}
+      debilityTypes={debilityTypes}
+      onToggleStatusEffect={handleToggleStatusEffect}
+      onToggleDebility={handleToggleDebility}
+      onClose={() => setShowStatusModal(false)}
+      saveToHistory={saveToHistory}
+    />
 
     <DamageModal
       isOpen={showDamageModal}
@@ -84,20 +82,21 @@ const GameModals = ({
       rollDie={rollDie}
     />
 
-    {showInventoryModal && (
-      <InventoryModal
-        inventory={inventory}
-        onEquip={handleEquipItem}
-        onConsume={handleConsumeItem}
-        onDrop={handleDropItem}
-        onUpdateNotes={handleUpdateNotes}
-        onClose={() => setShowInventoryModal(false)}
-      />
-    )}
+    <InventoryModal
+      isOpen={showInventoryModal}
+      inventory={inventory}
+      onEquip={handleEquipItem}
+      onConsume={handleConsumeItem}
+      onDrop={handleDropItem}
+      onUpdateNotes={handleUpdateNotes}
+      onClose={() => setShowInventoryModal(false)}
+    />
 
-    {showAddItemModal && (
-      <AddItemModal onAdd={handleAddItem} onClose={() => setShowAddItemModal(false)} />
-    )}
+    <AddItemModal
+      isOpen={showAddItemModal}
+      onAdd={handleAddItem}
+      onClose={() => setShowAddItemModal(false)}
+    />
 
     <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
 

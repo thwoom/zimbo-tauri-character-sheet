@@ -172,6 +172,9 @@ This plan outlines the staged approach for upgrading the project's UX. Each PR s
    - **Risk**: interaction regressions; **Rollback**: keep legacy components side-by-side and toggle via flag.
 3. **Stage 3 – Dialog Migration**
    - Swap modal components to Radix `Dialog` with Framer Motion transitions.
+   - Use `AnimatePresence` with shared `fadeScale` variants and the
+     `useMotionTransition` helper to disable motion when users enable
+     `prefers-reduced-motion`.
    - **Risk**: focus traps and overlay conflicts; **Rollback**: revert to `useModalTransition` modals.
 4. **Stage 4 – HUD & Toasts**
    - Refactor HUD widgets to Radix `Popover`/`Tooltip`; add Radix `Toast` system.

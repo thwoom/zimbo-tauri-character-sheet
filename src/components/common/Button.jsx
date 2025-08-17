@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useReducedMotion } from '../../motion/reduced';
 import { spring } from '../../motion/tokens';
 import styles from './Button.module.css';
 

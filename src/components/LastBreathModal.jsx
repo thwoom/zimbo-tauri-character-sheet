@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
 import { FaSkull } from 'react-icons/fa6';
+import { AnimatePresence, motion } from 'framer-motion';
+import { durations, easings, fadeScale } from '../motion/tokens';
+import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import styles from './LastBreathModal.module.css';
-import useModalTransition from './common/useModalTransition.js';
 
 export default function LastBreathModal({ isOpen, onClose, rollDie }) {
   const [result, setResult] = useState(null);
-  const [isVisible, isActive] = useModalTransition(isOpen && !!result);
+  const transition = useMotionTransition(durations.md, easings.standard);
+  const variants = useMotionVariants(fadeScale);
 
   useEffect(() => {
     if (isOpen) {
@@ -22,23 +25,36 @@ export default function LastBreathModal({ isOpen, onClose, rollDie }) {
     }
   }, [isOpen, rollDie]);
 
-  if (!isVisible) return null;
-
   return (
-    <div className={styles.overlay}>
-      <div
-        className={`${styles.modal} ${styles.modalEnter} ${isActive ? styles.modalEnterActive : ''}`}
-      >
-        <h2 className={styles.title}>
-          <FaSkull style={{ marginRight: '4px' }} /> Last Breath
-        </h2>
-        <div className={styles.result}>Roll: {result.total}</div>
-        <div className={styles.outcome}>{result.outcome}</div>
-        <button onClick={onClose} className={styles.button}>
-          Close
-        </button>
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && result && (
+        <motion.div
+          className={styles.overlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+        >
+          <motion.div
+            className={styles.modal}
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={transition}
+          >
+            <h2 className={styles.title}>
+              <FaSkull style={{ marginRight: '4px' }} /> Last Breath
+            </h2>
+            <div className={styles.result}>Roll: {result.total}</div>
+            <div className={styles.outcome}>{result.outcome}</div>
+            <button onClick={onClose} className={styles.button}>
+              Close
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

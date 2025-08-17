@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dialog, Tooltip, DropdownMenu, Separator, Slider } from '../components/ui/primitives.js';
+import { Dialog, Tooltip, DropdownMenu, Separator, Slider } from '../ui/primitives';
 
-export default function DevComponents() {
-  const [open, setOpen] = React.useState(false);
+export default function DevPrimitivesPreview() {
+  const [open, setOpen] = React.useState<boolean>(false);
 
   return (
     <div className="min-h-screen bg-bg p-md text-fg space-y-md">

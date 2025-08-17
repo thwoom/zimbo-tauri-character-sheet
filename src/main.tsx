@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import DevPrimitivesPreview from './components/dev/DevPrimitivesPreview';
 import ErrorBoundary from './components/ErrorBoundary';
-import DevComponents from './dev/DevComponents';
 import { CharacterProvider } from './state/CharacterContext';
 import { SettingsProvider } from './state/SettingsContext';
 import { ThemeProvider } from './state/ThemeContext';
@@ -17,7 +17,7 @@ if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider>
-        <DevComponents />
+        <DevPrimitivesPreview />
       </ThemeProvider>
     </React.StrictMode>,
   );

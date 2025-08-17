@@ -11,6 +11,8 @@ without changing component markup.
 - `--accent`: primary accent color
 - `--muted` / `--muted-foreground`: muted surfaces and their text color
 - `--card` / `--card-foreground`: card surfaces and their text color
+- `--color-neon` / `--color-neon-dark`: neon accent pair
+- `--shadow-neon`: neon glow
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
@@ -45,3 +47,18 @@ boxShadow: {
 ```
 
 Use these utilities in components to stay aligned with the design system.
+
+## Motion Tokens
+
+JavaScript animations use centralized timing and easing presets defined in
+`src/motion/tokens.ts`:
+
+- `durations.xs` `120ms`
+- `durations.sm` `160ms`
+- `durations.md` `220ms`
+- `durations.lg` `320ms`
+- `easings.standard` cubic-bezier(0.4, 0, 0.2, 1)
+- `easings.emphasized` cubic-bezier(0.2, 0, 0, 1)
+- `spring` preset for interactive elements
+
+Always reference these tokens instead of hardcoding values.

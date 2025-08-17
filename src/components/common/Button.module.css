@@ -18,11 +18,13 @@
 
 .button:hover {
   filter: brightness(1.1);
+  box-shadow: var(--shadow-neon);
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-neon);
   outline-offset: 2px;
+  box-shadow: var(--shadow-neon);
 }
 
 .button:disabled {

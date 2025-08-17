@@ -85,7 +85,7 @@ const CharacterStats = ({
           style={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}
         />
       </div>
-      <div className={styles.centerText}>
+      <div className={styles.centerText} data-testid="xp-display">
         XP: {character.xp}/{character.xpNeeded} (Level {character.level})
       </div>
       <div className={styles.controls}>
@@ -98,6 +98,7 @@ const CharacterStats = ({
             }))
           }
           className={styles.button}
+          data-testid="increment-xp"
         >
           +1 XP
         </button>

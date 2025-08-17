@@ -75,9 +75,15 @@ export default function ExportModal({ isOpen, onClose }) {
             />
             {message && <div className={styles.message}>{message}</div>}
             <ButtonGroup>
-              <Button onClick={handleSave}>Save</Button>
-              <Button onClick={handleLoad}>Load</Button>
-              <Button onClick={onClose}>Close</Button>
+              <Button onClick={handleSave} data-testid="save-character">
+                Save
+              </Button>
+              <Button onClick={handleLoad} data-testid="load-character">
+                Load
+              </Button>
+              <Button onClick={onClose} data-testid="close-export">
+                Close
+              </Button>
             </ButtonGroup>
           </motion.div>
         </motion.div>

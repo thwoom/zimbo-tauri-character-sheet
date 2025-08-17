@@ -49,47 +49,47 @@ afterAll(async () => {
 
 test('character flow with save and load', async () => {
   // wait for XP text to be available
-  const xpEl = await browser.$('div*=XP:');
+  const xpEl = await browser.$('[data-testid="xp-display"]');
   const initialXpText = await xpEl.getText();
   const initialXp = parseXp(initialXpText);
-  const xpButton = await browser.$('button=+1 XP');
+  const xpButton = await browser.$('[data-testid="increment-xp"]');
   await xpButton.click();
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 1);
 
   // Inventory modal
-  const inventoryButton = await browser.$('button=Inventory');
+  const inventoryButton = await browser.$('[data-testid="open-inventory"]');
   await inventoryButton.click();
   await expect(await browser.$('h2*=Inventory').isExisting()).resolves.toBe(true);
   await expect(await browser.$('div=Phases through time occasionally').isExisting()).resolves.toBe(
     true,
   );
-  const unequipBtn = await browser.$('button=Unequip');
-  await unequipBtn.click();
-  await expect(await browser.$('button=Equip').isExisting()).resolves.toBe(true);
-  await (await browser.$('button=Close')).click();
+  const equipToggle = await browser.$('[data-testid="equip-toggle"]');
+  await equipToggle.click();
+  await expect(await equipToggle.getText()).resolves.toBe('Equip');
+  await (await browser.$('[data-testid="close-inventory"]')).click();
 
   // Settings
-  const themeSelect = await browser.$('#theme-select');
+  const themeSelect = await browser.$('[data-testid="theme-select"]');
   await themeSelect.selectByVisibleText('classic');
   expect(await browser.$('html').getAttribute('data-theme')).toBe('classic');
 
   // Save character
-  const exportButton = await browser.$('button=Export/Save');
+  const exportButton = await browser.$('[data-testid="open-export"]');
   await exportButton.click();
-  const saveButton = await browser.$('button=Save');
+  const saveButton = await browser.$('[data-testid="save-character"]');
   await saveButton.click();
   await expect(await browser.$('div=Character saved!').isExisting()).resolves.toBe(true);
-  await (await browser.$('button=Close')).click();
+  await (await browser.$('[data-testid="close-export"]')).click();
 
   // change XP then load
   await xpButton.click();
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 2);
 
   await exportButton.click();
-  const loadButton = await browser.$('button=Load');
+  const loadButton = await browser.$('[data-testid="load-character"]');
   await loadButton.click();
   await expect(await browser.$('div=Character loaded!').isExisting()).resolves.toBe(true);
-  await (await browser.$('button=Close')).click();
+  await (await browser.$('[data-testid="close-export"]')).click();
 
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 1);
 }, 120000);

@@ -66,7 +66,11 @@ const InventoryModal = ({
                     </div>
                     <div className={styles.inventoryItemActions}>
                       {'equipped' in item && (
-                        <button className={styles.inventoryButton} onClick={() => onEquip(item.id)}>
+                        <button
+                          className={styles.inventoryButton}
+                          onClick={() => onEquip(item.id)}
+                          data-testid="equip-toggle"
+                        >
                           {item.equipped ? 'Unequip' : 'Equip'}
                         </button>
                       )}
@@ -87,7 +91,11 @@ const InventoryModal = ({
               </ul>
             )}
             <div className={styles.inventoryClose}>
-              <button className={styles.inventoryButton} onClick={onClose}>
+              <button
+                className={styles.inventoryButton}
+                onClick={onClose}
+                data-testid="close-inventory"
+              >
                 Close
               </button>
             </div>

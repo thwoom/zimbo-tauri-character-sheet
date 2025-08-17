@@ -9,7 +9,12 @@ const Settings = () => {
   return (
     <div>
       <label htmlFor="theme-select">Theme:</label>{' '}
-      <select id="theme-select" value={theme} onChange={(e) => setTheme(e.target.value)}>
+      <select
+        id="theme-select"
+        value={theme}
+        onChange={(e) => setTheme(e.target.value)}
+        data-testid="theme-select"
+      >
         {themes.map((t) => (
           <option key={t} value={t}>
             {t.replace('-', ' ')}

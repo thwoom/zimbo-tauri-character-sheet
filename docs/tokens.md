@@ -14,7 +14,7 @@ without changing component markup.
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
-- `--glow-shadow`: accent glow shadow
+- `--glow-shadow`: accent glow color
 
 ## Tailwind Mapping
 
@@ -40,7 +40,7 @@ borderRadius: {
 },
 boxShadow: {
   DEFAULT: 'var(--shadow)',
-  glow: 'var(--glow-shadow)'
+  glow: '0 0 8px var(--glow-shadow)'
 }
 ```
 

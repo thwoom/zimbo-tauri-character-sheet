@@ -79,7 +79,6 @@ pub fn run() -> Result<(), tauri::Error> {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![write_file, read_file, get_os])
-        .setup(|_| Ok(()))
         .run(tauri::generate_context!())?;
     Ok(())
 }

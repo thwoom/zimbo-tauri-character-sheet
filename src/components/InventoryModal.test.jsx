@@ -191,4 +191,21 @@ describe('InventoryModal', () => {
     await user.type(textarea, '!');
     expect(onUpdateNotes).toHaveBeenLastCalledWith(1, 'old!');
   });
+
+  it('handles missing onUpdateNotes without crashing', async () => {
+    const user = userEvent.setup();
+    const inventory = [{ id: 1, name: 'Sword', type: 'weapon' }];
+    render(
+      <InventoryModal
+        inventory={inventory}
+        onEquip={() => {}}
+        onConsume={() => {}}
+        onDrop={() => {}}
+        onClose={() => {}}
+      />,
+    );
+    const textarea = screen.getByPlaceholderText('Notes');
+    await user.type(textarea, 'hi');
+    expect(textarea.value).toBe('');
+  });
 });

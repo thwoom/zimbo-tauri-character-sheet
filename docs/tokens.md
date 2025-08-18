@@ -15,6 +15,7 @@ without changing component markup.
 - `--shadow-neon`: neon glow
 - `--glass-bg` / `--glass-border`: translucent panel surfaces
 - `--shadow-glass`: depth for glass backdrops
+- `--glass-blur`: blur radius for glass backdrops
 - `--radius` / `--radius-sm`: standard and small border radius
 - `--spacing-sm` / `--spacing-md` / `--spacing-lg`: spacing scale
 - `--shadow`: base shadow
@@ -49,6 +50,9 @@ boxShadow: {
   glow: '0 0 8px var(--glow-shadow)',
   glass: 'var(--shadow-glass)',
   neon: 'var(--shadow-neon)'
+},
+backdropBlur: {
+  glass: 'var(--glass-blur)'
 }
 ```
 

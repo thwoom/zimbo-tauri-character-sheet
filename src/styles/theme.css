@@ -122,6 +122,7 @@
   --panel-shadow: rgba(0, 0, 0, 0.3);
   --glass-bg: var(--panel-bg);
   --glass-border: var(--panel-border);
+  --glass-blur: 8px;
   --shadow-glass: 0 8px 32px var(--panel-shadow);
   --shadow-neon: 0 0 10px var(--color-neon);
   --color-bg-primary: var(--panel-bg);
@@ -178,6 +179,7 @@
 :root[data-theme='cosmic-v2'] {
   --glass-bg: hsla(0, 0%, 100%, 0.06);
   --glass-border: hsla(0, 0%, 100%, 0.15);
+  --glass-blur: 12px;
   --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
   --color-neon: #64f1e1;
   --shadow-neon: 0 0 12px var(--color-neon);

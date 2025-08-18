@@ -31,6 +31,9 @@ export default {
         glass: 'var(--shadow-glass)',
         neon: 'var(--shadow-neon)',
       },
+      backdropBlur: {
+        glass: 'var(--glass-blur)',
+      },
     },
   },
   plugins: [forms],

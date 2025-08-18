@@ -65,11 +65,6 @@ fn read_file(path: &str) -> Result<String, String> {
     fs::read_to_string(path).map_err(|e| e.to_string())
 }
 
-#[tauri::command]
-fn get_os() -> String {
-    std::env::consts::OS.to_string()
-}
-
 /// Runs the Tauri application.
 ///
 /// Returns `Ok` if the application starts successfully or a
@@ -77,8 +72,7 @@ fn get_os() -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() -> Result<(), tauri::Error> {
     tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![write_file, read_file, get_os])
+        .invoke_handler(tauri::generate_handler![write_file, read_file])
         .run(tauri::generate_context!())?;
     Ok(())
 }

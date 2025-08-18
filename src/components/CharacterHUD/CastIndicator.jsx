@@ -1,15 +1,15 @@
 import React from 'react';
 import { useCharacter } from '../../state/CharacterContext';
-import styles from './CastIndicator.module.css';
+import Toolbar from '../ui/Toolbar';
 
 export default function CastIndicator() {
   const { character } = useCharacter();
   const { castName, castProgress } = character;
   if (!castName) return null;
   return (
-    <div className={styles.container}>
+    <Toolbar className="justify-center text-center">
       <span>{castName}</span>
       {typeof castProgress === 'number' && <progress value={castProgress} max="100" />}
-    </div>
+    </Toolbar>
   );
 }

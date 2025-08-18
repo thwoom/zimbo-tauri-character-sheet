@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './ResourceBars.module.css';
 
 export default function ResourceBars({ primary, secondary, shield }) {
   const [showPercent, setShowPercent] = useState(false);
@@ -45,14 +44,18 @@ export default function ResourceBars({ primary, secondary, shield }) {
 
   const renderBar = (percent, chip, prev, current, max, type, includeShield) => (
     <div
-      className={styles.barWrapper}
+      className="relative w-full h-4 bg-muted rounded overflow-hidden"
       onMouseEnter={() => setShowPercent(true)}
       onMouseLeave={() => setShowPercent(false)}
       onFocus={() => setShowPercent(true)}
       onBlur={() => setShowPercent(false)}
     >
       <div
-        className={`${styles.bar} ${styles[type]}`}
+        className={`h-full transition-all motion-reduce:transition-none ${
+          type === 'primary'
+            ? 'bg-[linear-gradient(90deg,var(--color-danger),var(--color-warning))]'
+            : 'bg-[linear-gradient(90deg,var(--accent),var(--color-accent-dark))]'
+        }`}
         style={{ width: `${percent}%` }}
         role="progressbar"
         aria-valuenow={current}
@@ -60,24 +63,26 @@ export default function ResourceBars({ primary, secondary, shield }) {
         aria-valuemax={max}
       />
       <div
-        className={`${styles.chip} ${current < prev.current ? styles.damage : styles.heal}`}
+        className={`absolute top-0 left-0 h-full pointer-events-none transition-all motion-reduce:transition-none ${
+          current < prev.current ? 'bg-[rgba(255,0,0,0.4)]' : 'bg-[rgba(0,255,0,0.4)]'
+        }`}
         style={{ width: `${chip}%` }}
       />
       {includeShield && shield?.current > 0 && (
         <div
-          className={styles.shield}
+          className="absolute top-0 left-0 h-full bg-[var(--color-info-light)] opacity-50 transition-all motion-reduce:transition-none pointer-events-none"
           style={{ width: `${Math.min(percent + shieldPercent, 100)}%` }}
           data-testid="shield-bar"
         />
       )}
-      <span className={styles.label}>
+      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xs pointer-events-none">
         {showPercent ? `${Math.round(percent)}%` : `${current}/${max}`}
       </span>
     </div>
   );
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col gap-sm">
       {renderBar(
         primaryPercent,
         primaryChip,

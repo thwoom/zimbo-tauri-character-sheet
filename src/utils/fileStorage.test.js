@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { saveFile, loadFile } from './fileStorage.js';
 
-vi.mock('@tauri-apps/api/fs', () => ({
-  writeTextFile: vi.fn(),
+vi.mock('@tauri-apps/plugin-fs', () => ({
   readTextFile: vi.fn(),
+  writeTextFile: vi.fn(),
+  BaseDirectory: { AppData: 'app' },
 }));
 
 afterEach(() => {
@@ -12,21 +13,23 @@ afterEach(() => {
 });
 
 describe('fileStorage tauri integration', () => {
-  it('writes file when Tauri is available', async () => {
+  it('writes file using fs API when Tauri is available', async () => {
     window.__TAURI__ = {};
-    const module = '@tauri-apps/api/' + 'fs';
-    const { writeTextFile } = await import(/* @vite-ignore */ module);
+    const { writeTextFile, BaseDirectory } = await import('@tauri-apps/plugin-fs');
     await saveFile('test.json', '{"a":1}');
-    expect(writeTextFile).toHaveBeenCalledWith('test.json', '{"a":1}');
+    expect(writeTextFile).toHaveBeenCalledWith('test.json', '{"a":1}', {
+      dir: BaseDirectory.AppData,
+    });
   });
 
-  it('reads file when Tauri is available', async () => {
+  it('reads file using fs API when Tauri is available', async () => {
     window.__TAURI__ = {};
-    const module = '@tauri-apps/api/' + 'fs';
-    const { readTextFile } = await import(/* @vite-ignore */ module);
+    const { readTextFile, BaseDirectory } = await import('@tauri-apps/plugin-fs');
     readTextFile.mockResolvedValueOnce('content');
     await expect(loadFile('test.json')).resolves.toBe('content');
-    expect(readTextFile).toHaveBeenCalledWith('test.json');
+    expect(readTextFile).toHaveBeenCalledWith('test.json', {
+      dir: BaseDirectory.AppData,
+    });
   });
 });
 

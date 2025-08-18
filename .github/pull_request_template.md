@@ -1,7 +1,7 @@
 # UX Stage 0X: <short, imperative title>
 
-> **Plan adherence:** I read and followed [docs/ux-upgrade-plan.md] (plan version: **\_).
-> If not, explain why: **\*\*\*\*\***\*\_\_\_\_\*\***\*\*\*\*\*\*\*\*
+> **Plan adherence:** I read and followed [docs/ux-upgrade-plan.md](../docs/ux-upgrade-plan.md) (plan version: **\_**).
+> If not, explain why: \_
 
 ## Summary
 
@@ -20,7 +20,8 @@
 ## Libraries
 
 - Added/updated packages (with reasons):
-  - adix-ui/\*, @/components/ui (shadcn), ramer-motion, ailwindcss
+  - radix-ui/\*, @/components/ui (shadcn), framer-motion, tailwindcss
+  - Optional: tsparticles, @react-three/fiber (flagged)
   - Optional: sparticles, @react-three/fiber (flagged)
 
 ## Design Tokens

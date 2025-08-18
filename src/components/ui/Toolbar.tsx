@@ -7,7 +7,7 @@ const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
     <div
       ref={ref}
       className={[
-        'flex items-center gap-sm rounded bg-glass border border-glass shadow-glass p-sm',
+        'flex items-center gap-sm rounded bg-glass border border-glass shadow-glass backdrop-blur-glass p-sm',
         className,
       ]
         .filter(Boolean)

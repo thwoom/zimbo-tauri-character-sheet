@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { statusEffectTypes, debilityTypes } from '../state/character.js';
@@ -65,7 +65,7 @@ const renderModals = (props) =>
   );
 
 describe('GameModals', () => {
-  it('toggles LevelUpModal with showLevelUpModal', () => {
+  it('toggles LevelUpModal with showLevelUpModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByRole('heading', { level: 2, name: /level up!/i })).not.toBeInTheDocument();
     rerender(
@@ -79,10 +79,14 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByRole('heading', { level: 2, name: /level up!/i })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', { level: 2, name: /level up!/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles StatusModal with showStatusModal', () => {
+  it('toggles StatusModal with showStatusModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByRole('heading', { name: /status & debilities/i })).not.toBeInTheDocument();
     rerender(
@@ -96,10 +100,14 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByRole('heading', { name: /status & debilities/i })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', { name: /status & debilities/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles DamageModal with showDamageModal', () => {
+  it('toggles DamageModal with showDamageModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByText(/damage calculator/i)).not.toBeInTheDocument();
     rerender(
@@ -113,7 +121,9 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/damage calculator/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/damage calculator/i)).not.toBeInTheDocument();
+    });
   });
 
   it('toggles LastBreathModal with showLastBreathModal', async () => {
@@ -130,7 +140,9 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/last breath/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/last breath/i)).not.toBeInTheDocument();
+    });
   });
 
   it('toggles InventoryModal with showInventoryModal', () => {

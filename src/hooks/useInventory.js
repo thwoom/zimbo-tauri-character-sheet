@@ -16,12 +16,18 @@ export default function useInventory(character, setCharacter) {
 
   const handleAddItem = useCallback(
     (newItem) => {
-      const id = globalThis.crypto?.randomUUID
-        ? globalThis.crypto.randomUUID()
-        : Date.now().toString();
+      const id =
+        newItem.id ||
+        (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : Date.now().toString());
+      const itemWithDefaults = {
+        ...newItem,
+        id,
+        notes: newItem.notes || '',
+        addedAt: newItem.addedAt || new Date().toISOString(),
+      };
       setCharacter((prev) => ({
         ...prev,
-        inventory: [...prev.inventory, { ...newItem, id }],
+        inventory: [...prev.inventory, itemWithDefaults],
       }));
     },
     [setCharacter],

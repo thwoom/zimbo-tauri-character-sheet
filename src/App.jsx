@@ -55,6 +55,7 @@ function App() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
+  const [showPromptsModal, setShowPromptsModal] = useState(false);
   // Default to false when `window` is unavailable (e.g., during SSR)
   // to prevent reference errors.
   const [compactMode, setCompactMode] = useState(isCompactWidth);
@@ -225,6 +226,9 @@ function App() {
               >
                 <FaFlagCheckered className={styles.icon} /> End Session
               </Button>
+              <Button onClick={() => setShowPromptsModal(true)} className={styles.exportButton}>
+                Prompts
+              </Button>
               <Button
                 onClick={() => setShowExportModal(true)}
                 className={styles.exportButton}
@@ -328,6 +332,8 @@ function App() {
         setShowExportModal={setShowExportModal}
         showEndSessionModal={showEndSessionModal}
         setShowEndSessionModal={setShowEndSessionModal}
+        showPromptsModal={showPromptsModal}
+        setShowPromptsModal={setShowPromptsModal}
         bondsModal={bondsModal}
         saveToHistory={saveToHistory}
         showAddItemModal={showAddItemModal}

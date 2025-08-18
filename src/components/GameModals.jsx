@@ -9,6 +9,7 @@ import AddItemModal from './AddItemModal';
 import LastBreathModal from './LastBreathModal';
 import LevelUpModal from './LevelUpModal';
 import StatusModal from './StatusModal';
+import PromptsModal from './PromptsModal';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
 
 const GameModals = ({
@@ -44,72 +45,96 @@ const GameModals = ({
   setShowExportModal,
   showEndSessionModal,
   setShowEndSessionModal,
+  showPromptsModal,
+  setShowPromptsModal,
   bondsModal,
   saveToHistory,
-}) => (
-  <>
-    <LevelUpModal
-      isOpen={showLevelUpModal}
-      character={character}
-      setCharacter={setCharacter}
-      levelUpState={levelUpState}
-      setLevelUpState={setLevelUpState}
-      onClose={() => setShowLevelUpModal(false)}
-      rollDie={rollDie}
-      setRollResult={setRollResult}
-    />
+}) => {
+  // eslint-disable-next-line no-console
+  // GameModals flags
+  /* console.debug('GameModals flags', {
+    showLevelUpModal,
+    showStatusModal,
+    showDamageModal,
+    showLastBreathModal,
+    showInventoryModal,
+    showAddItemModal,
+    showExportModal,
+    showEndSessionModal,
+  }); */
+  return (
+    <>
+      {showLevelUpModal && (
+        <LevelUpModal
+          isOpen
+          character={character}
+          setCharacter={setCharacter}
+          levelUpState={levelUpState}
+          setLevelUpState={setLevelUpState}
+          onClose={() => setShowLevelUpModal(false)}
+          rollDie={rollDie}
+          setRollResult={setRollResult}
+        />
+      )}
 
-    <StatusModal
-      isOpen={showStatusModal}
-      statusEffects={character.statusEffects}
-      debilities={character.debilities}
-      statusEffectTypes={statusEffectTypes}
-      debilityTypes={debilityTypes}
-      onToggleStatusEffect={handleToggleStatusEffect}
-      onToggleDebility={handleToggleDebility}
-      onClose={() => setShowStatusModal(false)}
-      saveToHistory={saveToHistory}
-    />
+      {showStatusModal && (
+        <StatusModal
+          isOpen
+          statusEffects={character.statusEffects}
+          debilities={character.debilities}
+          statusEffectTypes={statusEffectTypes}
+          debilityTypes={debilityTypes}
+          onToggleStatusEffect={handleToggleStatusEffect}
+          onToggleDebility={handleToggleDebility}
+          onClose={() => setShowStatusModal(false)}
+          saveToHistory={saveToHistory}
+        />
+      )}
 
-    <DamageModal
-      isOpen={showDamageModal}
-      onClose={() => setShowDamageModal(false)}
-      onLastBreath={() => setShowLastBreathModal(true)}
-    />
+      {showDamageModal && (
+        <DamageModal
+          isOpen
+          onClose={() => setShowDamageModal(false)}
+          onLastBreath={() => setShowLastBreathModal(true)}
+        />
+      )}
 
-    <LastBreathModal
-      isOpen={showLastBreathModal}
-      onClose={() => setShowLastBreathModal(false)}
-      rollDie={rollDie}
-    />
+      {showLastBreathModal && (
+        <LastBreathModal isOpen onClose={() => setShowLastBreathModal(false)} rollDie={rollDie} />
+      )}
 
-    <InventoryModal
-      isOpen={showInventoryModal}
-      inventory={inventory}
-      onEquip={handleEquipItem}
-      onConsume={handleConsumeItem}
-      onDrop={handleDropItem}
-      onUpdateNotes={handleUpdateNotes}
-      onClose={() => setShowInventoryModal(false)}
-    />
+      {showInventoryModal && (
+        <InventoryModal
+          isOpen
+          inventory={inventory}
+          onEquip={handleEquipItem}
+          onConsume={handleConsumeItem}
+          onDrop={handleDropItem}
+          onUpdateNotes={handleUpdateNotes}
+          onClose={() => setShowInventoryModal(false)}
+        />
+      )}
 
-    <AddItemModal
-      isOpen={showAddItemModal}
-      onAdd={handleAddItem}
-      onClose={() => setShowAddItemModal(false)}
-    />
+      {showAddItemModal && (
+        <AddItemModal isOpen onAdd={handleAddItem} onClose={() => setShowAddItemModal(false)} />
+      )}
 
-    <BondsModal isOpen={bondsModal.isOpen} onClose={bondsModal.close} />
+      {bondsModal.isOpen && <BondsModal isOpen onClose={bondsModal.close} />}
 
-    <EndSessionModal
-      isOpen={showEndSessionModal}
-      onClose={() => setShowEndSessionModal(false)}
-      onLevelUp={() => setShowLevelUpModal(true)}
-    />
+      {showEndSessionModal && (
+        <EndSessionModal
+          isOpen
+          onClose={() => setShowEndSessionModal(false)}
+          onLevelUp={() => setShowLevelUpModal(true)}
+        />
+      )}
 
-    <ExportModal isOpen={showExportModal} onClose={() => setShowExportModal(false)} />
-  </>
-);
+      {showExportModal && <ExportModal isOpen onClose={() => setShowExportModal(false)} />}
+
+      {showPromptsModal && <PromptsModal isOpen onClose={() => setShowPromptsModal(false)} />}
+    </>
+  );
+};
 
 GameModals.propTypes = {
   character: PropTypes.object.isRequired,
@@ -144,6 +169,8 @@ GameModals.propTypes = {
   setShowExportModal: PropTypes.func.isRequired,
   showEndSessionModal: PropTypes.bool.isRequired,
   setShowEndSessionModal: PropTypes.func.isRequired,
+  showPromptsModal: PropTypes.bool.isRequired,
+  setShowPromptsModal: PropTypes.func.isRequired,
   bondsModal: PropTypes.shape({
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,

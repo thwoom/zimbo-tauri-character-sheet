@@ -14,3 +14,12 @@ if (!globalThis.requestAnimationFrame) {
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn().mockResolvedValue('0.0.0'),
 }));
+
+// Force reduced motion in tests to make modal exit instantaneous
+vi.mock('framer-motion', async (importOriginal) => {
+  const mod = await importOriginal();
+  return {
+    ...mod,
+    useReducedMotion: () => true,
+  };
+});

@@ -33,6 +33,7 @@ import { useSettings } from './state/SettingsContext';
 import styles from './styles/AppStyles.module.css';
 import safeLocalStorage from './utils/safeLocalStorage.js';
 import { isCompactWidth } from './utils/responsive.js';
+import VersionHistoryModal from './components/VersionHistoryModal';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -62,6 +63,15 @@ function App() {
   const [hudMounted, setHudMounted] = useState(false);
   const [isDragActive, setIsDragActive] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [showVersionsModal, setShowVersionsModal] = useState(false);
+  const [versions, setVersions] = useState(() => {
+    try {
+      const raw = localStorage.getItem('characterVersions');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -213,6 +223,20 @@ function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
+  // Poll versions for updates written by CharacterContext
+  useEffect(() => {
+    const id = setInterval(() => {
+      try {
+        const raw = localStorage.getItem('characterVersions');
+        const next = raw ? JSON.parse(raw) : [];
+        if (JSON.stringify(next) !== JSON.stringify(versions)) setVersions(next);
+      } catch {
+        /* ignore */
+      }
+    }, 750);
+    return () => clearInterval(id);
+  }, [versions]);
+
   const {
     statusEffects,
     debilities,
@@ -295,6 +319,9 @@ function App() {
                 className={styles.endSessionButton}
               >
                 <FaFlagCheckered className={styles.icon} /> End Session
+              </Button>
+              <Button onClick={() => setShowVersionsModal(true)} className={styles.bondsButton}>
+                📜 Versions
               </Button>
               <Button
                 onClick={() => setShowExportModal(true)}
@@ -432,6 +459,12 @@ function App() {
             action: () => rollDice(equippedWeaponDamage, 'Weapon Damage'),
           },
         ]}
+      />
+      <VersionHistoryModal
+        isOpen={showVersionsModal}
+        onClose={() => setShowVersionsModal(false)}
+        versions={versions}
+        onRestore={(data) => setCharacter(data)}
       />
       {PerformanceHud && (
         <Suspense fallback={null}>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useMemo, useEffect, useRef 
 import { INITIAL_CHARACTER_DATA } from './character';
 import { saveFile, loadFile } from '../utils/fileStorage.js';
 import cloneDeep from '../utils/cloneDeep.js';
+import safeLocalStorage from '../utils/safeLocalStorage.js';
 
 const STORAGE_FILE = 'character.json';
 
@@ -37,9 +38,23 @@ export const CharacterProvider = ({ children }) => {
 
   useEffect(() => {
     if (!initializedRef.current) return;
-    saveFile(STORAGE_FILE, JSON.stringify(character)).catch((error) => {
+    const json = JSON.stringify(character);
+    saveFile(STORAGE_FILE, json).catch((error) => {
       console.error('Failed to save character file:', error);
     });
+    try {
+      const existing = safeLocalStorage.getItem('characterVersions');
+      const versions = existing ? JSON.parse(existing) : [];
+      const last = versions[0];
+      const current = { id: Date.now(), timestamp: new Date().toISOString(), character };
+      const lastJson = last ? JSON.stringify(last.character) : null;
+      if (lastJson !== json) {
+        const next = [current, ...versions].slice(0, 10);
+        safeLocalStorage.setItem('characterVersions', JSON.stringify(next));
+      }
+    } catch (_) {
+      // ignore versioning failures
+    }
   }, [character]);
 
   const value = useMemo(() => ({ character, setCharacter }), [character]);

@@ -5,6 +5,10 @@ import { useSettings } from '../state/SettingsContext';
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();
   const { autoXpOnMiss, setAutoXpOnMiss, showDiagnostics, setShowDiagnostics } = useSettings();
+  const themeLabels = {
+    legacy: 'Legacy',
+    'cosmic-v2': 'Cosmic v2',
+  };
 
   return (
     <div>
@@ -17,7 +21,7 @@ const Settings = () => {
       >
         {themes.map((t) => (
           <option key={t} value={t}>
-            {t.replace('-', ' ')}
+            {themeLabels[t] || t}
           </option>
         ))}
       </select>

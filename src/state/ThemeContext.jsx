@@ -15,24 +15,31 @@ export const ThemeProvider = ({ children }) => {
 
     safeLocalStorage.setItem('theme', theme);
 
-    const styles = getComputedStyle(document.documentElement);
-    setTokens({
-      fg: styles.getPropertyValue('--fg').trim(),
-      bg: styles.getPropertyValue('--bg').trim(),
-      accent: styles.getPropertyValue('--accent').trim(),
-      radius: styles.getPropertyValue('--radius').trim(),
-      shadow: styles.getPropertyValue('--shadow').trim(),
-      glassBg: styles.getPropertyValue('--glass-bg').trim(),
-      glassBorder: styles.getPropertyValue('--glass-border').trim(),
-      shadowGlass: styles.getPropertyValue('--shadow-glass').trim(),
-      colorNeon: styles.getPropertyValue('--color-neon').trim(),
-      shadowNeon: styles.getPropertyValue('--shadow-neon').trim(),
-      spacing: {
-        sm: styles.getPropertyValue('--spacing-sm').trim(),
-        md: styles.getPropertyValue('--spacing-md').trim(),
-        lg: styles.getPropertyValue('--spacing-lg').trim(),
-      },
-    });
+    // Only update tokens if we have a proper document element (not in tests)
+    if (document.documentElement && typeof getComputedStyle === 'function') {
+      try {
+        const styles = getComputedStyle(document.documentElement);
+        setTokens({
+          fg: styles.getPropertyValue('--fg').trim(),
+          bg: styles.getPropertyValue('--bg').trim(),
+          accent: styles.getPropertyValue('--accent').trim(),
+          radius: styles.getPropertyValue('--radius').trim(),
+          shadow: styles.getPropertyValue('--shadow').trim(),
+          glassBg: styles.getPropertyValue('--glass-bg').trim(),
+          glassBorder: styles.getPropertyValue('--glass-border').trim(),
+          shadowGlass: styles.getPropertyValue('--shadow-glass').trim(),
+          colorNeon: styles.getPropertyValue('--color-neon').trim(),
+          shadowNeon: styles.getPropertyValue('--shadow-neon').trim(),
+          spacing: {
+            sm: styles.getPropertyValue('--spacing-sm').trim(),
+            md: styles.getPropertyValue('--spacing-md').trim(),
+            lg: styles.getPropertyValue('--spacing-lg').trim(),
+          },
+        });
+      } catch (error) {
+        console.warn('Failed to read CSS custom properties:', error);
+      }
+    }
   }, [theme]);
 
   const value = { theme, setTheme, themes: THEMES, tokens };

@@ -9,6 +9,17 @@ export default function useInventory(character, setCharacter) {
     return baseArmor + equippedArmor;
   }, [character.inventory, character.armor]);
 
+  const totalWeight = useMemo(() => {
+    // Simple slot/weight model: default weight 1; armor weighs 2; materials/consumables use quantity
+    return character.inventory.reduce((sum, item) => {
+      if (item.type === 'material' || item.type === 'consumable') {
+        return sum + Math.max(0, item.quantity || 0);
+      }
+      if (item.type === 'armor') return sum + 2;
+      return sum + 1;
+    }, 0);
+  }, [character.inventory]);
+
   const equippedWeaponDamage = useMemo(() => {
     const weapon = character.inventory.find((item) => item.equipped && item.type === 'weapon');
     return weapon ? weapon.damage || 'd6' : 'd6';
@@ -89,6 +100,7 @@ export default function useInventory(character, setCharacter) {
 
   return {
     totalArmor,
+    totalWeight,
     equippedWeaponDamage,
     handleAddItem,
     handleEquipItem,

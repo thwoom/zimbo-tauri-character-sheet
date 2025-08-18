@@ -85,6 +85,7 @@ describe('InventoryPanel', () => {
         rollDie={() => 1}
         setRollResult={() => {}}
         saveToHistory={() => {}}
+        setShowAddItemModal={() => {}}
       />,
     );
     expect(screen.getByText('gift')).toBeInTheDocument();
@@ -138,5 +139,27 @@ describe('InventoryPanel', () => {
     );
     await user.click(screen.getByText(/add item/i));
     expect(setShowAddItemModal).toHaveBeenCalledWith(true);
+  });
+
+  it('shows total load from inventory', () => {
+    const character = {
+      inventory: [
+        { id: 1, name: 'Sword', type: 'weapon', equipped: true },
+        { id: 2, name: 'Armor', type: 'armor', armor: 1, equipped: false },
+        { id: 3, name: 'Ration', type: 'consumable', quantity: 2 },
+      ],
+      debilities: [],
+    };
+    render(
+      <InventoryPanel
+        character={character}
+        setCharacter={() => {}}
+        rollDie={() => 1}
+        setRollResult={() => {}}
+        saveToHistory={() => {}}
+        setShowAddItemModal={() => {}}
+      />,
+    );
+    expect(screen.getByText(/Load: 5/i)).toBeInTheDocument();
   });
 });

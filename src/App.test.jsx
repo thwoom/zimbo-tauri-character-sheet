@@ -210,6 +210,41 @@ describe('Command palette', () => {
   });
 });
 
+describe('Version history modal', () => {
+  it('opens Versions and restores a snapshot', async () => {
+    const initial = { ...INITIAL_CHARACTER_DATA, xp: 1, xpNeeded: 5, level: 2 };
+    // Seed localStorage snapshots
+    const snapshot = {
+      id: 1,
+      timestamp: new Date().toISOString(),
+      character: { ...initial, xp: 0, xpNeeded: 5, level: 2 },
+    };
+    window.localStorage.setItem('characterVersions', JSON.stringify([snapshot]));
+
+    const Wrapper = createWrapper(initial, true);
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Open the modal
+    const versionsButton = screen.getByRole('button', { name: /versions/i });
+    await act(() => {
+      fireEvent.click(versionsButton);
+    });
+
+    // Click restore on the first snapshot
+    const restoreBtn = await screen.findByTestId('restore-1');
+    await act(() => {
+      fireEvent.click(restoreBtn);
+    });
+
+    // XP display should reflect restored data
+    expect(screen.getByTestId('xp-display').textContent).toMatch(/XP: 0\/5 \(Level 2\)/);
+  });
+});
+
 describe('Drag-and-drop import', () => {
   it('updates character XP display when a JSON file is dropped', async () => {
     const initial = { ...INITIAL_CHARACTER_DATA };

@@ -7,11 +7,6 @@ import { tauriDir, appPath } from './setup.js';
 let browser;
 let tauriDriver;
 
-const parseXp = (text) => {
-  const match = /XP: (\d+)/.exec(text);
-  return match ? Number(match[1]) : 0;
-};
-
 beforeAll(async () => {
   spawnSync('npx', ['tauri', 'build', '--debug'], {
     cwd: tauriDir,
@@ -46,10 +41,10 @@ afterAll(async () => {
 
 test('character flow with save and load', async () => {
   // wait for XP text to be available
-  const xpEl = await browser.$('div*=XP:');
+  const xpEl = await browser.$(xpSelector);
   const initialXpText = await xpEl.getText();
   const initialXp = parseXp(initialXpText);
-  const xpButton = await browser.$('button=+1 XP');
+  const xpButton = await browser.$(xpButtonSelector);
   await xpButton.click();
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 1);
 

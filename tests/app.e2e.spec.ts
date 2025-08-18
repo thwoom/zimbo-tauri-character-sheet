@@ -1,3 +1,4 @@
+
 import { spawn, spawnSync } from 'child_process';
 import { waitTauriDriverReady } from '@crabnebula/tauri-driver';
 import { remote } from 'webdriverio';
@@ -6,11 +7,6 @@ import { tauriDir, appPath } from './setup.js';
 
 let browser; // WebdriverIO.Browser
 let tauriDriver;
-
-const parseXp = (text: string): number => {
-  const match = /XP: (\d+)/.exec(text);
-  return match ? Number(match[1]) : 0;
-};
 
 beforeAll(async () => {
   spawnSync('npx', ['tauri', 'build', '--debug'], {
@@ -45,9 +41,9 @@ afterAll(async () => {
 });
 
 test('increments XP on button click', async () => {
-  const xpEl = await browser.$('div*=XP:');
+  const xpEl = await browser.$(xpSelector);
   const initialXp = parseXp(await xpEl.getText());
-  const xpButton = await browser.$('button=+1 XP');
+  const xpButton = await browser.$(xpButtonSelector);
   await xpButton.click();
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 1);
 }, 120000);

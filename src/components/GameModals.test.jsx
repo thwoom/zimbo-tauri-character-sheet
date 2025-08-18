@@ -145,7 +145,7 @@ describe('GameModals', () => {
     });
   });
 
-  it('toggles InventoryModal with showInventoryModal', () => {
+  it('toggles InventoryModal with showInventoryModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByRole('heading', { name: /inventory/i })).not.toBeInTheDocument();
     rerender(
@@ -159,10 +159,12 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByRole('heading', { name: /inventory/i })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole('heading', { name: /inventory/i })).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles AddItemModal with showAddItemModal', () => {
+  it('toggles AddItemModal with showAddItemModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByText(/add item/i)).not.toBeInTheDocument();
     rerender(
@@ -170,16 +172,18 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} showAddItemModal />
       </CharacterProvider>,
     );
-    expect(screen.getByText(/add item/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /add item/i })).toBeInTheDocument();
     rerender(
       <CharacterProvider>
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/add item/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole('heading', { name: /add item/i })).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles BondsModal with bondsModal.isOpen', () => {
+  it('toggles BondsModal with bondsModal.isOpen', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByText(/character bonds/i)).not.toBeInTheDocument();
     rerender(
@@ -193,10 +197,12 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/character bonds/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/character bonds/i)).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles EndSessionModal with showEndSessionModal', () => {
+  it('toggles EndSessionModal with showEndSessionModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByText(/end of session/i)).not.toBeInTheDocument();
     rerender(
@@ -210,10 +216,12 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/end of session/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/end of session/i)).not.toBeInTheDocument();
+    });
   });
 
-  it('toggles ExportModal with showExportModal', () => {
+  it('toggles ExportModal with showExportModal', async () => {
     const { rerender } = renderModals();
     expect(screen.queryByText(/export \/ import/i)).not.toBeInTheDocument();
     rerender(
@@ -227,6 +235,8 @@ describe('GameModals', () => {
         <Wrapper {...baseProps} />
       </CharacterProvider>,
     );
-    expect(screen.queryByText(/export \/ import/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/export \/ import/i)).not.toBeInTheDocument();
+    });
   });
 });

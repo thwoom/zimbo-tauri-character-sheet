@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { saveFile, loadFile } from '../utils/fileStorage.js';
 import useModal from '../hooks/useModal.js';
 import {
@@ -42,6 +42,7 @@ ClearNotesModal.propTypes = {
 
 const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMode }) => {
   const [warning, setWarning] = useState('');
+  const [tags, setTags] = useState('');
   const clearModal = useModal();
   const handleClear = () => clearModal.open();
   const handleConfirmClear = () => {
@@ -58,6 +59,16 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
     }
   }, []);
 
+  const exportMarkdown = async () => {
+    const header = `# Session Notes\n\nTags: ${tags || 'none'}\n\n`;
+    const body = sessionNotes;
+    try {
+      await saveFile('session-notes.md', header + body);
+    } catch {
+      setWarning('Export failed.');
+    }
+  };
+
   return (
     <>
       <div
@@ -68,6 +79,13 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
         <h3 className={styles.title}>
           <FaClipboard className={styles.icon} /> Session Notes
         </h3>
+        <input
+          className={styles.tags}
+          placeholder="Tags (comma-separated)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          aria-label="Session tags"
+        />
         <textarea
           className={styles.textarea}
           value={sessionNotes}
@@ -112,6 +130,9 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             aria-label="Load notes"
           >
             <FaFolderOpen className={styles.icon} /> Load
+          </button>
+          <button className={styles.button} onClick={exportMarkdown} aria-label="Export markdown">
+            Export MD
           </button>
           <button
             className={`${styles.button} ${styles.danger}`}

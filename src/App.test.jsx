@@ -1,4 +1,5 @@
 import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App';
@@ -8,6 +9,11 @@ import CharacterContext from './state/CharacterContext';
 import { SettingsProvider } from './state/SettingsContext';
 import { ThemeProvider } from './state/ThemeContext';
 import './styles/theme.css';
+
+function createFile(name, contents, type = 'application/json') {
+  const blob = new Blob([contents], { type });
+  return new File([blob], name, { type });
+}
 
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn().mockResolvedValue('1.0.0'),
@@ -178,6 +184,130 @@ describe('Rulebook display', () => {
     );
 
     expect(screen.getByText(/Rulebook: Dungeon World/i)).toBeInTheDocument();
+  });
+});
+
+describe('Command palette', () => {
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+  it('opens with Ctrl+K and runs a command', async () => {
+    const user = userEvent.setup();
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Open palette
+    await user.keyboard('{Control>}k{/Control}');
+    expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
+
+    // Filter and run command
+    await user.type(screen.getByLabelText(/command search/i), 'inventory');
+    await user.click(screen.getByRole('option', { name: /open inventory/i }));
+
+    // Inventory modal appears
+    expect(await screen.findByRole('heading', { name: /inventory/i })).toBeInTheDocument();
+  });
+});
+
+describe('Version history modal', () => {
+  it('opens Versions and restores a snapshot', async () => {
+    const initial = { ...INITIAL_CHARACTER_DATA, xp: 1, xpNeeded: 5, level: 2 };
+    // Seed localStorage snapshots
+    const snapshot = {
+      id: 1,
+      timestamp: new Date().toISOString(),
+      character: { ...initial, xp: 0, xpNeeded: 5, level: 2 },
+    };
+    window.localStorage.setItem('characterVersions', JSON.stringify([snapshot]));
+
+    const Wrapper = createWrapper(initial, true);
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Open the modal
+    const versionsButton = screen.getByRole('button', { name: /versions/i });
+    await act(() => {
+      fireEvent.click(versionsButton);
+    });
+
+    // Click restore on the first snapshot
+    const restoreBtn = await screen.findByTestId('restore-1');
+    await act(() => {
+      fireEvent.click(restoreBtn);
+    });
+
+    // XP display should reflect restored data
+    expect(screen.getByTestId('xp-display').textContent).toMatch(/XP: 0\/5 \(Level 2\)/);
+  });
+});
+
+describe('Printable sheet', () => {
+  it('opens print preview and calls window.print', async () => {
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => {});
+    const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const btn = screen.getByRole('button', { name: /print/i });
+    act(() => {
+      fireEvent.click(btn);
+    });
+
+    const printBtn = await screen.findByRole('button', { name: /^Print$/i });
+    act(() => {
+      fireEvent.click(printBtn);
+    });
+    expect(printSpy).toHaveBeenCalled();
+    printSpy.mockRestore();
+  });
+});
+
+describe('Drag-and-drop import', () => {
+  it('updates character XP display when a JSON file is dropped', async () => {
+    const initial = { ...INITIAL_CHARACTER_DATA };
+    const Wrapper = createWrapper(initial, true);
+
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Verify initial XP display
+    const xpDisplay = await screen.findByTestId('xp-display');
+    expect(xpDisplay.textContent).toMatch(/XP: \d+\/\d+ \(Level \d+\)/);
+
+    // Prepare mocked FileReader to return our JSON string
+    const newCharacter = { ...initial, level: 10, xp: 0, xpNeeded: 17 };
+    const fileText = JSON.stringify(newCharacter);
+
+    window.FileReader = class {
+      onload = null;
+      readAsText() {
+        this.result = fileText;
+        if (this.onload) this.onload();
+      }
+    };
+
+    const file = createFile('char.json', fileText);
+    const dataTransfer = {
+      files: [file],
+      items: [file],
+    };
+
+    await act(async () => {
+      // Dispatch on document because listeners are attached there
+      fireEvent.drop(document, { dataTransfer, preventDefault: () => {} });
+    });
+
+    expect(screen.getByTestId('xp-display').textContent).toBe('XP: 0/17 (Level 10)');
   });
 });
 

@@ -1,0 +1,12 @@
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  *[data-hide-on-print='true'] {
+    display: none !important;
+  }
+  .print-container {
+    padding: 0 !important;
+  }
+}

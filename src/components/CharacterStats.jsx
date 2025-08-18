@@ -189,6 +189,7 @@ const CharacterStats = ({
         </button>
       </div>
       {[
+        { key: 'coin', label: 'Coin', max: 999 },
         { key: 'paradoxPoints', label: 'Paradox Points', max: 3 },
         { key: 'bandages', label: 'Bandages', max: 3 },
         { key: 'rations', label: 'Rations', max: 5 },

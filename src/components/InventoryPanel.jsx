@@ -23,7 +23,7 @@ const InventoryPanel = ({
   saveToHistory,
   setShowAddItemModal,
 }) => {
-  const { handleConsumeItem, handleAddItem } = useInventory(character, setCharacter);
+  const { handleConsumeItem, handleAddItem, totalWeight } = useInventory(character, setCharacter);
   const [showAddModal, setShowAddModal] = useState(false);
 
   return (
@@ -31,6 +31,7 @@ const InventoryPanel = ({
       <h3 className="text-accent mb-md flex items-center gap-sm text-lg">
         <FaBoxOpen /> Equipment
       </h3>
+      <div className="text-xs text-[var(--color-gray-400)]">Load: {totalWeight}</div>
       <button
         className="bg-gradient-to-r from-success to-success-dark text-white px-sm py-1 rounded text-xs focus-visible:outline-accent"
         onClick={() => {

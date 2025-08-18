@@ -40,6 +40,7 @@ export const INITIAL_CHARACTER_DATA = {
 
   // Resources & Abilities
   resources: {
+    coin: 0,
     chronoUses: 2, // Ring of Smooshed Chronologies
     paradoxPoints: 0, // 0-3, 3 = reality unstable
     bandages: 3, // Heal 4 HP slowly

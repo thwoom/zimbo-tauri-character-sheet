@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './DiceRoller.module.css';
 import RollModal from './RollModal';
 import AidInterfereModal from './AidInterfereModal';
+import safeLocalStorage from '../utils/safeLocalStorage.js';
 
 const DiceRoller = ({
   character,
@@ -16,6 +17,18 @@ const DiceRoller = ({
 }) => {
   const [isRolling, setIsRolling] = useState(false);
   const [animate, setAnimate] = useState(false);
+  const [presets, setPresets] = useState(() => {
+    const saved = safeLocalStorage.getItem('rollPresets');
+    if (!saved) return [];
+    try {
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
+  const [presetName, setPresetName] = useState('');
+  const [presetFormula, setPresetFormula] = useState('');
 
   const handleRoll = (expr, label) => {
     setIsRolling(true);
@@ -28,6 +41,30 @@ const DiceRoller = ({
       setIsRolling(false);
       setAnimate(true);
     }, 350);
+  };
+
+  useEffect(() => {
+    if (presets.length > 0) {
+      safeLocalStorage.setItem('rollPresets', JSON.stringify(presets));
+    } else {
+      safeLocalStorage.removeItem('rollPresets');
+    }
+  }, [presets]);
+
+  const addPreset = () => {
+    const name = presetName.trim();
+    const formula = presetFormula.trim();
+    if (!name || !/^\d*d\d+(?:[+-]\d+)?$/i.test(formula)) return;
+    setPresets((prev) => {
+      const next = [...prev.filter((p) => p.name !== name), { name, formula }];
+      return next.slice(0, 12);
+    });
+    setPresetName('');
+    setPresetFormula('');
+  };
+
+  const removePreset = (name) => {
+    setPresets((prev) => prev.filter((p) => p.name !== name));
   };
 
   return (
@@ -130,6 +167,56 @@ const DiceRoller = ({
                 {`d${sides}`}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Roll Presets */}
+        <div className={styles.section}>
+          <h4 className={styles.subtitle}>Roll Presets</h4>
+          {presets.length > 0 && (
+            <div className={styles.combatGrid}>
+              {presets.map((p) => (
+                <div key={p.name} className={styles.presetItem}>
+                  <button
+                    onClick={() => handleRoll(p.formula, p.name)}
+                    className={`${styles.button} ${styles.purple} ${styles.small}`}
+                    aria-label={`Roll preset ${p.name}`}
+                  >
+                    {p.name}
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.tiny}`}
+                    aria-label={`Remove preset ${p.name}`}
+                    onClick={() => removePreset(p.name)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className={styles.presetForm}>
+            <input
+              placeholder="Name (e.g., Volley)"
+              value={presetName}
+              onChange={(e) => setPresetName(e.target.value)}
+              className={styles.input}
+              aria-label="Preset name"
+            />
+            <input
+              placeholder="Formula (e.g., 2d6+DEX)"
+              value={presetFormula}
+              onChange={(e) => setPresetFormula(e.target.value)}
+              className={styles.input}
+              aria-label="Preset formula"
+            />
+            <button
+              onClick={addPreset}
+              className={`${styles.button} ${styles.green} ${styles.small}`}
+              aria-label="Add preset"
+            >
+              Add
+            </button>
           </div>
         </div>
 

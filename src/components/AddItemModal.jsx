@@ -65,6 +65,7 @@ const AddItemModal = ({ isOpen = true, onAdd, onClose, generateOptions }) => {
             exit="exit"
             transition={transition}
           >
+            <h2 className={styles.title}>Add Item</h2>
             <label htmlFor="item-name" className={styles.label}>
               Name:
             </label>

@@ -8,6 +8,11 @@
   font-weight: var(--font-weight-body);
 }
 
+.dragActive {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 6px;
+}
+
 .innerContainer {
   width: 100%;
   margin: 0 auto;

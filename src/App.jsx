@@ -59,6 +59,7 @@ function App() {
   // to prevent reference errors.
   const [compactMode, setCompactMode] = useState(isCompactWidth);
   const [hudMounted, setHudMounted] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -144,6 +145,59 @@ function App() {
     return () => window.removeEventListener('resize', updateHeaderHeight);
   }, []);
 
+  // Drag-and-drop import of character JSON
+  useEffect(() => {
+    const root = document;
+
+    const onDragOver = (event) => {
+      event.preventDefault();
+      setIsDragActive(true);
+    };
+
+    const onDragLeave = (event) => {
+      // Only deactivate when leaving the window or when no related target inside
+      if (
+        !event.relatedTarget ||
+        !(event.currentTarget && event.currentTarget.contains?.(event.relatedTarget))
+      ) {
+        setIsDragActive(false);
+      }
+    };
+
+    const onDrop = (event) => {
+      event.preventDefault();
+      setIsDragActive(false);
+      try {
+        const file = event.dataTransfer?.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(String(reader.result || ''));
+            if (data && typeof data === 'object') {
+              setCharacter(data);
+            }
+          } catch (error) {
+            // ignore parse errors silently to avoid disrupting play
+            // could surface a non-intrusive message in the future
+          }
+        };
+        reader.readAsText(file);
+      } catch (_) {
+        // no-op
+      }
+    };
+
+    root.addEventListener('dragover', onDragOver);
+    root.addEventListener('dragleave', onDragLeave);
+    root.addEventListener('drop', onDrop);
+    return () => {
+      root.removeEventListener('dragover', onDragOver);
+      root.removeEventListener('dragleave', onDragLeave);
+      root.removeEventListener('drop', onDrop);
+    };
+  }, [setCharacter]);
+
   const {
     statusEffects,
     debilities,
@@ -156,7 +210,9 @@ function App() {
   // Styles moved to CSS modules
 
   return (
-    <div className={`${styles.container} ${getActiveVisualEffects()}`}>
+    <div
+      className={`${styles.container} ${getActiveVisualEffects()} ${isDragActive ? styles.dragActive : ''}`}
+    >
       <div className={styles.innerContainer}>
         {/* Header */}
         <div ref={headerRef} className={styles.header} style={{ background: getHeaderColor() }}>

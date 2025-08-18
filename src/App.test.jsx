@@ -9,6 +9,11 @@ import { SettingsProvider } from './state/SettingsContext';
 import { ThemeProvider } from './state/ThemeContext';
 import './styles/theme.css';
 
+function createFile(name, contents, type = 'application/json') {
+  const blob = new Blob([contents], { type });
+  return new File([blob], name, { type });
+}
+
 vi.mock('@tauri-apps/api/app', () => ({
   getVersion: vi.fn().mockResolvedValue('1.0.0'),
 }));
@@ -178,6 +183,48 @@ describe('Rulebook display', () => {
     );
 
     expect(screen.getByText(/Rulebook: Dungeon World/i)).toBeInTheDocument();
+  });
+});
+
+describe('Drag-and-drop import', () => {
+  it('updates character XP display when a JSON file is dropped', async () => {
+    const initial = { ...INITIAL_CHARACTER_DATA };
+    const Wrapper = createWrapper(initial, true);
+
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Verify initial XP display
+    const xpDisplay = await screen.findByTestId('xp-display');
+    expect(xpDisplay.textContent).toMatch(/XP: \d+\/\d+ \(Level \d+\)/);
+
+    // Prepare mocked FileReader to return our JSON string
+    const newCharacter = { ...initial, level: 10, xp: 0, xpNeeded: 17 };
+    const fileText = JSON.stringify(newCharacter);
+
+    window.FileReader = class {
+      onload = null;
+      readAsText() {
+        this.result = fileText;
+        if (this.onload) this.onload();
+      }
+    };
+
+    const file = createFile('char.json', fileText);
+    const dataTransfer = {
+      files: [file],
+      items: [file],
+    };
+
+    await act(async () => {
+      // Dispatch on document because listeners are attached there
+      fireEvent.drop(document, { dataTransfer, preventDefault: () => {} });
+    });
+
+    expect(screen.getByTestId('xp-display').textContent).toBe('XP: 0/17 (Level 10)');
   });
 });
 

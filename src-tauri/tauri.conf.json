@@ -21,6 +21,11 @@
       "csp": "default-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
     }
   },
+  "plugins": {
+    "fs": {
+      "scope": ["$APPDATA/**"]
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",

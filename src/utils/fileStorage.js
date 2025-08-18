@@ -1,7 +1,7 @@
 export async function saveFile(name, contents) {
   if (window.__TAURI__) {
-    const { invoke } = await import('@tauri-apps/api/core');
-    return invoke('write_file', { path: name, contents });
+    const { writeTextFile, BaseDirectory } = await import('@tauri-apps/plugin-fs');
+    return writeTextFile(name, contents, { dir: BaseDirectory.AppData });
   }
 
   try {
@@ -22,8 +22,8 @@ export async function saveFile(name, contents) {
 
 export async function loadFile(name) {
   if (window.__TAURI__) {
-    const { invoke } = await import('@tauri-apps/api/core');
-    return invoke('read_file', { path: name });
+    const { readTextFile, BaseDirectory } = await import('@tauri-apps/plugin-fs');
+    return readTextFile(name, { dir: BaseDirectory.AppData });
   }
 
   try {

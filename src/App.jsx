@@ -211,6 +211,7 @@ function App() {
               <Button
                 onClick={() => setShowInventoryModal(true)}
                 className={styles.inventoryButton}
+                data-testid="open-inventory"
               >
                 <FaBoxOpen className={styles.icon} /> Inventory
               </Button>
@@ -224,7 +225,11 @@ function App() {
               >
                 <FaFlagCheckered className={styles.icon} /> End Session
               </Button>
-              <Button onClick={() => setShowExportModal(true)} className={styles.exportButton}>
+              <Button
+                onClick={() => setShowExportModal(true)}
+                className={styles.exportButton}
+                data-testid="open-export"
+              >
                 <FaSatellite className={styles.icon} /> Export/Save
               </Button>
               <Settings />

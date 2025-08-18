@@ -41,9 +41,9 @@ afterAll(async () => {
 });
 
 test('increments XP on button click', async () => {
-  const xpEl = await browser.$(xpSelector);
+  const xpEl = await browser.$('[data-testid="xp-display"]');
   const initialXp = parseXp(await xpEl.getText());
-  const xpButton = await browser.$(xpButtonSelector);
+  const xpButton = await browser.$('[data-testid="increment-xp"]');
   await xpButton.click();
   expect(parseXp(await xpEl.getText())).toBe(initialXp + 1);
 }, 120000);

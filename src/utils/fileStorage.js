@@ -1,7 +1,8 @@
 export async function saveFile(name, contents) {
   if (window.__TAURI__) {
-    const { invoke } = await import('@tauri-apps/api/core');
-    return invoke('write_file', { path: name, contents });
+    const module = '@tauri-apps/api/' + 'fs';
+    const { writeTextFile } = await import(/* @vite-ignore */ module);
+    return writeTextFile(name, contents);
   }
 
   try {
@@ -22,8 +23,9 @@ export async function saveFile(name, contents) {
 
 export async function loadFile(name) {
   if (window.__TAURI__) {
-    const { invoke } = await import('@tauri-apps/api/core');
-    return invoke('read_file', { path: name });
+    const module = '@tauri-apps/api/' + 'fs';
+    const { readTextFile } = await import(/* @vite-ignore */ module);
+    return readTextFile(name);
   }
 
   try {

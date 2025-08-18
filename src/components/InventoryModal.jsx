@@ -12,7 +12,7 @@ const InventoryModal = ({
   onEquip,
   onConsume,
   onDrop,
-  onUpdateNotes,
+  onUpdateNotes = () => {},
   onClose,
 }) => {
   const transition = useMotionTransition(durations.md, easings.standard);
@@ -112,7 +112,7 @@ InventoryModal.propTypes = {
   onEquip: PropTypes.func.isRequired,
   onConsume: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
-  onUpdateNotes: PropTypes.func.isRequired,
+  onUpdateNotes: PropTypes.func,
   onClose: PropTypes.func.isRequired,
 };
 

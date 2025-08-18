@@ -245,6 +245,30 @@ describe('Version history modal', () => {
   });
 });
 
+describe('Printable sheet', () => {
+  it('opens print preview and calls window.print', async () => {
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => {});
+    const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    const btn = screen.getByRole('button', { name: /print/i });
+    act(() => {
+      fireEvent.click(btn);
+    });
+
+    const printBtn = await screen.findByRole('button', { name: /^Print$/i });
+    act(() => {
+      fireEvent.click(printBtn);
+    });
+    expect(printSpy).toHaveBeenCalled();
+    printSpy.mockRestore();
+  });
+});
+
 describe('Drag-and-drop import', () => {
   it('updates character XP display when a JSON file is dropped', async () => {
     const initial = { ...INITIAL_CHARACTER_DATA };

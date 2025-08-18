@@ -31,9 +31,11 @@ import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
 import { useCharacter } from './state/CharacterContext';
 import { useSettings } from './state/SettingsContext';
 import styles from './styles/AppStyles.module.css';
+import './styles/print.css';
 import safeLocalStorage from './utils/safeLocalStorage.js';
 import { isCompactWidth } from './utils/responsive.js';
 import VersionHistoryModal from './components/VersionHistoryModal';
+import PrintableSheet from './components/PrintableSheet.jsx';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -64,6 +66,7 @@ function App() {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [showVersionsModal, setShowVersionsModal] = useState(false);
+  const [showPrint, setShowPrint] = useState(false);
   const [versions, setVersions] = useState(() => {
     try {
       const raw = localStorage.getItem('characterVersions');
@@ -314,6 +317,9 @@ function App() {
                 <FaUserAstronaut className={styles.icon} /> Bonds (
                 {character.bonds.filter((b) => !b.resolved).length})
               </Button>
+              <Button onClick={() => setShowPrint(true)} className={styles.bondsButton}>
+                🖨️ Print
+              </Button>
               <Button
                 onClick={() => setShowEndSessionModal(true)}
                 className={styles.endSessionButton}
@@ -466,6 +472,41 @@ function App() {
         versions={versions}
         onRestore={(data) => setCharacter(data)}
       />
+      {showPrint && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 1000 }}
+          onClick={() => setShowPrint(false)}
+          data-hide-on-print="true"
+        >
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '5%',
+              transform: 'translateX(-50%)',
+              width: 'min(900px, 95vw)',
+              background: '#fff',
+              color: '#000',
+              borderRadius: 8,
+              padding: 16,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ margin: 0 }}>Print Preview</h2>
+              <div>
+                <button onClick={() => window.print()} style={{ marginRight: 8 }}>
+                  Print
+                </button>
+                <button onClick={() => setShowPrint(false)}>Close</button>
+              </div>
+            </div>
+            <div className="print-container">
+              <PrintableSheet character={character} />
+            </div>
+          </div>
+        </div>
+      )}
       {PerformanceHud && (
         <Suspense fallback={null}>
           <PerformanceHud />

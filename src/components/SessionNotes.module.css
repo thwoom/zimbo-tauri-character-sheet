@@ -17,6 +17,26 @@
   font-size: 1.3rem;
 }
 
+.tags {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: var(--hud-spacing-sm);
+  background: var(--overlay-darker);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--hud-radius-sm);
+  color: var(--color-gray-100);
+}
+
+.tags {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: var(--hud-spacing-sm);
+  background: var(--overlay-darker);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--hud-radius-sm);
+  color: var(--color-gray-100);
+}
+
 .textarea {
   width: 100%;
   height: 120px;

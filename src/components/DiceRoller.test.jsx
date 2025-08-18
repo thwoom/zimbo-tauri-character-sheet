@@ -142,4 +142,30 @@ describe('DiceRoller', () => {
     await screen.findByText('d6: 4 = 4');
     expect(screen.queryByText(/rolling/i)).not.toBeInTheDocument();
   });
+
+  it('adds, persists, and uses roll presets', async () => {
+    const user = userEvent.setup();
+    const rollDice = vi.fn();
+    // Start with saved presets empty
+    render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        equippedWeaponDamage="d8"
+        rollResult=""
+        rollHistory={[]}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+      />,
+    );
+
+    await user.type(screen.getByLabelText(/preset name/i), 'Volley');
+    await user.type(screen.getByLabelText(/preset formula/i), '2d6+1');
+    await user.click(screen.getByRole('button', { name: /add preset/i }));
+
+    // Use preset
+    await user.click(screen.getByRole('button', { name: /roll preset volley/i }));
+    expect(rollDice).toHaveBeenCalledWith('2d6+1', 'Volley');
+  });
 });

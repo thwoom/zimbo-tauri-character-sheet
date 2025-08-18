@@ -16,6 +16,7 @@ import InventoryPanel from './components/InventoryPanel';
 import SessionNotes from './components/SessionNotes';
 import CharacterHUD from './components/CharacterHUD/CharacterHUD';
 import Settings from './components/Settings';
+import CommandPalette from './components/CommandPalette';
 import CharacterSwitcher from './components/CharacterSwitcher';
 import AppVersion from './components/AppVersion';
 import DiagnosticOverlay from './components/DiagnosticOverlay';
@@ -60,6 +61,7 @@ function App() {
   const [compactMode, setCompactMode] = useState(isCompactWidth);
   const [hudMounted, setHudMounted] = useState(false);
   const [isDragActive, setIsDragActive] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
 
   const getDefaultLevelUpState = () => ({
     selectedStats: [],
@@ -197,6 +199,19 @@ function App() {
       root.removeEventListener('drop', onDrop);
     };
   }, [setCharacter]);
+
+  // Global shortcut: Ctrl/Cmd+K opens command palette
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const isMac = navigator.platform.toUpperCase().includes('MAC');
+      if ((isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsPaletteOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const {
     statusEffects,
@@ -388,6 +403,35 @@ function App() {
         saveToHistory={saveToHistory}
         showAddItemModal={showAddItemModal}
         setShowAddItemModal={setShowAddItemModal}
+      />
+      <CommandPalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        commands={[
+          {
+            id: 'open-inventory',
+            label: 'Open Inventory',
+            action: () => setShowInventoryModal(true),
+          },
+          {
+            id: 'open-status',
+            label: 'Toggle Status Effects',
+            action: () => setShowStatusModal(true),
+          },
+          { id: 'open-bonds', label: 'Open Bonds', action: () => bondsModal.open() },
+          {
+            id: 'open-end-session',
+            label: 'End Session',
+            action: () => setShowEndSessionModal(true),
+          },
+          { id: 'open-export', label: 'Export / Import', action: () => setShowExportModal(true) },
+          { id: 'roll-int', label: 'Roll INT Check', action: () => rollDice('2d6+0', 'INT Check') },
+          {
+            id: 'roll-damage',
+            label: 'Roll Weapon Damage',
+            action: () => rollDice(equippedWeaponDamage, 'Weapon Damage'),
+          },
+        ]}
       />
       {PerformanceHud && (
         <Suspense fallback={null}>

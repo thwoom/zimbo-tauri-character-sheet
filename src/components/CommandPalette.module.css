@@ -1,0 +1,57 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  @apply backdrop-blur-glass;
+  z-index: 1000;
+}
+
+.modal {
+  position: absolute;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  width: min(700px, 92vw);
+  background: var(--color-modal-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--hud-radius);
+  box-shadow: var(--shadow-glass);
+  padding: var(--space-md);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: var(--space-md);
+  background: var(--color-modal-bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--hud-radius-sm);
+  color: var(--color-text);
+}
+
+.list {
+  list-style: none;
+  max-height: 50vh;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--hud-radius-sm);
+  color: var(--color-text);
+}
+
+.empty {
+  color: var(--color-gray-400);
+  padding: 8px 12px;
+}

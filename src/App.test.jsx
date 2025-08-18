@@ -1,4 +1,5 @@
 import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import App from './App';
@@ -183,6 +184,29 @@ describe('Rulebook display', () => {
     );
 
     expect(screen.getByText(/Rulebook: Dungeon World/i)).toBeInTheDocument();
+  });
+});
+
+describe('Command palette', () => {
+  const Wrapper = createWrapper(INITIAL_CHARACTER_DATA, true);
+  it('opens with Ctrl+K and runs a command', async () => {
+    const user = userEvent.setup();
+    await renderWithVersion(
+      <Wrapper>
+        <App />
+      </Wrapper>,
+    );
+
+    // Open palette
+    await user.keyboard('{Control>}k{/Control}');
+    expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
+
+    // Filter and run command
+    await user.type(screen.getByLabelText(/command search/i), 'inventory');
+    await user.click(screen.getByRole('option', { name: /open inventory/i }));
+
+    // Inventory modal appears
+    expect(await screen.findByRole('heading', { name: /inventory/i })).toBeInTheDocument();
   });
 });
 

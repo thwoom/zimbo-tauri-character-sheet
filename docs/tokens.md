@@ -2,7 +2,8 @@
 
 These tokens are exposed via CSS variables and mapped into Tailwind for
 utility classes. Themes may override any variable to adjust appearance
-without changing component markup.
+without changing component markup. Currently available themes are `legacy`
+and `cosmic-v2`.
 
 ## CSS Variables
 

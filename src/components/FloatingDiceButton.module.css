@@ -1,0 +1,50 @@
+.floatingButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--color-accent), var(--color-accent-dark));
+  border: 2px solid var(--panel-border);
+  box-shadow: 0 8px 32px var(--panel-shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.floatingButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 40px var(--panel-shadow);
+}
+
+.floatingButton:active {
+  transform: scale(0.95);
+}
+
+.floatingButton.active {
+  background: linear-gradient(45deg, var(--color-success), var(--color-success-dark));
+  transform: scale(1.1);
+}
+
+.diceIcon {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+@media (max-width: 768px) {
+  .floatingButton {
+    bottom: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .diceIcon {
+    font-size: 20px;
+  }
+}

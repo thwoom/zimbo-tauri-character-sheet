@@ -11,6 +11,8 @@ import {
 } from 'react-icons/fa6';
 import CharacterStats from './components/CharacterStats';
 import DiceRoller from './components/DiceRoller';
+import FloatingDiceButton from './components/FloatingDiceButton';
+import DiceRollerModal from './components/DiceRollerModal';
 import GameModals from './components/GameModals';
 import InventoryPanel from './components/InventoryPanel';
 import SessionNotes from './components/SessionNotes';
@@ -68,6 +70,7 @@ function App() {
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [showVersionsModal, setShowVersionsModal] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
+  const [showDiceRollerModal, setShowDiceRollerModal] = useState(false);
   const [versions, setVersions] = useState(() => {
     try {
       const raw = localStorage.getItem('characterVersions');
@@ -363,20 +366,6 @@ function App() {
             />
           </div>
 
-          {/* Dice Roller Panel (component-based, main branch design) */}
-          <div className={styles.dice}>
-            <DiceRoller
-              character={character}
-              rollDice={rollDice}
-              rollResult={rollResult}
-              rollHistory={rollHistory}
-              equippedWeaponDamage={equippedWeaponDamage}
-              rollModal={rollModal}
-              rollModalData={rollModalData}
-              aidModal={aidModal}
-            />
-          </div>
-
           {/* Quick Inventory Panel */}
           <div className={styles.inventory}>
             <InventoryPanel
@@ -456,6 +445,11 @@ function App() {
           },
           { id: 'open-bonds', label: 'Open Bonds', action: () => bondsModal.open() },
           {
+            id: 'open-dice-roller',
+            label: 'Open Dice Roller',
+            action: () => setShowDiceRollerModal(true),
+          },
+          {
             id: 'open-end-session',
             label: 'End Session',
             action: () => setShowEndSessionModal(true),
@@ -510,6 +504,26 @@ function App() {
           </div>
         </div>
       )}
+      {/* Floating Dice Button */}
+      <FloatingDiceButton
+        onClick={() => setShowDiceRollerModal(true)}
+        isOpen={showDiceRollerModal}
+      />
+
+      {/* Dice Roller Modal */}
+      <DiceRollerModal
+        isOpen={showDiceRollerModal}
+        onClose={() => setShowDiceRollerModal(false)}
+        character={character}
+        rollDice={rollDice}
+        rollResult={rollResult}
+        rollHistory={rollHistory}
+        equippedWeaponDamage={equippedWeaponDamage}
+        rollModal={rollModal}
+        rollModalData={rollModalData}
+        aidModal={aidModal}
+      />
+
       {PerformanceHud && (
         <Suspense fallback={null}>
           <PerformanceHud />

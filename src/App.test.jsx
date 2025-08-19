@@ -98,6 +98,12 @@ describe('XP gain on miss', () => {
       </Wrapper>,
     );
 
+    // First open the dice roller modal
+    const diceButton = screen.getByRole('button', { name: 'Open dice roller' });
+    act(() => {
+      fireEvent.click(diceButton);
+    });
+
     const button = screen.getByRole('button', { name: 'Roll INT Check' });
 
     act(() => {
@@ -120,6 +126,12 @@ describe('XP gain on miss', () => {
         <App />
       </Wrapper>,
     );
+
+    // First open the dice roller modal
+    const diceButton = screen.getByRole('button', { name: 'Open dice roller' });
+    act(() => {
+      fireEvent.click(diceButton);
+    });
 
     const button = screen.getByRole('button', { name: 'Roll INT Check' });
     act(() => {

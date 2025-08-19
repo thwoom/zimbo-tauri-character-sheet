@@ -85,7 +85,6 @@
   grid-template-areas:
     'hud'
     'stats'
-    'dice'
     'inventory'
     'notes';
 }
@@ -96,10 +95,6 @@
 
 .stats {
   grid-area: stats;
-}
-
-.dice {
-  grid-area: dice;
 }
 
 .inventory {

@@ -36,14 +36,14 @@
         --color-danger: #b84f5e;
         --color-info: #4f6db8;
 
-        --panel-bg: rgba(255, 255, 255, 0.1);
+        --panel-bg: rgba(255, 255, 255, 0.08);
         --panel-border: rgba(95, 209, 193, 0.3);
         --panel-shadow: rgba(0, 0, 0, 0.3);
         --glass-bg: var(--panel-bg);
         --glass-border: var(--panel-border);
-        --glass-blur: 8px;
+        --glass-blur: 12px;
         --shadow-glass: 0 8px 32px var(--panel-shadow);
-        --shadow-neon: 0 0 10px var(--color-neon);
+        --shadow-neon: 0 0 20px var(--color-neon);
 
         /* Fallback for browsers without backdrop-filter support */
         --glass-bg-fallback: rgba(255, 255, 255, 0.15);
@@ -71,12 +71,75 @@
         line-height: 1.6;
         min-height: 100vh;
         overflow-x: hidden;
+        position: relative;
       }
+
+      /* Star Background */
+      .star-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .star {
+        position: absolute;
+        background: var(--color-accent);
+        border-radius: 50%;
+        opacity: 0.6;
+        box-shadow: 0 0 4px var(--color-accent);
+        /* Fallback for browsers that don't support animations */
+        animation: star-twinkle 3s infinite;
+        /* Ensure animation works in local file context */
+        -webkit-animation: star-twinkle 3s infinite;
+      }
+
+      /* Fallback for browsers that don't support backdrop-filter */
+      @supports not (backdrop-filter: blur(1px)) {
+        .header, .section, .feature-card, .theme-option, .item-type {
+          background: rgba(255, 255, 255, 0.15) !important;
+        }
+      }
+
+      /* Ensure backdrop-filter works in local file context */
+      .header, .section, .feature-card, .theme-option, .item-type {
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        /* Fallback background for browsers without backdrop-filter support */
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .star:nth-child(1) { top: 10%; left: 10%; width: 2px; height: 2px; animation: star-twinkle 3s infinite; }
+      .star:nth-child(2) { top: 20%; left: 80%; width: 1px; height: 1px; animation: star-twinkle 4s infinite 1s; }
+      .star:nth-child(3) { top: 30%; left: 20%; width: 3px; height: 3px; animation: star-twinkle 2.5s infinite 0.5s; }
+      .star:nth-child(4) { top: 40%; left: 90%; width: 2px; height: 2px; animation: star-twinkle 3.5s infinite 1.5s; }
+      .star:nth-child(5) { top: 50%; left: 5%; width: 1px; height: 1px; animation: star-twinkle 4.5s infinite 0.2s; }
+      .star:nth-child(6) { top: 60%; left: 70%; width: 2px; height: 2px; animation: star-twinkle 2.8s infinite 0.8s; }
+      .star:nth-child(7) { top: 70%; left: 15%; width: 1px; height: 1px; animation: star-twinkle 3.2s infinite 1.2s; }
+      .star:nth-child(8) { top: 80%; left: 85%; width: 3px; height: 3px; animation: star-twinkle 2.2s infinite 0.3s; }
+      .star:nth-child(9) { top: 90%; left: 25%; width: 2px; height: 2px; animation: star-twinkle 3.8s infinite 0.7s; }
+      .star:nth-child(10) { top: 15%; left: 60%; width: 1px; height: 1px; animation: star-twinkle 4.2s infinite 1.8s; }
+      .star:nth-child(11) { top: 25%; left: 40%; width: 2px; height: 2px; animation: star-twinkle 2.6s infinite 0.4s; }
+      .star:nth-child(12) { top: 35%; left: 75%; width: 1px; height: 1px; animation: star-twinkle 3.4s infinite 1.1s; }
+      .star:nth-child(13) { top: 45%; left: 30%; width: 3px; height: 3px; animation: star-twinkle 2.9s infinite 0.6s; }
+      .star:nth-child(14) { top: 55%; left: 95%; width: 2px; height: 2px; animation: star-twinkle 3.6s infinite 1.4s; }
+      .star:nth-child(15) { top: 65%; left: 50%; width: 1px; height: 1px; animation: star-twinkle 4.1s infinite 0.9s; }
+      .star:nth-child(16) { top: 75%; left: 35%; width: 2px; height: 2px; animation: star-twinkle 2.7s infinite 1.6s; }
+      .star:nth-child(17) { top: 85%; left: 65%; width: 1px; height: 1px; animation: star-twinkle 3.3s infinite 0.1s; }
+      .star:nth-child(18) { top: 95%; left: 45%; width: 3px; height: 3px; animation: star-twinkle 2.4s infinite 1.3s; }
+      .star:nth-child(19) { top: 5%; left: 55%; width: 2px; height: 2px; animation: star-twinkle 3.9s infinite 0.5s; }
+      .star:nth-child(20) { top: 45%; left: 80%; width: 1px; height: 1px; animation: star-twinkle 2.3s infinite 1.7s; }
 
       .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
+        position: relative;
+        z-index: 1;
       }
 
       .header {
@@ -87,9 +150,23 @@
         background: var(--glass-bg);
         -webkit-backdrop-filter: blur(var(--glass-blur));
         backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
         border-radius: var(--hud-radius);
         border: 1px solid var(--glass-border);
         box-shadow: var(--shadow-glass);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.1), rgba(100, 241, 225, 0.05));
+        pointer-events: none;
       }
 
       .header h1 {
@@ -97,8 +174,10 @@
         font-size: var(--font-size-heading);
         font-weight: var(--font-weight-heading);
         color: var(--color-accent);
-        text-shadow: 0 0 10px var(--text-glow);
+        text-shadow: 0 0 15px var(--text-glow);
         margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
       }
 
       .tagline {
@@ -106,6 +185,9 @@
         color: var(--color-neon);
         margin-bottom: 1rem;
         font-weight: 500;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 8px rgba(100, 241, 225, 0.5);
       }
 
       .description {
@@ -113,6 +195,8 @@
         color: var(--color-text);
         max-width: 600px;
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
       }
 
       .motto {
@@ -120,6 +204,9 @@
         color: var(--color-accent);
         font-size: 1rem;
         margin-top: 1rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 5px var(--text-glow);
       }
 
       .section {
@@ -129,15 +216,36 @@
         background: var(--glass-bg);
         -webkit-backdrop-filter: blur(var(--glass-blur));
         backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
         border-radius: var(--hud-radius);
         border: 1px solid var(--glass-border);
         box-shadow: var(--shadow-glass);
         transition: var(--hud-transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.05), rgba(100, 241, 225, 0.02));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
       .section:hover {
         box-shadow: var(--shadow-neon);
         border-color: var(--color-accent);
+        transform: translateY(-2px);
+      }
+
+      .section:hover::before {
+        opacity: 1;
       }
 
       .section h2 {
@@ -146,7 +254,9 @@
         font-weight: var(--font-weight-heading);
         color: var(--color-accent);
         margin-bottom: 1.5rem;
-        text-shadow: 0 0 5px var(--text-glow);
+        text-shadow: 0 0 8px var(--text-glow);
+        position: relative;
+        z-index: 1;
       }
 
       .section h3 {
@@ -155,6 +265,14 @@
         font-weight: 600;
         color: var(--color-neon);
         margin: 1.5rem 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 5px rgba(100, 241, 225, 0.5);
+      }
+
+      .section p {
+        position: relative;
+        z-index: 1;
       }
 
       .feature-grid {
@@ -167,84 +285,183 @@
       .feature-card {
         padding: 1.5rem;
         background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border-radius: var(--hud-radius-sm);
         border: 1px solid rgba(95, 209, 193, 0.2);
         transition: var(--hud-transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.1), rgba(100, 241, 225, 0.05));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
       .feature-card:hover {
         background: rgba(255, 255, 255, 0.08);
         border-color: var(--color-accent);
-        box-shadow: 0 0 15px var(--glow-shadow);
+        box-shadow: 0 0 20px var(--glow-shadow);
+        transform: translateY(-2px);
+      }
+
+      .feature-card:hover::before {
+        opacity: 1;
       }
 
       .feature-card h4 {
         color: var(--color-accent);
         font-weight: 600;
         margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 5px var(--text-glow);
       }
 
       .feature-card p {
-        color: var(--color-text);
-        font-size: var(--font-size-sm);
+        position: relative;
+        z-index: 1;
       }
 
-      .instructions {
-        background: rgba(79, 109, 184, 0.1);
-        border-left: 4px solid var(--color-info);
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 0 var(--hud-radius-sm) var(--hud-radius-sm) 0;
+      .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
       }
 
-      .instructions h4 {
-        color: var(--color-info);
-        margin-bottom: 0.5rem;
-      }
-
-      .code-block {
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--panel-border);
+      .tech-item {
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border-radius: var(--hud-radius-sm);
-        padding: 1rem;
-        margin: 1rem 0;
-        font-family: 'Courier New', monospace;
-        font-size: 0.9rem;
+        border: 1px solid rgba(95, 209, 193, 0.2);
+        transition: var(--hud-transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .tech-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.1), rgba(100, 241, 225, 0.05));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .tech-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--color-accent);
+        box-shadow: 0 0 15px var(--glow-shadow);
+        transform: translateY(-2px);
+      }
+
+      .tech-item:hover::before {
+        opacity: 1;
+      }
+
+      .tech-item h4 {
         color: var(--color-accent);
-        overflow-x: auto;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 5px var(--text-glow);
       }
 
-      .status-example {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 0.5rem;
+      .tech-item p {
+        position: relative;
+        z-index: 1;
       }
 
-      .status-healthy {
-        background: linear-gradient(45deg, var(--color-success), #3a8f66);
-        box-shadow: 0 0 8px rgba(74, 179, 129, 0.6);
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border-radius: var(--hud-radius);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glass);
+        position: relative;
+        overflow: hidden;
       }
 
-      .status-injured {
-        background: linear-gradient(45deg, var(--color-warning), #a7623c);
-        box-shadow: 0 0 8px rgba(201, 130, 74, 0.6);
+      .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.05), rgba(100, 241, 225, 0.02));
+        pointer-events: none;
       }
 
-      .status-critical {
-        background: linear-gradient(45deg, var(--color-danger), #9b3744);
-        box-shadow: 0 0 8px rgba(184, 79, 94, 0.6);
-        animation: pulse 1s infinite;
+      .footer p {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
+      .footer a {
+        color: var(--color-accent);
+        text-decoration: none;
+        transition: var(--hud-transition);
+        position: relative;
+        z-index: 1;
+      }
+
+      .footer a:hover {
+        color: var(--color-neon);
+        text-shadow: 0 0 8px var(--text-glow);
+      }
+
+      /* Enhanced animations for better compatibility */
+      @keyframes star-twinkle {
+        0%, 100% {
+          opacity: 0.6;
+          transform: scale(1);
         }
         50% {
-          opacity: 0.7;
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+
+      /* Fallback for browsers that don't support animations */
+      @media (prefers-reduced-motion: reduce) {
+        .star {
+          animation: none !important;
+          opacity: 0.8 !important;
+        }
+      }
+
+      /* Ensure animations work in local file context */
+      @-webkit-keyframes star-twinkle {
+        0%, 100% {
+          opacity: 0.6;
+          -webkit-transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          -webkit-transform: scale(1.2);
         }
       }
 
@@ -255,6 +472,15 @@
         font-size: 0.75rem;
         font-weight: 500;
         margin: 0.25rem;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: var(--hud-transition);
+      }
+
+      .item-type:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
       .type-weapon {
@@ -294,32 +520,58 @@
         border-radius: var(--hud-radius-sm);
         border: 1px solid var(--panel-border);
         background: var(--glass-bg-fallback);
-        background: var(--glass-bg);
+        background: var(--glass-bg
         -webkit-backdrop-filter: blur(var(--glass-blur));
         backdrop-filter: blur(var(--glass-blur));
         cursor: pointer;
         transition: var(--hud-transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .theme-option::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.1), rgba(100, 241, 225, 0.05));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
       .theme-option:hover {
         border-color: var(--color-accent);
-        box-shadow: 0 0 10px var(--glow-shadow);
+        box-shadow: 0 0 15px var(--glow-shadow);
+        transform: translateY(-2px);
+      }
+
+      .theme-option:hover::before {
+        opacity: 1;
       }
 
       .theme-option.active {
         border-color: var(--color-accent);
-        background: rgba(95, 209, 193, 0.1);
+        background: rgba(95, 209, 193, 0.15);
+        box-shadow: 0 0 20px var(--glow-shadow);
       }
 
+      .theme-option.active::before {
+        opacity: 1;
+      }
+
+      /* Responsive design */
       @media (max-width: 768px) {
         .container {
           padding: 1rem;
         }
-
+        
         .header h1 {
           font-size: 2rem;
         }
-
+        
         .feature-grid {
           grid-template-columns: 1fr;
         }
@@ -342,236 +594,194 @@
     </style>
   </head>
   <body>
+    <div class="star-background">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
     <div class="container">
       <div class="header">
         <h1>ZimboMate</h1>
-        <div class="tagline">Your loyal game companion for Dungeon World and beyond</div>
+        <div class="tagline">Your companion from a broken future</div>
         <div class="description">
-          Track stats, manage inventory, log sessions, and keep Zimbo (and your party) battle-ready.
-          Built with Tauri + React for a fast, cross-platform desktop experience.
+          Track your character's journey through time. Your wounds, your victories, your possessions—all preserved 
+          in digital echoes. Every scar tells a story of battles fought across timelines, every item carries the weight 
+          of multiple realities. Built with Tauri + React for a fast, cross-platform experience that bridges the gap 
+          between the digital and the physical, allowing you to maintain your existence across the void of forgotten time.
         </div>
-        <div class="motto">Not just a sheet. A mate.</div>
+        <div class="motto">Time bends, but I do not.</div>
       </div>
 
       <div class="section">
         <h2>Core Features</h2>
         <div class="feature-grid">
           <div class="feature-card">
-            <h4>Character Management</h4>
+            <h4>Wound Tracking</h4>
             <p>
-              Track HP, XP, level, bonds, debilities, and status effects with real-time updates and
-              visual indicators. Monitor your character's condition with color-coded status
-              indicators.
+              Your flesh remembers what your mind forgets. Track HP, XP, level, bonds, debilities, and status effects 
+              with real-time updates and visual indicators. Every scar tells a story of battles fought across time, 
+              every wound a lesson learned in the school of hard knocks. Monitor your character's condition with 
+              color-coded status indicators that speak of your resilience against the forces of entropy. The system 
+              remembers what you have forgotten, preserving the echoes of every near-death experience.
             </p>
           </div>
           <div class="feature-card">
-            <h4>Dice Roller</h4>
+            <h4>Probability Engine</h4>
             <p>
-              Roll dice with modifiers, view comprehensive history, and automatically apply XP on
-              misses. Features critical hit/failure animations and sound effects for immersive
-              gameplay.
+              The dice fall as they must. Roll with modifiers, view comprehensive history, and automatically 
+              apply XP on misses. Each failure teaches lessons written in experience, each success a moment 
+              of defiance against the chaos of probability. Features critical hit/failure animations and sound 
+              effects that echo through time, making each roll a visceral reminder of your mortality and your 
+              capacity to overcome it. The system tracks every decision, every risk taken, every moment of 
+              courage in the face of uncertainty.
             </p>
           </div>
           <div class="feature-card">
-            <h4>Inventory System</h4>
+            <h4>Paradoxical Inventory</h4>
             <p>
-              Equip, consume, or drop items with automatic calculation of total armor and weapon
-              damage. Visual indicators show equipped status and item types.
+              Equip, consume, or drop items with automatic calculation of armor and weapon damage. 
+              Visual indicators show equipped status and item types across multiple timelines. Each item 
+              exists in a state of quantum uncertainty until observed, its properties shifting between 
+              realities. The interface calculates the impossible, tracking weapons that have not yet been 
+              forged and armor that has already failed in a thousand timelines. Your possessions carry 
+              the weight of multiple existences, each one a fragment of a reality that has already ended.
             </p>
           </div>
           <div class="feature-card">
-            <h4>Session Notes</h4>
+            <h4>Memory Crystals</h4>
             <p>
-              Take persistent notes with compact and full modes. Switch between views seamlessly and
-              maintain detailed session logs for campaign continuity.
+              Take persistent notes with compact and full modes. Each session preserved in digital amber, 
+              maintaining detailed logs for campaign continuity across the void. Your experiences crystallize 
+              into permanent records, each word a memory of something that has not yet happened. Switch 
+              between views seamlessly, maintaining the illusion of continuity in a universe where nothing 
+              truly endures. The notes you write now have already been read in the future, creating a 
+              paradox of knowledge that defies the linear flow of time.
             </p>
           </div>
           <div class="feature-card">
-            <h4>Undo/History</h4>
+            <h4>Temporal Reversal</h4>
             <p>
-              Reverse recent actions with a built-in undo system. Never lose progress due to
-              accidental clicks or misclicks during intense gameplay.
+              Reverse recent actions with a built-in undo system. Step backward through your timeline, 
+              though the scars of what might have been remain in the code. Never lose progress due to 
+              accidental clicks or misclicks during intense gameplay. The system allows you to rewrite 
+              moments that have already occurred, though the memory of what might have been lingers 
+              in the digital ether. Each reversal is a small act of defiance against the inexorable 
+              march of entropy.
             </p>
           </div>
           <div class="feature-card">
-            <h4>Import/Export</h4>
+            <h4>Timeline Preservation</h4>
             <p>
-              Save or load characters with the ExportModal. Backup your characters locally and share
-              them with your party members easily.
+              Save or load characters with the ExportModal. Backup your existence to files that exist 
+              outside of time, share them with others who walk the same path. Export your character's 
+              data to JSON files that can be shared or backed up, ensuring your digital self persists 
+              across the void. Import characters from other timelines, merging fragments of existence 
+              into a coherent whole. Your data exists in a state of quantum superposition until observed, 
+              each save a snapshot of a reality that may or may not come to pass.
             </p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>Visual Experience</h2>
-        <div class="feature-grid">
-          <div class="feature-card">
-            <h4>Status Effects</h4>
-            <p>
-              Dynamic status-based overlays for conditions like poisoned, burning, shocked, frozen,
-              blessed, and more. Each status has unique visual effects and color coding.
-            </p>
+        <h2>Technical Architecture</h2>
+        <div class="tech-stack">
+          <div class="tech-item">
+            <h4>Tauri</h4>
+            <p>Cross-platform desktop framework using Rust for the backend and web technologies for the frontend. 
+            Provides native performance with web flexibility, creating a bridge between the digital and physical worlds.</p>
           </div>
-          <div class="feature-card">
-            <h4>Theme Switching</h4>
-            <p>
-              Choose from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and
-              motion effects. Your choice is saved for future sessions.
-            </p>
+          <div class="tech-item">
+            <h4>React</h4>
+            <p>Modern UI framework for building responsive, component-based interfaces. Manages the state of your 
+            character's existence across multiple timelines with efficient rendering and virtual DOM.</p>
           </div>
-          <div class="feature-card">
-            <h4>Cyber-Barbarian Aesthetic</h4>
-            <p>
-              Immersive cyber-future design with neon gradients, glows, and smooth animations. Dark
-              backgrounds with vibrant accent colors create an engaging visual experience.
-            </p>
+          <div class="tech-item">
+            <h4>TypeScript</h4>
+            <p>Type-safe JavaScript that catches errors before they can corrupt your character's data. Ensures 
+            the integrity of your digital self across the void of forgotten time.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Tailwind CSS</h4>
+            <p>Utility-first CSS framework for rapid UI development. Provides the visual language of the 
+            cyber-barbarian aesthetic, with custom properties for the color scheme and glass morphism effects.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Vite</h4>
+            <p>Fast build tool and development server that accelerates the development process. Ensures 
+            your character's interface loads quickly across all timelines.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Vitest</h4>
+            <p>Unit testing framework that validates the integrity of your character's data and ensures 
+            the reliability of the probability engine across multiple realities.</p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>Character Status System</h2>
-        <p>ZimboMate provides comprehensive visual feedback for your character's condition:</p>
-
-        <div style="margin: 1rem 0">
-          <span class="status-example status-healthy"></span>
-          <strong>Healthy</strong> - Character is in good condition with full capabilities
-        </div>
-        <div style="margin: 1rem 0">
-          <span class="status-example status-injured"></span>
-          <strong>Injured</strong> - Character has taken damage but is still functional
-        </div>
-        <div style="margin: 1rem 0">
-          <span class="status-example status-critical"></span>
-          <strong>Critical</strong> - Character is severely wounded and needs immediate attention
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>Inventory Management</h2>
-        <p>ZimboMate supports a comprehensive inventory system with the following item types:</p>
-
-        <div style="margin: 1rem 0">
-          <span class="item-type type-weapon">Weapon</span>
+        <h2>Item System</h2>
+        <p>
+          The inventory system supports various item types, each with their own properties and behaviors:
+        </p>
+        <div style="margin: 1rem 0;">
+          <span class="item-type type-weapon">Weapons</span>
           <span class="item-type type-armor">Armor</span>
-          <span class="item-type type-consumable">Consumable</span>
-          <span class="item-type type-magic">Magic</span>
-          <span class="item-type type-material">Material</span>
+          <span class="item-type type-consumable">Consumables</span>
+          <span class="item-type type-magic">Magic Items</span>
+          <span class="item-type type-material">Materials</span>
           <span class="item-type type-gear">Gear</span>
         </div>
-
-        <h3>Item Properties</h3>
-        <p>Each inventory item tracks:</p>
-        <ul style="margin: 1rem 0; padding-left: 2rem">
-          <li><strong>Damage</strong> - Dice string for weapons (e.g., "d8", "2d6")</li>
-          <li><strong>Armor</strong> - Protection bonus for defensive gear</li>
-          <li><strong>Quantity</strong> - Stack count for consumables and materials</li>
-          <li><strong>Description</strong> - Detailed item information</li>
-          <li><strong>Equipped Status</strong> - Visual indicators for active gear</li>
-          <li><strong>Tags</strong> - Custom categorization labels</li>
-        </ul>
+        <p>
+          Each item type has specific behaviors and visual indicators. Weapons automatically calculate damage, 
+          armor provides protection, consumables can be used for healing or buffs, magic items have special 
+          properties, materials are used for crafting, and gear provides utility bonuses. The system tracks 
+          equipped status and provides visual feedback for item interactions.
+        </p>
       </div>
 
       <div class="section">
-        <h2>How to Use ZimboMate</h2>
-
-        <div class="instructions">
-          <h4>Saving and Loading Characters</h4>
-          <ol>
-            <li>Click <strong>Export/Import</strong> in the toolbar</li>
-            <li>
-              Choose <strong>Export</strong> to save your current character (e.g., "my-hero.json")
-            </li>
-            <li>
-              To load later, reopen <strong>Export/Import</strong>, select <strong>Import</strong>,
-              and pick your saved file
-            </li>
-          </ol>
-        </div>
-
-        <div class="instructions">
-          <h4>Customizing Your Experience</h4>
-          <p>Open the Settings panel from the toolbar to access:</p>
-          <ul>
-            <li>
-              <strong>Theme Selection</strong> - Switch between cosmic, classic, or moebius themes
-            </li>
-            <li>
-              <strong>Auto XP on Miss</strong> - Enable automatic XP gain when rolls fail, or track
-              manually
-            </li>
-          </ul>
-        </div>
-
-        <div class="instructions">
-          <h4>Dice Rolling</h4>
-          <ol>
-            <li>Select your dice type and modifiers</li>
-            <li>Click roll to see results with animations</li>
-            <li>View roll history and automatic XP tracking</li>
-            <li>Critical hits and failures trigger special visual effects</li>
-          </ol>
-        </div>
-
-        <div class="instructions">
-          <h4>Inventory Management</h4>
-          <ol>
-            <li>Add items to your inventory with type and properties</li>
-            <li>Click to equip/unequip gear (visual indicators show equipped status)</li>
-            <li>Consume items to reduce quantity or remove them entirely</li>
-            <li>View calculated totals for armor and weapon damage</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>Theme Options</h2>
-        <p>ZimboMate offers three distinct visual themes to match your gaming style:</p>
-
+        <h2>Theme System</h2>
+        <p>
+          ZimboMate features a cyber-barbarian aesthetic with glass morphism effects and neon accents. 
+          The theme system provides consistent visual language across all components:
+        </p>
         <div class="theme-preview">
-          <div class="theme-option active">
-            <strong>Cosmic</strong><br />
-            <small>Cyber-future with neon accents</small>
-          </div>
-          <div class="theme-option">
-            <strong>Classic</strong><br />
-            <small>Traditional fantasy styling</small>
-          </div>
-          <div class="theme-option">
-            <strong>Moebius</strong><br />
-            <small>Artistic and flowing design</small>
-          </div>
+          <div class="theme-option">Cyber-Barbarian</div>
+          <div class="theme-option">Neon Accents</div>
+          <div class="theme-option">Glass Morphism</div>
+          <div class="theme-option">Dark Theme</div>
         </div>
-
         <p>
-          Each theme includes unique fonts, spacing, motion effects, and color schemes that are
-          automatically saved for your next session.
+          The color scheme uses teal and cyan accents against a dark background, with glass-like panels 
+          that blur the content behind them. Text has subtle glow effects, and interactive elements 
+          have hover states with neon shadows. The overall aesthetic evokes a futuristic, post-apocalyptic 
+          setting where technology and barbarism coexist.
         </p>
       </div>
 
-      <div class="section">
-        <h2>Cross-Platform Compatibility</h2>
-        <p>
-          ZimboMate runs natively on Windows, macOS, and Linux, providing a consistent experience
-          across all platforms. Built with Tauri technology for optimal performance and native
-          system integration.
-        </p>
-
-        <div class="feature-grid">
-          <div class="feature-card">
-            <h4>Windows</h4>
-            <p>Native .msi installer with full system integration</p>
-          </div>
-          <div class="feature-card">
-            <h4>macOS</h4>
-            <p>.dmg package with proper app bundle structure</p>
-          </div>
-          <div class="feature-card">
-            <h4>Linux</h4>
-            <p>.AppImage and .deb packages for easy installation</p>
-          </div>
-        </div>
+      <div class="footer">
+        <p>ZimboMate - Your companion from a broken future</p>
+        <p>Built with Tauri + React for cross-platform compatibility</p>
+        <p><a href="https://github.com/your-repo/zimbomate" target="_blank">View on GitHub</a> | 
+           <a href="https://zimbomate.com" target="_blank">Official Website</a></p>
       </div>
     </div>
   </body>

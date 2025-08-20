@@ -1,6 +1,11 @@
-# Zimbo Panel
 
-A cross-platform desktop application for managing tabletop RPG characters. Built with [Tauri](https://tauri.app/), [React](https://react.dev/), and [Vite](https://vitejs.dev/), it runs natively on Windows, macOS, and Linux.
+# ZimboMate
+
+**Your loyal game companion for Dungeon World and beyond.**
+Track stats, manage inventory, log sessions, and keep Zimbo (and your party) battle-ready.
+Built with Tauri + React for a fast, cross-platform desktop experience.
+
+Not just a sheet. A mate.
 
 ## Features
 
@@ -170,7 +175,7 @@ The command above bundles the application and produces platform-specific install
 1. Run the installer for your operating system (e.g., `.msi`, `.dmg`, `.AppImage`/`.deb`) and follow the prompts.
 2. Launch the installed application and confirm the main window appears. Try creating or loading a character and rolling dice to verify basic functionality.
 
-Logs are written to OS-specific locations such as `~/.local/share/zimbo-panel/logs` on Linux, `~/Library/Logs/zimbo-panel` on macOS, or `%APPDATA%\zimbo-panel\logs` on Windows. Running the app from a terminal will also display any runtime messages.
+Logs are written to OS-specific locations such as `~/.local/share/zimbomate/logs` on Linux, `~/Library/Logs/zimbomate` on macOS, or `%APPDATA%\zimbomate\logs` on Windows. Running the app from a terminal will also display any runtime messages.
 
 If you encounter issues, capture the relevant logs or console output and [open an issue](../../issues) describing the problem.
 
@@ -189,6 +194,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup, linting, and testing 
 ## Development scripts
 
 Optional helper scripts can be kept in a local `scripts/` directory. This folder is ignored by Git and is not required for building or running the project.
+
+## Rebranding Note
+
+This project was previously named "zimbo-tauri-character-sheet" and has been rebranded to **ZimboMate** to better reflect its role as a comprehensive game companion. The repository slug has been updated to `zimbo-mate` to match the new branding.
 
 ## License
 

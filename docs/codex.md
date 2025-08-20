@@ -1,13 +1,13 @@
-# ZIMBO Tauri App – Codex Prompt
+# ZimboMate – Codex Prompt
 
 This document provides a condensed, structured prompt for use with OpenAI’s **Codex**. It is broken into two parts: a **Persistent Project Context** and a **Task Instruction Template**. Store the first part in a system prompt or separate note so that Codex retains the overall architecture and constraints. When you need help with a specific feature, supply a focused task instruction based on the template.
 
 ## Persistent Project Context
 
-- **Project Name:** ZIMBO Tauri App — Dungeon World Character Sheet.
+- **Project Name:** ZimboMate — Dungeon World Character Sheet.
 - **Tech Stack:** Tauri + React (JavaScript, no TypeScript).
 - **Repository Structure:**
-  - `zimbo-panel/` contains the Tauri project. Inside `src/` you will find `App.jsx` and sub‑folders `components/`, `utils/`, and `styles/`. Do not modify `src-tauri/`.
+  - `zimbomate/` contains the Tauri project. Inside `src/` you will find `App.jsx` and sub‑folders `components/`, `utils/`, and `styles/`. Do not modify `src-tauri/`.
 - **Character State Model:** A single `character` object maintained in `App.jsx`. It tracks level, hit points, experience, armor, six core attributes (with scores and modifiers), consumable resources, bonds, status effects, debilities, inventory items, selected advanced moves, action history, session notes, session recap, last session end timestamp and dice roll history. See the detailed state structure from the original Claude specification for exact keys and formulae.
 - **Styling & Theme:** Cyber‑future aesthetic using neon gradients and glows. Dark backgrounds (`var(--color-bg-start)` to `var(--color-bg-end)`) with primary accent `var(--color-accent)`, plus purple and blue secondary accents. Use inline styles or the shared `cyber-theme.css` from `src/styles/`. Buttons and panels should have gradients, border glows and smooth transitions. Visual states for conditions (poisoned, burning, shocked, frozen, blessed, etc.) are achieved through tinted overlays.
 - **Architecture Rules:**
@@ -57,7 +57,7 @@ When asking Codex to implement a new feature or component, provide a concise des
 
 ### Example: DamageModal
 
-> **Current Task:** Build `DamageModal.jsx` for the ZIMBO Tauri App.
+> **Current Task:** Build `DamageModal.jsx` for the ZimboMate App.
 > **Purpose:** Records damage taken and updates the character's hit points.
 > **Requirements:**
 > • Allow the user to input a damage value and optional notes.

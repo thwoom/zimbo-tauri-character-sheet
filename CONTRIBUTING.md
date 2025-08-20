@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to Zimbo Tauri Character Sheet.
+Thank you for your interest in contributing to ZimboMate.
 
 ## Prerequisites
 

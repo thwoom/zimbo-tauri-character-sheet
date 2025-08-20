@@ -39,7 +39,7 @@ function writeVSCodeSettings() {
 
 function normalizePackageJson() {
   const pkg = {
-    name: 'zimbo-panel',
+    name: 'zimbomate',
     private: true,
     version: '0.1.0',
     license: 'MIT',

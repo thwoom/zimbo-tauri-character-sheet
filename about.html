@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About ZimboMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ZimboMate Cyber-Barbarian Theme */
+      :root {
+        --font-heading: 'Montserrat', sans-serif;
+        --font-body: 'Inter', sans-serif;
+        --font-size-heading: 2.5rem;
+        --font-size-body: 1rem;
+        --font-size-sm: 0.875rem;
+        --font-weight-heading: 700;
+        --font-weight-body: 400;
+
+        --color-bg-start: #0b0d17;
+        --color-bg-end: #1a1f38;
+        --color-text: #d0d7e2;
+        --color-accent: #5fd1c1;
+        --color-accent-dark: #3fa39e;
+        --color-neon: #64f1e1;
+        --color-accent-rgb: 95, 209, 193;
+
+        --color-success: #4ab381;
+        --color-warning: #c9824a;
+        --color-danger: #b84f5e;
+        --color-info: #4f6db8;
+
+        --panel-bg: rgba(255, 255, 255, 0.1);
+        --panel-border: rgba(95, 209, 193, 0.3);
+        --panel-shadow: rgba(0, 0, 0, 0.3);
+        --glass-bg: var(--panel-bg);
+        --glass-border: var(--panel-border);
+        --glass-blur: 8px;
+        --shadow-glass: 0 8px 32px var(--panel-shadow);
+        --shadow-neon: 0 0 10px var(--color-neon);
+
+        --glow-shadow: rgba(95, 209, 193, 0.3);
+        --text-glow: rgba(95, 209, 193, 0.5);
+
+        --hud-radius: 0.75rem;
+        --hud-radius-sm: 0.375rem;
+        --hud-spacing: 1.25rem;
+        --hud-transition: all 300ms ease-in-out;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        font-size: var(--font-size-body);
+        background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: var(--hud-radius);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glass);
+      }
+
+      .header h1 {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-heading);
+        font-weight: var(--font-weight-heading);
+        color: var(--color-accent);
+        text-shadow: 0 0 10px var(--text-glow);
+        margin-bottom: 1rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        color: var(--color-neon);
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+
+      .description {
+        font-size: 1.1rem;
+        color: var(--color-text);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .motto {
+        font-style: italic;
+        color: var(--color-accent);
+        font-size: 1rem;
+        margin-top: 1rem;
+      }
+
+      .section {
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: var(--hud-radius);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glass);
+        transition: var(--hud-transition);
+      }
+
+      .section:hover {
+        box-shadow: var(--shadow-neon);
+        border-color: var(--color-accent);
+      }
+
+      .section h2 {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        font-weight: var(--font-weight-heading);
+        color: var(--color-accent);
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 5px var(--text-glow);
+      }
+
+      .section h3 {
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--color-neon);
+        margin: 1.5rem 0 0.5rem 0;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .feature-card {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--hud-radius-sm);
+        border: 1px solid rgba(95, 209, 193, 0.2);
+        transition: var(--hud-transition);
+      }
+
+      .feature-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--color-accent);
+        box-shadow: 0 0 15px var(--glow-shadow);
+      }
+
+      .feature-card h4 {
+        color: var(--color-accent);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-card p {
+        color: var(--color-text);
+        font-size: var(--font-size-sm);
+      }
+
+      .instructions {
+        background: rgba(79, 109, 184, 0.1);
+        border-left: 4px solid var(--color-info);
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 var(--hud-radius-sm) var(--hud-radius-sm) 0;
+      }
+
+      .instructions h4 {
+        color: var(--color-info);
+        margin-bottom: 0.5rem;
+      }
+
+      .code-block {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--hud-radius-sm);
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        color: var(--color-accent);
+        overflow-x: auto;
+      }
+
+      .status-example {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+
+      .status-healthy {
+        background: linear-gradient(45deg, var(--color-success), #3a8f66);
+        box-shadow: 0 0 8px rgba(74, 179, 129, 0.6);
+      }
+
+      .status-injured {
+        background: linear-gradient(45deg, var(--color-warning), #a7623c);
+        box-shadow: 0 0 8px rgba(201, 130, 74, 0.6);
+      }
+
+      .status-critical {
+        background: linear-gradient(45deg, var(--color-danger), #9b3744);
+        box-shadow: 0 0 8px rgba(184, 79, 94, 0.6);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .item-type {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--hud-radius-sm);
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 0.25rem;
+      }
+
+      .type-weapon {
+        background: rgba(184, 79, 94, 0.2);
+        color: var(--color-danger);
+      }
+      .type-armor {
+        background: rgba(74, 179, 129, 0.2);
+        color: var(--color-success);
+      }
+      .type-consumable {
+        background: rgba(201, 130, 74, 0.2);
+        color: var(--color-warning);
+      }
+      .type-magic {
+        background: rgba(110, 90, 163, 0.2);
+        color: #6e5aa3;
+      }
+      .type-material {
+        background: rgba(79, 109, 184, 0.2);
+        color: var(--color-info);
+      }
+      .type-gear {
+        background: rgba(95, 209, 193, 0.2);
+        color: var(--color-accent);
+      }
+
+      .theme-preview {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+        flex-wrap: wrap;
+      }
+
+      .theme-option {
+        padding: 0.5rem 1rem;
+        border-radius: var(--hud-radius-sm);
+        border: 1px solid var(--panel-border);
+        background: var(--glass-bg);
+        cursor: pointer;
+        transition: var(--hud-transition);
+      }
+
+      .theme-option:hover {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 10px var(--glow-shadow);
+      }
+
+      .theme-option.active {
+        border-color: var(--color-accent);
+        background: rgba(95, 209, 193, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>ZimboMate</h1>
+        <div class="tagline">Your loyal game companion for Dungeon World and beyond</div>
+        <div class="description">
+          Track stats, manage inventory, log sessions, and keep Zimbo (and your party) battle-ready.
+          Built with Tauri + React for a fast, cross-platform desktop experience.
+        </div>
+        <div class="motto">Not just a sheet. A mate.</div>
+      </div>
+
+      <div class="section">
+        <h2>Core Features</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Character Management</h4>
+            <p>
+              Track HP, XP, level, bonds, debilities, and status effects with real-time updates and
+              visual indicators. Monitor your character's condition with color-coded status
+              indicators.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Dice Roller</h4>
+            <p>
+              Roll dice with modifiers, view comprehensive history, and automatically apply XP on
+              misses. Features critical hit/failure animations and sound effects for immersive
+              gameplay.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Inventory System</h4>
+            <p>
+              Equip, consume, or drop items with automatic calculation of total armor and weapon
+              damage. Visual indicators show equipped status and item types.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Session Notes</h4>
+            <p>
+              Take persistent notes with compact and full modes. Switch between views seamlessly and
+              maintain detailed session logs for campaign continuity.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Undo/History</h4>
+            <p>
+              Reverse recent actions with a built-in undo system. Never lose progress due to
+              accidental clicks or misclicks during intense gameplay.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Import/Export</h4>
+            <p>
+              Save or load characters with the ExportModal. Backup your characters locally and share
+              them with your party members easily.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Visual Experience</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Status Effects</h4>
+            <p>
+              Dynamic status-based overlays for conditions like poisoned, burning, shocked, frozen,
+              blessed, and more. Each status has unique visual effects and color coding.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Theme Switching</h4>
+            <p>
+              Choose from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and
+              motion effects. Your choice is saved for future sessions.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Cyber-Barbarian Aesthetic</h4>
+            <p>
+              Immersive cyber-future design with neon gradients, glows, and smooth animations. Dark
+              backgrounds with vibrant accent colors create an engaging visual experience.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Character Status System</h2>
+        <p>ZimboMate provides comprehensive visual feedback for your character's condition:</p>
+
+        <div style="margin: 1rem 0">
+          <span class="status-example status-healthy"></span>
+          <strong>Healthy</strong> - Character is in good condition with full capabilities
+        </div>
+        <div style="margin: 1rem 0">
+          <span class="status-example status-injured"></span>
+          <strong>Injured</strong> - Character has taken damage but is still functional
+        </div>
+        <div style="margin: 1rem 0">
+          <span class="status-example status-critical"></span>
+          <strong>Critical</strong> - Character is severely wounded and needs immediate attention
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Inventory Management</h2>
+        <p>ZimboMate supports a comprehensive inventory system with the following item types:</p>
+
+        <div style="margin: 1rem 0">
+          <span class="item-type type-weapon">Weapon</span>
+          <span class="item-type type-armor">Armor</span>
+          <span class="item-type type-consumable">Consumable</span>
+          <span class="item-type type-magic">Magic</span>
+          <span class="item-type type-material">Material</span>
+          <span class="item-type type-gear">Gear</span>
+        </div>
+
+        <h3>Item Properties</h3>
+        <p>Each inventory item tracks:</p>
+        <ul style="margin: 1rem 0; padding-left: 2rem">
+          <li><strong>Damage</strong> - Dice string for weapons (e.g., "d8", "2d6")</li>
+          <li><strong>Armor</strong> - Protection bonus for defensive gear</li>
+          <li><strong>Quantity</strong> - Stack count for consumables and materials</li>
+          <li><strong>Description</strong> - Detailed item information</li>
+          <li><strong>Equipped Status</strong> - Visual indicators for active gear</li>
+          <li><strong>Tags</strong> - Custom categorization labels</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>How to Use ZimboMate</h2>
+
+        <div class="instructions">
+          <h4>Saving and Loading Characters</h4>
+          <ol>
+            <li>Click <strong>Export/Import</strong> in the toolbar</li>
+            <li>
+              Choose <strong>Export</strong> to save your current character (e.g., "my-hero.json")
+            </li>
+            <li>
+              To load later, reopen <strong>Export/Import</strong>, select <strong>Import</strong>,
+              and pick your saved file
+            </li>
+          </ol>
+        </div>
+
+        <div class="instructions">
+          <h4>Customizing Your Experience</h4>
+          <p>Open the Settings panel from the toolbar to access:</p>
+          <ul>
+            <li>
+              <strong>Theme Selection</strong> - Switch between cosmic, classic, or moebius themes
+            </li>
+            <li>
+              <strong>Auto XP on Miss</strong> - Enable automatic XP gain when rolls fail, or track
+              manually
+            </li>
+          </ul>
+        </div>
+
+        <div class="instructions">
+          <h4>Dice Rolling</h4>
+          <ol>
+            <li>Select your dice type and modifiers</li>
+            <li>Click roll to see results with animations</li>
+            <li>View roll history and automatic XP tracking</li>
+            <li>Critical hits and failures trigger special visual effects</li>
+          </ol>
+        </div>
+
+        <div class="instructions">
+          <h4>Inventory Management</h4>
+          <ol>
+            <li>Add items to your inventory with type and properties</li>
+            <li>Click to equip/unequip gear (visual indicators show equipped status)</li>
+            <li>Consume items to reduce quantity or remove them entirely</li>
+            <li>View calculated totals for armor and weapon damage</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Theme Options</h2>
+        <p>ZimboMate offers three distinct visual themes to match your gaming style:</p>
+
+        <div class="theme-preview">
+          <div class="theme-option active">
+            <strong>Cosmic</strong><br />
+            <small>Cyber-future with neon accents</small>
+          </div>
+          <div class="theme-option">
+            <strong>Classic</strong><br />
+            <small>Traditional fantasy styling</small>
+          </div>
+          <div class="theme-option">
+            <strong>Moebius</strong><br />
+            <small>Artistic and flowing design</small>
+          </div>
+        </div>
+
+        <p>
+          Each theme includes unique fonts, spacing, motion effects, and color schemes that are
+          automatically saved for your next session.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>Cross-Platform Compatibility</h2>
+        <p>
+          ZimboMate runs natively on Windows, macOS, and Linux, providing a consistent experience
+          across all platforms. Built with Tauri technology for optimal performance and native
+          system integration.
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Windows</h4>
+            <p>Native .msi installer with full system integration</p>
+          </div>
+          <div class="feature-card">
+            <h4>macOS</h4>
+            <p>.dmg package with proper app bundle structure</p>
+          </div>
+          <div class="feature-card">
+            <h4>Linux</h4>
+            <p>.AppImage and .deb packages for easy installation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -49,7 +49,7 @@ New-Item -ItemType Directory -Path ".vscode" -Force | Out-Null
 function Normalize-PackageJson {
 $pjMerged = @"
 {
-  "name": "zimbo-panel",
+  "name": "zimbomate",
   "private": true,
   "version": "0.1.0",
   "type": "module",

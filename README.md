@@ -4,14 +4,16 @@ A cross-platform desktop application for managing tabletop RPG characters. Built
 
 ## Features
 
-- **Character Management** – Track stats like HP, XP, level, bonds, debilities, and status effects.
-- **Dice Roller** – Roll dice with modifiers, view history, and auto-apply XP on misses.
+- **Character Management** – Track stats like HP, XP, level, bonds, debilities, status effects, and resources (coin, paradox points, bandages, rations, adventuring gear).
+- **Dice Roller** – Roll dice with modifiers, view history, and auto-apply XP on misses. Accessible via floating button or toolbar integration.
 - **Inventory System** – Equip, consume, or drop items; calculates total armor and weapon damage.
-- **Session Notes** – Take persistent notes, switch between compact and full modes.
+- **Session Notes** – Take persistent notes with tags, timestamps, and markdown export. Switch between compact and full modes, save/load from files.
 - **Undo/History** – Reverse recent actions with a built-in undo system.
-- **Import/Export** – Save or load characters with the `ExportModal`.
+- **Import/Export** – Save or load characters with the `ExportModal`. Supports drag-and-drop import and AI-assisted item generation.
 - **Visual Effects** – Status-based overlays (poisoned, burning, shocked, etc.).
 - **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
+- **Command Palette** – Global keyboard shortcuts for quick access to features.
+- **Print Support** – Print character sheets with preview modal.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
 
 ## Inventory Item Schema
@@ -40,6 +42,15 @@ Open the Settings panel from the toolbar to customize your experience:
 
 - **Theme** – Switch between cosmic, classic, or moebius. The choice is saved for future sessions.
 - **Auto XP on miss** – Enable this checkbox to automatically gain XP when a roll misses. Uncheck to track XP manually.
+- **Show Diagnostics** – Display diagnostic information overlay (development feature).
+
+### Environment Variables
+
+You can configure default settings using environment variables:
+
+- `VITE_AUTO_XP_ON_MISS=true` – Enable auto XP on miss by default
+- `VITE_SHOW_DIAGNOSTICS=true` – Show diagnostics overlay by default
+- `VITE_SHOW_PERFORMANCE_HUD=true` – Display performance metrics (development only)
 
 ## Performance HUD (development only)
 
@@ -49,6 +60,8 @@ To display render metrics in the bottom-right corner while developing:
 2. Run `npm run dev`.
 
 The overlay appears during development builds only and is ignored in production.
+
+> **Note**: See [Environment Variables](#environment-variables) for all available configuration options.
 
 ## Getting Started
 

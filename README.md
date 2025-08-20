@@ -1,3 +1,4 @@
+
 # ZimboMate
 
 **Your loyal game companion for Dungeon World and beyond.**
@@ -9,12 +10,19 @@ Not just a sheet. A mate.
 ## Features
 
 - **Character Management** – Track stats like HP, XP, level, bonds, debilities, and status effects.
+- **Character Switcher** – Manage multiple characters with easy switching between them.
 - **Dice Roller** – Roll dice with modifiers, view history, and auto-apply XP on misses.
+- **Floating Dice Button** – Quick access to dice rolling from anywhere in the app.
 - **Inventory System** – Equip, consume, or drop items; calculates total armor and weapon damage.
 - **Session Notes** – Take persistent notes, switch between compact and full modes.
+- **End Session Management** – Properly end sessions with character state management.
+- **Level Up System** – Comprehensive character progression with stat and move selection.
+- **Status Effects** – Visual status overlays (poisoned, burning, shocked, etc.) with status tray.
+- **Command Palette** – Keyboard shortcuts and quick commands for power users.
+- **Version History** – Track and manage character versions over time.
+- **Printable Character Sheet** – Generate printable versions of character data.
 - **Undo/History** – Reverse recent actions with a built-in undo system.
 - **Import/Export** – Save or load characters with the `ExportModal`.
-- **Visual Effects** – Status-based overlays (poisoned, burning, shocked, etc.).
 - **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
 
@@ -136,6 +144,17 @@ Run the end-to-end suite, which builds a debug bundle and drives the app using W
 npm run test:e2e
 ```
 
+### Code quality
+
+Lint and format your code:
+
+```bash
+npm run lint          # Check for linting issues
+npm run lint:fix      # Fix auto-fixable linting issues
+npm run format:check  # Check Prettier formatting
+npm run format        # Format code with Prettier
+```
+
 ### Sync with GitHub
 
 ```bash
@@ -162,7 +181,7 @@ If you encounter issues, capture the relevant logs or console output and [open a
 
 ## Screenshots
 
-_Add screenshots or GIFs demonstrating character stats, dice roller, and inventory panels._
+_Add screenshots or GIFs demonstrating character stats, dice roller, inventory panels, and the various modals._
 
 ## Contributing
 

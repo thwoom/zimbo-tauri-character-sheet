@@ -6,9 +6,9 @@ export const durations = {
 } as const;
 
 export const easings = {
-  standard: [0.4, 0, 0.2, 1] as const,
-  emphasized: [0.2, 0, 0, 1] as const,
-} as const;
+  standard: [0.4, 0, 0.2, 1],
+  emphasized: [0.2, 0, 0, 1],
+};
 
 export const spring = {
   type: 'spring',

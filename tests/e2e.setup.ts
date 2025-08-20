@@ -36,7 +36,7 @@ if (!globalThis.__E2E_BROWSER_PROMISE__) {
         'tauri:options': {
           application: appPath,
         },
-      },
+      } as any,
       logLevel: 'error',
     });
 
@@ -50,7 +50,7 @@ if (!globalThis.__E2E_BROWSER_PROMISE__) {
 }
 
 beforeAll(async () => {
-  globalThis.browser = await globalThis.__E2E_BROWSER_PROMISE__;
+  globalThis.browser = await globalThis.__E2E_BROWSER_PROMISE__!;
 }, 120000);
 
 export {};

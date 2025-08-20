@@ -4,8 +4,14 @@ import { remote } from 'webdriverio';
 import { beforeAll, afterAll, test, expect } from 'vitest';
 import { tauriDir, appPath } from './setup.js';
 
-let browser; // WebdriverIO.Browser
-let tauriDriver;
+// Helper function to parse XP from text
+function parseXp(text: string): number {
+  const match = text.match(/XP:\s*(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+let browser: any; // WebdriverIO.Browser
+let tauriDriver: any;
 
 beforeAll(async () => {
   spawnSync('npx', ['tauri', 'build', '--debug'], {
@@ -25,7 +31,7 @@ beforeAll(async () => {
       'tauri:options': {
         application: appPath,
       },
-    },
+    } as any,
     logLevel: 'error',
   });
 }, 120000);

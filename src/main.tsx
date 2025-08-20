@@ -28,7 +28,7 @@ if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
       <ErrorBoundary>
         <ThemeProvider>
           <CharacterProvider>
-            <SettingsProvider>
+            <SettingsProvider initialAutoXpOnMiss={false} initialShowDiagnostics={false}>
               <App />
             </SettingsProvider>
           </CharacterProvider>

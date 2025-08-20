@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>About ZimboMate</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,6 +44,9 @@
         --glass-blur: 12px;
         --shadow-glass: 0 8px 32px var(--panel-shadow);
         --shadow-neon: 0 0 20px var(--color-neon);
+
+        /* Fallback for browsers without backdrop-filter support */
+        --glass-bg-fallback: rgba(255, 255, 255, 0.15);
 
         --glow-shadow: rgba(95, 209, 193, 0.3);
         --text-glow: rgba(95, 209, 193, 0.5);
@@ -140,8 +145,10 @@
       .header {
         text-align: center;
         margin-bottom: 3rem;
-        padding: 2.5rem;
+        padding: 2rem;
+        background: var(--glass-bg-fallback);
         background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(var(--glass-blur));
         backdrop-filter: blur(var(--glass-blur));
         -webkit-backdrop-filter: blur(var(--glass-blur));
         border-radius: var(--hud-radius);
@@ -204,8 +211,10 @@
 
       .section {
         margin-bottom: 3rem;
-        padding: 2.5rem;
+        padding: 2rem;
+        background: var(--glass-bg-fallback);
         background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(var(--glass-blur));
         backdrop-filter: blur(var(--glass-blur));
         -webkit-backdrop-filter: blur(var(--glass-blur));
         border-radius: var(--hud-radius);
@@ -510,9 +519,10 @@
         padding: 0.5rem 1rem;
         border-radius: var(--hud-radius-sm);
         border: 1px solid var(--panel-border);
-        background: var(--glass-bg);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        background: var(--glass-bg-fallback);
+        background: var(--glass-bg
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        backdrop-filter: blur(var(--glass-blur));
         cursor: pointer;
         transition: var(--hud-transition);
         position: relative;
@@ -565,17 +575,20 @@
         .feature-grid {
           grid-template-columns: 1fr;
         }
-        
-        .tech-stack {
-          flex-direction: column;
-        }
-      }
 
-      /* Additional fallbacks for local file viewing */
-      @media screen and (max-width: 1px) {
-        /* This media query will never be true, but it helps with some browser compatibility issues */
-        .star {
-          animation: star-twinkle 3s infinite !important;
+        /* Mobile-specific glass effect optimizations */
+        .header,
+        .section,
+        .theme-option {
+          -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Ensure proper rendering on mobile Chrome */
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
       }
     </style>

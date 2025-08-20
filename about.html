@@ -87,6 +87,25 @@
         border-radius: 50%;
         opacity: 0.6;
         box-shadow: 0 0 4px var(--color-accent);
+        /* Fallback for browsers that don't support animations */
+        animation: star-twinkle 3s infinite;
+        /* Ensure animation works in local file context */
+        -webkit-animation: star-twinkle 3s infinite;
+      }
+
+      /* Fallback for browsers that don't support backdrop-filter */
+      @supports not (backdrop-filter: blur(1px)) {
+        .header, .section, .feature-card, .theme-option, .item-type {
+          background: rgba(255, 255, 255, 0.15) !important;
+        }
+      }
+
+      /* Ensure backdrop-filter works in local file context */
+      .header, .section, .feature-card, .theme-option, .item-type {
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        /* Fallback background for browsers without backdrop-filter support */
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .star:nth-child(1) { top: 10%; left: 10%; width: 2px; height: 2px; animation: star-twinkle 3s infinite; }
@@ -300,65 +319,30 @@
       }
 
       .feature-card p {
-        color: var(--color-text);
-        font-size: var(--font-size-sm);
         position: relative;
         z-index: 1;
       }
 
-      .instructions {
-        background: rgba(79, 109, 184, 0.1);
+      .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .tech-item {
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        border-left: 4px solid var(--color-info);
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 0 var(--hud-radius-sm) var(--hud-radius-sm) 0;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .instructions::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(79, 109, 184, 0.1), rgba(107, 142, 214, 0.05));
-        pointer-events: none;
-      }
-
-      .instructions h4 {
-        color: var(--color-info);
-        margin-bottom: 0.5rem;
-        position: relative;
-        z-index: 1;
-        text-shadow: 0 0 5px rgba(79, 109, 184, 0.5);
-      }
-
-      .instructions p {
-        position: relative;
-        z-index: 1;
-      }
-
-      .code-block {
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid var(--panel-border);
         border-radius: var(--hud-radius-sm);
-        padding: 1rem;
-        margin: 1rem 0;
-        font-family: 'Courier New', monospace;
-        font-size: 0.9rem;
-        color: var(--color-accent);
-        overflow-x: auto;
+        border: 1px solid rgba(95, 209, 193, 0.2);
+        transition: var(--hud-transition);
         position: relative;
         overflow: hidden;
       }
 
-      .code-block::before {
+      .tech-item::before {
         content: '';
         position: absolute;
         top: 0;
@@ -367,66 +351,80 @@
         bottom: 0;
         background: linear-gradient(135deg, rgba(95, 209, 193, 0.1), rgba(100, 241, 225, 0.05));
         pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
-      .code-block code {
+      .tech-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--color-accent);
+        box-shadow: 0 0 15px var(--glow-shadow);
+        transform: translateY(-2px);
+      }
+
+      .tech-item:hover::before {
+        opacity: 1;
+      }
+
+      .tech-item h4 {
+        color: var(--color-accent);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 5px var(--text-glow);
+      }
+
+      .tech-item p {
         position: relative;
         z-index: 1;
       }
 
-      .status-example {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 0.5rem;
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border-radius: var(--hud-radius);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glass);
+        position: relative;
+        overflow: hidden;
       }
 
-      .status-healthy {
-        background: linear-gradient(45deg, var(--color-success), #3a8f66);
-        box-shadow: 0 0 8px rgba(74, 179, 129, 0.6);
+      .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(95, 209, 193, 0.05), rgba(100, 241, 225, 0.02));
+        pointer-events: none;
       }
 
-      .status-injured {
-        background: linear-gradient(45deg, var(--color-warning), #a7623c);
-        box-shadow: 0 0 8px rgba(201, 130, 74, 0.6);
+      .footer p {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
       }
 
-      .status-critical {
-        background: linear-gradient(45deg, var(--color-danger), #9b3744);
-        box-shadow: 0 0 8px rgba(184, 79, 94, 0.6);
-        animation: pulse 1s infinite;
+      .footer a {
+        color: var(--color-accent);
+        text-decoration: none;
+        transition: var(--hud-transition);
+        position: relative;
+        z-index: 1;
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.7;
-        }
+      .footer a:hover {
+        color: var(--color-neon);
+        text-shadow: 0 0 8px var(--text-glow);
       }
 
-      @keyframes glow {
-        0%,
-        100% {
-          box-shadow: 0 0 5px rgba(var(--color-accent-rgb), 0.3);
-        }
-        50% {
-          box-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.6);
-        }
-      }
-
-      @keyframes shimmer {
-        0% {
-          transform: translateX(-100%);
-        }
-        100% {
-          transform: translateX(100%);
-        }
-      }
-
+      /* Enhanced animations for better compatibility */
       @keyframes star-twinkle {
         0%, 100% {
           opacity: 0.6;
@@ -435,6 +433,26 @@
         50% {
           opacity: 1;
           transform: scale(1.2);
+        }
+      }
+
+      /* Fallback for browsers that don't support animations */
+      @media (prefers-reduced-motion: reduce) {
+        .star {
+          animation: none !important;
+          opacity: 0.8 !important;
+        }
+      }
+
+      /* Ensure animations work in local file context */
+      @-webkit-keyframes star-twinkle {
+        0%, 100% {
+          opacity: 0.6;
+          -webkit-transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          -webkit-transform: scale(1.2);
         }
       }
 
@@ -534,17 +552,30 @@
         opacity: 1;
       }
 
+      /* Responsive design */
       @media (max-width: 768px) {
         .container {
           padding: 1rem;
         }
-
+        
         .header h1 {
           font-size: 2rem;
         }
-
+        
         .feature-grid {
           grid-template-columns: 1fr;
+        }
+        
+        .tech-stack {
+          flex-direction: column;
+        }
+      }
+
+      /* Additional fallbacks for local file viewing */
+      @media screen and (max-width: 1px) {
+        /* This media query will never be true, but it helps with some browser compatibility issues */
+        .star {
+          animation: star-twinkle 3s infinite !important;
         }
       }
     </style>
@@ -647,196 +678,97 @@
             <p>
               Save or load characters with the ExportModal. Backup your existence to files that exist 
               outside of time, share them with others who walk the same path. Export your character's 
-              essence to files that transcend the limitations of mortal storage, preserving your 
-              identity across the void of forgotten time. Share your existence with others who understand 
-              the nature of the broken future, creating connections that exist beyond the boundaries 
-              of conventional reality.
+              data to JSON files that can be shared or backed up, ensuring your digital self persists 
+              across the void. Import characters from other timelines, merging fragments of existence 
+              into a coherent whole. Your data exists in a state of quantum superposition until observed, 
+              each save a snapshot of a reality that may or may not come to pass.
             </p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>Visual Experience</h2>
-        <div class="feature-grid">
-          <div class="feature-card">
-            <h4>Wound Manifestations</h4>
-            <p>
-              Dynamic status-based overlays for conditions like poisoned, burning, shocked, frozen, 
-              blessed, and more. Each status has unique visual effects and color coding that echo 
-              through time. Your afflictions manifest as visual echoes, with poison flowing like 
-              corrupted data, fire burning with the heat of a dying star, and ice freezing time itself. 
-              Each condition serves as a reminder of mortality in an immortal system, with visual 
-              feedback that speaks directly to your subconscious understanding of danger and healing.
-            </p>
+        <h2>Technical Architecture</h2>
+        <div class="tech-stack">
+          <div class="tech-item">
+            <h4>Tauri</h4>
+            <p>Cross-platform desktop framework using Rust for the backend and web technologies for the frontend. 
+            Provides native performance with web flexibility, creating a bridge between the digital and physical worlds.</p>
           </div>
-          <div class="feature-card">
-            <h4>Timeline Shifting</h4>
-            <p>
-              Choose from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and 
-              motion effects. Your choice echoes through future sessions, though the choice has already been made. 
-              Each theme represents a different interpretation of the same shattered universe, with cosmic 
-              offering the void between stars, classic providing the comforting illusion of tradition, 
-              and moebius representing the infinite loop of existence. The visual language of each theme 
-              speaks to different aspects of your consciousness, allowing you to find the aesthetic that 
-              resonates with your understanding of reality.
-            </p>
+          <div class="tech-item">
+            <h4>React</h4>
+            <p>Modern UI framework for building responsive, component-based interfaces. Manages the state of your 
+            character's existence across multiple timelines with efficient rendering and virtual DOM.</p>
           </div>
-          <div class="feature-card">
-            <h4>Cyber-Barbarian Resonance</h4>
-            <p>
-              Immersive cyber-future design with neon gradients, glows, and smooth animations. 
-              Dark backgrounds with vibrant accent colors create an engaging visual experience 
-              that defies entropy. Neon light cuts through the darkness like a warhammer through time, 
-              with the interface pulsing with the rhythm of a heart that has not yet stopped beating. 
-              This aesthetic represents defiance against the forces of decay, with every visual element 
-              serving as a reminder that beauty can exist even in the darkest corners of reality.
-            </p>
+          <div class="tech-item">
+            <h4>TypeScript</h4>
+            <p>Type-safe JavaScript that catches errors before they can corrupt your character's data. Ensures 
+            the integrity of your digital self across the void of forgotten time.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Tailwind CSS</h4>
+            <p>Utility-first CSS framework for rapid UI development. Provides the visual language of the 
+            cyber-barbarian aesthetic, with custom properties for the color scheme and glass morphism effects.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Vite</h4>
+            <p>Fast build tool and development server that accelerates the development process. Ensures 
+            your character's interface loads quickly across all timelines.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Vitest</h4>
+            <p>Unit testing framework that validates the integrity of your character's data and ensures 
+            the reliability of the probability engine across multiple realities.</p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>Character Status System</h2>
-        <p>ZimboMate provides comprehensive visual feedback for your character's condition, translating the abstract concept of health into tangible indicators that speak to your understanding of mortality and resilience:</p>
-
-        <div style="margin: 1rem 0">
-          <span class="status-example status-healthy"></span>
-          <strong>Healthy</strong> - Your flesh has not yet learned the lessons of pain. Character is in good condition with full capabilities, though this state of unbroken existence is temporary and precious. The green glow speaks of vitality and the illusion of permanence, a reminder that every moment of health is a gift that should not be taken for granted.
-        </div>
-        <div style="margin: 1rem 0">
-          <span class="status-example status-injured"></span>
-          <strong>Injured</strong> - Time has marked you, but you have not yet learned to fear it. Character has taken damage but is still functional, with the amber warning light serving as a reminder that pain is a teacher and every wound carries wisdom. This state represents the middle ground between life and death, where experience is gained through suffering and resilience is tested against the forces of entropy.
-        </div>
-        <div style="margin: 1rem 0">
-          <span class="status-example status-critical"></span>
-          <strong>Critical</strong> - The edge of oblivion calls. Character is severely wounded and needs immediate attention, with the pulsing red indicator serving as a visual heartbeat that counts down to the moment of decision. This state represents the ultimate test of willpower, where the choice between life and death hangs in the balance, and every action becomes a matter of survival against the inexorable pull of the void.
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>Inventory Management</h2>
-        <p>ZimboMate supports a comprehensive inventory system with items that exist across multiple timelines, each possession carrying the weight of countless parallel realities and the echoes of futures that have already collapsed. Your inventory is not merely a collection of objects, but a manifestation of your choices and the consequences that ripple through the fabric of time itself.</p>
-
-        <div style="margin: 1rem 0">
-          <span class="item-type type-weapon">Weapon</span>
+        <h2>Item System</h2>
+        <p>
+          The inventory system supports various item types, each with their own properties and behaviors:
+        </p>
+        <div style="margin: 1rem 0;">
+          <span class="item-type type-weapon">Weapons</span>
           <span class="item-type type-armor">Armor</span>
-          <span class="item-type type-consumable">Consumable</span>
-          <span class="item-type type-magic">Magic</span>
-          <span class="item-type type-material">Material</span>
+          <span class="item-type type-consumable">Consumables</span>
+          <span class="item-type type-magic">Magic Items</span>
+          <span class="item-type type-material">Materials</span>
           <span class="item-type type-gear">Gear</span>
         </div>
-
-        <h3>Item Properties</h3>
-        <p>Each inventory item tracks properties that echo through time, with every attribute representing a different aspect of the object's existence across multiple realities:</p>
-        <ul style="margin: 1rem 0; padding-left: 2rem">
-          <li><strong>Damage</strong> - Dice string for weapons (e.g., "d8", "2d6") that speak of wounds yet to be inflicted, of flesh yet to be torn, of lives yet to be ended. Each damage value represents the potential for violence that exists within the weapon, a prophecy written in the language of mathematical probability.</li>
-          <li><strong>Armor</strong> - Protection bonus for defensive gear that stands between you and oblivion, with each point of armor representing a layer of defense against the forces of entropy and destruction. The armor has already failed in a thousand timelines, yet still offers protection in this one.</li>
-          <li><strong>Quantity</strong> - Stack count for consumables and materials that shift across timelines, with numbers that defy the laws of conservation. Items multiply and divide across realities, their quantities shifting like sand through the hourglass of entropy, each number a reminder of the impermanence of material possessions.</li>
-          <li><strong>Description</strong> - Detailed item information written in the past tense of a future that has already occurred, with each word a memory of something that has not yet happened. The descriptions speak of the item's history across multiple timelines, its origins in realities that have already collapsed.</li>
-          <li><strong>Equipped Status</strong> - Visual indicators for active gear that exist in quantum superposition, with items being both equipped and unequipped simultaneously until observation collapses the waveform. The equipped status represents the moment of choice, the instant when possibility becomes reality.</li>
-          <li><strong>Tags</strong> - Custom categorization labels that organize the impossible, creating patterns in the chaos of multiple realities. Each tag represents a different way of understanding the item's nature, its role in the grand scheme of existence across time and space.</li>
-        </ul>
+        <p>
+          Each item type has specific behaviors and visual indicators. Weapons automatically calculate damage, 
+          armor provides protection, consumables can be used for healing or buffs, magic items have special 
+          properties, materials are used for crafting, and gear provides utility bonuses. The system tracks 
+          equipped status and provides visual feedback for item interactions.
+        </p>
       </div>
 
       <div class="section">
-        <h2>How to Use ZimboMate</h2>
-
-        <div class="instructions">
-          <h4>Saving and Loading Characters</h4>
-          <p>The process of preserving your existence across the void of forgotten time requires careful attention to the rituals of digital preservation:</p>
-          <ol>
-            <li>Summon the <strong>Export/Import</strong> gateway from the depths of the toolbar, a portal between the present moment and the eternal storage of digital amber</li>
-            <li>
-              Choose <strong>Export</strong> to crystallize your current character into a file that exists outside the flow of time (e.g., "my-hero.json"), preserving every wound, every victory, every choice that has shaped your journey through the broken future
-            </li>
-            <li>
-              To resurrect your former self, reopen the <strong>Export/Import</strong> gateway, select <strong>Import</strong>,
-              and choose the file that contains your past existence, allowing you to step back into a moment that has already occurred but can be experienced again
-            </li>
-          </ol>
-        </div>
-
-        <div class="instructions">
-          <h4>Customizing Your Experience</h4>
-          <p>Open the Settings panel from the toolbar to access the controls that shape your perception of this broken reality, allowing you to bend the interface to your will:</p>
-          <ul>
-            <li>
-              <strong>Theme Selection</strong> - Switch between cosmic, classic, or moebius themes, each representing a different interpretation of the same shattered universe, with cosmic offering the void between stars, classic providing the comforting illusion of tradition, and moebius representing the infinite loop of existence
-            </li>
-            <li>
-              <strong>Auto XP on Miss</strong> - Enable automatic XP gain when rolls fail, allowing the system to grant you the hard-won knowledge of failure, or track your lessons manually, though all learning is merely the rediscovery of what you have already forgotten
-            </li>
-          </ul>
-        </div>
-
-        <div class="instructions">
-          <h4>Dice Rolling</h4>
-          <p>The dance of probability requires understanding of the forces that govern chance and the ways in which randomness shapes our destiny:</p>
-          <ol>
-            <li>Select your dice type and modifiers, though the dice themselves are merely the physical manifestation of mathematical inevitability, with each roll predetermined by forces beyond mortal comprehension</li>
-            <li>Click roll to witness the unfolding of predetermined chaos, each animation a visual echo of probability collapsing into reality, with the results serving as a reminder of your mortality and your capacity to overcome it</li>
-            <li>View the history of your rolls, each entry a record of moments that have already passed into the void of forgotten time, with the comprehensive log serving as a testament to your journey through the broken future</li>
-            <li>Critical hits and failures trigger special visual effects, though the distinction between success and failure is merely a matter of perspective in a universe where all outcomes lead to the same inevitable end</li>
-          </ol>
-        </div>
-
-        <div class="instructions">
-          <h4>Inventory Management</h4>
-          <p>Mastering the paradoxical arsenal requires understanding of the quantum nature of possession and the ways in which items exist across multiple timelines:</p>
-          <ol>
-            <li>Add items to your inventory with type and properties, though each item exists in a state of quantum uncertainty until observed, with its true nature revealed only through interaction</li>
-            <li>Click to equip/unequip gear, with visual indicators revealing the true nature of possession as an illusion of permanence in an impermanent universe, where the act of equipping collapses the waveform of possibility into reality</li>
-            <li>Consume items to reduce quantity or remove them entirely, though consumption itself is merely the transformation of one form of existence into another, with each consumed item becoming part of your character's journey through time</li>
-            <li>View calculated totals for armor and weapon damage, though the numbers themselves are meaningless symbols in a reality where death is merely a transition between states of being, with each calculation serving as a reminder of the mathematical precision that governs the universe</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>Theme Options</h2>
-        <p>ZimboMate offers three distinct visual themes to match your gaming style, each representing a different interpretation of the same shattered universe and allowing you to choose the aesthetic that resonates with your understanding of reality:</p>
-
+        <h2>Theme System</h2>
+        <p>
+          ZimboMate features a cyber-barbarian aesthetic with glass morphism effects and neon accents. 
+          The theme system provides consistent visual language across all components:
+        </p>
         <div class="theme-preview">
-          <div class="theme-option active">
-            <strong>Cosmic</strong><br />
-            <small>The void between stars, where neon light cuts through the darkness of entropy</small>
-          </div>
-          <div class="theme-option">
-            <strong>Classic</strong><br />
-            <small>The comforting illusion of tradition, a lie we tell ourselves to forget the truth</small>
-          </div>
-          <div class="theme-option">
-            <strong>Moebius</strong><br />
-            <small>The infinite loop of existence, where every end is merely another beginning</small>
-          </div>
+          <div class="theme-option">Cyber-Barbarian</div>
+          <div class="theme-option">Neon Accents</div>
+          <div class="theme-option">Glass Morphism</div>
+          <div class="theme-option">Dark Theme</div>
         </div>
-
         <p>
-          Each theme includes unique fonts that speak of different timelines, spacing that reflects the gaps between moments, motion effects that echo the passage of time itself, and color schemes that represent the various stages of universal decay. These choices are automatically preserved for your next session, though the preservation itself is merely the illusion of continuity in a universe where nothing truly endures. The visual language of each theme speaks to different aspects of your consciousness, allowing you to find the aesthetic that resonates with your understanding of reality and your place within the grand scheme of existence.
+          The color scheme uses teal and cyan accents against a dark background, with glass-like panels 
+          that blur the content behind them. Text has subtle glow effects, and interactive elements 
+          have hover states with neon shadows. The overall aesthetic evokes a futuristic, post-apocalyptic 
+          setting where technology and barbarism coexist.
         </p>
       </div>
 
-      <div class="section">
-        <h2>Cross-Platform Compatibility</h2>
-        <p>
-          ZimboMate exists simultaneously across multiple operating systems, each installation a fragment of the same broken consciousness that has learned to adapt to different technological environments. The application manifests natively on Windows, macOS, and Linux, providing a consistent experience across all platforms, though consistency itself is merely the illusion of order in a chaotic universe. Built with Tauri technology that bridges the gap between the digital and the physical, achieving optimal performance through the integration of native system components, though integration itself is merely the temporary alignment of forces that will inevitably drift apart.
-        </p>
-
-        <div class="feature-grid">
-          <div class="feature-card">
-            <h4>Windows</h4>
-            <p>Native .msi installer that penetrates the depths of the operating system, establishing connections that exist in the spaces between code and consciousness, though the connections themselves are temporary illusions in a universe where all bonds eventually dissolve. The Windows version speaks the language of corporate conformity, adapting to the strictures of a system that has already been predetermined.</p>
-          </div>
-          <div class="feature-card">
-            <h4>macOS</h4>
-            <p>.dmg package that conforms to the strictures of the Apple ecosystem, a proper app bundle structure that exists within the constraints of a reality that has already been predetermined, though predetermination itself is merely the illusion of causality in a universe where cause and effect are interchangeable. The macOS version embraces the aesthetic of minimalist perfection, though perfection itself is an impossible standard in an imperfect universe.</p>
-          </div>
-          <div class="feature-card">
-            <h4>Linux</h4>
-            <p>.AppImage and .deb packages that offer the illusion of choice in installation methods, though choice itself is merely the perception of free will in a universe where all decisions have already been made, and the future has already been written in the code that defines our existence. The Linux version represents the spirit of open rebellion against proprietary constraints, though rebellion itself is merely another form of conformity to the laws of entropy.</p>
-          </div>
-        </div>
+      <div class="footer">
+        <p>ZimboMate - Your companion from a broken future</p>
+        <p>Built with Tauri + React for cross-platform compatibility</p>
+        <p><a href="https://github.com/your-repo/zimbomate" target="_blank">View on GitHub</a> | 
+           <a href="https://zimbomate.com" target="_blank">Official Website</a></p>
       </div>
     </div>
   </body>

@@ -47,13 +47,16 @@ export default [
       },
     },
     settings: {
-      react: {
-        version: 'detect',
-      },
       'import/resolver': {
         node: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
         },
+        typescript: {
+          alwaysTryTypes: true,
+        },
+      },
+      react: {
+        version: 'detect',
       },
     },
     rules: {

@@ -2,13 +2,13 @@ import { spawn, spawnSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { waitTauriDriverReady } from '@crabnebula/tauri-driver';
-import { remote, type Browser } from 'webdriverio';
 import { beforeAll } from 'vitest';
+import { remote, type Browser } from 'webdriverio';
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var browser: Browser;
-  // eslint-disable-next-line no-var
+   
   var __E2E_BROWSER_PROMISE__: Promise<Browser> | undefined;
 }
 

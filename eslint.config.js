@@ -1,4 +1,6 @@
 import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
@@ -6,22 +8,23 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
 
 export default [
   {
     ignores: [
-      'node_modules',
-      'dist',
-      'build',
-      'coverage',
-      '.next',
-      '.out',
-      'storybook-static',
-      'assets',
-      'tests',
-      'eslint.config.js',
+      'src-tauri/',
+      '**/node_modules/',
+      '**/dist/',
+      '**/.env',
+      '**/build/',
+      '**/coverage/',
+      '**/.git/',
+      '**/.husky/',
+      'styled-system/',
+      'src/styled-system/',
+      'panda.config.ts',
+      'assets/',
+      'tests/',
     ],
   },
   js.configs.recommended,

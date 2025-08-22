@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { getVersion } from '@tauri-apps/api/app';
+import React, { useEffect, useState } from 'react';
 
 function AppVersion() {
   const [version, setVersion] = useState<string>('Version unavailable');

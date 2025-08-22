@@ -1,7 +1,7 @@
 import { spawn, spawnSync } from 'child_process';
 import { waitTauriDriverReady } from '@crabnebula/tauri-driver';
-import { remote } from 'webdriverio';
 import { beforeAll, afterAll, test, expect } from 'vitest';
+import { remote } from 'webdriverio';
 import { tauriDir, appPath } from './setup.js';
 
 let browser; // WebdriverIO.Browser

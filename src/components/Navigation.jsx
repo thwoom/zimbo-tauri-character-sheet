@@ -3,6 +3,7 @@ import { css } from '../styled-system/css';
 
 const Navigation = () => {
   const currentPath = window.location.pathname;
+  console.log('Navigation component rendering, current path:', currentPath);
 
   const navStyle = css({
     position: 'fixed',
@@ -12,9 +13,9 @@ const Navigation = () => {
     display: 'flex',
     gap: 'sm',
     padding: 'sm',
-    backgroundColor: 'rgba(2, 30, 38, 0.8)',
+    backgroundColor: 'rgba(255, 0, 128, 0.9)', // Temporarily bright pink for visibility
     borderRadius: 'md',
-    border: '1px solid',
+    border: '2px solid',
     borderColor: 'primary',
   });
 

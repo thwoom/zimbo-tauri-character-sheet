@@ -16,7 +16,10 @@ if (!rootElement) {
   throw new Error("Root element with id 'root' not found");
 }
 
+console.log('Current pathname:', window.location.pathname);
+
 if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
+  console.log('Rendering DevPrimitivesPreview');
   ReactDOM.createRoot(rootElement).render(
     <ThemeProvider>
       <ArwesWrapper>
@@ -25,6 +28,7 @@ if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
     </ThemeProvider>,
   );
 } else if (window.location.pathname === '/fx-demo') {
+  console.log('Rendering FxDemo');
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
       <ThemeProvider>
@@ -35,6 +39,7 @@ if (import.meta.env.DEV && window.location.pathname === '/dev/components') {
     </ErrorBoundary>,
   );
 } else {
+  console.log('Rendering main App');
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
       <ThemeProvider>

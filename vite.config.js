@@ -43,6 +43,8 @@ export default defineConfig(async () => ({
           port: 1421,
         }
       : undefined,
+    // Add middleware to handle SPA routing
+    middlewareMode: false,
     headers: {
       'X-Frame-Options': 'DENY',
       'Cache-Control': 'no-store',

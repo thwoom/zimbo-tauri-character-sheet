@@ -70,8 +70,8 @@ test('character flow with save and load', async () => {
 
   // Settings
   const themeSelect = await browser.$('#theme-select');
-  await themeSelect.selectByVisibleText('classic');
-  expect(await browser.$('html').getAttribute('data-theme')).toBe('classic');
+  await themeSelect.selectByVisibleText('Arwes Space');
+  expect(await browser.$('html').getAttribute('data-theme')).toBe('arwes');
 
   // Save character
   const exportButton = await browser.$('button=Export/Save');

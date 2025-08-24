@@ -20,6 +20,7 @@ import DiagnosticOverlay from './components/DiagnosticOverlay';
 import DiceRollerModal from './components/DiceRollerModal';
 import FloatingDiceButton from './components/FloatingDiceButton';
 import GameModals from './components/GameModals';
+import EquipmentPanel from './components/EquipmentPanel';
 import InventoryPanel from './components/InventoryPanel';
 import PrintableSheet from './components/PrintableSheet.jsx';
 import SessionNotes from './components/SessionNotes';
@@ -446,13 +447,12 @@ function App() {
             />
           </div>
 
-          {/* Quick Inventory Panel */}
+          {/* Equipment and Inventory Panels */}
           <div className={styles.inventory}>
+            <EquipmentPanel character={character} setCharacter={setCharacter} />
             <InventoryPanel
               character={character}
               setCharacter={setCharacter}
-              rollDie={rollDie}
-              setRollResult={setRollResult}
               saveToHistory={saveToHistory}
               setShowAddItemModal={setShowAddItemModal}
             />

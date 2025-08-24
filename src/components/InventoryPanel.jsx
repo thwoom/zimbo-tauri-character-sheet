@@ -1,30 +1,46 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import {
-  FaBoxOpen,
-  FaCube,
-  FaFlask,
-  FaMeteor,
-  FaSatellite,
-  FaShield,
-  FaStar,
-} from 'react-icons/fa6';
-import useInventory from '../hooks/useInventory';
-import { debilityTypes } from '../state/character';
-import AddItemModal from './AddItemModal';
+import React, { useMemo, useState } from 'react';
+import { FaBoxOpen, FaMagnifyingGlass, FaWandMagicSparkles } from 'react-icons/fa6';
+import useInventory from '../hooks/useInventory.js';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
+import AddItemModal from './AddItemModal.jsx';
+import ItemDetailModal from './ItemDetailModal.jsx';
 import Panel from './ui/Panel';
+import { getTagDescription } from '../data/itemTags.js';
 
-const InventoryPanel = ({
-  character,
-  setCharacter,
-  rollDie,
-  setRollResult,
-  saveToHistory,
-  setShowAddItemModal,
-}) => {
-  const { handleConsumeItem, handleAddItem, totalWeight } = useInventory(character, setCharacter);
-  const [showAddModal, setShowAddModal] = useState(false);
+const tagStyle = {
+  display: 'inline-block',
+  background: 'var(--overlay-info, rgba(95, 209, 193, 0.2))',
+  border: '1px solid var(--color-accent)',
+  color: 'var(--color-accent)',
+  padding: '0.125rem 0.375rem',
+  borderRadius: 'var(--hud-radius-sm)',
+  fontSize: '0.75rem',
+  marginRight: '0.25rem',
+  marginBottom: '0.25rem',
+};
+
+function InventoryPanel({ character, setCharacter, saveToHistory, setShowAddItemModal }) {
+  const {
+    totalWeight,
+    maxLoad,
+    handleEquipItem,
+    handleConsumeItem,
+    handleDropItem,
+    handleAddItem,
+  } = useInventory(character, setCharacter);
+
+  const [showAdd, setShowAdd] = useState(false);
+  const [detailItem, setDetailItem] = useState(null);
+  const [search, setSearch] = useState('');
+
+  const filtered = useMemo(() => {
+    return character.inventory.filter(
+      (i) => !i.equipped && i.name.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [character.inventory, search]);
+
+  const loadWarn = totalWeight > maxLoad;
 
   return (
     <Panel>
@@ -38,210 +54,125 @@ const InventoryPanel = ({
           fontSize: '1.125rem',
         }}
       >
-        <FaBoxOpen /> Equipment
+        <FaBoxOpen /> Inventory
       </h3>
-      <div style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)' }}>Load: {totalWeight}</div>
-      <button
+      <div
         style={{
-          background: 'linear-gradient(45deg, var(--color-success), var(--color-success-dark))',
-          color: 'var(--color-white)',
-          padding: 'var(--space-sm) var(--space-md)',
-          borderRadius: 'var(--hud-radius-sm)',
           fontSize: '0.75rem',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-        onClick={() => {
-          setShowAddModal(true);
-          if (setShowAddItemModal) setShowAddItemModal(true);
+          color: loadWarn ? 'var(--color-danger)' : 'var(--color-gray-400)',
         }}
       >
-        Add Item
-      </button>
-      <div style={{ maxHeight: '40vh', overflow: 'auto' }}>
-        <div
-          style={{
-            display: 'grid',
-            gap: 'var(--space-sm)',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        Load: {totalWeight}/{maxLoad}
+      </div>
+      <div
+        style={{
+          margin: 'var(--space-sm) 0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-sm)',
+        }}
+      >
+        <FaMagnifyingGlass />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search"
+          style={{ flex: 1 }}
+        />
+        <button
+          onClick={() => {
+            setShowAdd(true);
+            if (setShowAddItemModal) setShowAddItemModal(true);
           }}
         >
-          {character.inventory.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                background: 'transparent',
-                padding: 'var(--space-sm)',
-                margin: 'var(--space-sm) 0',
-                borderRadius: 'var(--hud-radius-sm)',
-                borderLeft: `4px solid ${item.equipped ? 'var(--color-success)' : 'var(--color-accent)'}`,
-              }}
-            >
-              <div
+          Add Item
+        </button>
+      </div>
+      <div style={{ maxHeight: '40vh', overflow: 'auto' }}>
+        {filtered.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              borderLeft: '4px solid var(--color-accent)',
+              padding: 'var(--space-sm)',
+              marginBottom: 'var(--space-sm)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span
+                onClick={() => setDetailItem(item)}
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
+                  cursor: 'pointer',
+                  color: item.magical ? 'var(--color-warning)' : 'var(--color-white)',
                 }}
               >
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: '0.875rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                      position: 'relative',
-                    }}
-                  >
-                    {item.type === 'weapon' && <FaMeteor />}
-                    {item.type === 'magic' && <FaStar />}
-                    {item.type === 'consumable' && <FaFlask />}
-                    {item.type === 'armor' && <FaShield />}
-                    {item.type === 'material' && <FaCube />}
-                    {(!item.type || item.type === 'gear') && <FaSatellite />}
-                    {item.name}
-                    {item.equipped && (
-                      <span style={{ color: 'var(--color-success)', fontSize: '0.75rem' }}>✓</span>
-                    )}
-                    {item.description && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          display: 'none',
-                          background: 'rgba(0, 0, 0, 0.3)',
-                          color: 'white',
-                          padding: 'var(--space-sm)',
-                          borderRadius: 'var(--hud-radius-sm)',
-                          fontSize: '0.75rem',
-                          top: '100%',
-                          left: 0,
-                          zIndex: 10,
-                          maxWidth: '200px',
-                        }}
-                      >
-                        {item.description}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)' }}>
-                    {item.damage && `${item.damage} damage`}
-                    {item.armor && `+${item.armor} armor`}
-                    {item.quantity > 1 && ` x${item.quantity}`}
-                    {item.addedAt && (
-                      <div style={{ color: 'var(--color-gray-500)' }}>
-                        Added {new Date(item.addedAt).toLocaleDateString()}
-                      </div>
-                    )}
-                    {item.notes && (
-                      <div style={{ color: 'var(--color-gray-300)', marginTop: 'var(--space-sm)' }}>
-                        {item.notes}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                {item.name}
+                {item.magical && (
+                  <FaWandMagicSparkles title="Magical Item" style={{ marginLeft: 4 }} />
+                )}
+              </span>
+              <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
                 {item.type === 'consumable' && item.quantity > 0 && (
                   <button
-                    style={{
-                      background:
-                        'linear-gradient(45deg, var(--color-success), var(--color-success-dark))',
-                      color: 'var(--color-white)',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      borderRadius: 'var(--hud-radius-sm)',
-                      fontSize: '0.75rem',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
                     onClick={() => {
                       saveToHistory('Inventory Change');
-                      if (item.name === 'Healing Potion') {
-                        const healing = rollDie(8);
-                        setRollResult(`Used ${item.name}: healed ${healing} HP!`);
-                        handleConsumeItem(item.id, (char) => ({
-                          ...char,
-                          hp: Math.min(char.maxHp, char.hp + healing),
-                        }));
-                      } else {
-                        handleConsumeItem(item.id);
-                      }
+                      handleConsumeItem(item.id);
                     }}
                     aria-label={`Use ${item.name}`}
                   >
                     Use
                   </button>
                 )}
+                {item.slot && (
+                  <button
+                    onClick={() => handleEquipItem(item.id)}
+                    aria-label={`Equip ${item.name}`}
+                  >
+                    Equip
+                  </button>
+                )}
+                <button onClick={() => handleDropItem(item.id)} aria-label={`Drop ${item.name}`}>
+                  Drop
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+            <div style={{ fontSize: '0.75rem', marginTop: 'var(--space-xs)' }}>
+              {item.tags &&
+                item.tags.map((tag) => (
+                  <span key={tag} style={tagStyle} title={getTagDescription(tag)}>
+                    {tag}
+                  </span>
+                ))}
+              {typeof item.weight === 'number' && <div>Weight: {item.weight}</div>}
+              {item.quantity > 1 && <div>Qty: {item.quantity}</div>}
+            </div>
+          </div>
+        ))}
       </div>
-      {character.debilities.length > 0 && (
-        <div
-          style={{
-            marginTop: 'var(--space-md)',
-            paddingTop: 'var(--space-sm)',
-            borderTop: '1px solid var(--glass-border, rgba(95, 209, 193, 0.3))',
-          }}
-        >
-          <div
-            style={{
-              color: 'var(--color-danger)',
-              fontSize: '0.875rem',
-              marginBottom: 'var(--space-md)',
-            }}
-          >
-            Active Debilities:
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
-            {character.debilities.map((debility) => {
-              const Icon = debilityTypes[debility].icon;
-              return (
-                <span
-                  key={debility}
-                  style={{
-                    background: 'var(--overlay-danger, rgba(184, 79, 94, 0.2))',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-danger-light)',
-                    padding: '0.125rem 0.375rem',
-                    borderRadius: 'var(--hud-radius-sm)',
-                    fontSize: '0.75rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                  }}
-                >
-                  {Icon && <Icon />} {debilityTypes[debility].name}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      )}
-      {showAddModal && (
+      {showAdd && (
         <AddItemModal
-          handleAddItem={(item) => {
+          isOpen={showAdd}
+          onAdd={(item) => {
             saveToHistory('Inventory Change');
             handleAddItem(item);
           }}
           onClose={() => {
-            setShowAddModal(false);
+            setShowAdd(false);
             if (setShowAddItemModal) setShowAddItemModal(false);
           }}
         />
       )}
+      {detailItem && <ItemDetailModal item={detailItem} onClose={() => setDetailItem(null)} />}
     </Panel>
   );
-};
+}
 
 InventoryPanel.propTypes = {
   character: PropTypes.shape({
     inventory: PropTypes.arrayOf(inventoryItemType).isRequired,
-    debilities: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   setCharacter: PropTypes.func.isRequired,
-  rollDie: PropTypes.func.isRequired,
-  setRollResult: PropTypes.func.isRequired,
   saveToHistory: PropTypes.func.isRequired,
   setShowAddItemModal: PropTypes.func.isRequired,
 };

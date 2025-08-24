@@ -10,8 +10,10 @@ export default function useInventory(character, setCharacter) {
   }, [character.inventory, character.armor]);
 
   const totalWeight = useMemo(() => {
-    // Simple slot/weight model: default weight 1; armor weighs 2; materials/consumables use quantity
     return character.inventory.reduce((sum, item) => {
+      if (typeof item.weight === 'number') {
+        return sum + item.weight * (item.quantity || 1);
+      }
       if (item.type === 'material' || item.type === 'consumable') {
         return sum + Math.max(0, item.quantity || 0);
       }
@@ -46,12 +48,34 @@ export default function useInventory(character, setCharacter) {
 
   const handleEquipItem = useCallback(
     (id) => {
-      setCharacter((prev) => ({
-        ...prev,
-        inventory: prev.inventory.map((item) =>
-          item.id === id ? { ...item, equipped: !item.equipped } : item,
-        ),
-      }));
+      setCharacter((prev) => {
+        const itemToEquip = prev.inventory.find((i) => i.id === id);
+        const slot = itemToEquip?.slot;
+        const isTwoHanded = itemToEquip?.tags?.includes('two-handed');
+        return {
+          ...prev,
+          inventory: prev.inventory.map((item) => {
+            if (item.id === id) {
+              return { ...item, equipped: !item.equipped };
+            }
+            if (slot && item.slot === slot && item.equipped) {
+              return { ...item, equipped: false };
+            }
+            if (isTwoHanded && item.slot === 'Off-hand' && item.equipped) {
+              return { ...item, equipped: false };
+            }
+            if (
+              itemToEquip?.slot === 'Off-hand' &&
+              isTwoHanded &&
+              item.slot === 'Weapon' &&
+              item.equipped
+            ) {
+              return { ...item, equipped: false };
+            }
+            return item;
+          }),
+        };
+      });
     },
     [setCharacter],
   );
@@ -98,10 +122,13 @@ export default function useInventory(character, setCharacter) {
     [setCharacter],
   );
 
+  const maxLoad = character.maxLoad ?? 12;
+
   return {
     totalArmor,
     totalWeight,
     equippedWeaponDamage,
+    maxLoad,
     handleAddItem,
     handleEquipItem,
     handleConsumeItem,

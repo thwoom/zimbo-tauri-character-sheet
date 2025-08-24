@@ -1,6 +1,6 @@
 .button {
   background: linear-gradient(45deg, var(--color-neon), var(--color-neon-dark));
-  border: none;
+  border: 2px solid var(--color-neon);
   border-radius: var(--hud-radius-sm);
   color: var(--color-white);
   font-size: var(--font-size-body);
@@ -9,22 +9,25 @@
   min-height: calc(var(--space-md) * 2 + 1.2em);
   cursor: pointer;
   font-weight: bold;
-  transition: var(--hud-transition);
+  transition:
+    box-shadow var(--hud-transition),
+    filter var(--hud-transition);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
+  box-shadow: 0 0 0 0 var(--color-neon);
 }
 
 .button:hover {
   filter: brightness(1.1);
-  box-shadow: var(--shadow-neon);
+  box-shadow: 0 0 8px 2px var(--color-neon);
 }
 
 .button:focus-visible {
   outline: 2px solid var(--color-neon);
   outline-offset: 2px;
-  box-shadow: var(--shadow-neon);
+  box-shadow: 0 0 8px 2px var(--color-neon);
 }
 
 .button:disabled {

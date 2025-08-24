@@ -1,4 +1,3 @@
-
 # ZimboMate
 
 **Your loyal game companion for Dungeon World and beyond.**
@@ -178,10 +177,6 @@ The command above bundles the application and produces platform-specific install
 Logs are written to OS-specific locations such as `~/.local/share/zimbomate/logs` on Linux, `~/Library/Logs/zimbomate` on macOS, or `%APPDATA%\zimbomate\logs` on Windows. Running the app from a terminal will also display any runtime messages.
 
 If you encounter issues, capture the relevant logs or console output and [open an issue](../../issues) describing the problem.
-
-## Screenshots
-
-_Add screenshots or GIFs demonstrating character stats, dice roller, inventory panels, and the various modals._
 
 ## Contributing
 

@@ -10,7 +10,9 @@
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-body);
-  background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+  background-image: var(--space-bg-image);
+  background-repeat: repeat;
+  animation: spaceScroll 60s linear infinite;
   color: var(--color-text);
   overflow-x: hidden;
 }
@@ -30,6 +32,15 @@ h1 {
 }
 
 /* Animations */
+@keyframes spaceScroll {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 10000px;
+  }
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -147,7 +158,7 @@ select:focus-visible {
 }
 
 .glass-panel {
-  background: var(--panel-bg);
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: var(--hud-radius);
@@ -236,4 +247,19 @@ select:focus-visible {
     var(--critical-failure-end)
   ) !important;
   animation: pulse 0.5s ease-in-out 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+
+  .loading-shimmer,
+  .status-critical,
+  .level-up-celebration,
+  .dice-rolling,
+  .critical-hit,
+  .critical-failure {
+    animation: none !important;
+  }
 }

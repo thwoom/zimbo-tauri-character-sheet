@@ -1,6 +1,8 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+  background-image: var(--space-bg-image);
+  background-repeat: repeat;
+  animation: spaceScroll 60s linear infinite;
   color: var(--color-text);
   padding: var(--hud-spacing);
   font-family: var(--font-body);
@@ -23,7 +25,8 @@
   margin-bottom: var(--space-md);
   padding: var(--hud-spacing);
   border-radius: 15px;
-  border: 2px solid var(--color-accent);
+  background: var(--glass-bg);
+  border: 1px solid var(--panel-border);
   box-shadow: 0 0 20px var(--glow-shadow);
   transition: var(--hud-transition-slow);
 }
@@ -226,4 +229,17 @@
 
 :global(.invisible-overlay)::before {
   background: radial-gradient(circle at 50% 50%, var(--overlay-invisible) 0%, transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none;
+  }
+
+  .statusEffectIcon,
+  :global(.burning-overlay)::before,
+  :global(.shocked-overlay)::before,
+  :global(.blessed-overlay)::before {
+    animation: none;
+  }
 }

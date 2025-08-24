@@ -21,7 +21,7 @@ const CharacterStats = ({
   const variants = useMotionVariants(fadeScale);
 
   return (
-    <div className={styles.modal}>
+    <motion.div className={styles.modal} variants={variants} initial="initial" animate="animate">
       <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
       <div className={styles.statsGrid}>
         {Object.entries(character.stats).map(([stat, data]) => (
@@ -248,7 +248,7 @@ const CharacterStats = ({
         }}
       >
         🔄 Reset All Resources
-      </button>
+      </Button>
     </motion.div>
   );
 };

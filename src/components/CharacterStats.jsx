@@ -1,4 +1,7 @@
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+import { useMotionTransition, useMotionVariants } from '../motion/reduced';
+import { durations, easings, fadeScale } from '../motion/tokens';
 import { resourceColors } from '../styles/colorMap.js';
 import styles from './CharacterStats.module.css';
 
@@ -12,8 +15,17 @@ const CharacterStats = ({
   setSessionNotes,
   clearRollHistory,
 }) => {
+  const transition = useMotionTransition(durations.md, easings.standard);
+  const variants = useMotionVariants(fadeScale);
+
   return (
-    <div className={styles.panel}>
+    <motion.div
+      className={styles.panel}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      transition={transition}
+    >
       <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
       <div className={styles.statsGrid}>
         {Object.entries(character.stats).map(([stat, data]) => (
@@ -36,9 +48,10 @@ const CharacterStats = ({
         aria-valuemin={0}
         aria-valuemax={character.maxHp}
       >
-        <div
+        <motion.div
           className={styles.hpFill}
-          style={{ width: `${(character.hp / character.maxHp) * 100}%` }}
+          animate={{ width: `${(character.hp / character.maxHp) * 100}%` }}
+          transition={transition}
         />
       </div>
       <div className={styles.centerText}>
@@ -80,9 +93,10 @@ const CharacterStats = ({
         aria-valuemin={0}
         aria-valuemax={character.xpNeeded}
       >
-        <div
+        <motion.div
           className={styles.xpFill}
-          style={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}
+          animate={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}
+          transition={transition}
         />
       </div>
       <div className={styles.centerText} data-testid="xp-display">
@@ -259,7 +273,7 @@ const CharacterStats = ({
       >
         🔄 Reset All Resources
       </button>
-    </div>
+    </motion.div>
   );
 };
 

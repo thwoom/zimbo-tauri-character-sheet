@@ -429,12 +429,12 @@ function App() {
         {/* Main Grid Layout */}
         <div className={styles.grid}>
           {/* Avatar Panel */}
-          <div className={styles.hud}>
+          <div className={`${styles.tile} ${styles.hud}`}>
             <CharacterHUD onMountChange={setHudMounted} />
           </div>
 
           {/* Stats Panel */}
-          <div className={styles.stats}>
+          <div className={`${styles.tile} ${styles.stats}`}>
             <CharacterStats
               character={character}
               setCharacter={setCharacter}
@@ -446,9 +446,8 @@ function App() {
               clearRollHistory={clearRollHistory}
             />
           </div>
-
           {/* Equipment and Inventory Panels */}
-          <div className={styles.inventory}>
+          <div className={`${styles.tile} ${styles.inventory}`}>
             <EquipmentPanel character={character} setCharacter={setCharacter} />
             <InventoryPanel
               character={character}
@@ -459,7 +458,7 @@ function App() {
           </div>
 
           {/* Session Notes Panel */}
-          <div className={styles.notes}>
+          <div className={`${styles.tile} ${styles.notes}`}>
             <SessionNotes
               sessionNotes={sessionNotes}
               setSessionNotes={setSessionNotes}

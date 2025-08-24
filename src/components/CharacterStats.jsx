@@ -256,7 +256,7 @@ const CharacterStats = ({
       >
         🔄 Reset All Resources
       </Button>
-    </div>
+    </motion.div>
   );
 };
 

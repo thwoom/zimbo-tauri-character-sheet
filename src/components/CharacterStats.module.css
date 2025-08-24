@@ -3,6 +3,9 @@
   border: 2px solid var(--color-accent);
   border-radius: 15px;
   padding: var(--hud-spacing);
+  text-align: center;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .title {

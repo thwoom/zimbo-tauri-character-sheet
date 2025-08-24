@@ -4,8 +4,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +17,7 @@
 .modal {
   background: var(--panel-bg);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--hud-radius);
   border: 1px solid var(--panel-border);
   box-shadow: 0 16px 64px var(--panel-shadow);

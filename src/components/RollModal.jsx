@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { FaDiceD20 } from 'react-icons/fa6';
 import { AnimatePresence, motion } from 'framer-motion';
-import { durations, easings, fadeScale } from '../motion/tokens';
+import PropTypes from 'prop-types';
+import { FaDiceD20 } from 'react-icons/fa6';
 import { useMotionTransition, useMotionVariants } from '../motion/reduced';
+import { durations, easings, fadeScale } from '../motion/tokens';
 import styles from './RollModal.module.css';
 
-export default function RollModal({ isOpen, data, onClose }) {
+export default function RollModal({ isOpen, data = null, onClose }) {
   const transition = useMotionTransition(durations.md, easings.standard);
   const variants = useMotionVariants(fadeScale);
   return (
@@ -69,8 +68,4 @@ RollModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   data: PropTypes.object,
   onClose: PropTypes.func.isRequired,
-};
-
-RollModal.defaultProps = {
-  data: null,
 };

@@ -1,11 +1,12 @@
 .panel {
-  background: var(--panel-bg);
-  @apply backdrop-blur-glass;
-  border-radius: var(--hud-radius);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
   padding: var(--hud-spacing);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 8px 32px var(--panel-shadow);
-  overflow: hidden;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
   transition:
     max-height 0.3s ease,
     opacity 0.3s ease;
@@ -21,9 +22,9 @@
   width: 100%;
   margin-bottom: 8px;
   padding: var(--hud-spacing-sm);
-  background: var(--overlay-darker);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--hud-radius-sm);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: var(--color-gray-100);
 }
 
@@ -31,18 +32,18 @@
   width: 100%;
   margin-bottom: 8px;
   padding: var(--hud-spacing-sm);
-  background: var(--overlay-darker);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--hud-radius-sm);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: var(--color-gray-100);
 }
 
 .textarea {
   width: 100%;
   height: 120px;
-  background: var(--overlay-darker);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--hud-radius-sm);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: var(--color-gray-100);
   padding: var(--hud-spacing-sm);
   resize: vertical;
@@ -120,9 +121,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  background: var(--color-overlay);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 1000;
   display: flex;
   align-items: center;

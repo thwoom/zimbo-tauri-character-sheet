@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import { durations, easings, fadeScale } from '../motion/tokens';
+import styles from './CharacterStats.module.css';
 import Button from './common/Button';
 import ButtonGroup from './common/ButtonGroup';
-import styles from './CharacterStats.module.css';
 
 const CharacterStats = ({
   character,
@@ -13,8 +13,8 @@ const CharacterStats = ({
   totalArmor,
   setShowLevelUpModal,
   setRollResult,
-  setSessionNotes,
-  clearRollHistory,
+  setSessionNotes = () => {},
+  clearRollHistory = () => {},
 }) => {
   const transition = useMotionTransition(durations.md, easings.standard);
   const variants = useMotionVariants(fadeScale);
@@ -276,11 +276,6 @@ CharacterStats.propTypes = {
   setRollResult: PropTypes.func.isRequired,
   setSessionNotes: PropTypes.func,
   clearRollHistory: PropTypes.func,
-};
-
-CharacterStats.defaultProps = {
-  setSessionNotes: () => {},
-  clearRollHistory: () => {},
 };
 
 export default CharacterStats;

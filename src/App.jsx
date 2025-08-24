@@ -1,43 +1,43 @@
-import React, { useState, useEffect, lazy, Suspense, useRef } from 'react';
-import './App.css';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
+  FaArrowRotateLeft,
+  FaBoxOpen,
+  FaFlagCheckered,
   FaMeteor,
   FaRadiation,
-  FaBoxOpen,
-  FaUserAstronaut,
   FaSatellite,
-  FaArrowRotateLeft,
-  FaFlagCheckered,
+  FaUserAstronaut,
 } from 'react-icons/fa6';
-import CharacterStats from './components/CharacterStats';
-import DiceRoller from './components/DiceRoller';
-import FloatingDiceButton from './components/FloatingDiceButton';
-import DiceRollerModal from './components/DiceRollerModal';
-import GameModals from './components/GameModals';
-import InventoryPanel from './components/InventoryPanel';
-import SessionNotes from './components/SessionNotes';
-import CharacterHUD from './components/CharacterHUD/CharacterHUD';
-import Settings from './components/Settings';
-import CommandPalette from './components/CommandPalette';
-import CharacterSwitcher from './components/CharacterSwitcher';
+import './App.css';
 import AppVersion from './components/AppVersion';
-import DiagnosticOverlay from './components/DiagnosticOverlay';
+import CharacterHUD from './components/CharacterHUD/CharacterHUD';
+import CharacterStats from './components/CharacterStats';
+import CharacterSwitcher from './components/CharacterSwitcher';
+import CommandPalette from './components/CommandPalette';
 import Button from './components/common/Button';
 import ButtonGroup from './components/common/ButtonGroup';
+import DiagnosticOverlay from './components/DiagnosticOverlay';
+import DiceRollerModal from './components/DiceRollerModal';
+import FloatingDiceButton from './components/FloatingDiceButton';
+import GameModals from './components/GameModals';
+import InventoryPanel from './components/InventoryPanel';
+import PrintableSheet from './components/PrintableSheet.jsx';
+import SessionNotes from './components/SessionNotes';
+import Settings from './components/Settings';
+
+import VersionHistoryModal from './components/VersionHistoryModal';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
 import useStatusEffects from './hooks/useStatusEffects.js';
 import useUndo from './hooks/useUndo.js';
-import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
+import { debilityTypes, RULEBOOK, statusEffectTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext';
 import { useSettings } from './state/SettingsContext';
 import styles from './styles/AppStyles.module.css';
 import './styles/print.css';
-import safeLocalStorage from './utils/safeLocalStorage.js';
 import { isCompactWidth } from './utils/responsive.js';
-import VersionHistoryModal from './components/VersionHistoryModal';
-import PrintableSheet from './components/PrintableSheet.jsx';
+import safeLocalStorage from './utils/safeLocalStorage.js';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -47,6 +47,8 @@ const PerformanceHud =
 function App() {
   const { character, setCharacter } = useCharacter();
   const { showDiagnostics } = useSettings();
+
+  // Auto-refresh test comment - this should trigger a rebuild!
 
   // UI State
   const bondsModal = useModal();
@@ -91,6 +93,7 @@ function App() {
 
   const saveToHistoryRef = useRef(() => {});
   const headerRef = useRef(null);
+
   const {
     rollResult,
     setRollResult,
@@ -197,19 +200,19 @@ function App() {
               setCharacter(data);
             }
           } catch (error) {
-            // ignore parse errors silently to avoid disrupting play
-            // could surface a non-intrusive message in the future
+            console.error('Failed to parse character data:', error);
           }
         };
         reader.readAsText(file);
-      } catch (_) {
-        // no-op
+      } catch (error) {
+        console.error('Failed to read file:', error);
       }
     };
 
     root.addEventListener('dragover', onDragOver);
     root.addEventListener('dragleave', onDragLeave);
     root.addEventListener('drop', onDrop);
+
     return () => {
       root.removeEventListener('dragover', onDragOver);
       root.removeEventListener('dragleave', onDragLeave);
@@ -217,32 +220,40 @@ function App() {
     };
   }, [setCharacter]);
 
-  // Global shortcut: Ctrl/Cmd+K opens command palette
+  // Keyboard shortcuts
   useEffect(() => {
-    const onKeyDown = (e) => {
-      const isMac = navigator.platform.toUpperCase().includes('MAC');
-      if ((isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
+    const handleKeyDown = (event) => {
+      // Command palette
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
         setIsPaletteOpen(true);
       }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
 
-  // Poll versions for updates written by CharacterContext
-  useEffect(() => {
-    const id = setInterval(() => {
-      try {
-        const raw = localStorage.getItem('characterVersions');
-        const next = raw ? JSON.parse(raw) : [];
-        if (JSON.stringify(next) !== JSON.stringify(versions)) setVersions(next);
-      } catch {
-        /* ignore */
+      // Dice roller
+      if ((event.metaKey || event.ctrlKey) && event.key === 'd') {
+        event.preventDefault();
+        setShowDiceRollerModal(true);
       }
-    }, 750);
-    return () => clearInterval(id);
-  }, [versions]);
+
+      // Undo
+      if ((event.metaKey || event.ctrlKey) && event.key === 'z' && !event.shiftKey) {
+        event.preventDefault();
+        undoLastAction();
+      }
+
+      // Redo (Ctrl+Shift+Z or Ctrl+Y)
+      if (
+        ((event.metaKey || event.ctrlKey) && event.key === 'z' && event.shiftKey) ||
+        ((event.metaKey || event.ctrlKey) && event.key === 'y')
+      ) {
+        event.preventDefault();
+        // TODO: Implement redo functionality
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [undoLastAction]);
 
   const {
     statusEffects,
@@ -253,12 +264,81 @@ function App() {
     toggleDebility,
   } = useStatusEffects(character, setCharacter);
 
-  // Styles moved to CSS modules
-
   return (
     <div
       className={`${styles.container} ${getActiveVisualEffects()} ${isDragActive ? styles.dragActive : ''}`}
     >
+      {/* Star Background */}
+      <div className="star-background">
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+        <div className="star"></div>
+      </div>
+
+      {/* Space HUD Background Elements */}
+      <div id="stars" className={styles.stars}></div>
+      <div id="stars2" className={styles.stars2}></div>
+      <div id="stars3" className={styles.stars3}></div>
+      <div className={styles.hudGrid}></div>
+      <div className={styles.radarSweep}></div>
+      <div className={styles.scanlines}></div>
+
+      {/* Sensor Blips */}
+      <div className={styles.sensorBlip}></div>
+      <div className={styles.sensorBlip}></div>
+      <div className={styles.sensorBlip}></div>
+      <div className={styles.sensorBlip}></div>
+      <div className={styles.sensorBlip}></div>
+
+      {/* HUD Status Text */}
+      <div className={`${styles.hudStatus} ${styles.topLeft}`}>
+        SECTOR STATUS: ONLINE
+        <br />
+        HULL INTEGRITY: 97%
+        <br />
+        LIFE SUPPORT: NOMINAL
+      </div>
+
+      <div className={`${styles.hudStatus} ${styles.topRight}`}>
+        STELLAR COORDS
+        <br />
+        X-2106, Y-0442
+        <br />
+        QUADRANT: ALPHA-7
+      </div>
+
+      <div className={`${styles.hudStatus} ${styles.bottomLeft}`}>
+        NAVIGATION: ACTIVE
+        <br />
+        SHIELDS: 85%
+        <br />
+        WEAPONS: READY
+      </div>
+
+      <div className={`${styles.hudStatus} ${styles.bottomRight}`}>
+        TIMESTAMP: {new Date().toLocaleTimeString()}
+        <br />
+        MISSION: ZIMBO-{character.level}
+        <br />
+        STATUS: ENGAGED
+      </div>
       <div className={styles.innerContainer}>
         {/* Header */}
         <div ref={headerRef} className={styles.header} style={{ background: getHeaderColor() }}>
@@ -482,10 +562,12 @@ function App() {
               top: '5%',
               transform: 'translateX(-50%)',
               width: 'min(900px, 95vw)',
-              background: '#fff',
-              color: '#000',
+              background: 'var(--color-modal-bg, rgba(255, 255, 255, 0.1))',
+              color: 'var(--color-text, #d0d7e2)',
               borderRadius: 8,
               padding: 16,
+              border: '1px solid var(--panel-border, rgba(95, 209, 193, 0.3))',
+              backdropFilter: 'blur(var(--glass-blur, 8px))',
             }}
             onClick={(e) => e.stopPropagation()}
           >

@@ -7,9 +7,9 @@
 
 .chip {
   position: relative;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   padding: 4px;
   display: flex;
   align-items: center;

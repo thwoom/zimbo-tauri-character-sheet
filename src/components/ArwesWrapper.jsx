@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Animator } from '@arwes/react-animator';
-import { GridLines, Dots } from '@arwes/react-bgs';
+import { Dots, GridLines } from '@arwes/react-bgs';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Navigation from './Navigation';
 
 const ArwesWrapper = ({ children }) => {
@@ -55,7 +55,8 @@ const ArwesWrapper = ({ children }) => {
           position: 'relative',
           minHeight: '100vh',
           overflow: 'hidden',
-          backgroundColor: '#001114',
+          background:
+            'linear-gradient(135deg, var(--color-bg-start, #001114), var(--color-bg-end, #0b1e33))',
           isolation: 'isolate',
         }}
       >

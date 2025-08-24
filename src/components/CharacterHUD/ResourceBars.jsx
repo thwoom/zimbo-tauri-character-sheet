@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
 import styles from './ResourceBars.module.css';
 
-export default function ResourceBars({ primary, secondary, shield }) {
+export default function ResourceBars({ primary, secondary = null, shield = null }) {
   const [showPercent, setShowPercent] = useState(false);
 
   const prevPrimary = useRef(primary.current);
@@ -114,9 +114,4 @@ ResourceBars.propTypes = {
     current: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
   }),
-};
-
-ResourceBars.defaultProps = {
-  secondary: null,
-  shield: null,
 };

@@ -1,11 +1,11 @@
 .avatarContainer {
-  background: var(--panel-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--hud-radius);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
   padding: var(--hud-spacing);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 8px 32px var(--panel-shadow);
+  border: none;
+  box-shadow: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +15,7 @@
   width: 100%;
   max-width: 200px;
   border-radius: 50%;
-  border: 2px solid var(--color-accent);
+  border: none;
   cursor: pointer;
 }
 

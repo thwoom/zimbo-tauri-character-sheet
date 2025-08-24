@@ -10,6 +10,7 @@
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-body);
+  background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
   background-image: var(--space-bg-image);
   background-repeat: repeat;
   animation: spaceScroll 60s linear infinite;
@@ -158,11 +159,11 @@ select:focus-visible {
 }
 
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--hud-radius);
-  border: 1px solid var(--panel-border);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+  border: none;
 }
 
 /* Loading Animation */

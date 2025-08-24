@@ -401,6 +401,23 @@
   --glow-shadow-strong: rgba(39, 169, 161, 0.6);
 }
 
+:root[data-theme='arwes'] {
+  --font-heading: 'Orbitron', sans-serif;
+  --font-body: 'Roboto Mono', monospace;
+
+  --color-bg-start: #0a0d1a;
+  --color-bg-end: #0b1e33;
+
+  --color-accent: #00ffd1;
+  --color-accent-dark: #00b8a1;
+  --color-neon: #7efcf3;
+  --color-neon-dark: #02c3ad;
+  --shadow-neon: 0 0 10px var(--color-neon);
+  --color-accent-rgb: 0, 255, 209;
+
+  --space-bg-image: url('/starfield.svg');
+}
+
 @media (max-width: 767px) {
   :root {
     --font-size-heading: 2.25rem;

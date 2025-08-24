@@ -1,11 +1,4 @@
-.panel {
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  padding: var(--hud-spacing);
-  border: none;
-  box-shadow: none;
+.container {
   overflow: visible;
   transition:
     max-height 0.3s ease,
@@ -98,19 +91,19 @@
   grid-column: 1 / -1;
 }
 
-.panelCompact {
+.collapsed {
   max-height: 0;
   opacity: 0;
 }
 
-.panelExpanded {
+.expanded {
   max-height: calc(100vh - var(--header-height) - 2 * var(--space-lg));
   overflow: auto;
   opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .panel {
+  .container {
     transition: none;
   }
 }

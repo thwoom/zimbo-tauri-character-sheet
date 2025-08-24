@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   FaBoxOpen,
-  FaMeteor,
-  FaStar,
-  FaFlask,
-  FaShield,
   FaCube,
+  FaFlask,
+  FaMeteor,
   FaSatellite,
+  FaShield,
+  FaStar,
 } from 'react-icons/fa6';
 import useInventory from '../hooks/useInventory';
 import { debilityTypes } from '../state/character';
+import { css } from '../styled-system/css';
 import AddItemModal from './AddItemModal';
 import { inventoryItemType } from './common/inventoryItemPropTypes.js';
-import Panel from './ui/Panel';
 
 const InventoryPanel = ({
   character,
@@ -27,10 +27,33 @@ const InventoryPanel = ({
   const [showAddModal, setShowAddModal] = useState(false);
 
   return (
-    <Panel className="space-y-md">
-      <h3 className="text-accent mb-md flex items-center gap-sm text-lg">
-        <FaBoxOpen /> Equipment
-      </h3>
+    <div
+      className={css({
+        background: 'rgba(2, 30, 38, 0.8)',
+        border: '1px solid rgba(100, 241, 225, 0.3)',
+        borderRadius: '8px',
+        padding: '1rem',
+        marginBottom: '1rem',
+        backdropFilter: 'blur(10px)',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
+      })}
+    >
+      <div
+        className={css({
+          fontSize: '1.1rem',
+          fontWeight: 'bold',
+          color: '#64f1e1',
+          marginBottom: '1rem',
+          textAlign: 'center',
+          borderBottom: '1px solid rgba(100, 241, 225, 0.2)',
+          paddingBottom: '0.5rem',
+        })}
+      >
+        Equipment
+      </div>
+      <div className="flex items-center gap-sm mb-md">
+        <FaBoxOpen />
+      </div>
       <div className="text-xs text-[var(--color-gray-400)]">Load: {totalWeight}</div>
       <button
         className="bg-gradient-to-r from-success to-success-dark text-white px-sm py-1 rounded text-xs focus-visible:outline-accent"
@@ -137,7 +160,7 @@ const InventoryPanel = ({
           }}
         />
       )}
-    </Panel>
+    </div>
   );
 };
 

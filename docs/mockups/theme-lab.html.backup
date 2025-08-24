@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme Lab - Futuristic Augmented UI</title>
+    <style>
+      /* CSS Variables for theming tokens */
+      :root {
+        /* Base tokens */
+        --bg: hsl(220, 15%, 8%);
+        --fg: hsl(220, 15%, 95%);
+        --muted: hsl(220, 15%, 25%);
+        --card: hsl(220, 15%, 12%);
+        --accent: hsl(200, 100%, 60%);
+        --accent-2: hsl(280, 100%, 70%);
+        --radius-md: 8px;
+        --radius-lg: 16px;
+        --shadow-glow: 0 0 20px rgba(100, 200, 255, 0.3);
+        --blur: blur(12px);
+
+        /* Motion tokens */
+        --speed-fast: 150ms;
+        --speed: 300ms;
+        --speed-slow: 500ms;
+      }
+
+      /* Theme variations */
+      .theme-classic {
+        --bg: hsl(0, 0%, 8%);
+        --fg: hsl(0, 0%, 95%);
+        --muted: hsl(0, 0%, 25%);
+        --card: hsl(0, 0%, 12%);
+        --accent: hsl(45, 100%, 60%);
+        --accent-2: hsl(30, 100%, 70%);
+      }
+
+      .theme-cosmic {
+        --bg: hsl(220, 15%, 8%);
+        --fg: hsl(220, 15%, 95%);
+        --muted: hsl(220, 15%, 25%);
+        --card: hsl(220, 15%, 12%);
+        --accent: hsl(200, 100%, 60%);
+        --accent-2: hsl(280, 100%, 70%);
+      }
+
+      .theme-moebius {
+        --bg: hsl(140, 15%, 8%);
+        --fg: hsl(140, 15%, 95%);
+        --muted: hsl(140, 15%, 25%);
+        --card: hsl(140, 15%, 12%);
+        --accent: hsl(120, 100%, 60%);
+        --accent-2: hsl(160, 100%, 70%);
+      }
+
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Segoe UI',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        min-height: 100vh;
+        padding: 20px;
+        overflow-x: hidden;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Theme switcher */
+      .theme-switcher {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        gap: 8px;
+      }
+
+      .theme-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--muted);
+        background: var(--card);
+        color: var(--fg);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all var(--speed);
+        backdrop-filter: var(--blur);
+      }
+
+      .theme-btn:hover {
+        border-color: var(--accent);
+        box-shadow: var(--shadow-glow);
+      }
+
+      .theme-btn.active {
+        background: var(--accent);
+        color: var(--bg);
+      }
+
+      /* Main container */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 60px;
+      }
+
+      /* Futuristic Toolbar with diagonal tabs */
+      .toolbar {
+        display: flex;
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        padding: 4px;
+        margin-bottom: 30px;
+        backdrop-filter: var(--blur);
+        border: 1px solid var(--muted);
+        position: relative;
+      }
+
+      .toolbar::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+        padding: 1px;
+        background: linear-gradient(45deg, var(--accent), var(--accent-2));
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .tab {
+        padding: 12px 24px;
+        background: transparent;
+        color: var(--fg);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+        transition: all var(--speed);
+        margin-right: -6px;
+      }
+
+      .tab:hover {
+        background: var(--muted);
+        transform: translateY(-2px);
+      }
+
+      .tab.active {
+        background: var(--accent);
+        color: var(--bg);
+        box-shadow: var(--shadow-glow);
+      }
+
+      /* Glass panels with neon seams */
+      .panels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .panel {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        position: relative;
+        backdrop-filter: var(--blur);
+        border: 1px solid var(--muted);
+        min-height: 200px;
+      }
+
+      .panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+        padding: 1px;
+        background: linear-gradient(
+          135deg,
+          var(--accent),
+          transparent 30%,
+          transparent 70%,
+          var(--accent-2)
+        );
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .panel::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      }
+
+      .panel h3 {
+        margin-bottom: 16px;
+        color: var(--accent);
+        font-size: 1.2em;
+      }
+
+      /* HUD Pills with scanline overlay */
+      .hud-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .hud-pill {
+        flex: 1;
+        height: 60px;
+        background: var(--card);
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: var(--blur);
+        border: 1px solid var(--muted);
+      }
+
+      .hud-pill::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.03) 2px,
+          rgba(255, 255, 255, 0.03) 4px
+        );
+        pointer-events: none;
+      }
+
+      .hud-pill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        padding: 1px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .hud-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        height: 100%;
+      }
+
+      .hud-label {
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      .hud-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--fg);
+      }
+
+      .hud-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border-radius: 0 0 30px 30px;
+        transition: width var(--speed);
+      }
+
+      /* Modal styles */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-dialog {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        backdrop-filter: var(--blur);
+        border: 1px solid var(--muted);
+        transform: scale(0.9);
+        opacity: 0;
+        transition: all var(--speed);
+      }
+
+      .modal-overlay.active .modal-dialog {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      .modal-dialog::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+        padding: 2px;
+        background: linear-gradient(45deg, var(--accent), var(--accent-2), var(--accent));
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-title {
+        color: var(--accent);
+        font-size: 1.5em;
+        font-weight: 600;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--fg);
+        font-size: 1.5em;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: var(--radius-md);
+        transition: all var(--speed);
+      }
+
+      .modal-close:hover {
+        background: var(--muted);
+        color: var(--accent);
+      }
+
+      /* Button styles */
+      .btn {
+        padding: 12px 24px;
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        font-weight: 600;
+        transition: all var(--speed);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-glow);
+      }
+
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left var(--speed);
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      /* Focus styles for accessibility */
+      .tab:focus,
+      .theme-btn:focus,
+      .btn:focus,
+      .modal-close:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .panels {
+          grid-template-columns: 1fr;
+        }
+
+        .hud-container {
+          flex-direction: column;
+        }
+
+        .toolbar {
+          flex-wrap: wrap;
+        }
+
+        .tab {
+          clip-path: none;
+          margin-right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-cosmic">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+      <button class="theme-btn" data-theme="classic">Classic</button>
+      <button class="theme-btn active" data-theme="cosmic">Cosmic</button>
+      <button class="theme-btn" data-theme="moebius">Moebius</button>
+    </div>
+
+    <div class="container">
+      <!-- Futuristic Toolbar -->
+      <div class="toolbar">
+        <button class="tab active">Dashboard</button>
+        <button class="tab">Inventory</button>
+        <button class="tab">Combat</button>
+        <button class="tab">Settings</button>
+      </div>
+
+      <!-- Glass Panels -->
+      <div class="panels">
+        <div class="panel">
+          <h3>System Status</h3>
+          <p>
+            All systems operational. Neural interface running at 98.7% efficiency. Quantum
+            processors synchronized.
+          </p>
+          <br />
+          <p>Last diagnostic: 2.3 seconds ago</p>
+        </div>
+        <div class="panel">
+          <h3>Active Protocols</h3>
+          <p>• Enhanced perception active</p>
+          <p>• Threat assessment online</p>
+          <p>• Environmental analysis running</p>
+          <p>• Communication protocols ready</p>
+        </div>
+      </div>
+
+      <!-- HUD Pills -->
+      <div class="hud-container">
+        <div class="hud-pill">
+          <div class="hud-content">
+            <span class="hud-label">HEALTH</span>
+            <span class="hud-value">87%</span>
+          </div>
+          <div class="hud-bar" style="width: 87%"></div>
+        </div>
+        <div class="hud-pill">
+          <div class="hud-content">
+            <span class="hud-label">MANA</span>
+            <span class="hud-value">64%</span>
+          </div>
+          <div class="hud-bar" style="width: 64%"></div>
+        </div>
+        <div class="hud-pill">
+          <div class="hud-content">
+            <span class="hud-label">STAMINA</span>
+            <span class="hud-value">92%</span>
+          </div>
+          <div class="hud-bar" style="width: 92%"></div>
+        </div>
+      </div>
+
+      <!-- Modal Trigger -->
+      <button class="btn" onclick="openModal()">Open System Dialog</button>
+    </div>
+
+    <!-- Modal Dialog -->
+    <div class="modal-overlay" id="modal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 class="modal-title">System Configuration</h2>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <p>
+          This is a demonstration of the futuristic modal dialog with glass morphism effects and
+          neon borders. The interface adapts to the selected theme while maintaining accessibility
+          and performance.
+        </p>
+        <br />
+        <p>
+          All visual effects are achieved using pure CSS with no external dependencies or images.
+        </p>
+        <br />
+        <button class="btn" onclick="closeModal()">Confirm</button>
+      </div>
+    </div>
+
+    <script>
+      // Theme switching functionality
+      function setTheme(theme) {
+        document.body.className = `theme-${theme}`;
+
+        // Update active button
+        document.querySelectorAll('.theme-btn').forEach((btn) => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+
+        // Update URL
+        const url = new URL(window.location);
+        url.searchParams.set('theme', theme);
+        window.history.replaceState({}, '', url);
+      }
+
+      // Tab switching functionality
+      document.querySelectorAll('.tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
+
+      // Theme button functionality
+      document.querySelectorAll('.theme-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.dataset.theme;
+          setTheme(theme);
+        });
+      });
+
+      // Modal functionality
+      function openModal() {
+        document.getElementById('modal').classList.add('active');
+      }
+
+      function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+      }
+
+      // Close modal on overlay click
+      document.getElementById('modal').addEventListener('click', (e) => {
+        if (e.target.id === 'modal') {
+          closeModal();
+        }
+      });
+
+      // Initialize theme from URL parameter
+      function initTheme() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const theme = urlParams.get('theme') || 'cosmic';
+        setTheme(theme);
+      }
+
+      // Initialize on load
+      document.addEventListener('DOMContentLoaded', initTheme);
+    </script>
+  </body>
+</html>

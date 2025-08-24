@@ -1,0 +1,291 @@
+/* Augmented-UI System - Using the official augmented-ui library */
+
+/* Import the official augmented-ui library */
+@import 'augmented-ui/augmented-ui.min.css';
+
+/* Import theme-specific styles */
+@import './timey-wimey-theme.css';
+
+/* Base Augmented-UI variables */
+:root {
+  /* Animation durations */
+  --augmented-transition-fast: 150ms;
+  --augmented-transition-normal: 300ms;
+  --augmented-transition-slow: 500ms;
+
+  /* Effect intensities */
+  --augmented-glow-intensity: 0.6;
+  --augmented-blur-intensity: 12px;
+  --augmented-shadow-intensity: 0.4;
+
+  /* Performance settings */
+  --augmented-gpu-accelerated: true;
+  --augmented-render-quality: high;
+}
+
+/* GPU acceleration hints */
+.augmented-gpu {
+  transform: translateZ(0);
+  will-change: transform, opacity, box-shadow;
+  backface-visibility: hidden;
+}
+
+/* Base dramatic effects */
+.augmented-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanline overlay for all augmented elements */
+.augmented-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(100, 241, 225, 0.03) 2px,
+    rgba(100, 241, 225, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* When a modal is open, disable scanlines and animations to prevent artifacts */
+.aug-modal-open .augmented-effect::after {
+  display: none;
+}
+
+.aug-modal-open .cyberpunk-hud-frame,
+.aug-modal-open .holographic-modal,
+.aug-modal-open .neon-toolbar,
+.aug-modal-open .tactical-panel-grid,
+.aug-modal-open .dimensional-navigation,
+.aug-modal-open .temporal-effects,
+.aug-modal-open .quantum-loading,
+.aug-modal-open .stealth-mode-interface {
+  animation: none !important;
+  will-change: auto !important;
+}
+
+/* Cyberpunk HUD Frame Effect - Using augmented-ui mixins */
+.cyberpunk-hud-frame {
+  --aug-border-all: 3px;
+  --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.8), rgba(100, 241, 225, 0.4));
+  --aug-inlay-all: 2px;
+  --aug-inlay-bg: linear-gradient(90deg, transparent, rgba(100, 241, 225, 0.15), transparent);
+  --aug-inlay-opacity: 0.6;
+  --aug-tl1: 20px;
+  --aug-tr1: 20px;
+  --aug-br1: 20px;
+  --aug-bl1: 20px;
+  animation: cyberpunk-pulse 4s ease-in-out infinite;
+  background: rgba(100, 241, 225, 0.02);
+}
+
+@keyframes cyberpunk-pulse {
+  0%,
+  100% {
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.6), rgba(100, 241, 225, 0.3));
+  }
+  50% {
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 1), rgba(100, 241, 225, 0.6));
+  }
+}
+
+/* Holographic Modal Effect - Using augmented-ui mixins */
+.holographic-modal {
+  --aug-border-all: 2px;
+  --aug-border-bg: linear-gradient(90deg, rgba(100, 241, 225, 0.7), rgba(100, 241, 225, 0.3));
+  --aug-inlay-all: 1px;
+  --aug-inlay-bg: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(100, 241, 225, 0.15) 3px,
+    rgba(100, 241, 225, 0.15) 6px
+  );
+  --aug-inlay-opacity: 0.4;
+  --aug-tl1: 15px;
+  --aug-tr1: 15px;
+  --aug-br1: 15px;
+  --aug-bl1: 15px;
+  animation: holographic-scan 3s linear infinite;
+  background: rgba(100, 241, 225, 0.03);
+}
+
+@keyframes holographic-scan {
+  0% {
+    --aug-border-bg: linear-gradient(90deg, rgba(100, 241, 225, 0.4), rgba(100, 241, 225, 0.2));
+  }
+  50% {
+    --aug-border-bg: linear-gradient(90deg, rgba(100, 241, 225, 0.9), rgba(100, 241, 225, 0.4));
+  }
+  100% {
+    --aug-border-bg: linear-gradient(90deg, rgba(100, 241, 225, 0.4), rgba(100, 241, 225, 0.2));
+  }
+}
+
+/* Neon Toolbar Effect - Using augmented-ui mixins */
+.neon-toolbar {
+  --aug-border-all: 2px;
+  --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.8), rgba(100, 241, 225, 0.4));
+  --aug-tl1: 12px;
+  --aug-tr1: 12px;
+  --aug-br1: 12px;
+  --aug-bl1: 12px;
+  animation: neon-flicker 2s ease-in-out infinite;
+  background: rgba(100, 241, 225, 0.02);
+}
+
+@keyframes neon-flicker {
+  0%,
+  100% {
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.5), rgba(100, 241, 225, 0.2));
+  }
+  50% {
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 1), rgba(100, 241, 225, 0.5));
+  }
+}
+
+/* Tactical Panel Grid Effect - Using augmented-ui mixins */
+.tactical-panel-grid {
+  --aug-border-all: 1px;
+  --aug-border-bg:
+    linear-gradient(90deg, rgba(100, 241, 225, 0.4) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(100, 241, 225, 0.4) 1px, transparent 1px);
+  --aug-border-bg-size: 25px 25px;
+  --aug-tl1: 8px;
+  --aug-tr1: 8px;
+  --aug-br1: 8px;
+  --aug-bl1: 8px;
+  animation: tactical-grid-pulse 5s ease-in-out infinite;
+  background: rgba(100, 241, 225, 0.01);
+}
+
+@keyframes tactical-grid-pulse {
+  0%,
+  100% {
+    --aug-border-bg:
+      linear-gradient(90deg, rgba(100, 241, 225, 0.3) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(100, 241, 225, 0.3) 1px, transparent 1px);
+  }
+  50% {
+    --aug-border-bg:
+      linear-gradient(90deg, rgba(100, 241, 225, 0.6) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(100, 241, 225, 0.6) 1px, transparent 1px);
+  }
+}
+
+/* Dimensional Navigation Effect - Using augmented-ui mixins */
+.dimensional-navigation {
+  --aug-border-all: 2px;
+  --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.7), rgba(100, 241, 225, 0.3));
+  --aug-tl1: 18px;
+  --aug-tr1: 18px;
+  --aug-br1: 18px;
+  --aug-bl1: 18px;
+  animation: dimensional-shift 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+  background: rgba(100, 241, 225, 0.02);
+}
+
+@keyframes dimensional-shift {
+  0%,
+  100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.4), rgba(100, 241, 225, 0.2));
+  }
+  25% {
+    transform: perspective(1000px) rotateX(1deg) rotateY(1deg);
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.6), rgba(100, 241, 225, 0.3));
+  }
+  50% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(2deg);
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.8), rgba(100, 241, 225, 0.4));
+  }
+  75% {
+    transform: perspective(1000px) rotateX(-1deg) rotateY(1deg);
+    --aug-border-bg: linear-gradient(45deg, rgba(100, 241, 225, 0.6), rgba(100, 241, 225, 0.3));
+  }
+}
+
+/* Temporal Effects - Using augmented-ui mixins */
+.temporal-effects {
+  --aug-border-all: 2px;
+  --aug-border-bg: linear-gradient(45deg, rgba(139, 92, 246, 0.6), rgba(139, 92, 246, 0.3));
+  --aug-inlay-all: 1px;
+  --aug-inlay-bg: radial-gradient(circle at center, rgba(139, 92, 246, 0.3), transparent);
+  --aug-inlay-opacity: 0.5;
+  --aug-tl1: 15px;
+  --aug-tr1: 15px;
+  --aug-br1: 15px;
+  --aug-bl1: 15px;
+  animation: temporal-pulse 4s ease-in-out infinite;
+  background: rgba(139, 92, 246, 0.02);
+}
+
+@keyframes temporal-pulse {
+  0%,
+  100% {
+    --aug-border-bg: linear-gradient(45deg, rgba(139, 92, 246, 0.4), rgba(139, 92, 246, 0.2));
+  }
+  50% {
+    --aug-border-bg: linear-gradient(45deg, rgba(139, 92, 246, 0.8), rgba(139, 92, 246, 0.4));
+  }
+}
+
+/* Performance optimizations */
+.augmented-performance-low {
+  --augmented-glow-intensity: 0.3;
+  --augmented-blur-intensity: 6px;
+  --augmented-shadow-intensity: 0.2;
+}
+
+.augmented-performance-medium {
+  --augmented-glow-intensity: 0.6;
+  --augmented-blur-intensity: 12px;
+  --augmented-shadow-intensity: 0.4;
+}
+
+.augmented-performance-high {
+  --augmented-glow-intensity: 1;
+  --augmented-blur-intensity: 16px;
+  --augmented-shadow-intensity: 0.6;
+}
+
+/* Accessibility-aware animations */
+@media (prefers-reduced-motion: reduce) {
+  .cyberpunk-hud-frame,
+  .holographic-modal,
+  .neon-toolbar,
+  .tactical-panel-grid,
+  .dimensional-navigation,
+  .temporal-effects {
+    animation: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .dimensional-navigation {
+    animation: none;
+  }
+}
+
+/* Debug panel pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

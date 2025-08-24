@@ -1,0 +1,209 @@
+.timer {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.timer.normal::before {
+  background: var(--accent-color);
+}
+
+.timer.warning::before {
+  background: #f59e0b;
+  animation: pulse 2s infinite;
+}
+
+.timer.critical::before {
+  background: #ef4444;
+  animation: pulse 1s infinite;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.icon {
+  font-size: 14px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer.normal .icon {
+  color: var(--accent-color);
+}
+
+.timer.warning .icon {
+  color: #f59e0b;
+}
+
+.timer.critical .icon {
+  color: #ef4444;
+}
+
+.effectName {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  text-transform: capitalize;
+  flex: 1;
+}
+
+.count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.timeDisplay {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.time {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+
+.timer.normal .time {
+  color: var(--accent-color);
+}
+
+.timer.warning .time {
+  color: #f59e0b;
+}
+
+.timer.critical .time {
+  color: #ef4444;
+  animation: blink 1s infinite;
+}
+
+.controls {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.adjustButton {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+}
+
+.adjustButton:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.adjustButton:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .timer {
+    padding: 8px;
+  }
+
+  .time {
+    font-size: 16px;
+  }
+
+  .effectName {
+    font-size: 13px;
+  }
+
+  .adjustButton {
+    padding: 3px 6px;
+    font-size: 11px;
+    min-width: 35px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .timer {
+    border-width: 3px;
+  }
+
+  .timer.warning {
+    border-color: #f59e0b;
+  }
+
+  .timer.critical {
+    border-color: #ef4444;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .timer,
+  .timer::before,
+  .adjustButton {
+    animation: none;
+    transition: none;
+  }
+
+  .timer.warning .time,
+  .timer.critical .time {
+    animation: none;
+  }
+}

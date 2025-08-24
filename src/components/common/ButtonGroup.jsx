@@ -1,10 +1,18 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import styles from './ButtonGroup.module.css';
+import { css } from '../../styled-system/css';
 
 export default function ButtonGroup({ className = '', children, ...props }) {
   return (
-    <div className={`${styles.group} ${className}`} {...props}>
+    <div
+      className={`${css({
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'sm',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+      })} ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );

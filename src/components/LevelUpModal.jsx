@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import styles from './LevelUpModal.module.css';
+import { useState } from 'react';
+import { FaDice, FaStar } from 'react-icons/fa6';
 import { advancedMoves } from '../data/advancedMoves.js';
 import { scoreToMod } from '../utils/score.js';
 import Message from './Message';
-import { durations, easings, fadeScale } from '../motion/tokens';
-import { useMotionTransition, useMotionVariants } from '../motion/reduced';
+import GlassModal from './ui/GlassModal';
 
 const LevelUpModal = ({
   isOpen = true,
@@ -20,40 +18,6 @@ const LevelUpModal = ({
 }) => {
   const [showMoveDetails, setShowMoveDetails] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
-  const modalRef = useRef(null);
-  const transition = useMotionTransition(durations.lg, easings.standard);
-  const variants = useMotionVariants(fadeScale);
-
-  useEffect(() => {
-    if (!modalRef.current) return;
-    modalRef.current.focus();
-
-    const handleTabTrap = (e) => {
-      if (e.key !== 'Tab') return;
-      const focusable = modalRef.current.querySelectorAll(
-        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-      );
-      if (focusable.length === 0) {
-        e.preventDefault();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else if (document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    const node = modalRef.current;
-    node.addEventListener('keydown', handleTabTrap);
-    return () => node.removeEventListener('keydown', handleTabTrap);
-  }, []);
 
   // Helper functions
   const canIncreaseTwo = () => {
@@ -98,377 +62,413 @@ const LevelUpModal = ({
 
     setLevelUpState((prev) => ({ ...prev, hpIncrease: increase }));
     setRollResult(`HP Roll: d10(${roll}) + CON(${conMod}) = +${increase} HP`);
-
-    setCharacter((prev) => ({
-      ...prev,
-      rollHistory: [
-        {
-          type: 'HP Roll',
-          result: `+${increase} HP`,
-          rolls: [roll],
-          modifier: conMod,
-          total: increase,
-          timestamp: Date.now(),
-        },
-        ...(prev.rollHistory ? prev.rollHistory.slice(0, 9) : []),
-      ],
-    }));
   };
 
-  const completeLevelUp = () => {
-    if (
-      levelUpState.selectedStats.length === 0 ||
-      !levelUpState.selectedMove ||
-      levelUpState.hpIncrease === 0
-    ) {
-      setValidationMessage(
-        'Please complete all level up steps: select stats, choose a move, and roll for HP!',
-      );
+  const handleMoveSelection = (moveName) => {
+    setLevelUpState((prev) => {
+      const alreadySelected = prev.selectedMoves.includes(moveName);
+      if (alreadySelected) {
+        return { ...prev, selectedMoves: prev.selectedMoves.filter((m) => m !== moveName) };
+      }
+      return { ...prev, selectedMoves: [...prev.selectedMoves, moveName] };
+    });
+  };
+
+  const handleComplete = () => {
+    // Validate selections
+    if (levelUpState.selectedStats.length === 0) {
+      setValidationMessage('Please select at least one stat to increase.');
       return;
     }
 
-    setValidationMessage('');
+    if (levelUpState.hpIncrease === 0) {
+      setValidationMessage('Please roll for HP increase.');
+      return;
+    }
 
-    // Update character stats
-    const newStats = { ...character.stats };
-    levelUpState.selectedStats.forEach((stat) => {
-      newStats[stat] = {
-        score: newStats[stat].score + 1,
-        mod: scoreToMod(newStats[stat].score + 1),
+    if (levelUpState.selectedMoves.length === 0) {
+      setValidationMessage('Please select at least one move.');
+      return;
+    }
+
+    // Apply level up
+    setCharacter((prev) => {
+      const newStats = { ...prev.stats };
+      levelUpState.selectedStats.forEach((stat) => {
+        newStats[stat] = {
+          ...newStats[stat],
+          score: Math.min(18, newStats[stat].score + 1),
+        };
+        newStats[stat].mod = scoreToMod(newStats[stat].score);
+      });
+
+      const newMoves = [...prev.moves, ...levelUpState.selectedMoves];
+
+      return {
+        ...prev,
+        level: prev.level + 1,
+        stats: newStats,
+        moves: newMoves,
+        hp: prev.hp + levelUpState.hpIncrease,
+        maxHp: prev.maxHp + levelUpState.hpIncrease,
+        xp: prev.xp - prev.xpNeeded,
+        xpNeeded: Math.floor(prev.xpNeeded * 1.5),
       };
     });
 
-    // Apply level up changes
-    setCharacter((prev) => ({
-      ...prev,
-      level: levelUpState.newLevel,
-      stats: newStats,
-      maxHp: prev.maxHp + levelUpState.hpIncrease,
-      hp: prev.maxHp + levelUpState.hpIncrease, // Heal to full when leveling
-      xp: prev.xp - prev.xpNeeded,
-      xpNeeded: levelUpState.newLevel + 7,
-      selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
-      levelUpPending: false,
-      actionHistory: [
-        ...prev.actionHistory.slice(-4), // Keep last 4 actions
-        {
-          type: 'level_up',
-          data: {
-            oldLevel: prev.level,
-            newLevel: levelUpState.newLevel,
-            statsIncreased: levelUpState.selectedStats,
-            moveGained: levelUpState.selectedMove,
-            hpGained: levelUpState.hpIncrease,
-          },
-          timestamp: new Date().toISOString(),
-        },
-      ],
-    }));
-
-    // Reset level up state
-    setLevelUpState({
-      selectedStats: [],
-      selectedMove: '',
-      hpIncrease: 0,
-      newLevel: levelUpState.newLevel,
-      expandedMove: '',
-    });
-
-    setRollResult(
-      `🎉 Welcome to Level ${levelUpState.newLevel}! ${levelUpState.selectedStats.join(' & ')} increased, gained "${advancedMoves[levelUpState.selectedMove].name}" move, +${levelUpState.hpIncrease} HP!`,
-    );
     onClose();
   };
 
-  const isComplete =
-    levelUpState.selectedStats.length > 0 &&
-    levelUpState.selectedMove &&
-    levelUpState.hpIncrease > 0;
-
-  // Class helpers
-  const statButtonClass = (stat) => {
-    const currentScore = character.stats[stat].score;
-    const isSelected = levelUpState.selectedStats.includes(stat);
-    const isMaxed = currentScore >= 18;
-    const canSelect =
-      !isMaxed &&
-      (levelUpState.selectedStats.length === 0 ||
-        (levelUpState.selectedStats.length === 1 && canIncreaseTwo()) ||
-        isSelected);
-
-    return [
-      styles.statButton,
-      isSelected && styles.selected,
-      isMaxed && styles.maxed,
-      !isSelected && !canSelect && styles.disabled,
-    ]
-      .filter(Boolean)
-      .join(' ');
+  const getCurrentStep = () => {
+    if (levelUpState.selectedStats.length === 0) return 1;
+    if (levelUpState.hpIncrease === 0) return 2;
+    if (levelUpState.selectedMoves.length === 0) return 3;
+    return 4;
   };
 
-  const moveButtonClass = (moveId) => {
-    const isSelected = levelUpState.selectedMove === moveId;
-    return [styles.moveButton, isSelected && styles.selected].filter(Boolean).join(' ');
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
-  };
-
-  const handleOverlayKeyDown = (e) => {
-    if (e.key === 'Escape') onClose();
-  };
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [onClose]);
+  const currentStep = getCurrentStep();
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
-        <motion.div
-          className={styles.overlay}
-          onClick={handleOverlayClick}
-          onKeyDown={handleOverlayKeyDown}
-          aria-label="Close"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={transition}
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Level Up to ${levelUpState.newLevel}`}
+      icon={<FaStar />}
+      variant="success"
+      maxWidth="800px"
+    >
+      <div style={{ padding: '0' }}>
+        {/* Progress Indicator */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '1.5rem',
+            padding: '1rem',
+            background: 'rgba(100, 241, 225, 0.1)',
+            borderRadius: 'var(--radius)',
+            border: '1px solid rgba(100, 241, 225, 0.2)',
+          }}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
-          <motion.div
-            ref={modalRef}
-            className={styles.modal}
-            variants={variants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={transition}
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            tabIndex={-1}
+          <div
+            style={{
+              textAlign: 'center',
+              color: currentStep >= 1 ? 'var(--color-neon)' : 'var(--color-neutral)',
+            }}
           >
-            {/* Header */}
-            <div className={styles.header}>
-              <h2 className={styles.headerTitle}>LEVEL UP!</h2>
-              <p className={styles.headerText}>
-                {character.name} advances to Level {levelUpState.newLevel}
-              </p>
-              <button onClick={onClose} className={styles.closeButton} aria-label="Close modal">
-                ×
-              </button>
-            </div>
+            <div style={{ fontSize: '20px' }}>📊</div>
+            <div style={{ fontSize: '12px' }}>Stats</div>
+          </div>
+          <div
+            style={{
+              textAlign: 'center',
+              color: currentStep >= 2 ? 'var(--color-neon)' : 'var(--color-neutral)',
+            }}
+          >
+            <div style={{ fontSize: '20px' }}>❤️</div>
+            <div style={{ fontSize: '12px' }}>HP</div>
+          </div>
+          <div
+            style={{
+              textAlign: 'center',
+              color: currentStep >= 3 ? 'var(--color-neon)' : 'var(--color-neutral)',
+            }}
+          >
+            <div style={{ fontSize: '20px' }}>⚔️</div>
+            <div style={{ fontSize: '12px' }}>Moves</div>
+          </div>
+          <div
+            style={{
+              textAlign: 'center',
+              color: currentStep >= 4 ? 'var(--color-neon)' : 'var(--color-neutral)',
+            }}
+          >
+            <div style={{ fontSize: '20px' }}>✅</div>
+            <div style={{ fontSize: '12px' }}>Complete</div>
+          </div>
+        </div>
 
-            <div className={styles.content}>
-              {/* Progress Indicator */}
-              <div className={styles.progress}>
-                <div
-                  className={`${styles.progressStep} ${levelUpState.selectedStats.length > 0 ? styles.complete : ''}`}
-                >
-                  <div className={styles.progressIcon}>
-                    {levelUpState.selectedStats.length > 0 ? '✅' : '1️⃣'}
-                  </div>
-                  <div className={styles.progressLabel}>Stats</div>
-                </div>
-                <div
-                  className={`${styles.progressStep} ${levelUpState.selectedMove ? styles.complete : ''}`}
-                >
-                  <div className={styles.progressIcon}>
-                    {levelUpState.selectedMove ? '✅' : '2️⃣'}
-                  </div>
-                  <div className={styles.progressLabel}>Move</div>
-                </div>
-                <div
-                  className={`${styles.progressStep} ${levelUpState.hpIncrease > 0 ? styles.complete : ''}`}
-                >
-                  <div className={styles.progressIcon}>
-                    {levelUpState.hpIncrease > 0 ? '✅' : '3️⃣'}
-                  </div>
-                  <div className={styles.progressLabel}>HP</div>
-                </div>
-              </div>
+        {validationMessage && (
+          <Message type="error" style={{ marginBottom: '1rem' }}>
+            {validationMessage}
+          </Message>
+        )}
 
-              {/* Step 1: Stat Selection */}
-              <div className={styles.step}>
-                <h3 className={styles.stepTitle}>📊 Step 1: Increase Ability Scores</h3>
-                <p className={styles.stepDesc}>
-                  Choose 1 stat (max 18) or 2 stats if both are under 16:
-                </p>
-
-                <div className={styles.statGrid}>
-                  {Object.entries(character.stats).map(([stat, data]) => (
-                    <button
-                      key={stat}
-                      onClick={() => handleStatSelection(stat)}
-                      className={statButtonClass(stat)}
-                      disabled={
-                        data.score >= 18 ||
-                        (!levelUpState.selectedStats.includes(stat) &&
-                          levelUpState.selectedStats.length >= 2)
-                      }
-                    >
-                      <div className={styles.statName}>{stat}</div>
-                      <div className={styles.statScore}>
-                        {data.score} → {data.score >= 18 ? data.score : data.score + 1}
-                        {data.score >= 18 && ' (MAX)'}
-                      </div>
-                      <div className={styles.statMod}>
-                        ({data.mod >= 0 ? '+' : ''}
-                        {data.mod} →{' '}
-                        {Math.floor((Math.min(18, data.score + 1) - 10) / 2) >= 0 ? '+' : ''}
-                        {Math.floor((Math.min(18, data.score + 1) - 10) / 2)})
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {levelUpState.selectedStats.length > 0 && (
-                  <div className={styles.selectedBox}>
-                    Selected: {levelUpState.selectedStats.join(', ')}
-                  </div>
-                )}
-              </div>
-
-              {/* Step 2: Advanced Move Selection */}
-              <div className={styles.step}>
-                <h3 className={styles.stepTitle}>⚔️ Step 2: Choose Advanced Move</h3>
-                <div className={styles.moveList}>
-                  {Object.entries(advancedMoves)
-                    .filter(([id]) => !character.selectedMoves.includes(id))
-                    .map(([id, move]) => (
-                      <div key={id} className={styles.moveWrapper}>
-                        <div
-                          onClick={() => setLevelUpState((prev) => ({ ...prev, selectedMove: id }))}
-                          className={moveButtonClass(id)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) =>
-                            e.key === 'Enter' &&
-                            setLevelUpState((prev) => ({ ...prev, selectedMove: id }))
-                          }
-                        >
-                          <div className={styles.moveHeader}>
-                            <div className={styles.moveText}>
-                              <h4 className={styles.moveName}>{move.name}</h4>
-                              <p className={styles.moveDesc}>{move.desc}</p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowMoveDetails(showMoveDetails === id ? '' : id);
-                              }}
-                              className={styles.detailsButton}
-                            >
-                              {showMoveDetails === id ? '▲' : '▼'}
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Expanded move details */}
-                        {showMoveDetails === id && (
-                          <div className={styles.moveDetails}>
-                            <p className={styles.moveExpanded}>{move.expanded}</p>
-                            <div className={styles.moveExamples}>
-                              <strong>Examples:</strong>
-                              <br />
-                              {move.examples}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                </div>
-
-                {levelUpState.selectedMove && (
-                  <div className={`${styles.selectedBox} ${styles.selectedMove}`}>
-                    Selected: {advancedMoves[levelUpState.selectedMove].name}
-                  </div>
-                )}
-              </div>
-
-              {/* Step 3: HP Rolling */}
-              <div className={styles.step}>
-                <h3 className={styles.stepTitle}>❤️ Step 3: Roll for Hit Points</h3>
-                <div className={styles.hpContainer}>
-                  <button
-                    onClick={rollHPIncrease}
-                    className={`${styles.button} ${levelUpState.hpIncrease > 0 ? styles.buttonRolled : ''}`}
-                    disabled={levelUpState.hpIncrease > 0}
-                  >
-                    {levelUpState.hpIncrease > 0 ? '✅ HP Rolled' : '🎲 Roll d10 + CON'}
-                  </button>
-
-                  <div className={styles.hpText}>
-                    Roll d10 + CON ({character.stats.CON.mod >= 0 ? '+' : ''}
-                    {character.stats.CON.mod}) for HP increase
-                    {levelUpState.hpIncrease > 0 && (
-                      <div className={styles.hpResult}>Result: +{levelUpState.hpIncrease} HP</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Summary & Complete Button */}
-              <div
-                className={`${styles.summary} ${isComplete ? styles.complete : styles.incomplete}`}
+        {/* Step 1: Stat Selection */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h3
+            style={{
+              color: 'var(--color-neon)',
+              marginBottom: '1rem',
+              fontSize: '1.2rem',
+            }}
+          >
+            Step 1: Increase Stats
+          </h3>
+          <p
+            style={{
+              color: 'var(--color-neutral)',
+              marginBottom: '1rem',
+              fontSize: '0.9rem',
+            }}
+          >
+            Select up to 2 stats to increase by 1 point each (max 18).
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '0.75rem',
+            }}
+          >
+            {Object.entries(character.stats).map(([stat, data]) => (
+              <button
+                key={stat}
+                onClick={() => handleStatSelection(stat)}
+                style={{
+                  padding: '1rem',
+                  background: levelUpState.selectedStats.includes(stat)
+                    ? 'rgba(100, 241, 225, 0.2)'
+                    : 'rgba(255, 255, 255, 0.05)',
+                  border: `1px solid ${
+                    levelUpState.selectedStats.includes(stat)
+                      ? 'rgba(100, 241, 225, 0.4)'
+                      : 'rgba(255, 255, 255, 0.1)'
+                  }`,
+                  borderRadius: 'var(--radius)',
+                  color: levelUpState.selectedStats.includes(stat)
+                    ? 'var(--color-neon)'
+                    : 'var(--color-text)',
+                  cursor: data.score >= 18 ? 'not-allowed' : 'pointer',
+                  opacity: data.score >= 18 ? 0.5 : 1,
+                  transition: 'var(--hud-transition)',
+                }}
+                disabled={data.score >= 18}
               >
-                <h4 className={styles.summaryTitle}>Level Up Summary</h4>
-                <div className={styles.summaryDetails}>
-                  <div>
-                    Level: {character.level} → {levelUpState.newLevel}
-                  </div>
-                  <div>
-                    Stats:{' '}
-                    {levelUpState.selectedStats.length > 0
-                      ? levelUpState.selectedStats.join(' & ')
-                      : 'None selected'}
-                  </div>
-                  <div>
-                    Move:{' '}
-                    {levelUpState.selectedMove
-                      ? advancedMoves[levelUpState.selectedMove].name
-                      : 'None selected'}
-                  </div>
-                  <div>
-                    HP: {levelUpState.hpIncrease > 0 ? `+${levelUpState.hpIncrease}` : 'Not rolled'}
-                  </div>
+                <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{stat}</div>
+                <div style={{ fontSize: '0.9rem' }}>
+                  {data.score} ({data.mod >= 0 ? '+' : ''}
+                  {data.mod})
                 </div>
+                {data.score >= 18 && (
+                  <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral)' }}>Max</div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
 
-                <div className={styles.actions}>
-                  <button onClick={onClose} className={`${styles.button} ${styles.buttonCancel}`}>
-                    Cancel
-                  </button>
+        {/* Step 2: HP Roll */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h3
+            style={{
+              color: 'var(--color-neon)',
+              marginBottom: '1rem',
+              fontSize: '1.2rem',
+            }}
+          >
+            Step 2: Roll for HP
+          </h3>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginBottom: '1rem',
+            }}
+          >
+            <button
+              onClick={rollHPIncrease}
+              disabled={levelUpState.hpIncrease > 0}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background:
+                  levelUpState.hpIncrease > 0
+                    ? 'rgba(107, 114, 128, 0.2)'
+                    : 'rgba(100, 241, 225, 0.2)',
+                border: `1px solid ${
+                  levelUpState.hpIncrease > 0
+                    ? 'rgba(107, 114, 128, 0.3)'
+                    : 'rgba(100, 241, 225, 0.3)'
+                }`,
+                borderRadius: 'var(--radius-sm)',
+                color: levelUpState.hpIncrease > 0 ? 'var(--color-neutral)' : 'var(--color-neon)',
+                cursor: levelUpState.hpIncrease > 0 ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'var(--hud-transition)',
+              }}
+            >
+              <FaDice />
+              Roll d10 + CON
+            </button>
+            {levelUpState.hpIncrease > 0 && (
+              <div
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: 'rgba(74, 179, 129, 0.2)',
+                  border: '1px solid rgba(74, 179, 129, 0.3)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--color-success)',
+                  fontWeight: 'bold',
+                }}
+              >
+                +{levelUpState.hpIncrease} HP
+              </div>
+            )}
+          </div>
+          <p
+            style={{
+              color: 'var(--color-neutral)',
+              fontSize: '0.9rem',
+              margin: 0,
+            }}
+          >
+            Current HP: {character.hp}/{character.maxHp} → New Max:{' '}
+            {character.maxHp + levelUpState.hpIncrease}
+          </p>
+        </div>
 
-                  <button
-                    onClick={completeLevelUp}
-                    disabled={!isComplete}
-                    className={`${styles.button} ${styles.buttonComplete} ${!isComplete ? styles.buttonDisabled : ''}`}
+        {/* Step 3: Move Selection */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h3
+            style={{
+              color: 'var(--color-neon)',
+              marginBottom: '1rem',
+              fontSize: '1.2rem',
+            }}
+          >
+            Step 3: Choose Moves
+          </h3>
+          <p
+            style={{
+              color: 'var(--color-neutral)',
+              marginBottom: '1rem',
+              fontSize: '0.9rem',
+            }}
+          >
+            Select moves from your class or any class. Click a move to see details.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '0.75rem',
+            }}
+          >
+            {advancedMoves.map((move) => (
+              <div key={move.name}>
+                <button
+                  onClick={() => setShowMoveDetails(showMoveDetails === move.name ? '' : move.name)}
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    background: levelUpState.selectedMoves.includes(move.name)
+                      ? 'rgba(100, 241, 225, 0.2)'
+                      : 'rgba(255, 255, 255, 0.05)',
+                    border: `1px solid ${
+                      levelUpState.selectedMoves.includes(move.name)
+                        ? 'rgba(100, 241, 225, 0.4)'
+                        : 'rgba(255, 255, 255, 0.1)'
+                    }`,
+                    borderRadius: 'var(--radius)',
+                    color: levelUpState.selectedMoves.includes(move.name)
+                      ? 'var(--color-neon)'
+                      : 'var(--color-text)',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'var(--hud-transition)',
+                  }}
+                >
+                  <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>{move.name}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral)' }}>
+                    {move.class}
+                  </div>
+                </button>
+                {showMoveDetails === move.name && (
+                  <div
+                    style={{
+                      marginTop: '0.5rem',
+                      padding: '1rem',
+                      background: 'rgba(0, 0, 0, 0.2)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: 'var(--radius)',
+                      fontSize: '0.9rem',
+                    }}
                   >
-                    🚀 Complete Level Up!
-                  </button>
-                </div>
-
-                {validationMessage ? (
-                  <Message type="error">{validationMessage}</Message>
-                ) : (
-                  !isComplete && (
-                    <Message type="warning">Complete all steps to finish leveling up</Message>
-                  )
+                    <div style={{ marginBottom: '0.5rem' }}>
+                      <strong>Description:</strong> {move.description}
+                    </div>
+                    {move.trigger && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <strong>Trigger:</strong> {move.trigger}
+                      </div>
+                    )}
+                    <button
+                      onClick={() => handleMoveSelection(move.name)}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        background: levelUpState.selectedMoves.includes(move.name)
+                          ? 'rgba(74, 179, 129, 0.2)'
+                          : 'rgba(100, 241, 225, 0.2)',
+                        border: `1px solid ${
+                          levelUpState.selectedMoves.includes(move.name)
+                            ? 'rgba(74, 179, 129, 0.3)'
+                            : 'rgba(100, 241, 225, 0.3)'
+                        }`,
+                        borderRadius: 'var(--radius-sm)',
+                        color: levelUpState.selectedMoves.includes(move.name)
+                          ? 'var(--color-success)'
+                          : 'var(--color-neon)',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        transition: 'var(--hud-transition)',
+                      }}
+                    >
+                      {levelUpState.selectedMoves.includes(move.name) ? 'Selected' : 'Select Move'}
+                    </button>
+                  </div>
                 )}
               </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            ))}
+          </div>
+        </div>
+
+        {/* Complete Button */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '2rem',
+          }}
+        >
+          <button
+            onClick={handleComplete}
+            disabled={currentStep < 4}
+            style={{
+              padding: '1rem 2rem',
+              background: currentStep >= 4 ? 'rgba(74, 179, 129, 0.2)' : 'rgba(107, 114, 128, 0.2)',
+              border: `1px solid ${
+                currentStep >= 4 ? 'rgba(74, 179, 129, 0.3)' : 'rgba(107, 114, 128, 0.3)'
+              }`,
+              borderRadius: 'var(--radius)',
+              color: currentStep >= 4 ? 'var(--color-success)' : 'var(--color-neutral)',
+              cursor: currentStep >= 4 ? 'pointer' : 'not-allowed',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'var(--hud-transition)',
+            }}
+          >
+            <FaStar />
+            Complete Level Up
+          </button>
+        </div>
+      </div>
+    </GlassModal>
   );
 };
 

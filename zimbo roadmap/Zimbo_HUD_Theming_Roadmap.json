@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "1. Fix & Freeze",
+    "task": "Correct ArwesWrapper event listener typos; lock Panda imports.",
+    "owner": "Dev Lead",
+    "dependencies": "Current codebase",
+    "done_when": "GridLines/Dots animate; Panda classes compile."
+  },
+  {
+    "stage": "2. Tokens",
+    "task": "Expand panda.config.ts with HUD semantic tokens; enforce motion tokens.",
+    "owner": "UI Dev",
+    "dependencies": "Stage 1",
+    "done_when": "No hardcoded hex colors/durations remain."
+  },
+  {
+    "stage": "3. HUDPanel + Primitives",
+    "task": "Implement HUDPanel slot recipe; convert typography/buttons to Panda.",
+    "owner": "Frontend Dev",
+    "dependencies": "Stage 2",
+    "done_when": "3 screens render only HUD components."
+  },
+  {
+    "stage": "4. Backgrounds & Audio",
+    "task": "Add GridLines/Dots backgrounds, Bleeps sounds, Animator transitions.",
+    "owner": "UI/UX Dev",
+    "dependencies": "Stage 3",
+    "done_when": "Animations/sounds work; reduced-motion disables them."
+  },
+  {
+    "stage": "5. Component Migration",
+    "task": "Migrate panels/widgets to HUD primitives; purge CSS modules.",
+    "owner": "Team",
+    "dependencies": "Stage 4",
+    "done_when": "No CSS modules in runtime UI shells."
+  },
+  {
+    "stage": "6. QA & Perf",
+    "task": "Run a11y, perf tests; update docs, PR templates.",
+    "owner": "QA + Docs",
+    "dependencies": "Stage 5",
+    "done_when": "WCAG AA passed; 60fps anims; docs reflect Panda/Arwes."
+  }
+]

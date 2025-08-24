@@ -117,7 +117,8 @@ select:focus-visible {
 
 /* Modal Backdrop Blur */
 .modal-backdrop {
-  @apply backdrop-blur-glass;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 /* Responsive Design */
@@ -146,10 +147,31 @@ select:focus-visible {
 }
 
 .glass-panel {
-  background: var(--panel-bg);
-  @apply backdrop-blur-glass;
-  border-radius: var(--hud-radius);
-  border: 1px solid var(--panel-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 /* Loading Animation */

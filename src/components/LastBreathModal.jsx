@@ -1,16 +1,10 @@
 import PropTypes from 'prop-types';
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaSkull } from 'react-icons/fa6';
-import { AnimatePresence, motion } from 'framer-motion';
-import { durations, easings, fadeScale } from '../motion/tokens';
-import { useMotionTransition, useMotionVariants } from '../motion/reduced';
-import styles from './LastBreathModal.module.css';
+import GlassModal from './ui/GlassModal';
 
 export default function LastBreathModal({ isOpen, onClose, rollDie }) {
   const [result, setResult] = useState(null);
-  const transition = useMotionTransition(durations.md, easings.standard);
-  const variants = useMotionVariants(fadeScale);
 
   useEffect(() => {
     if (isOpen) {
@@ -26,35 +20,38 @@ export default function LastBreathModal({ isOpen, onClose, rollDie }) {
   }, [isOpen, rollDie]);
 
   return (
-    <AnimatePresence>
-      {isOpen && result && (
-        <motion.div
-          className={styles.overlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={transition}
-        >
-          <motion.div
-            className={styles.modal}
-            variants={variants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={transition}
+    <GlassModal
+      isOpen={isOpen && result}
+      onClose={onClose}
+      title="Last Breath"
+      icon={<FaSkull />}
+      variant="danger"
+      maxWidth="500px"
+    >
+      {result && (
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              fontSize: '2rem',
+              fontWeight: 'bold',
+              color: '#64f1e1',
+              marginBottom: '1rem',
+            }}
           >
-            <h2 className={styles.title}>
-              <FaSkull style={{ marginRight: '4px' }} /> Last Breath
-            </h2>
-            <div className={styles.result}>Roll: {result.total}</div>
-            <div className={styles.outcome}>{result.outcome}</div>
-            <button onClick={onClose} className={styles.button}>
-              Close
-            </button>
-          </motion.div>
-        </motion.div>
+            Roll: {result.total}
+          </div>
+          <div
+            style={{
+              fontSize: '1.2rem',
+              color: '#d0d7e2',
+              marginBottom: '1.5rem',
+            }}
+          >
+            {result.outcome}
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </GlassModal>
   );
 }
 

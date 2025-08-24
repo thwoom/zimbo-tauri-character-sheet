@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { durations, easings, fadeScale } from '../motion/tokens';
-import { useMotionTransition, useMotionVariants } from '../motion/reduced';
-import styles from './StatusModal.module.css';
+import { FaSkull } from 'react-icons/fa6';
+import GlassModal from './ui/GlassModal';
 
 const StatusModal = ({
   isOpen = true,
@@ -16,77 +14,122 @@ const StatusModal = ({
   onClose,
   saveToHistory,
 }) => {
-  const transition = useMotionTransition(durations.md, easings.standard);
-  const variants = useMotionVariants(fadeScale);
-
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className={styles.statusOverlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={transition}
-        >
-          <motion.div
-            className={styles.statusModal}
-            variants={variants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={transition}
-          >
-            <h2 className={styles.statusTitle}>💀 Status & Debilities</h2>
-            <div>
-              <h3 className={styles.statusSubtitle}>Status Effects</h3>
-              <ul className={styles.statusList}>
-                {Object.keys(statusEffectTypes).map((key) => (
-                  <li key={key} className={styles.statusItem}>
-                    <label className={styles.statusLabel}>
-                      <input
-                        type="checkbox"
-                        checked={statusEffects.includes(key)}
-                        onChange={() => {
-                          saveToHistory('Status Change');
-                          onToggleStatusEffect(key);
-                        }}
-                      />{' '}
-                      {statusEffectTypes[key].name}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className={styles.statusSubtitle}>Debilities</h3>
-              <ul className={styles.statusList}>
-                {Object.keys(debilityTypes).map((key) => (
-                  <li key={key} className={styles.statusItem}>
-                    <label className={styles.statusLabel}>
-                      <input
-                        type="checkbox"
-                        checked={debilities.includes(key)}
-                        onChange={() => {
-                          saveToHistory('Debility Change');
-                          onToggleDebility(key);
-                        }}
-                      />{' '}
-                      {debilityTypes[key].name}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className={styles.statusFooter}>
-              <button className={styles.statusButton} onClick={onClose}>
-                Close
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Status & Debilities"
+      icon={<FaSkull />}
+      maxWidth="600px"
+    >
+      <div style={{ padding: '0' }}>
+        {/* Status Effects Section */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h3 style={{
+            color: '#64f1e1',
+            marginBottom: '1rem',
+            fontSize: '1.1rem',
+            borderBottom: '1px solid rgba(100, 241, 225, 0.2)',
+            paddingBottom: '0.5rem'
+          }}>
+            Status Effects
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '0.75rem'
+          }}>
+            {Object.keys(statusEffectTypes).map((key) => (
+              <label
+                key={key}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  cursor: 'pointer',
+                  padding: '0.75rem',
+                  background: statusEffects.includes(key)
+                    ? 'rgba(100, 241, 225, 0.2)'
+                    : 'rgba(255, 255, 255, 0.05)',
+                  border: `1px solid ${
+                    statusEffects.includes(key)
+                      ? 'rgba(100, 241, 225, 0.3)'
+                      : 'rgba(255, 255, 255, 0.1)'
+                  }`,
+                  borderRadius: '6px',
+                  color: statusEffects.includes(key) ? '#64f1e1' : '#d0d7e2',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={statusEffects.includes(key)}
+                  onChange={() => {
+                    saveToHistory('Status Change');
+                    onToggleStatusEffect(key);
+                  }}
+                  style={{ margin: 0 }}
+                />
+                <span style={{ fontSize: '0.9rem' }}>{statusEffectTypes[key].name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Debilities Section */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h3 style={{
+            color: '#64f1e1',
+            marginBottom: '1rem',
+            fontSize: '1.1rem',
+            borderBottom: '1px solid rgba(100, 241, 225, 0.2)',
+            paddingBottom: '0.5rem'
+          }}>
+            Debilities
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '0.75rem'
+          }}>
+            {Object.keys(debilityTypes).map((key) => (
+              <label
+                key={key}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  cursor: 'pointer',
+                  padding: '0.75rem',
+                  background: debilities.includes(key)
+                    ? 'rgba(220, 53, 69, 0.2)'
+                    : 'rgba(255, 255, 255, 0.05)',
+                  border: `1px solid ${
+                    debilities.includes(key)
+                      ? 'rgba(220, 53, 69, 0.3)'
+                      : 'rgba(255, 255, 255, 0.1)'
+                  }`,
+                  borderRadius: '6px',
+                  color: debilities.includes(key) ? '#dc3545' : '#d0d7e2',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={debilities.includes(key)}
+                  onChange={() => {
+                    saveToHistory('Debility Change');
+                    onToggleDebility(key);
+                  }}
+                  style={{ margin: 0 }}
+                />
+                <span style={{ fontSize: '0.9rem' }}>{debilityTypes[key].name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+    </GlassModal>
   );
 };
 

@@ -1,6 +1,5 @@
-import React from 'react';
-import { useTheme } from '../state/ThemeContext';
 import { useSettings } from '../state/SettingsContext';
+import { useTheme } from '../state/ThemeContext';
 
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();
@@ -8,6 +7,9 @@ const Settings = () => {
   const themeLabels = {
     legacy: 'Legacy',
     'cosmic-v2': 'Cosmic v2',
+    classic: 'Classic',
+    moebius: 'Moebius',
+    cyberpunk: 'Cyberpunk',
   };
 
   return (

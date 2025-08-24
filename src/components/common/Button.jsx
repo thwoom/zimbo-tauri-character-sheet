@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
-import React from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { useReducedMotion } from '../../motion/reduced';
 import { spring } from '../../motion/tokens';
-import styles from './Button.module.css';
+import { css } from '../../styled-system/css';
 
 export default function Button({ className = '', type = 'button', children, ...props }) {
   const reduce = useReducedMotion();
@@ -14,7 +13,31 @@ export default function Button({ className = '', type = 'button', children, ...p
   return (
     <motion.button
       type={type}
-      className={`${styles.button} ${className}`}
+      className={`${css({
+        backgroundColor: 'surface',
+        color: 'text',
+        border: '1px solid',
+        borderColor: 'primary',
+        borderRadius: 'md',
+        padding: 'sm',
+        fontSize: 'sm',
+        fontWeight: 'medium',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          backgroundColor: 'primary',
+          color: 'background',
+        },
+        '&:focus': {
+          outline: '2px solid',
+          outlineColor: 'accent',
+          outlineOffset: '2px',
+        },
+        '&:disabled': {
+          opacity: 0.5,
+          cursor: 'not-allowed',
+        },
+      })} ${className}`}
       whileHover={hover}
       whileTap={tap}
       transition={transition}

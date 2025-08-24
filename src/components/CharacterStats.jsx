@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
+import { css } from '../styled-system/css';
 import { resourceColors } from '../styles/colorMap.js';
-import styles from './CharacterStats.module.css';
 
 const CharacterStats = ({
   character,
@@ -9,26 +9,80 @@ const CharacterStats = ({
   totalArmor,
   setShowLevelUpModal,
   setRollResult,
-  setSessionNotes,
-  clearRollHistory,
+  setSessionNotes = () => {},
+  clearRollHistory = () => {},
 }) => {
   return (
-    <div className={styles.panel}>
-      <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
-      <div className={styles.statsGrid}>
+    <div
+      className={css({
+        background: 'rgba(2, 30, 38, 0.8)',
+        border: '1px solid rgba(100, 241, 225, 0.3)',
+        borderRadius: '8px',
+        padding: '1rem',
+        marginBottom: '1rem',
+        backdropFilter: 'blur(10px)',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
+      })}
+    >
+      <div
+        className={css({
+          fontSize: '1.1rem',
+          fontWeight: 'bold',
+          color: '#64f1e1',
+          marginBottom: '1rem',
+          textAlign: 'center',
+          borderBottom: '1px solid rgba(100, 241, 225, 0.2)',
+          paddingBottom: '0.5rem',
+        })}
+      >
+        ⚡ Stats & Health
+      </div>
+      <div
+        className={css({
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+          gap: 'sm',
+          marginBottom: 'md',
+        })}
+      >
         {Object.entries(character.stats).map(([stat, data]) => (
-          <div key={stat} className={styles.statItem}>
-            <div className={styles.statName}>{stat}</div>
-            <div className={styles.statValue}>
+          <div
+            key={stat}
+            className={css({
+              textAlign: 'center',
+              padding: 'xs',
+              border: '1px solid',
+              borderColor: 'muted',
+              borderRadius: 'sm',
+            })}
+          >
+            <div
+              className={css({
+                fontSize: 'sm',
+                fontWeight: 'bold',
+                color: 'text',
+                marginBottom: 'xs',
+              })}
+            >
+              {stat}
+            </div>
+            <div
+              className={css({
+                fontSize: 'lg',
+                color: 'primary',
+              })}
+            >
               {data.score} ({data.mod >= 0 ? '+' : ''}
               {data.mod})
             </div>
           </div>
         ))}
       </div>
-      {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+      {/* HP Bar */}
       <div
-        className={styles.hpBarContainer}
+        className={css({
+          marginBottom: 'md',
+        })}
         role="progressbar"
         tabIndex={3}
         aria-label="Health points"
@@ -37,14 +91,46 @@ const CharacterStats = ({
         aria-valuemax={character.maxHp}
       >
         <div
-          className={styles.hpFill}
-          style={{ width: `${(character.hp / character.maxHp) * 100}%` }}
-        />
+          className={css({
+            width: '100%',
+            height: '20px',
+            backgroundColor: 'surface',
+            border: '1px solid',
+            borderColor: 'muted',
+            borderRadius: 'sm',
+            overflow: 'hidden',
+            marginBottom: 'xs',
+          })}
+        >
+          <div
+            className={css({
+              height: '100%',
+              backgroundColor: 'secondary',
+              transition: 'width 0.3s ease',
+            })}
+            style={{ width: `${(character.hp / character.maxHp) * 100}%` }}
+          />
+        </div>
+        <div
+          className={css({
+            textAlign: 'center',
+            fontSize: 'sm',
+            color: 'text',
+          })}
+        >
+          HP: {character.hp}/{character.maxHp} | Armor: {totalArmor}
+        </div>
       </div>
-      <div className={styles.centerText}>
-        HP: {character.hp}/{character.maxHp} | Armor: {totalArmor}
-      </div>
-      <div className={styles.controls}>
+
+      {/* HP Controls */}
+      <div
+        className={css({
+          display: 'flex',
+          gap: 'sm',
+          marginBottom: 'md',
+          justifyContent: 'center',
+        })}
+      >
         <button
           onClick={() => {
             saveToHistory('HP Change');
@@ -53,7 +139,19 @@ const CharacterStats = ({
               hp: Math.min(prev.maxHp, prev.hp + 1),
             }));
           }}
-          className={styles.button}
+          className={css({
+            padding: 'xs',
+            paddingX: 'sm',
+            backgroundColor: 'primary',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'sm',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
         >
           +1 HP
         </button>
@@ -65,14 +163,28 @@ const CharacterStats = ({
               hp: Math.max(0, prev.hp - 1),
             }));
           }}
-          className={`${styles.button} ${styles.buttonRed}`}
+          className={css({
+            padding: 'xs',
+            paddingX: 'sm',
+            backgroundColor: 'secondary',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'sm',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
         >
           -1 HP
         </button>
       </div>
-      {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
+      {/* XP Bar */}
       <div
-        className={styles.xpBarContainer}
+        className={css({
+          marginBottom: 'md',
+        })}
         role="progressbar"
         tabIndex={4}
         aria-label="Experience points"
@@ -81,14 +193,47 @@ const CharacterStats = ({
         aria-valuemax={character.xpNeeded}
       >
         <div
-          className={styles.xpFill}
-          style={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}
-        />
+          className={css({
+            width: '100%',
+            height: '20px',
+            backgroundColor: 'surface',
+            border: '1px solid',
+            borderColor: 'muted',
+            borderRadius: 'sm',
+            overflow: 'hidden',
+            marginBottom: 'xs',
+          })}
+        >
+          <div
+            className={css({
+              height: '100%',
+              backgroundColor: 'accent',
+              transition: 'width 0.3s ease',
+            })}
+            style={{ width: `${(character.xp / character.xpNeeded) * 100}%` }}
+          />
+        </div>
+        <div
+          className={css({
+            textAlign: 'center',
+            fontSize: 'sm',
+            color: 'text',
+          })}
+          data-testid="xp-display"
+        >
+          XP: {character.xp}/{character.xpNeeded} (Level {character.level})
+        </div>
       </div>
-      <div className={styles.centerText} data-testid="xp-display">
-        XP: {character.xp}/{character.xpNeeded} (Level {character.level})
-      </div>
-      <div className={styles.controls}>
+
+      {/* XP Controls */}
+      <div
+        className={css({
+          display: 'flex',
+          gap: 'sm',
+          marginBottom: 'md',
+          justifyContent: 'center',
+        })}
+      >
         <button
           onClick={() =>
             setCharacter((prev) => ({
@@ -97,7 +242,19 @@ const CharacterStats = ({
               xpNeeded: prev.level + 7,
             }))
           }
-          className={styles.button}
+          className={css({
+            padding: 'xs',
+            paddingX: 'sm',
+            backgroundColor: 'primary',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'sm',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
           data-testid="increment-xp"
         >
           +1 XP
@@ -110,7 +267,19 @@ const CharacterStats = ({
               xpNeeded: prev.level + 7,
             }))
           }
-          className={`${styles.button} ${styles.buttonRed}`}
+          className={css({
+            padding: 'xs',
+            paddingX: 'sm',
+            backgroundColor: 'secondary',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'sm',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
         >
           -1 XP
         </button>
@@ -118,7 +287,20 @@ const CharacterStats = ({
       {import.meta.env.DEV && (
         <button
           onClick={() => setShowLevelUpModal(true)}
-          className={`${styles.button} ${styles.devButton}`}
+          className={css({
+            padding: 'sm',
+            backgroundColor: 'accent',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'md',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            fontWeight: 'medium',
+            marginBottom: 'sm',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
         >
           Open Level Up Test Modal
         </button>
@@ -126,13 +308,44 @@ const CharacterStats = ({
       {character.xp >= character.xpNeeded && (
         <button
           onClick={() => setShowLevelUpModal(true)}
-          className={`${styles.button} ${styles.levelUpButton}`}
+          className={css({
+            padding: 'sm',
+            backgroundColor: 'primary',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'md',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            fontWeight: 'bold',
+            marginBottom: 'sm',
+            animation: 'pulse 2s infinite',
+            '&:hover': {
+              opacity: 0.8,
+            },
+          })}
         >
           🎉 LEVEL UP AVAILABLE!
         </button>
       )}
-      <div className={styles.chronoContainer}>
-        <div className={`${styles.centerText} ${styles.chronoRow}`}>
+      <div
+        className={css({
+          marginBottom: 'md',
+          padding: 'sm',
+          border: '1px solid',
+          borderColor: 'primary',
+          borderRadius: 'md',
+          backgroundColor: 'surface',
+        })}
+      >
+        <div
+          className={css({
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'sm',
+            marginBottom: 'sm',
+          })}
+        >
           <button
             aria-label="Decrease Chrono-Retcon"
             onClick={() =>
@@ -144,11 +357,31 @@ const CharacterStats = ({
                 },
               }))
             }
-            className={styles.minusButton}
+            className={css({
+              padding: 'xs',
+              paddingX: 'sm',
+              backgroundColor: 'secondary',
+              color: 'background',
+              border: 'none',
+              borderRadius: 'sm',
+              cursor: 'pointer',
+              fontSize: 'sm',
+              '&:hover': {
+                opacity: 0.8,
+              },
+            })}
           >
             -1
           </button>
-          <span>Chrono-Retcon Uses: {character.resources.chronoUses}</span>
+          <span
+            className={css({
+              fontSize: 'sm',
+              color: 'text',
+              fontWeight: 'medium',
+            })}
+          >
+            Chrono-Retcon Uses: {character.resources.chronoUses}
+          </span>
           <button
             aria-label="Increase Chrono-Retcon"
             onClick={() =>
@@ -160,7 +393,19 @@ const CharacterStats = ({
                 },
               }))
             }
-            className={styles.plusButton}
+            className={css({
+              padding: 'xs',
+              paddingX: 'sm',
+              backgroundColor: 'primary',
+              color: 'background',
+              border: 'none',
+              borderRadius: 'sm',
+              cursor: 'pointer',
+              fontSize: 'sm',
+              '&:hover': {
+                opacity: 0.8,
+              },
+            })}
           >
             +1
           </button>
@@ -183,7 +428,24 @@ const CharacterStats = ({
             }
           }}
           disabled={character.resources.chronoUses === 0}
-          className={styles.chronoButton}
+          className={css({
+            width: '100%',
+            padding: 'sm',
+            backgroundColor: 'accent',
+            color: 'background',
+            border: 'none',
+            borderRadius: 'sm',
+            cursor: 'pointer',
+            fontSize: 'sm',
+            fontWeight: 'medium',
+            '&:hover': {
+              opacity: 0.8,
+            },
+            '&:disabled': {
+              opacity: 0.5,
+              cursor: 'not-allowed',
+            },
+          })}
         >
           ⏰ Use Chrono-Retcon
         </button>
@@ -195,14 +457,52 @@ const CharacterStats = ({
         { key: 'rations', label: 'Rations', max: 5 },
         { key: 'advGear', label: 'Adventuring Gear', max: 5 },
       ].map(({ key, label, max }) => (
-        <div key={key} className={styles.resourceRow}>
-          <div className={styles.resourceHeader}>
-            <span className={styles.resourceLabel}>{label}:</span>
-            <span className={styles.resourceValue} style={{ color: resourceColors[key] }}>
+        <div
+          key={key}
+          className={css({
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 'sm',
+            marginBottom: 'xs',
+            border: '1px solid',
+            borderColor: 'muted',
+            borderRadius: 'sm',
+            backgroundColor: 'surface',
+          })}
+        >
+          <div
+            className={css({
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'sm',
+            })}
+          >
+            <span
+              className={css({
+                fontSize: 'sm',
+                color: 'text',
+                fontWeight: 'medium',
+              })}
+            >
+              {label}:
+            </span>
+            <span
+              className={css({
+                fontSize: 'sm',
+                fontWeight: 'bold',
+              })}
+              style={{ color: resourceColors[key] }}
+            >
               {character.resources[key]}/{max}
             </span>
           </div>
-          <div className={styles.resourceButtons}>
+          <div
+            className={css({
+              display: 'flex',
+              gap: 'xs',
+            })}
+          >
             <button
               onClick={() =>
                 setCharacter((prev) => ({
@@ -213,7 +513,19 @@ const CharacterStats = ({
                   },
                 }))
               }
-              className={styles.minusButton}
+              className={css({
+                padding: 'xs',
+                paddingX: 'sm',
+                backgroundColor: 'secondary',
+                color: 'background',
+                border: 'none',
+                borderRadius: 'sm',
+                cursor: 'pointer',
+                fontSize: 'sm',
+                '&:hover': {
+                  opacity: 0.8,
+                },
+              })}
             >
               -1
             </button>
@@ -227,7 +539,19 @@ const CharacterStats = ({
                   },
                 }))
               }
-              className={styles.plusButton}
+              className={css({
+                padding: 'xs',
+                paddingX: 'sm',
+                backgroundColor: 'primary',
+                color: 'background',
+                border: 'none',
+                borderRadius: 'sm',
+                cursor: 'pointer',
+                fontSize: 'sm',
+                '&:hover': {
+                  opacity: 0.8,
+                },
+              })}
             >
               +1
             </button>
@@ -235,8 +559,27 @@ const CharacterStats = ({
         </div>
       ))}
       {character.resources.paradoxPoints >= 3 && (
-        <div className={styles.warningBox}>
-          <div className={styles.warningText}>⚠️ REALITY UNSTABLE! ⚠️</div>
+        <div
+          className={css({
+            padding: 'sm',
+            marginBottom: 'md',
+            backgroundColor: 'secondary',
+            border: '2px solid',
+            borderColor: 'secondary',
+            borderRadius: 'md',
+            textAlign: 'center',
+            animation: 'pulse 1s infinite',
+          })}
+        >
+          <div
+            className={css({
+              fontSize: 'sm',
+              fontWeight: 'bold',
+              color: 'background',
+            })}
+          >
+            ⚠️ REALITY UNSTABLE! ⚠️
+          </div>
         </div>
       )}
       <button
@@ -255,7 +598,21 @@ const CharacterStats = ({
           clearRollHistory();
           setRollResult('🔄 All resources restored!');
         }}
-        className={styles.resetButton}
+        className={css({
+          width: '100%',
+          padding: 'sm',
+          backgroundColor: 'accent',
+          color: 'background',
+          border: 'none',
+          borderRadius: 'md',
+          cursor: 'pointer',
+          fontSize: 'sm',
+          fontWeight: 'medium',
+          marginTop: 'md',
+          '&:hover': {
+            opacity: 0.8,
+          },
+        })}
       >
         🔄 Reset All Resources
       </button>
@@ -280,11 +637,6 @@ CharacterStats.propTypes = {
   setRollResult: PropTypes.func.isRequired,
   setSessionNotes: PropTypes.func,
   clearRollHistory: PropTypes.func,
-};
-
-CharacterStats.defaultProps = {
-  setSessionNotes: () => {},
-  clearRollHistory: () => {},
 };
 
 export default CharacterStats;

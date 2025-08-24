@@ -1,43 +1,44 @@
-import React, { useState, useEffect, lazy, Suspense, useRef } from 'react';
-import './App.css';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
+  FaArrowRotateLeft,
+  FaBoxOpen,
+  FaFlagCheckered,
   FaMeteor,
   FaRadiation,
-  FaBoxOpen,
-  FaUserAstronaut,
   FaSatellite,
-  FaArrowRotateLeft,
-  FaFlagCheckered,
+  FaUserAstronaut,
 } from 'react-icons/fa6';
-import CharacterStats from './components/CharacterStats';
-import DiceRoller from './components/DiceRoller';
-import FloatingDiceButton from './components/FloatingDiceButton';
-import DiceRollerModal from './components/DiceRollerModal';
-import GameModals from './components/GameModals';
-import InventoryPanel from './components/InventoryPanel';
-import SessionNotes from './components/SessionNotes';
-import CharacterHUD from './components/CharacterHUD/CharacterHUD';
-import Settings from './components/Settings';
-import CommandPalette from './components/CommandPalette';
-import CharacterSwitcher from './components/CharacterSwitcher';
+import './App.css';
 import AppVersion from './components/AppVersion';
-import DiagnosticOverlay from './components/DiagnosticOverlay';
+import CharacterHUD from './components/CharacterHUD/CharacterHUD';
+import CharacterStats from './components/CharacterStatsNew';
+import CharacterSwitcher from './components/CharacterSwitcher';
+import CommandPalette from './components/CommandPalette';
 import Button from './components/common/Button';
 import ButtonGroup from './components/common/ButtonGroup';
+import DiagnosticOverlay from './components/DiagnosticOverlay';
+import DiceRollerModal from './components/DiceRollerModal';
+import DiceRoller from './components/DiceRollerNew';
+import FloatingDiceButton from './components/FloatingDiceButton';
+import GameModals from './components/GameModals';
+import GlassDemo from './components/GlassDemo';
+import InventoryPanel from './components/InventoryPanel';
+import PrintableSheet from './components/PrintableSheet.jsx';
+import SessionNotes from './components/SessionNotesNew';
+import Settings from './components/Settings';
+import VersionHistoryModal from './components/VersionHistoryModal';
 import useDiceRoller from './hooks/useDiceRoller';
 import useInventory from './hooks/useInventory';
 import useModal from './hooks/useModal.js';
 import useStatusEffects from './hooks/useStatusEffects.js';
 import useUndo from './hooks/useUndo.js';
-import { statusEffectTypes, debilityTypes, RULEBOOK } from './state/character';
+import { debilityTypes, RULEBOOK, statusEffectTypes } from './state/character';
 import { useCharacter } from './state/CharacterContext';
 import { useSettings } from './state/SettingsContext';
-import styles from './styles/AppStyles.module.css';
+import { css } from './styled-system/css';
 import './styles/print.css';
-import safeLocalStorage from './utils/safeLocalStorage.js';
 import { isCompactWidth } from './utils/responsive.js';
-import VersionHistoryModal from './components/VersionHistoryModal';
-import PrintableSheet from './components/PrintableSheet.jsx';
+import safeLocalStorage from './utils/safeLocalStorage.js';
 
 const PerformanceHud =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_PERFORMANCE_HUD === 'true'
@@ -71,6 +72,7 @@ function App() {
   const [showVersionsModal, setShowVersionsModal] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [showDiceRollerModal, setShowDiceRollerModal] = useState(false);
+  const [showGlassDemo, setShowGlassDemo] = useState(false);
   const [versions, setVersions] = useState(() => {
     try {
       const raw = localStorage.getItem('characterVersions');
@@ -257,23 +259,92 @@ function App() {
 
   return (
     <div
-      className={`${styles.container} ${getActiveVisualEffects()} ${isDragActive ? styles.dragActive : ''}`}
+      className={css({
+        minHeight: '100vh',
+        backgroundColor: 'background',
+        color: 'text',
+        padding: 'md',
+        fontFamily: 'body',
+        fontSize: 'sm',
+        fontWeight: 'normal',
+        ...(isDragActive && {
+          outline: '3px dashed',
+          outlineColor: 'accent',
+          outlineOffset: '6px',
+        }),
+      })}
     >
-      <div className={styles.innerContainer}>
+      <div
+        className={css({
+          width: '100%',
+          margin: '0 auto',
+        })}
+      >
         {/* Header */}
-        <div ref={headerRef} className={styles.header} style={{ background: getHeaderColor() }}>
-          <div className={styles.headerTop}>
+        <div
+          ref={headerRef}
+          className={css({
+            textAlign: 'center',
+            marginBottom: 'md',
+            padding: 'md',
+            borderRadius: 'lg',
+            border: '2px solid',
+            borderColor: 'primary',
+            backgroundColor: 'surface',
+            boxShadow: '0 0 20px rgba(0, 217, 255, 0.3)',
+            transition: 'all 0.3s ease',
+          })}
+          style={{ background: getHeaderColor() }}
+        >
+          <div
+            className={css({
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            })}
+          >
             <CharacterSwitcher />
             <div>
               {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
-              <h1 className={styles.title} tabIndex={1}>
+              <h1
+                className={css({
+                  fontFamily: 'heading',
+                  fontSize: 'xl',
+                  fontWeight: 'bold',
+                  marginBottom: 'md',
+                  color: 'text',
+                  textShadow: '0 0 10px rgb(0, 217, 255)',
+                  '&:focus': {
+                    outline: '2px solid',
+                    outlineColor: 'primary',
+                    outlineOffset: '2px',
+                  },
+                })}
+                tabIndex={1}
+              >
                 ZIMBO – The Time-Bound Juggernaut
               </h1>
-              <div className={styles.subHeader}>
+              <div
+                className={css({
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'sm',
+                })}
+              >
                 <p>Barbarian-Wizard Hybrid | Level {character.level} | Neutral Good</p>
                 <p>Rulebook: {RULEBOOK}</p>
                 {character.statusEffects.length > 0 && (
-                  <div className={styles.statusEffectsContainer}>
+                  <div
+                    className={css({
+                      display: 'flex',
+                      gap: 'xs',
+                      padding: 'xs',
+                      paddingX: 'sm',
+                      backgroundColor: 'surface',
+                      borderRadius: 'full',
+                    })}
+                  >
                     {character.statusEffects.map((effect, idx) => {
                       const Icon = statusEffectTypes[effect]?.icon;
                       const stacks = character.statusEffects.filter((e) => e === effect).length;
@@ -284,7 +355,16 @@ function App() {
                           tabIndex={5 + idx}
                           role="status"
                           aria-label={`${statusEffectTypes[effect]?.name}: ${statusEffectTypes[effect]?.description}. Stack count: ${stacks}`}
-                          className={styles.statusEffectIcon}
+                          className={css({
+                            fontSize: 'lg',
+                            animation: 'pulse 2s infinite',
+                            '&:focus': {
+                              outline: '2px solid',
+                              outlineColor: 'primary',
+                              outlineOffset: '2px',
+                              borderRadius: 'sm',
+                            },
+                          })}
                         >
                           {Icon && <Icon />}
                         </span>
@@ -298,62 +378,52 @@ function App() {
               <Button
                 onClick={undoLastAction}
                 disabled={character.actionHistory.length === 0}
-                className={styles.undoButton}
                 title="Undo last action"
               >
-                <FaArrowRotateLeft className={styles.icon} /> Undo
+                <FaArrowRotateLeft /> Undo
               </Button>
-              <Button onClick={() => setShowDamageModal(true)} className={styles.damageButton}>
-                <FaMeteor className={styles.icon} /> Take Damage
+              <Button onClick={() => setShowDamageModal(true)}>
+                <FaMeteor /> Take Damage
               </Button>
-              <Button onClick={() => setShowStatusModal(true)} className={styles.statusButton}>
-                <FaRadiation className={styles.icon} /> Effects (
-                {statusEffects.length + debilities.length})
+              <Button onClick={() => setShowStatusModal(true)}>
+                <FaRadiation /> Effects ({statusEffects.length + debilities.length})
               </Button>
-              <Button
-                onClick={() => setShowInventoryModal(true)}
-                className={styles.inventoryButton}
-                data-testid="open-inventory"
-              >
-                <FaBoxOpen className={styles.icon} /> Inventory
+              <Button onClick={() => setShowInventoryModal(true)} data-testid="open-inventory">
+                <FaBoxOpen /> Inventory
               </Button>
-              <Button onClick={bondsModal.open} className={styles.bondsButton}>
-                <FaUserAstronaut className={styles.icon} /> Bonds (
-                {character.bonds.filter((b) => !b.resolved).length})
+              <Button onClick={bondsModal.open}>
+                <FaUserAstronaut /> Bonds ({character.bonds.filter((b) => !b.resolved).length})
               </Button>
-              <Button onClick={() => setShowPrint(true)} className={styles.bondsButton}>
-                🖨️ Print
+              <Button onClick={() => setShowPrint(true)}>🖨️ Print</Button>
+              <Button onClick={() => setShowEndSessionModal(true)}>
+                <FaFlagCheckered /> End Session
               </Button>
-              <Button
-                onClick={() => setShowEndSessionModal(true)}
-                className={styles.endSessionButton}
-              >
-                <FaFlagCheckered className={styles.icon} /> End Session
+              <Button onClick={() => setShowVersionsModal(true)}>📜 Versions</Button>
+              <Button onClick={() => setShowExportModal(true)} data-testid="open-export">
+                <FaSatellite /> Export/Save
               </Button>
-              <Button onClick={() => setShowVersionsModal(true)} className={styles.bondsButton}>
-                📜 Versions
-              </Button>
-              <Button
-                onClick={() => setShowExportModal(true)}
-                className={styles.exportButton}
-                data-testid="open-export"
-              >
-                <FaSatellite className={styles.icon} /> Export/Save
-              </Button>
+              <Button onClick={() => setShowGlassDemo(true)}>🪟 Glass Demo</Button>
               <Settings />
             </ButtonGroup>
           </div>
         </div>
 
         {/* Main Grid Layout */}
-        <div className={styles.grid}>
+        <div
+          className={css({
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'lg',
+            marginBottom: 'lg',
+          })}
+        >
           {/* Avatar Panel */}
-          <div className={styles.hud}>
+          <div>
             <CharacterHUD onMountChange={setHudMounted} />
           </div>
 
           {/* Stats Panel */}
-          <div className={styles.stats}>
+          <div>
             <CharacterStats
               character={character}
               setCharacter={setCharacter}
@@ -367,7 +437,7 @@ function App() {
           </div>
 
           {/* Quick Inventory Panel */}
-          <div className={styles.inventory}>
+          <div>
             <InventoryPanel
               character={character}
               setCharacter={setCharacter}
@@ -379,12 +449,26 @@ function App() {
           </div>
 
           {/* Session Notes Panel */}
-          <div className={styles.notes}>
+          <div>
             <SessionNotes
               sessionNotes={sessionNotes}
               setSessionNotes={setSessionNotes}
               compactMode={compactMode}
               setCompactMode={setCompactMode}
+            />
+          </div>
+
+          {/* Dice Roller Panel */}
+          <div>
+            <DiceRoller
+              character={character}
+              rollDice={rollDice}
+              rollResult={rollResult}
+              rollHistory={rollHistory}
+              equippedWeaponDamage={equippedWeaponDamage}
+              rollModal={rollModal}
+              rollModalData={rollModalData}
+              aidModal={aidModal}
             />
           </div>
         </div>
@@ -529,6 +613,37 @@ function App() {
           <PerformanceHud />
         </Suspense>
       )}
+
+      {/* Glass Demo Modal */}
+      {showGlassDemo && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.8)',
+            zIndex: 1000,
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+          onClick={() => setShowGlassDemo(false)}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 'min(1200px, 95vw)',
+              height: 'min(800px, 90vh)',
+              overflow: 'auto',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GlassDemo />
+          </div>
+        </div>
+      )}
+
       <AppVersion />
     </div>
   );

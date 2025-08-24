@@ -1,0 +1,40 @@
+{
+  "cursor_task": {
+    "title": "Enable Arwes HUD Backgrounds with Panda Tokens",
+    "description": "Create background components, mount under a transparent shell, ensure StrictMode is off for Arwes subtree.",
+    "operations": [
+      {
+        "type": "write",
+        "path": "src/ui/ArwesBackgroundProbe.tsx",
+        "content": "import React from 'react'\nimport { Animator } from '@arwes/react-animator'\nimport { GridLines, Dots } from '@arwes/react-bgs'\nimport { css } from '/styled-system/css'\n\n/**\n * Minimal, reliable Arwes background.\n * Uses Panda CSS variables for colors.\n * Always visible until we re-introduce gating.\n */\nexport function ArwesBackgroundProbe(): JSX.Element {\n  const line = 'var(--token-colors-primary, #00D9FF)'\n  const dot  = 'var(--token-colors-primary, #00D9FF)'\n\n  return (\n    <div\n      className={css({\n        position: 'absolute',\n        inset: 0,\n        pointerEvents: 'none',\n        zIndex: 0,\n        opacity: 1\n      })}\n    >\n      <Animator duration={{ enter: 0.22 }}>\n        <GridLines lineColor={line} distance={30} lineWidth={1} />\n        <Dots color={dot} distance={60} size={2} />\n      </Animator>\n    </div>\n  )\n}\n"
+      },
+      {
+        "type": "write",
+        "path": "src/ui/ArwesBackground.tsx",
+        "content": "import React from 'react'\nimport { Animator } from '@arwes/react-animator'\nimport { GridLines, Dots } from '@arwes/react-bgs'\nimport { css } from '/styled-system/css'\n\n/**\n * Production background with a11y/perf gating.\n * - Animations disabled under prefers-reduced-motion (pattern remains visible)\n * - Opacity dims on low-DPR devices, but never 0\n */\nexport function ArwesBackground(): JSX.Element {\n  const prefersReduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches\n  const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1\n  const lowPerf = dpr < 1.25\n  const opacity = prefersReduced ? 0.25 : (lowPerf ? 0.25 : 0.45)\n\n  const line = 'var(--token-colors-primary, #00D9FF)'\n  const dot  = 'var(--token-colors-primary, #00D9FF)'\n\n  return (\n    <div\n      className={css({\n        position: 'absolute',\n        inset: 0,\n        pointerEvents: 'none',\n        zIndex: 0,\n        opacity\n      })}\n    >\n      <Animator duration={{ enter: 0.22 }} disabled={prefersReduced}>\n        <GridLines lineColor={line} distance={30} lineWidth={1} />\n        <Dots color={dot} distance={60} size={2} />\n      </Animator>\n    </div>\n  )\n}\n"
+      },
+      {
+        "type": "patch",
+        "path": "src/ui/ArwesWrapper.tsx",
+        "content": "*** Begin Patch\n*** Update File: src/ui/ArwesWrapper.tsx\n@@\n-import React from 'react'\n-import { css } from '/styled-system/css'\n-// (existing imports...)\n+import React from 'react'\n+import { css } from '/styled-system/css'\n+import { ArwesBackgroundProbe } from '@/ui/ArwesBackgroundProbe'\n@@\n-export function ArwesWrapper({ children }: { children: React.ReactNode }) {\n-  return (\n-    <div className={css({ /* existing styles */ })}>\n-      {/* existing content */}\n-      {children}\n-    </div>\n-  )\n-}\n+export function ArwesWrapper({ children }: { children: React.ReactNode }) {\n+  return (\n+    <div\n+      className={css({\n+        position: 'relative',\n+        isolation: 'isolate',\n+        minHeight: '100vh',\n+        background: 'transparent'\n+      })}\n+    >\n+      <ArwesBackgroundProbe />\n+      <div className={css({ zIndex: 10 })}>\n+        {children}\n+      </div>\n+    </div>\n+  )\n+}\n*** End Patch\n"
+      },
+      {
+        "type": "verify",
+        "checks": [
+          {
+            "path": "src/ui/ArwesBackgroundProbe.tsx",
+            "includes": "export function ArwesBackgroundProbe()"
+          },
+          {
+            "path": "src/ui/ArwesBackground.tsx",
+            "includes": "export function ArwesBackground()"
+          }
+        ]
+      },
+      {
+        "type": "hint",
+        "message": "Replace <ArwesBackgroundProbe /> with <ArwesBackground /> once visuals are confirmed. Ensure src/main.tsx does not wrap the Arwes subtree in React.StrictMode."
+      }
+    ]
+  }
+}

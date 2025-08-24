@@ -1,0 +1,426 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 99998;
+  border: none;
+  cursor: pointer;
+}
+
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 241, 225, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(100, 241, 225, 0.3);
+  overflow: hidden;
+}
+
+.header {
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(100, 241, 225, 0.2);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  font-size: 24px;
+  font-family: var(--font-heading);
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.subtitle {
+  color: rgb(107, 114, 128);
+  font-size: 14px;
+  margin: 8px 0 0 0;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgb(208, 215, 226);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.content {
+  padding: 32px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+  padding: 12px 24px;
+  background-color: transparent;
+  border: none;
+  color: rgb(107, 114, 128);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  color: rgb(208, 215, 226);
+}
+
+.tab.active {
+  color: rgb(100, 241, 225);
+  border-bottom-color: rgb(100, 241, 225);
+}
+
+.tabContent {
+  min-height: 400px;
+}
+
+.overview {
+  display: grid;
+  gap: 24px;
+}
+
+.classInfo {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.classInfo h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  margin: 0 0 12px 0;
+}
+
+.description {
+  color: rgb(107, 114, 128);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.movesSummary,
+.advancedMoves {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.movesSummary h4,
+.advancedMoves h4 {
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  margin: 0 0 16px 0;
+}
+
+.movesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.moveItem {
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.moveItem strong {
+  color: rgb(100, 241, 225);
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.moveItem p {
+  color: rgb(107, 114, 128);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.mechanics {
+  display: grid;
+  gap: 24px;
+}
+
+.mechanicsSection {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectionIcon {
+  color: rgb(100, 241, 225);
+  font-size: 16px;
+}
+
+.spellSlots h4,
+.signatureWeapon h4,
+.armorOptions h4,
+.companionForm h4,
+.divineForm h4,
+.oathForm h4,
+.specializedGear h4,
+.poisonTypes h4,
+.prayerbook h4 {
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  margin: 0 0 16px 0;
+}
+
+.slotGrid,
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.slotItem {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slotLevel {
+  color: rgb(208, 215, 226);
+  font-weight: 500;
+}
+
+.slotCount {
+  color: rgb(100, 241, 225);
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.optionItem {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: rgb(208, 215, 226);
+  font-size: 14px;
+}
+
+.tags {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.tag {
+  padding: 2px 8px;
+  background-color: rgba(100, 241, 225, 0.2);
+  border: 1px solid rgba(100, 241, 225, 0.3);
+  border-radius: 4px;
+  color: rgb(100, 241, 225);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(208, 215, 226);
+  margin-bottom: 8px;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgb(208, 215, 226);
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: rgb(100, 241, 225);
+  box-shadow: 0 0 0 2px rgba(100, 241, 225, 0.2);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkboxItem:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.checkboxItem input[type='checkbox'] {
+  width: auto;
+  margin: 0;
+}
+
+.checkboxItem input[type='checkbox']:checked + span {
+  color: rgb(100, 241, 225);
+}
+
+.tenetList {
+  display: grid;
+  gap: 12px;
+}
+
+.tenetItem input {
+  width: 100%;
+}
+
+.spellLists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.spellList {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.spellList h5 {
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(208, 215, 226);
+  margin: 0 0 12px 0;
+}
+
+.spellList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.spellItem {
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  color: rgb(208, 215, 226);
+  font-size: 13px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal {
+    max-width: 95vw;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .slotGrid,
+  .optionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkboxGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .spellLists {
+    grid-template-columns: 1fr;
+  }
+}

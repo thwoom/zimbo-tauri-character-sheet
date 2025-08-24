@@ -5,12 +5,16 @@ export interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {}
 const Panel = React.forwardRef<HTMLDivElement, PanelProps>(({ className = '', ...props }, ref) => (
   <div
     ref={ref}
-    className={[
-      'rounded bg-glass border border-glass shadow-glass backdrop-blur-glass p-md',
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ')}
+    style={{
+      borderRadius: 'var(--radius)',
+      background: 'var(--glass-bg)',
+      border: '1px solid var(--glass-border)',
+      boxShadow: 'var(--shadow-glass)',
+      backdropFilter: 'blur(var(--glass-blur))',
+      WebkitBackdropFilter: 'blur(var(--glass-blur))',
+      padding: 'var(--space-md)',
+    }}
+    className={className}
     {...props}
   />
 ));

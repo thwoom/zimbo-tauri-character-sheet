@@ -1,0 +1,345 @@
+/* Timey Wimey Theme - Temporal and Dimensional Effects */
+:root[data-augmented-theme='timey-wimey'] {
+  /* Import temporal fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
+
+  /* Base temporal variables */
+  --font-heading: 'Orbitron', 'Montserrat', sans-serif;
+  --font-body: 'Exo 2', 'Inter', sans-serif;
+  --font-size-heading: 2.5rem;
+  --font-size-body: 1rem;
+  --font-size-sm: 0.75rem;
+  --font-weight-heading: 700;
+  --font-weight-body: 400;
+
+  /* Temporal spacing */
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+
+  /* Timey Wimey color palette */
+  --color-bg-start: #0a0a0f;
+  --color-bg-end: #1a1a2e;
+  --color-text: #e0e0ff;
+  --color-accent: #8b5cf6;
+  --color-accent-dark: #7c3aed;
+  --color-accent-darker: #6d28d9;
+  --color-accent-rgb: 139, 92, 246;
+
+  /* Temporal neon colors */
+  --color-neon: #a855f7;
+  --color-neon-dark: #9333ea;
+  --shadow-neon: 0 0 15px var(--color-neon);
+
+  /* Dimensional colors */
+  --color-dimensional: #06b6d4;
+  --color-dimensional-dark: #0891b2;
+  --color-dimensional-rgb: 6, 182, 212;
+
+  /* Temporal gradients */
+  --temporal-gradient: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #312e81 100%);
+  --dimensional-gradient: linear-gradient(135deg, #0a0a0f 0%, #1e1b4b 50%, #1e40af 100%);
+
+  /* Glassmorphism for timey-wimey */
+  --glass-bg: rgba(139, 92, 246, 0.05);
+  --glass-border: rgba(139, 92, 246, 0.3);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(139, 92, 246, 0.1);
+  --backdrop-blur: blur(16px);
+
+  /* Panel and overlay variables */
+  --panel-bg: rgba(0, 0, 0, 0.4);
+  --panel-border: rgba(139, 92, 246, 0.2);
+  --panel-shadow: rgba(0, 0, 0, 0.6);
+  --overlay-darker: rgba(0, 0, 0, 0.5);
+  --overlay-dark: rgba(0, 0, 0, 0.3);
+
+  /* Temporal status effects */
+  --overlay-poison: rgba(139, 92, 246, 0.15);
+  --overlay-burning: rgba(239, 68, 68, 0.15);
+  --overlay-shocked-blue: rgba(59, 130, 246, 0.15);
+  --overlay-shocked-gold: rgba(245, 158, 11, 0.15);
+  --overlay-frozen: rgba(6, 182, 212, 0.15);
+  --overlay-blessed: rgba(34, 197, 94, 0.15);
+  --overlay-confused: rgba(168, 85, 247, 0.15);
+  --overlay-weakened: rgba(107, 114, 128, 0.15);
+  --overlay-invisible: rgba(255, 255, 255, 0.05);
+  --overlay-success: rgba(34, 197, 94, 0.2);
+  --overlay-warning: rgba(245, 158, 11, 0.2);
+  --overlay-danger: rgba(239, 68, 68, 0.2);
+  --overlay-info: rgba(59, 130, 246, 0.2);
+
+  /* Equipment states */
+  --equipped-item-border: #8b5cf6;
+  --equipped-item-bg: rgba(139, 92, 246, 0.15);
+  --unequipped-item-border: #6b7280;
+
+  /* Status indicators */
+  --status-healthy-start: #34d399;
+  --status-healthy-end: #10b981;
+  --status-healthy-shadow: rgba(52, 211, 153, 0.5);
+  --status-injured-start: #f59e0b;
+  --status-injured-end: #d97706;
+  --status-injured-shadow: rgba(245, 158, 11, 0.5);
+  --status-critical-start: #ef4444;
+  --status-critical-end: #dc2626;
+  --status-critical-shadow: rgba(239, 68, 68, 0.5);
+
+  /* Special effects */
+  --critical-hit-start: #34d399;
+  --critical-hit-end: #10b981;
+  --critical-failure-start: #ef4444;
+  --critical-failure-end: #dc2626;
+
+  /* Text effects */
+  --text-glow: rgba(139, 92, 246, 0.6);
+
+  /* Loading effects */
+  --loading-shimmer: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+
+  /* Success/Warning/Error states */
+  --success-border: #34d399;
+  --success-shadow: rgba(52, 211, 153, 0.4);
+  --warning-border: #f59e0b;
+  --warning-shadow: rgba(245, 158, 11, 0.4);
+  --error-border: #ef4444;
+  --error-shadow: rgba(239, 68, 68, 0.4);
+
+  /* Modal backgrounds */
+  --color-bg-primary: var(--panel-bg);
+  --color-modal-bg: var(--panel-bg);
+  --color-modal-bg-secondary: rgba(139, 92, 246, 0.05);
+  --color-modal-bg-dark: rgba(0, 0, 0, 0.7);
+
+  /* Semantic tokens for compatibility */
+  --fg: var(--color-text);
+  --bg: var(--color-bg-start);
+  --accent: var(--color-accent);
+  --radius: 0.75rem;
+  --radius-sm: 0.375rem;
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --shadow: 0 0 10px var(--panel-shadow);
+
+  /* HUD layout tokens */
+  --hud-radius: 0.75rem;
+  --hud-radius-sm: 0.375rem;
+  --hud-spacing: 1.25rem;
+  --hud-spacing-sm: 0.625rem;
+  --hud-transition-fast: all 150ms ease-in-out;
+  --hud-transition: all 300ms ease-in-out;
+  --hud-transition-slow: all 500ms ease-in-out;
+
+  /* Temporal animation variables */
+  --temporal-pulse-duration: 4s;
+  --dimensional-shift-duration: 5s;
+  --quantum-circle-duration: 3s;
+  --holographic-scan-duration: 3s;
+  --neon-flicker-duration: 1.5s;
+  --cyberpunk-pulse-duration: 2s;
+}
+
+/* Temporal animations */
+@keyframes temporal-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 32px rgba(139, 92, 246, 0.4),
+      0 0 0 1px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 8px 32px rgba(139, 92, 246, 0.8),
+      0 0 0 1px rgba(139, 92, 246, 0.4);
+  }
+}
+
+@keyframes dimensional-shift {
+  0%,
+  100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    box-shadow:
+      0 8px 32px rgba(6, 182, 212, 0.4),
+      0 0 0 1px rgba(6, 182, 212, 0.2);
+  }
+  25% {
+    transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+    box-shadow:
+      0 8px 32px rgba(6, 182, 212, 0.6),
+      0 0 0 1px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(4deg);
+    box-shadow:
+      0 8px 32px rgba(6, 182, 212, 0.8),
+      0 0 0 1px rgba(6, 182, 212, 0.4);
+  }
+  75% {
+    transform: perspective(1000px) rotateX(-2deg) rotateY(2deg);
+    box-shadow:
+      0 8px 32px rgba(6, 182, 212, 0.6),
+      0 0 0 1px rgba(6, 182, 212, 0.3);
+  }
+}
+
+@keyframes quantum-circle {
+  0% {
+    transform: rotate(0deg);
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    border-color: rgba(139, 92, 246, 0.8);
+  }
+  100% {
+    transform: rotate(360deg);
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes holographic-scan {
+  0% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(139, 92, 246, 0.1) 50%,
+      transparent 100%
+    );
+    background-position: -200% 0;
+  }
+  100% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(139, 92, 246, 0.1) 50%,
+      transparent 100%
+    );
+    background-position: 200% 0;
+  }
+}
+
+@keyframes neon-flicker {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(139, 92, 246, 1),
+      0 0 35px rgba(139, 92, 246, 0.5);
+  }
+}
+
+@keyframes cyberpunk-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(139, 92, 246, 0.9),
+      0 0 40px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Temporal particle effects */
+.temporal-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.temporal-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(139, 92, 246, 0.8);
+  border-radius: 50%;
+  animation: temporal-particle-float 6s infinite linear;
+}
+
+@keyframes temporal-particle-float {
+  0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(100px);
+    opacity: 0;
+  }
+}
+
+/* Dimensional portal effects */
+.dimensional-portal {
+  position: relative;
+  overflow: hidden;
+}
+
+.dimensional-portal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+  animation: dimensional-portal-pulse 4s ease-in-out infinite;
+}
+
+@keyframes dimensional-portal-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  :root[data-augmented-theme='timey-wimey'] {
+    --font-size-heading: 2.25rem;
+    --font-size-body: 0.9rem;
+    --hud-spacing: 1.125rem;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-augmented-theme='timey-wimey'] {
+    --temporal-pulse-duration: 0s;
+    --dimensional-shift-duration: 0s;
+    --quantum-circle-duration: 0s;
+    --holographic-scan-duration: 0s;
+    --neon-flicker-duration: 0s;
+    --cyberpunk-pulse-duration: 0s;
+  }
+
+  .temporal-particles,
+  .temporal-particle,
+  .dimensional-portal::before {
+    animation: none;
+  }
+}
+

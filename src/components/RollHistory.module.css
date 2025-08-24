@@ -1,0 +1,112 @@
+.container {
+  background: var(--panel-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: var(--hud-radius);
+  padding: var(--hud-spacing);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 32px var(--panel-shadow);
+  margin-top: var(--space-md);
+}
+
+.title {
+  color: var(--color-accent);
+  margin-bottom: var(--space-md);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.historyItem {
+  background: rgba(var(--color-accent-rgb), 0.1);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+  border-radius: var(--hud-radius-sm);
+  padding: var(--space-sm);
+  transition: var(--hud-transition);
+}
+
+.historyItem:hover {
+  background: rgba(var(--color-accent-rgb), 0.15);
+  border-color: rgba(var(--color-accent-rgb), 0.3);
+}
+
+.rollHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.rollLabel {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.rollTotal {
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(var(--color-accent-rgb), 0.2);
+}
+
+.rollResult {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  word-break: break-word;
+}
+
+/* Result type styling */
+.success {
+  border-left: 4px solid var(--color-success);
+}
+
+.success .rollTotal {
+  background: rgba(var(--color-success-rgb), 0.3);
+  color: var(--color-success);
+}
+
+.partial {
+  border-left: 4px solid var(--color-warning);
+}
+
+.partial .rollTotal {
+  background: rgba(var(--color-warning-rgb), 0.3);
+  color: var(--color-warning);
+}
+
+.failure {
+  border-left: 4px solid var(--color-danger);
+}
+
+.failure .rollTotal {
+  background: rgba(var(--color-danger-rgb), 0.3);
+  color: var(--color-danger);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    margin-top: var(--space-sm);
+    padding: var(--space-sm);
+  }
+  
+  .rollLabel {
+    font-size: 0.8rem;
+  }
+  
+  .rollTotal {
+    font-size: 1rem;
+  }
+  
+  .rollResult {
+    font-size: 0.8rem;
+  }
+}

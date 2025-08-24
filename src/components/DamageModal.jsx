@@ -1,21 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { FaMeteor } from 'react-icons/fa6';
-import { AnimatePresence, motion } from 'framer-motion';
 import useInventory from '../hooks/useInventory';
 import { useCharacter } from '../state/CharacterContext';
-import { durations, easings, fadeScale } from '../motion/tokens';
-import { useMotionTransition, useMotionVariants } from '../motion/reduced';
-import styles from './DamageModal.module.css';
-import Button from './common/Button';
-import ButtonGroup from './common/ButtonGroup';
+import GlassModal from './ui/GlassModal';
 
 export default function DamageModal({ isOpen, onClose, onLastBreath }) {
   const { character, setCharacter } = useCharacter();
   const [damage, setDamage] = useState('');
   const { totalArmor } = useInventory(character, setCharacter);
-  const transition = useMotionTransition(durations.md, easings.standard);
-  const variants = useMotionVariants(fadeScale);
 
   const effectiveDamage = () => {
     const dmg = parseInt(damage, 10);
@@ -43,45 +36,105 @@ export default function DamageModal({ isOpen, onClose, onLastBreath }) {
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className={styles.overlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={transition}
-        >
-          <motion.div
-            className={styles.modal}
-            variants={variants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={transition}
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Damage Calculator"
+      icon={<FaMeteor />}
+      variant="danger"
+      maxWidth="400px"
+    >
+      <div style={{ padding: '0' }}>
+        <div style={{
+          padding: '1rem',
+          background: 'rgba(220, 53, 69, 0.1)',
+          border: '1px solid rgba(220, 53, 69, 0.2)',
+          borderRadius: '8px',
+          marginBottom: '1.5rem',
+          textAlign: 'center'
+        }}>
+          <div style={{ color: '#dc3545', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            Armor: {totalArmor}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={{
+            display: 'block',
+            color: '#64f1e1',
+            marginBottom: '0.5rem',
+            fontSize: '0.9rem'
+          }}>
+            Incoming Damage:
+          </label>
+          <input
+            type="number"
+            placeholder="Enter damage amount"
+            value={damage}
+            onChange={(e) => setDamage(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '6px',
+              color: '#d0d7e2',
+              fontSize: '1rem',
+              outline: 'none'
+            }}
+          />
+        </div>
+
+        <div style={{
+          padding: '1rem',
+          background: 'rgba(100, 241, 225, 0.1)',
+          border: '1px solid rgba(100, 241, 225, 0.2)',
+          borderRadius: '8px',
+          marginBottom: '1.5rem',
+          textAlign: 'center'
+        }}>
+          <div style={{ color: '#64f1e1', fontWeight: 'bold' }}>
+            After Armor: {effectiveDamage()}
+          </div>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          gap: '1rem',
+          justifyContent: 'center'
+        }}>
+          <button
+            onClick={applyDamage}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'rgba(220, 53, 69, 0.2)',
+              border: '1px solid rgba(220, 53, 69, 0.3)',
+              borderRadius: '6px',
+              color: '#dc3545',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease'
+            }}
           >
-            <h2 className={styles.title}>
-              <FaMeteor style={{ marginRight: '4px' }} /> Damage Calculator
-            </h2>
-            <div className={styles.info}>Armor: {totalArmor}</div>
-            <input
-              type="number"
-              placeholder="Incoming damage"
-              value={damage}
-              onChange={(e) => setDamage(e.target.value)}
-              className={styles.input}
-            />
-            <div className={styles.summary}>After armor: {effectiveDamage()}</div>
-            <ButtonGroup>
-              <Button onClick={applyDamage} className={styles.applyButton}>
-                Apply
-              </Button>
-              <Button onClick={onClose}>Cancel</Button>
-            </ButtonGroup>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            Apply Damage
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '6px',
+              color: '#6b7280',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </GlassModal>
   );
 }
 

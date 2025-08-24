@@ -1,54 +1,59 @@
-import { defineConfig } from "@pandacss/dev";
+import { defineConfig } from '@pandacss/dev';
 
 export default defineConfig({
-  // Disable preflight to avoid conflicts with Arwes SVG styling
+  // Disable preflight to avoid conflicts with existing styling
   preflight: false,
-
-  // Where to look for your css declarations
-  include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
-
-  // Files to exclude
+  include: ['./src/**/*.{js,jsx,ts,tsx}'],
   exclude: [],
-
-  // Theme customization
   theme: {
     extend: {
       tokens: {
         colors: {
-          // Arwes-inspired color palette
+          // Sci-fi inspired color palette
           primary: { value: '#00d9ff' },
-          secondary: { value: '#ff0080' },
-          accent: { value: '#ffa726' },
-          background: { value: '#001114' },
-          surface: { value: '#021e26' },
-          text: { value: '#7efcf6' },
-          muted: { value: '#456c74' },
-        },
-        spacing: {
-          xs: { value: '0.25rem' },
-          sm: { value: '0.5rem' },
-          md: { value: '1rem' },
-          lg: { value: '1.5rem' },
-          xl: { value: '2rem' },
-          '2xl': { value: '3rem' },
-          '3xl': { value: '4rem' },
-        },
-        radii: {
-          none: { value: '0' },
-          sm: { value: '2px' },
-          md: { value: '4px' },
-          lg: { value: '8px' },
-          full: { value: '9999px' },
+          secondary: { value: '#00ffff' },
+          accent: { value: '#64f1e1' },
+          success: { value: '#4ab381' },
+          warning: { value: '#ffc107' },
+          danger: { value: '#dc3545' },
+          info: { value: '#17a2b8' },
+          neutral: { value: '#6b7280' },
+          'neutral-light': { value: '#d0d7e2' },
+          'neutral-dark': { value: '#374151' },
+          'bg-start': { value: '#020e26' },
+          'bg-end': { value: '#0a1a3a' },
+          'text-primary': { value: '#d0d7e2' },
+          'text-secondary': { value: '#6b7280' },
+          // Glass morphism colors
+          glass: { value: 'rgba(255, 255, 255, 0.05)' },
+          'glass-border': { value: 'rgba(95, 209, 193, 0.3)' },
+          'glass-shadow': { value: '0 8px 32px rgba(0, 0, 0, 0.3)' },
         },
         fonts: {
-          body: { value: 'system-ui, -apple-system, sans-serif' },
-          heading: { value: 'system-ui, -apple-system, sans-serif' },
-          mono: { value: 'Consolas, Monaco, monospace' },
+          heading: { value: 'var(--font-heading)' },
+          body: { value: 'var(--font-body)' },
+        },
+        spacing: {
+          sm: { value: 'var(--space-sm)' },
+          md: { value: 'var(--space-md)' },
+          lg: { value: 'var(--space-lg)' },
+        },
+        radii: {
+          sm: { value: 'var(--hud-radius-sm)' },
+          md: { value: 'var(--hud-radius)' },
+        },
+        blur: {
+          glass: { value: 'var(--glass-blur)' },
         },
       },
     },
   },
-
-  // The output directory for your css system
-  outdir: "src/styled-system",
+  utilities: {
+    extend: {
+      backdropBlur: {
+        glass: { value: 'blur(var(--glass-blur))' },
+      },
+    },
+  },
+  outdir: 'src/styled-system',
 });

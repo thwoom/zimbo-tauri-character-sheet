@@ -13,7 +13,7 @@ const CharacterStats = ({
   clearRollHistory,
 }) => {
   return (
-    <div className={styles.panel}>
+    <div className={styles.modal}>
       <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
       <div className={styles.statsGrid}>
         {Object.entries(character.stats).map(([stat, data]) => (

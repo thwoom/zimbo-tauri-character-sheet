@@ -1,10 +1,8 @@
-.panel {
-  background: var(--panel-bg);
-  @apply backdrop-blur-glass;
-  border-radius: var(--hud-radius);
+.modal {
+  background: var(--color-modal-bg);
+  border: 2px solid var(--color-accent);
+  border-radius: 15px;
   padding: var(--hud-spacing);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 8px 32px var(--panel-shadow);
 }
 
 .title {

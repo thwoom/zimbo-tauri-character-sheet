@@ -1,7 +1,7 @@
 .panel {
   background: transparent;
-  backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   border-radius: 0;
   padding: var(--hud-spacing);
   border: none;
@@ -122,8 +122,8 @@
   width: 100%;
   height: 100%;
   background: var(--color-overlay);
-  backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   z-index: 1000;
   display: flex;
   align-items: center;

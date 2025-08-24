@@ -28,8 +28,8 @@
   border-radius: 50%;
   opacity: 0.6;
   box-shadow: 0 0 4px var(--color-accent);
-  animation: star-twinkle 3s infinite;
   -webkit-animation: star-twinkle 3s infinite;
+  animation: star-twinkle 3s infinite;
 }
 
 .star:nth-child(1) {

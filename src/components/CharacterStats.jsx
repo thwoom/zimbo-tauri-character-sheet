@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import { durations, easings, fadeScale } from '../motion/tokens';
-import { resourceColors } from '../styles/colorMap.js';
 import Button from './common/Button';
 import ButtonGroup from './common/ButtonGroup';
 import styles from './CharacterStats.module.css';
@@ -198,7 +197,7 @@ const CharacterStats = ({
         <div key={key} className={styles.resourceRow}>
           <div className={styles.resourceHeader}>
             <span className={styles.resourceLabel}>{label}:</span>
-            <span className={styles.resourceValue} style={{ color: resourceColors[key] }}>
+            <span className={styles.resourceValue}>
               {character.resources[key]}/{max}
             </span>
           </div>
@@ -256,7 +255,7 @@ const CharacterStats = ({
       >
         🔄 Reset All Resources
       </Button>
-    </div>
+    </motion.div>
   );
 };
 

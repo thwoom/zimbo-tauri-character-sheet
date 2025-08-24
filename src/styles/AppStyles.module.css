@@ -463,152 +463,38 @@
 
 .hud {
   grid-area: hud;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
-}
-
-.hud::before {
-  display: none;
-}
-
-.hud::after {
-  display: none;
 }
 
 .hud:hover {
   transform: translateY(-1px);
 }
 
-.hud:hover::before {
-  display: none;
-}
-
-.hud:hover::after {
-  display: none;
-}
-
 .stats {
   grid-area: stats;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
-}
-
-.stats::before {
-  display: none;
-}
-
-.stats::after {
-  display: none;
 }
 
 .stats:hover {
   transform: translateY(-1px);
 }
 
-.stats:hover::before {
-  display: none;
-}
-
-.stats:hover::after {
-  display: none;
-}
-
 .inventory {
   grid-area: inventory;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
 }
 
 .equipment {
   grid-area: equipment;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
-}
-
-.inventory::before {
-  display: none;
-}
-
-.inventory::after {
-  display: none;
 }
 
 .inventory:hover {
   transform: translateY(-1px);
 }
 
-.inventory:hover::before {
-  display: none;
-}
-
-.inventory:hover::after {
-  display: none;
-}
-
 .notes {
   grid-area: notes;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
-}
-
-.notes::before {
-  display: none;
-}
-
-.notes::after {
-  display: none;
 }
 
 .notes:hover {
   transform: translateY(-1px);
-}
-
-.notes:hover::before {
-  display: none;
-}
-
-.notes:hover::after {
-  display: none;
 }
 
 @media (max-width: 1199px) {

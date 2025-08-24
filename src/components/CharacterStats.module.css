@@ -1,9 +1,9 @@
 .panel {
-  background: var(--panel-bg);
+  background: var(--color-modal-bg);
   @apply backdrop-blur-glass;
   border-radius: var(--hud-radius);
   padding: var(--hud-spacing);
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--color-accent);
   box-shadow: 0 8px 32px var(--panel-shadow);
 }
 
@@ -28,10 +28,10 @@
 
 .statItem {
   text-align: center;
-  background: var(--overlay-darker);
+  background: var(--color-modal-bg-dark);
   padding: var(--hud-spacing-sm);
   border-radius: 8px;
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--color-accent);
 }
 
 .statName {
@@ -48,10 +48,10 @@
 .hpBarContainer {
   width: 100%;
   height: 25px;
-  background: var(--color-gray-800);
+  background: var(--color-modal-bg-dark);
   border-radius: var(--hud-radius);
   overflow: hidden;
-  border: 2px solid var(--color-gray-700);
+  border: 2px solid var(--color-accent);
   margin: var(--space-md) 0;
 }
 
@@ -100,9 +100,10 @@
 .xpBarContainer {
   width: 100%;
   height: 20px;
-  background: var(--color-gray-800);
+  background: var(--color-modal-bg-dark);
   border-radius: 10px;
   overflow: hidden;
+  border: 2px solid var(--color-accent);
   margin: var(--space-md) 0 var(--space-md) 0;
 }
 

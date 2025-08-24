@@ -2,8 +2,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import { useMotionTransition, useMotionVariants } from '../../motion/reduced';
 import { durations, easings, fadeScale } from '../../motion/tokens';
-// eslint-disable-next-line import/no-unresolved
-import { css } from '../../styled-system/css';
 import { Dialog, Tooltip, DropdownMenu, Separator, Slider } from '../ui/primitives';
 
 export default function DevPrimitivesPreview() {
@@ -14,39 +12,37 @@ export default function DevPrimitivesPreview() {
 
   return (
     <div
-      className={css({
+      style={{
         minHeight: '100vh',
-        backgroundColor: 'background',
-        padding: 'md',
-        color: 'text',
+        backgroundColor: '#001114',
+        padding: '1rem',
+        color: '#7efcf6',
         display: 'flex',
         flexDirection: 'column',
-        gap: 'md',
-      })}
+        gap: '1rem',
+      }}
     >
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button
-            className={css({
-              borderRadius: 'md',
-              backgroundColor: 'accent',
-              paddingX: 'md',
-              paddingY: 'sm',
-              color: 'background',
-            })}
+            style={{
+              borderRadius: '4px',
+              backgroundColor: '#ffa726',
+              padding: '0.5rem 1rem',
+              color: '#001114',
+            }}
           >
             Tooltip
           </button>
         </Tooltip.Trigger>
         <Tooltip.Content
-          className={css({
-            borderRadius: 'md',
-            backgroundColor: 'background',
-            paddingX: 'sm',
-            paddingY: 'sm',
+          style={{
+            borderRadius: '4px',
+            backgroundColor: '#001114',
+            padding: '0.5rem',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            color: 'text',
-          })}
+            color: '#7efcf6',
+          }}
         >
           Hello
         </Tooltip.Content>
@@ -55,13 +51,12 @@ export default function DevPrimitivesPreview() {
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <button
-            className={css({
-              borderRadius: 'md',
-              backgroundColor: 'accent',
-              paddingX: 'md',
-              paddingY: 'sm',
-              color: 'background',
-            })}
+            style={{
+              borderRadius: '4px',
+              backgroundColor: '#ffa726',
+              padding: '0.5rem 1rem',
+              color: '#001114',
+            }}
           >
             Open Dialog
           </button>
@@ -75,26 +70,25 @@ export default function DevPrimitivesPreview() {
                 animate="visible"
                 exit="exit"
                 transition={transition}
-                className={css({
-                  borderRadius: 'md',
-                  backgroundColor: 'background',
-                  padding: 'md',
+                style={{
+                  borderRadius: '4px',
+                  backgroundColor: '#001114',
+                  padding: '1rem',
                   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                })}
+                }}
               >
-                <Dialog.Title className={css({ marginBottom: 'sm' })}>Dialog Title</Dialog.Title>
-                <Dialog.Description className={css({ marginBottom: 'md' })}>
+                <Dialog.Title style={{ marginBottom: '0.5rem' }}>Dialog Title</Dialog.Title>
+                <Dialog.Description style={{ marginBottom: '1rem' }}>
                   This is a Radix dialog.
                 </Dialog.Description>
                 <button
                   onClick={() => setOpen(false)}
-                  className={css({
-                    borderRadius: 'md',
-                    backgroundColor: 'accent',
-                    paddingX: 'md',
-                    paddingY: 'sm',
-                    color: 'background',
-                  })}
+                  style={{
+                    borderRadius: '4px',
+                    backgroundColor: '#ffa726',
+                    padding: '0.5rem 1rem',
+                    color: '#001114',
+                  }}
                 >
                   Close
                 </button>
@@ -107,13 +101,12 @@ export default function DevPrimitivesPreview() {
       <DropdownMenu.Root open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenu.Trigger asChild>
           <button
-            className={css({
-              borderRadius: 'md',
-              backgroundColor: 'accent',
-              paddingX: 'md',
-              paddingY: 'sm',
-              color: 'background',
-            })}
+            style={{
+              borderRadius: '4px',
+              backgroundColor: '#ffa726',
+              padding: '0.5rem 1rem',
+              color: '#001114',
+            }}
           >
             Menu
           </button>
@@ -123,13 +116,13 @@ export default function DevPrimitivesPreview() {
             <DropdownMenu.Content
               asChild
               forceMount
-              className={css({
-                borderRadius: 'md',
-                backgroundColor: 'background',
-                padding: 'sm',
+              style={{
+                borderRadius: '4px',
+                backgroundColor: '#001114',
+                padding: '0.5rem',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                color: 'text',
-              })}
+                color: '#7efcf6',
+              }}
             >
               <motion.div
                 variants={variants}
@@ -138,30 +131,24 @@ export default function DevPrimitivesPreview() {
                 exit="exit"
                 transition={transition}
               >
-                <DropdownMenu.Item className={css({ paddingX: 'md', paddingY: 'sm' })}>
-                  Item 1
-                </DropdownMenu.Item>
-                <DropdownMenu.Item className={css({ paddingX: 'md', paddingY: 'sm' })}>
-                  Item 2
-                </DropdownMenu.Item>
+                <DropdownMenu.Item style={{ padding: '0.5rem 1rem' }}>Item 1</DropdownMenu.Item>
+                <DropdownMenu.Item style={{ padding: '0.5rem 1rem' }}>Item 2</DropdownMenu.Item>
                 <Separator
-                  className={css({
-                    marginY: 'sm',
+                  style={{
+                    marginY: '0.5rem',
                     height: '1px',
-                    backgroundColor: 'accent',
-                  })}
+                    backgroundColor: '#ffa726',
+                  }}
                 />
-                <DropdownMenu.Item className={css({ paddingX: 'md', paddingY: 'sm' })}>
-                  Item 3
-                </DropdownMenu.Item>
+                <DropdownMenu.Item style={{ padding: '0.5rem 1rem' }}>Item 3</DropdownMenu.Item>
               </motion.div>
             </DropdownMenu.Content>
           )}
         </AnimatePresence>
       </DropdownMenu.Root>
 
-      <div className={css({ width: '16rem' })}>
-        <Slider defaultValue={[50]} className={css({ marginY: 'md' })} />
+      <div style={{ width: '16rem' }}>
+        <Slider defaultValue={[50]} style={{ marginY: '1rem' }} />
       </div>
     </div>
   );

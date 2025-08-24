@@ -1,34 +1,37 @@
 import React, { useState } from 'react';
 import { PanelKranox, PanelOctagon } from './panels';
-import { css } from '../styled-system/css';
 
 const FxDemo = () => {
   const [hoveredPanel, setHoveredPanel] = useState(null);
 
   return (
-    <div className={css({
-      padding: '2xl',
-      minHeight: '100vh',
-    })}>
+    <div
+      style={{
+        padding: '3rem',
+        minHeight: '100vh',
+      }}
+    >
       <PanelKranox
         title="FX Demo"
         subtitle="Showcasing Arwes frames and animations"
         density="comfortable"
         variant="loud"
-        className={css({ marginBottom: '2xl' })}
+        style={{ marginBottom: '3rem' }}
       >
-        <p className={css({ color: 'text', lineHeight: 1.6 })}>
-          This demo showcases the Arwes visual effects system with animated frames,
-          ambient backgrounds, and staggered entry animations.
+        <p style={{ color: '#7efcf6', lineHeight: 1.6 }}>
+          This demo showcases the Arwes visual effects system with animated frames, ambient
+          backgrounds, and staggered entry animations.
         </p>
       </PanelKranox>
 
-      <div className={css({
-        display: 'grid',
-        gridTemplateColumns: { base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
-        gap: 'xl',
-        marginBottom: '2xl',
-      })}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '2rem',
+          marginBottom: '3rem',
+        }}
+      >
         {/* Kranox Panels */}
         <PanelKranox
           title="Kranox Panel 1"
@@ -36,12 +39,12 @@ const FxDemo = () => {
           density="normal"
           onMouseEnter={() => setHoveredPanel('kranox1')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'kranox1' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text' })}>
+          <p style={{ color: '#7efcf6' }}>
             This is a standard Kranox panel with normal density and styling.
           </p>
         </PanelKranox>
@@ -52,14 +55,12 @@ const FxDemo = () => {
           density="compact"
           onMouseEnter={() => setHoveredPanel('kranox2')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'kranox2' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text', fontSize: '0.875rem' })}>
-            Compact panel with less padding.
-          </p>
+          <p style={{ color: '#7efcf6', fontSize: '0.875rem' }}>Compact panel with less padding.</p>
         </PanelKranox>
 
         <PanelKranox
@@ -69,14 +70,12 @@ const FxDemo = () => {
           variant="loud"
           onMouseEnter={() => setHoveredPanel('kranox3')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'kranox3' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text' })}>
-            Loud variant with thicker borders and secondary color.
-          </p>
+          <p style={{ color: '#7efcf6' }}>Loud variant with thicker borders and secondary color.</p>
         </PanelKranox>
 
         {/* Octagon Panels */}
@@ -86,14 +85,12 @@ const FxDemo = () => {
           density="normal"
           onMouseEnter={() => setHoveredPanel('octagon1')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'octagon1' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text' })}>
-            Standard octagonal frame with basic corner accents.
-          </p>
+          <p style={{ color: '#7efcf6' }}>Standard octagonal frame with basic corner accents.</p>
         </PanelOctagon>
 
         <PanelOctagon
@@ -102,14 +99,12 @@ const FxDemo = () => {
           density="comfortable"
           onMouseEnter={() => setHoveredPanel('octagon2')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'octagon2' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text' })}>
-            More spacious padding for comfortable reading.
-          </p>
+          <p style={{ color: '#7efcf6' }}>More spacious padding for comfortable reading.</p>
         </PanelOctagon>
 
         <PanelOctagon
@@ -119,14 +114,12 @@ const FxDemo = () => {
           variant="loud"
           onMouseEnter={() => setHoveredPanel('octagon3')}
           onMouseLeave={() => setHoveredPanel(null)}
-          className={css({
+          style={{
             transition: 'transform 0.3s ease',
             transform: hoveredPanel === 'octagon3' ? 'scale(1.02)' : 'scale(1)',
-          })}
+          }}
         >
-          <p className={css({ color: 'text' })}>
-            Loud variant with all corner accents enabled.
-          </p>
+          <p style={{ color: '#7efcf6' }}>Loud variant with all corner accents enabled.</p>
         </PanelOctagon>
       </div>
 
@@ -137,50 +130,61 @@ const FxDemo = () => {
         density="comfortable"
         variant="normal"
       >
-        <div className={css({ display: 'flex', gap: 'md', flexWrap: 'wrap' })}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <button
-            className={css({
-              padding: 'sm md',
-              backgroundColor: 'primary',
-              color: 'background',
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#00d9ff',
+              color: '#001114',
               border: 'none',
-              borderRadius: 'sm',
+              borderRadius: '2px',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'secondary',
-                transform: 'translateY(-2px)',
-              },
-              '&:focus': {
-                outline: '2px solid',
-                outlineColor: 'accent',
-                outlineOffset: '2px',
-              },
-            })}
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#ff0080';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#00d9ff';
+              e.target.style.transform = 'translateY(0)';
+            }}
+            onFocus={(e) => {
+              e.target.style.outline = '2px solid #ffa726';
+              e.target.style.outlineOffset = '2px';
+            }}
+            onBlur={(e) => {
+              e.target.style.outline = 'none';
+            }}
           >
             Primary Action
           </button>
 
           <button
-            className={css({
-              padding: 'sm md',
+            style={{
+              padding: '0.5rem 1rem',
               backgroundColor: 'transparent',
-              color: 'primary',
-              border: '1px solid',
-              borderColor: 'primary',
-              borderRadius: 'sm',
+              color: '#00d9ff',
+              border: '1px solid #00d9ff',
+              borderRadius: '2px',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'primary',
-                color: 'background',
-              },
-              '&:focus': {
-                outline: '2px solid',
-                outlineColor: 'accent',
-                outlineOffset: '2px',
-              },
-            })}
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#00d9ff';
+              e.target.style.color = '#001114';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.color = '#00d9ff';
+            }}
+            onFocus={(e) => {
+              e.target.style.outline = '2px solid #ffa726';
+              e.target.style.outlineOffset = '2px';
+            }}
+            onBlur={(e) => {
+              e.target.style.outline = 'none';
+            }}
           >
             Secondary Action
           </button>

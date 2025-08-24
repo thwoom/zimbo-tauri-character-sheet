@@ -1,61 +1,74 @@
 import React from 'react';
-import { css } from '../styled-system/css';
 
 const Navigation = () => {
   const currentPath = window.location.pathname;
 
-  const navStyle = css({
+  const navStyle = {
     position: 'fixed',
     top: '1rem',
     right: '1rem',
     zIndex: 100,
     display: 'flex',
-    gap: 'sm',
-    padding: 'sm',
+    gap: '0.5rem',
+    padding: '0.5rem',
     backgroundColor: 'rgba(2, 30, 38, 0.8)',
-    borderRadius: 'md',
-    border: '1px solid',
-    borderColor: 'primary',
-  });
+    borderRadius: '4px',
+    border: '1px solid #00d9ff',
+  };
 
-  const linkStyle = (isActive) =>
-    css({
-      padding: 'xs md',
-      color: isActive ? 'background' : 'primary',
-      backgroundColor: isActive ? 'primary' : 'transparent',
-      border: '1px solid',
-      borderColor: 'primary',
-      borderRadius: 'sm',
-      textDecoration: 'none',
-      fontSize: '0.875rem',
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        backgroundColor: isActive ? 'primary' : 'rgba(0, 217, 255, 0.1)',
-      },
-    });
+  const linkStyle = (isActive) => ({
+    padding: '0.25rem 1rem',
+    color: isActive ? '#001114' : '#00d9ff',
+    backgroundColor: isActive ? '#00d9ff' : 'transparent',
+    border: '1px solid #00d9ff',
+    borderRadius: '2px',
+    textDecoration: 'none',
+    fontSize: '0.875rem',
+    transition: 'all 0.2s ease',
+  });
 
   const navigate = (path) => {
     window.location.href = path;
   };
 
   return (
-    <nav className={navStyle}>
+    <nav style={navStyle}>
       <a
         href="/"
-        className={linkStyle(currentPath === '/')}
+        style={linkStyle(currentPath === '/')}
         onClick={(e) => {
           e.preventDefault();
           navigate('/');
+        }}
+        onMouseEnter={(e) => {
+          if (currentPath !== '/') {
+            e.target.style.backgroundColor = 'rgba(0, 217, 255, 0.1)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (currentPath !== '/') {
+            e.target.style.backgroundColor = 'transparent';
+          }
         }}
       >
         Main App
       </a>
       <a
         href="/fx-demo"
-        className={linkStyle(currentPath === '/fx-demo')}
+        style={linkStyle(currentPath === '/fx-demo')}
         onClick={(e) => {
           e.preventDefault();
           navigate('/fx-demo');
+        }}
+        onMouseEnter={(e) => {
+          if (currentPath !== '/fx-demo') {
+            e.target.style.backgroundColor = 'rgba(0, 217, 255, 0.1)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (currentPath !== '/fx-demo') {
+            e.target.style.backgroundColor = 'transparent';
+          }
         }}
       >
         FX Demo
@@ -63,10 +76,20 @@ const Navigation = () => {
       {import.meta.env.DEV && (
         <a
           href="/dev/components"
-          className={linkStyle(currentPath === '/dev/components')}
+          style={linkStyle(currentPath === '/dev/components')}
           onClick={(e) => {
             e.preventDefault();
             navigate('/dev/components');
+          }}
+          onMouseEnter={(e) => {
+            if (currentPath !== '/dev/components') {
+              e.target.style.backgroundColor = 'rgba(0, 217, 255, 0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentPath !== '/dev/components') {
+              e.target.style.backgroundColor = 'transparent';
+            }
           }}
         >
           Dev Components

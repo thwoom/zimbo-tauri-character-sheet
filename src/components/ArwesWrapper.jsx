@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Animator } from '@arwes/react-animator';
 import { GridLines, Dots } from '@arwes/react-bgs';
-import { css } from '../styled-system/css';
 import Navigation from './Navigation';
 
 const ArwesWrapper = ({ children }) => {
@@ -52,37 +51,37 @@ const ArwesWrapper = ({ children }) => {
       enabled={animatorEnabled}
     >
       <div
-        className={css({
+        style={{
           position: 'relative',
           minHeight: '100vh',
           overflow: 'hidden',
-          backgroundColor: 'background',
+          backgroundColor: '#001114',
           isolation: 'isolate',
-        })}
+        }}
       >
         {/* Background layers with performance-aware opacity */}
         {!prefersReducedMotion && (
           <>
             <div
-              className={css({
+              style={{
                 position: 'absolute',
                 inset: 0,
                 pointerEvents: 'none',
                 zIndex: 0,
                 opacity: backgroundOpacity,
-              })}
+              }}
             >
               <GridLines lineColor="rgb(0, 217, 255)" lineWidth={1} distance={30} />
             </div>
 
             <div
-              className={css({
+              style={{
                 position: 'absolute',
                 inset: 0,
                 pointerEvents: 'none',
                 zIndex: 1,
                 opacity: dotsOpacity,
-              })}
+              }}
             >
               <Dots color="rgb(0, 217, 255)" size={2} distance={30} />
             </div>
@@ -91,12 +90,12 @@ const ArwesWrapper = ({ children }) => {
 
         {/* Main content layer */}
         <div
-          className={css({
+          style={{
             position: 'relative',
             zIndex: 10,
             width: '100%',
             minHeight: '100vh',
-          })}
+          }}
         >
           <Navigation />
           {children}

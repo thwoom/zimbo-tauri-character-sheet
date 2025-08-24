@@ -52,6 +52,10 @@
   --hud-spacing: 1.25rem;
   --hud-transition: all 300ms ease-in-out;
 
+  /* HUD frame colors */
+  --hud-frame-orange: #ff8a00;
+  --hud-frame-cyan: #00ffff;
+
   /* Legacy compatibility */
   --fg: var(--color-text);
   --bg: var(--color-bg-start);
@@ -364,6 +368,49 @@ body::after {
 }
 
 /* Typography */
+
+/* HUD panel with animated gradient frame */
+.hud-panel {
+  position: relative;
+  padding: var(--hud-spacing);
+  border-radius: var(--hud-radius);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 32px var(--panel-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
+  transition: var(--hud-transition);
+}
+
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--hud-frame-orange),
+    var(--hud-frame-cyan),
+    var(--hud-frame-orange)
+  );
+  background-size: 300% 300%;
+  filter: blur(8px);
+  z-index: -1;
+  animation: hud-frame-glow 8s linear infinite;
+}
+
+@keyframes hud-frame-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 h1,
 h2,
 h3,

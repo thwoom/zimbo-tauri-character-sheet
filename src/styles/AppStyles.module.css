@@ -460,45 +460,52 @@
   margin-bottom: var(--hud-spacing);
 }
 
-.tile {
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  transition: var(--hud-transition);
-  position: relative;
-  overflow: visible;
-  padding: var(--hud-spacing);
-}
-
-.tile::before,
-.tile::after,
-.tile:hover::before,
-.tile:hover::after {
-  display: none;
+.hud {
+  grid-area: hud;
 }
 
 .tile:hover {
   transform: translateY(-1px);
 }
 
-.hud {
-  grid-column: span 2;
-  grid-row: span 2;
+.stats {
+  grid-area: stats;
 }
 
-.stats {
-  grid-row: span 2;
+.stats:hover {
+  transform: translateY(-1px);
 }
 
 .inventory {
-  grid-row: span 2;
+  grid-area: inventory;
+}
+
+.equipment {
+  grid-area: equipment;
+}
+
+.inventory:hover {
+  transform: translateY(-1px);
 }
 
 .notes {
-  grid-column: span 3;
+  grid-area: notes;
+}
+
+.notes:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1199px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Button Styles - Updated to match about page */

@@ -406,8 +406,8 @@
   gap: 5px;
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-radius: 20px;
   border: 1px solid rgba(0, 212, 255, 0.3);
   box-shadow:
@@ -612,8 +612,8 @@
 /* Button Styles - Updated to match about page */
 .undoButton {
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -684,8 +684,8 @@
 
 .damageButton {
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -749,8 +749,8 @@
 
 .statusButton {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -785,8 +785,8 @@
 
 .inventoryButton {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -821,8 +821,8 @@
 
 .bondsButton {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -857,8 +857,8 @@
 
 .endSessionButton {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -893,8 +893,8 @@
 
 .exportButton {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);

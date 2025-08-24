@@ -397,8 +397,8 @@ h3 {
 button {
   font-family: var(--font-body);
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);
@@ -457,8 +457,8 @@ textarea,
 select {
   font-family: var(--font-body);
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: var(--hud-radius-sm);
   color: var(--color-text);

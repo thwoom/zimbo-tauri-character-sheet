@@ -6,9 +6,8 @@ import { beforeAll } from 'vitest';
 import { remote, type Browser } from 'webdriverio';
 
 declare global {
-   
   var browser: Browser;
-   
+
   var __E2E_BROWSER_PROMISE__: Promise<Browser> | undefined;
 }
 

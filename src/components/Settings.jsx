@@ -8,6 +8,9 @@ const Settings = () => {
   const themeLabels = {
     legacy: 'Legacy',
     'cosmic-v2': 'Cosmic v2',
+    classic: 'Classic',
+    moebius: 'Moebius',
+    arwes: 'Arwes Space',
   };
 
   return (

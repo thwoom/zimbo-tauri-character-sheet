@@ -49,10 +49,10 @@ describe('ThemeContext', () => {
     safeLocalStorage.getItem.mockImplementation((key, fallback) => fallback);
     const { result } = renderHook(() => useTheme(), { wrapper });
     act(() => {
-      result.current.setTheme('classic');
+      result.current.setTheme('arwes');
     });
-    expect(setAttributeMock).toHaveBeenCalledWith('data-theme', 'classic');
-    expect(safeLocalStorage.setItem).toHaveBeenCalledWith('theme', 'classic');
+    expect(setAttributeMock).toHaveBeenCalledWith('data-theme', 'arwes');
+    expect(safeLocalStorage.setItem).toHaveBeenCalledWith('theme', 'arwes');
   });
 
   it('persists theme changes and loads stored theme', () => {

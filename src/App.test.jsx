@@ -436,6 +436,25 @@ describe('Theme switching', () => {
       expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
     });
   });
+
+  it('updates the theme attribute when selecting arwes', () => {
+    render(
+      <ThemeProvider>
+        <SettingsProvider initialAutoXpOnMiss={true}>
+          <Settings />
+        </SettingsProvider>
+      </ThemeProvider>,
+    );
+
+    const select = screen.getByLabelText(/Theme:/i);
+
+    return waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
+    }).then(() => {
+      fireEvent.change(select, { target: { value: 'arwes' } });
+      expect(document.documentElement.getAttribute('data-theme')).toBe('arwes');
+    });
+  });
 });
 
 describe('App header', () => {

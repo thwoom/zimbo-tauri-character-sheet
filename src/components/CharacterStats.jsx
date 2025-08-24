@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import { durations, easings, fadeScale } from '../motion/tokens';
 import { resourceColors } from '../styles/colorMap.js';
+import Button from './common/Button';
+import ButtonGroup from './common/ButtonGroup';
 import styles from './CharacterStats.module.css';
 
 const CharacterStats = ({
@@ -57,8 +59,8 @@ const CharacterStats = ({
       <div className={styles.centerText}>
         HP: {character.hp}/{character.maxHp} | Armor: {totalArmor}
       </div>
-      <div className={styles.controls}>
-        <button
+      <ButtonGroup className={styles.controls}>
+        <Button
           onClick={() => {
             saveToHistory('HP Change');
             setCharacter((prev) => ({
@@ -66,11 +68,10 @@ const CharacterStats = ({
               hp: Math.min(prev.maxHp, prev.hp + 1),
             }));
           }}
-          className={styles.button}
         >
           +1 HP
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             saveToHistory('HP Change');
             setCharacter((prev) => ({
@@ -78,11 +79,10 @@ const CharacterStats = ({
               hp: Math.max(0, prev.hp - 1),
             }));
           }}
-          className={`${styles.button} ${styles.buttonRed}`}
         >
           -1 HP
-        </button>
-      </div>
+        </Button>
+      </ButtonGroup>
       {/* eslint-disable-next-line jsx-a11y/tabindex-no-positive */}
       <div
         className={styles.xpBarContainer}
@@ -102,8 +102,8 @@ const CharacterStats = ({
       <div className={styles.centerText} data-testid="xp-display">
         XP: {character.xp}/{character.xpNeeded} (Level {character.level})
       </div>
-      <div className={styles.controls}>
-        <button
+      <ButtonGroup className={styles.controls}>
+        <Button
           onClick={() =>
             setCharacter((prev) => ({
               ...prev,
@@ -111,12 +111,11 @@ const CharacterStats = ({
               xpNeeded: prev.level + 7,
             }))
           }
-          className={styles.button}
           data-testid="increment-xp"
         >
           +1 XP
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() =>
             setCharacter((prev) => ({
               ...prev,
@@ -124,30 +123,19 @@ const CharacterStats = ({
               xpNeeded: prev.level + 7,
             }))
           }
-          className={`${styles.button} ${styles.buttonRed}`}
         >
           -1 XP
-        </button>
-      </div>
+        </Button>
+      </ButtonGroup>
       {import.meta.env.DEV && (
-        <button
-          onClick={() => setShowLevelUpModal(true)}
-          className={`${styles.button} ${styles.devButton}`}
-        >
-          Open Level Up Test Modal
-        </button>
+        <Button onClick={() => setShowLevelUpModal(true)}>Open Level Up Test Modal</Button>
       )}
       {character.xp >= character.xpNeeded && (
-        <button
-          onClick={() => setShowLevelUpModal(true)}
-          className={`${styles.button} ${styles.levelUpButton}`}
-        >
-          🎉 LEVEL UP AVAILABLE!
-        </button>
+        <Button onClick={() => setShowLevelUpModal(true)}>🎉 LEVEL UP AVAILABLE!</Button>
       )}
       <div className={styles.chronoContainer}>
-        <div className={`${styles.centerText} ${styles.chronoRow}`}>
-          <button
+        <ButtonGroup className={`${styles.centerText} ${styles.chronoRow}`}>
+          <Button
             aria-label="Decrease Chrono-Retcon"
             onClick={() =>
               setCharacter((prev) => ({
@@ -158,12 +146,11 @@ const CharacterStats = ({
                 },
               }))
             }
-            className={styles.minusButton}
           >
             -1
-          </button>
+          </Button>
           <span>Chrono-Retcon Uses: {character.resources.chronoUses}</span>
-          <button
+          <Button
             aria-label="Increase Chrono-Retcon"
             onClick={() =>
               setCharacter((prev) => ({
@@ -174,12 +161,11 @@ const CharacterStats = ({
                 },
               }))
             }
-            className={styles.plusButton}
           >
             +1
-          </button>
-        </div>
-        <button
+          </Button>
+        </ButtonGroup>
+        <Button
           onClick={() => {
             if (character.resources.chronoUses > 0) {
               setCharacter((prev) => ({
@@ -197,10 +183,9 @@ const CharacterStats = ({
             }
           }}
           disabled={character.resources.chronoUses === 0}
-          className={styles.chronoButton}
         >
           ⏰ Use Chrono-Retcon
-        </button>
+        </Button>
       </div>
       {[
         { key: 'coin', label: 'Coin', max: 999 },
@@ -216,8 +201,8 @@ const CharacterStats = ({
               {character.resources[key]}/{max}
             </span>
           </div>
-          <div className={styles.resourceButtons}>
-            <button
+          <ButtonGroup className={styles.resourceButtons}>
+            <Button
               onClick={() =>
                 setCharacter((prev) => ({
                   ...prev,
@@ -227,11 +212,10 @@ const CharacterStats = ({
                   },
                 }))
               }
-              className={styles.minusButton}
             >
               -1
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() =>
                 setCharacter((prev) => ({
                   ...prev,
@@ -241,11 +225,10 @@ const CharacterStats = ({
                   },
                 }))
               }
-              className={styles.plusButton}
             >
               +1
-            </button>
-          </div>
+            </Button>
+          </ButtonGroup>
         </div>
       ))}
       {character.resources.paradoxPoints >= 3 && (
@@ -253,7 +236,7 @@ const CharacterStats = ({
           <div className={styles.warningText}>⚠️ REALITY UNSTABLE! ⚠️</div>
         </div>
       )}
-      <button
+      <Button
         onClick={() => {
           setCharacter((prev) => ({
             ...prev,
@@ -269,7 +252,6 @@ const CharacterStats = ({
           clearRollHistory();
           setRollResult('🔄 All resources restored!');
         }}
-        className={styles.resetButton}
       >
         🔄 Reset All Resources
       </button>

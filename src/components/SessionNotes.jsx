@@ -11,6 +11,7 @@ import {
   FaLaptop,
   FaMobileScreen,
 } from 'react-icons/fa6';
+import Panel from './ui/Panel';
 import styles from './SessionNotes.module.css';
 
 const NOTES_FILE = 'session_notes.txt';
@@ -71,9 +72,9 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
 
   return (
     <>
-      <div
-        className={`${styles.panel} ${
-          compactMode ? styles.panelCompact : styles.panelExpanded
+      <Panel
+        className={`${styles.container} ${
+          compactMode ? styles.collapsed : styles.expanded
         } ${compactMode ? '' : styles.fullWidth}`}
       >
         <h3 className={styles.title}>
@@ -150,7 +151,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
             {compactMode ? <FaLaptop /> : <FaMobileScreen />} {compactMode ? 'Expand' : 'Compact'}
           </button>
         </div>
-      </div>
+      </Panel>
       <ClearNotesModal
         isOpen={clearModal.isOpen}
         onConfirm={handleConfirmClear}

@@ -117,20 +117,8 @@
   font-size: 0.9rem;
 }
 
-.resourceButtons {
-  display: flex;
-  gap: 5px;
-}
-
 .chronoContainer {
   margin-top: var(--space-md);
-}
-
-.chronoRow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
 }
 
 .warningBox {

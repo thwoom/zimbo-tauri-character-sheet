@@ -134,7 +134,7 @@ const CharacterStats = ({
         <Button onClick={() => setShowLevelUpModal(true)}>🎉 LEVEL UP AVAILABLE!</Button>
       )}
       <div className={styles.chronoContainer}>
-        <ButtonGroup className={`${styles.centerText} ${styles.chronoRow}`}>
+        <ButtonGroup>
           <Button
             aria-label="Decrease Chrono-Retcon"
             onClick={() =>
@@ -201,7 +201,7 @@ const CharacterStats = ({
               {character.resources[key]}/{max}
             </span>
           </div>
-          <ButtonGroup className={styles.resourceButtons}>
+          <ButtonGroup>
             <Button
               onClick={() =>
                 setCharacter((prev) => ({

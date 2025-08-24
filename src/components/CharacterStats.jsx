@@ -248,8 +248,8 @@ const CharacterStats = ({
         }}
       >
         🔄 Reset All Resources
-      </button>
-    </motion.div>
+      </Button>
+    </div>
   );
 };
 

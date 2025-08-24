@@ -1,36 +1,82 @@
-# Contributor Guidelines
+# AI Agent Guide
 
-This repository's conventions keep contributions consistent. Update this file whenever practices change so everyone stays aligned.
+This document provides machine-readable instructions for contributing to the ZimboMate repository.
 
-## Style Preferences
+## Project Overview
 
-- Format code with Prettier using the settings in `.prettierrc`.
-- Lint using ESLint with the config in `.eslintrc.cjs`.
-- Follow existing patterns in the codebase for naming, imports, and structure.
+- **Purpose**: Desktop companion for Dungeon World players providing character management, dice rolling, inventory, notes, and more.
+- **Tech stack**: React 18 + TypeScript, Vite, Tauri 2 (Rust backend), Vitest for unit tests, WebdriverIO + Tauri driver for end-to-end tests.
+- **Key directories**:
+  - `src` – React front-end.
+  - `src-tauri` – Rust/Tauri backend.
+  - `tests` – WebdriverIO end-to-end tests.
 
-## Required Commands
+## Setup Instructions
 
-Run these checks before submitting changes:
+1. Requirements: Node.js ≥20, npm, Rust/Cargo, Tauri CLI, glib-2.0 dev headers, WebKitWebDriver.
+2. Install dependencies:
+   ```bash
+   npm install
+   pre-commit install
+   ```
+3. Optional environment file for development features:
+   - Create `.env` and set `VITE_SHOW_PERFORMANCE_HUD=true` to display the performance HUD.
 
-- `npm run lint` – lint all source files.
-- `npm test` – execute the test suite with Vitest when code changes.
+## Build & Test Commands
+
+Run these from the repository root:
+
+- `npm run dev` – browser-only dev server.
+- `npm run tauri dev` – full app with Tauri shell.
+- `npm run build` – production build (required before PR).
+- `npm run preview` – serve built assets.
+- `npm run lint` – ESLint.
+- `npm run lint:fix` – fix lint issues.
 - `npm run format:check` – verify Prettier formatting.
-- `npm run test:e2e` – run end-to-end tests.
-- `npm run build` – confirm the app builds successfully.
+- `npm run format` – apply Prettier formatting.
+- `npm test` – Vitest unit tests.
+- `npm run test:e2e` – end-to-end tests (requires WebKitWebDriver).
+- `pre-commit run --all-files` – run prettier, eslint, and vitest hooks.
 
-## Pull Request Conventions
+## Code Style & Conventions
+
+- Prettier rules in `.prettierrc`: single quotes, trailing commas, print width 100, semicolons, LF line endings.
+- ESLint config in `eslint.config.js` uses React, JSX a11y, import ordering, and TypeScript rules.
+- Maintain alphabetical import order and avoid newlines between groups.
+- Use TypeScript (`.ts`/`.tsx`) for new code; keep components and hooks colocated.
+- Tests reside near source files or under `tests/` for e2e.
+
+## Contribution & PR Guidelines
 
 - Use Conventional Commit messages.
-- Provide clear PR descriptions that reference related issues.
-- Include updates to documentation, tests, and configuration files when they are affected.
+- Branch from `main`; avoid creating additional long‑lived branches.
+- Before committing, run:
+  ```bash
+  npm run lint
+  npm test
+  npm run format:check
+  npm run test:e2e
+  npm run build
+  ```
+- PR descriptions must reference related issues and include updates to docs and tests where relevant.
 
-## Areas Requiring Extra Care
+## Security / Constraints
 
-- `src` – core application code; ensure accompanying tests exist or are updated.
-- `src-tauri` – Tauri backend; verify platform-specific behavior.
-- `docs` – project documentation; keep examples accurate.
-- Configuration files (`package.json`, `vite.config.js`, `.eslintrc.cjs`, `.prettierrc`) must remain consistent.
+- Never commit secrets or `.env` files.
+- Do not modify files in `node_modules`, `dist`, `coverage`, `src-tauri/target`, or generated assets.
+- Respect the fs plugin scope: application can read/write under `$APPDATA/**` only.
 
----
+## Custom Tools or Scripts
 
-Keep this file current with project practices to maintain contributor alignment.
+- `npm run watch` – rebuild on source changes.
+- `npm run sync` – interactive branch sync via `git-sync-ask.sh`.
+- `npm run fix-prs` / `fix-prs.ps1` – auto-format and test pull requests.
+- `update-version.mjs` – updates version numbers during release.
+
+## Monorepo / Subproject Instructions
+
+This repo contains both a React app and a Rust/Tauri backend:
+
+- Frontend code lives in `src` and is bundled by Vite.
+- Backend code lives in `src-tauri`; Cargo handles builds automatically through Tauri commands.
+- End-to-end tests in `tests` launch the built Tauri app.

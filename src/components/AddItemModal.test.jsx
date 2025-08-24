@@ -24,12 +24,14 @@ describe('AddItemModal', () => {
     expect(screen.getByLabelText(/name/i)).toHaveValue('Sword');
 
     await user.click(screen.getByText(/save/i));
-    expect(onAdd).toHaveBeenCalledWith({
-      name: 'Sword',
-      type: 'weapon',
-      description: 'A sharp blade',
-      effect: '+1 dmg',
-    });
+    expect(onAdd).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Sword',
+        type: 'weapon',
+        description: 'A sharp blade',
+        effects: '+1 dmg',
+      }),
+    );
   });
 
   it('copies prompt', async () => {

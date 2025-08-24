@@ -543,6 +543,20 @@
   padding: var(--hud-spacing);
 }
 
+.equipment {
+  grid-area: equipment;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  transition: var(--hud-transition);
+  position: relative;
+  overflow: visible;
+  padding: var(--hud-spacing);
+}
+
 .inventory::before {
   display: none;
 }

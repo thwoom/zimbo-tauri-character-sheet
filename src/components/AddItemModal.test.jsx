@@ -29,7 +29,7 @@ describe('AddItemModal', () => {
         name: 'Sword',
         type: 'weapon',
         description: 'A sharp blade',
-        effects: '+1 dmg',
+        effect: '+1 dmg',
       }),
     );
   });

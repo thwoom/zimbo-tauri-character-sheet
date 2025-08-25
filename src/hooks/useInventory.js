@@ -122,7 +122,7 @@ export default function useInventory(character, setCharacter) {
     [setCharacter],
   );
 
-  const maxLoad = character.maxLoad ?? 12;
+  const maxLoad = (character.baseLoad || 0) + (character.stats?.STR?.mod || 0);
 
   return {
     totalArmor,

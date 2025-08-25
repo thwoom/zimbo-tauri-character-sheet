@@ -18,9 +18,9 @@ import Button from './components/common/Button';
 import ButtonGroup from './components/common/ButtonGroup';
 import DiagnosticOverlay from './components/DiagnosticOverlay';
 import DiceRollerModal from './components/DiceRollerModal';
+import EquipmentPanel from './components/EquipmentPanel';
 import FloatingDiceButton from './components/FloatingDiceButton';
 import GameModals from './components/GameModals';
-import EquipmentPanel from './components/EquipmentPanel';
 import InventoryPanel from './components/InventoryPanel';
 import PrintableSheet from './components/PrintableSheet.jsx';
 import SessionNotes from './components/SessionNotes';
@@ -446,9 +446,13 @@ function App() {
               clearRollHistory={clearRollHistory}
             />
           </div>
-          {/* Equipment and Inventory Panels */}
-          <div className={`${styles.tile} ${styles.inventory}`}>
+          {/* Equipment Panel */}
+          <div className={`${styles.tile} ${styles.equipment}`}>
             <EquipmentPanel character={character} setCharacter={setCharacter} />
+          </div>
+
+          {/* Inventory Panel */}
+          <div className={`${styles.tile} ${styles.inventory}`}>
             <InventoryPanel
               character={character}
               setCharacter={setCharacter}

@@ -1,5 +1,5 @@
-[33m2ad834c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Revert crystal glass effect and restore floating panel design
-[33m644620d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #445 from thwoom/codex/delete-arwes-theme.png-and-update-readme
-[33m2eb295e[m[33m ([m[1;31morigin/codex/delete-arwes-theme.png-and-update-readme[m[33m)[m docs: remove screenshot placeholder
-[33ma6a7aca[m Merge pull request #444 from thwoom/codex/add-arwes-theme-variables-to-theme.css
-[33m07c47cd[m Merge pull request #443 from thwoom/codex/update-button-styles-and-verify-accessibility
+[33m5a7a543[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #450 from thwoom/codex/create-agents.md-for-ai-coding-agents
+[33m8a3e3f7[m[33m ([m[1;31morigin/codex/create-agents.md-for-ai-coding-agents[m[33m)[m docs: add AI agent guide
+[33mb6da019[m Merge pull request #449 from thwoom/codex/implement-hud-panel-class-and-cleanup-code
+[33m6c09659[m[33m ([m[1;31morigin/codex/implement-hud-panel-class-and-cleanup-code[m[33m)[m Merge branch 'main' into codex/implement-hud-panel-class-and-cleanup-code
+[33m2fa3d87[m Merge pull request #448 from thwoom/codex/refactor-sessionnotes-component-with-panel

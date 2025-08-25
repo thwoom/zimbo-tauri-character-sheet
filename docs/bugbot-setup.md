@@ -153,11 +153,37 @@ gh workflow run centralized-pr-automation.yml --field action=analyze --field pr_
 - **Build failures**: Check Vite build configuration
 - **Missing stats**: Ensure build generates stats.json
 
+## 🚀 Quick Setup (Automated)
+
+### **Option 1: One-Click Setup**
+
+```powershell
+# Opens signup pages and guides you through setup
+.\scripts\quick-bugbot-setup.ps1
+```
+
+### **Option 2: Automated Secret Addition**
+
+After getting your tokens, run:
+
+```powershell
+# Automatically adds all secrets to GitHub
+.\scripts\add-bugbot-secrets.ps1 -SnykToken 'your-snyk-token' -SonarToken 'your-sonar-token'
+```
+
+### **Option 3: Manual Setup**
+
+```powershell
+# Step-by-step setup guide
+.\scripts\setup-bugbot-tools.ps1
+```
+
 ## 🎉 Next Steps
 
-1. **Set up Snyk** (5 minutes)
-2. **Set up SonarCloud** (10 minutes)
-3. **Run the automation** on your PRs
-4. **Review results** and apply recommendations
+1. **Run quick setup**: `.\scripts\quick-bugbot-setup.ps1`
+2. **Sign up for free accounts** (5 minutes)
+3. **Get API tokens** from dashboards
+4. **Add secrets automatically** with the script
+5. **Test the automation** on your PRs
 
 **You'll have BugBot-level analysis capabilities!** 🚀

@@ -15,6 +15,7 @@ const DiceRollerModal = ({
   equippedWeaponDamage,
   rollModal,
   rollModalData,
+  resolveAidOrInterfere,
   aidModal,
 }) => {
   const [isRolling, setIsRolling] = useState(false);
@@ -224,6 +225,14 @@ const DiceRollerModal = ({
               {isRolling ? 'rolling…' : rollResult}
             </div>
 
+            <button
+              onClick={resolveAidOrInterfere}
+              className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label="Apply Aid or Interfere"
+            >
+              Apply Aid/Interfere
+            </button>
+
             {/* Roll History */}
             {rollHistory.length > 0 && (
               <div className={styles.history}>
@@ -267,6 +276,7 @@ DiceRollerModal.propTypes = {
     close: PropTypes.func.isRequired,
   }).isRequired,
   rollModalData: PropTypes.object.isRequired,
+  resolveAidOrInterfere: PropTypes.func.isRequired,
   aidModal: PropTypes.shape({
     isOpen: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func.isRequired,

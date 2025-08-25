@@ -102,6 +102,7 @@ function App() {
     rollDice,
     rollModal,
     rollModalData,
+    resolveAidOrInterfere,
     aidModal,
     rollDie,
     clearRollHistory,
@@ -610,6 +611,7 @@ function App() {
         equippedWeaponDamage={equippedWeaponDamage}
         rollModal={rollModal}
         rollModalData={rollModalData}
+        resolveAidOrInterfere={resolveAidOrInterfere}
         aidModal={aidModal}
       />
 

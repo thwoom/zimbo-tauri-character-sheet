@@ -31,6 +31,7 @@ describe('DiceRollerModal', () => {
       equippedWeaponDamage: 'd8',
       rollModal: { isOpen: false, close: vi.fn() },
       rollModalData: {},
+      resolveAidOrInterfere: vi.fn(),
       aidModal: { isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() },
     };
   });
@@ -87,6 +88,15 @@ describe('DiceRollerModal', () => {
     render(<DiceRollerModal {...mockProps} />);
 
     expect(screen.getByText('Roll result: 12')).toBeInTheDocument();
+  });
+
+  it('calls resolveAidOrInterfere when button is clicked', () => {
+    render(<DiceRollerModal {...mockProps} />);
+
+    const button = screen.getByRole('button', { name: 'Apply Aid/Interfere' });
+    fireEvent.click(button);
+
+    expect(mockProps.resolveAidOrInterfere).toHaveBeenCalledTimes(1);
   });
 
   it('displays roll history', () => {

@@ -49,4 +49,15 @@ describe('RollModal', () => {
     expect(screen.getByText('2d6: 3 + 4 = 7')).toBeInTheDocument();
     expect(screen.getByText('d4: 2 = 2')).toBeInTheDocument();
   });
+
+  it('triggers ammo spending when provided', async () => {
+    const user = userEvent.setup();
+    const onSpendAmmo = vi.fn();
+    const data = { result: '5', onSpendAmmo };
+    render(<RollModal isOpen data={data} onClose={() => {}} />);
+    const btn = screen.getByText('Spend 1 Ammo');
+    expect(btn).toBeInTheDocument();
+    await user.click(btn);
+    expect(onSpendAmmo).toHaveBeenCalled();
+  });
 });

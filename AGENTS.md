@@ -72,7 +72,7 @@ npm run tauri dev
    - Any processes with "vite" or "tauri" in command line
 4. Right-click → **End Task**
 
-**Method 2: Command Line (may trigger pagers)**
+**Method 2: Command Line (pager-safe)**
 
 ```powershell
 # Simple direct kill (if you know there are Node processes)
@@ -82,7 +82,7 @@ taskkill /F /IM node.exe
 npm run dev
 ```
 
-**⚠️ Warning**: Commands using `Get-Process` or `findstr` may get stuck in pagers in automated environments.
+**✅ Pager Issue Resolved**: Set `$env:GITHUB_PAGER=""` and `gh config set pager cat` to prevent pager blocking in automated environments.
 
 #### macOS/Linux
 
@@ -140,6 +140,7 @@ npm run dev
 
 **⚠️ Critical for AI Agents:**
 
+- **Pager Issue Resolved**: Set `$env:GITHUB_PAGER=""` and `gh config set pager cat` to prevent pager blocking
 - **Avoid commands that trigger pagers** (`Get-Process | Where-Object`, `tasklist | findstr`, etc.)
 - **Use direct commands** like `taskkill /F /IM node.exe` instead
 - **If commands get stuck in pagers**, recommend manual Task Manager approach

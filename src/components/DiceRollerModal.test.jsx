@@ -32,6 +32,8 @@ describe('DiceRollerModal', () => {
       rollModal: { isOpen: false, close: vi.fn() },
       rollModalData: {},
       aidModal: { isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() },
+      setCharacter: vi.fn(),
+      saveToHistory: vi.fn(),
     };
   });
 

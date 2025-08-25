@@ -1,0 +1,22 @@
+[33mcommit c3426ffb49ba9385dd1aae9056e75c26a4efbb5d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcodex/update-itemtags-with-srd-tags[m[33m, [m[1;31morigin/codex/update-itemtags-with-srd-tags[m[33m)[m
+Author: thwoom <dan.hubel@gmail.com>
+Date:   Sun Aug 24 23:58:54 2025 -0400
+
+    feat: add complete auto pipeline for all PRs
+    
+    - Add comprehensive PowerShell script for full PR automation
+    - Add scheduled workflow that runs every 30 minutes
+    - Complete pipeline: analysis → fixes → conflict resolution → auto-merge
+    - Fixes the entire automation process to work automatically
+    - Resolves conflicts with dry_run=false to actually process PRs
+    
+    The automation now runs the complete pipeline in the correct order:
+    1. Analysis (ESLint, tests, security, SonarCloud)
+    2. Auto-fixes (format, lint, security fixes)
+    3. Conflict resolution (with actual changes)
+    4. Auto-merge (when all checks pass)
+    
+    This creates a fully automated BugBot-level PR processing system!
+
+A	.github/workflows/auto-process-all-prs.yml
+A	scripts/auto-process-all-prs.ps1

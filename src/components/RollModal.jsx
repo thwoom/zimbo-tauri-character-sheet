@@ -53,6 +53,11 @@ export default function RollModal({ isOpen, data = null, onClose }) {
               )}
               {data.description && <div className={styles.description}>{data.description}</div>}
               {data.context && <div className={styles.context}>{data.context}</div>}
+              {data.onSpendAmmo && (
+                <button onClick={data.onSpendAmmo} className={styles.button}>
+                  Spend 1 Ammo
+                </button>
+              )}
               <button onClick={onClose} className={styles.button}>
                 Close
               </button>

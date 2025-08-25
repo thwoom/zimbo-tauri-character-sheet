@@ -14,6 +14,8 @@ const DiceRoller = ({
   rollModal,
   rollModalData,
   aidModal,
+  setCharacter,
+  saveToHistory,
 }) => {
   const [isRolling, setIsRolling] = useState(false);
   const [animate, setAnimate] = useState(false);
@@ -128,6 +130,26 @@ const DiceRoller = ({
               aria-label="Roll Hack & Slash"
             >
               Hack & Slash
+            </button>
+            <button
+              onClick={() =>
+                rollDice(`2d6+${character.stats.DEX.mod}`, 'Volley', {
+                  onSpendAmmo: () => {
+                    saveToHistory('Ammo Change');
+                    setCharacter((prev) => ({
+                      ...prev,
+                      resources: {
+                        ...prev.resources,
+                        ammo: Math.max(0, prev.resources.ammo - 1),
+                      },
+                    }));
+                  },
+                })
+              }
+              className={`${styles.button} ${styles.purple} ${styles.small}`}
+              aria-label="Roll Volley"
+            >
+              Volley
             </button>
             <button
               onClick={() => rollDice('d4', 'Upper Hand')}
@@ -273,6 +295,8 @@ DiceRoller.propTypes = {
     onConfirm: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
   }).isRequired,
+  setCharacter: PropTypes.func.isRequired,
+  saveToHistory: PropTypes.func.isRequired,
 };
 
 export default DiceRoller;

@@ -49,6 +49,7 @@ export const INITIAL_CHARACTER_DATA = {
     bandages: 3, // Heal 4 HP slowly
     rations: 5, // Satisfy hunger at camp
     advGear: 5, // Rope, torches, chalk, etc.
+    ammo: 3, // Ammunition for ranged weapons
   },
 
   // Character Relationships

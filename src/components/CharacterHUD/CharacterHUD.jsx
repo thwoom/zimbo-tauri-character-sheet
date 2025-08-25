@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { FaDice, FaThumbtack, FaStar, FaWeightHanging, FaSword, FaHeart } from 'react-icons/fa6';
+import { useEffect, useState } from 'react';
+import { FaDice, FaHeart, FaStar, FaThumbtack, FaWeightHanging } from 'react-icons/fa6';
+import useInventory from '../../hooks/useInventory';
+import { useCharacter } from '../../state/CharacterContext';
+import Button from '../common/Button';
+import ButtonGroup from '../common/ButtonGroup';
+import Panel from '../ui/Panel';
+import CastIndicator from './CastIndicator';
 import Nameplate from './Nameplate';
 import Portrait from './Portrait';
 import ResourceBars from './ResourceBars';
 import StatusTray from './StatusTray';
-import CastIndicator from './CastIndicator';
-import { useCharacter } from '../../state/CharacterContext';
-import Panel from '../ui/Panel';
-import Button from '../common/Button';
-import ButtonGroup from '../common/ButtonGroup';
-import useInventory from '../../hooks/useInventory';
 
 export default function CharacterHUD({
   onMountChange = () => {},
@@ -64,8 +64,6 @@ export default function CharacterHUD({
     >
       <Nameplate />
       <Portrait />
-
-      {/* Enhanced Resource Bars with Animation */}
       <ResourceBars
         primary={{ current: character.hp, max: character.maxHp }}
         secondary={
@@ -145,7 +143,7 @@ export default function CharacterHUD({
             marginTop: 'var(--space-sm)',
           }}
         >
-          <FaSword />
+          <FaStar />
           <span>{equippedWeapon.name}</span>
           <span style={{ color: 'var(--color-gray-400)' }}>({equippedWeapon.damage || '1d6'})</span>
         </div>

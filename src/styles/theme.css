@@ -369,38 +369,66 @@ body::after {
 
 /* Typography */
 
-/* HUD panel with animated gradient frame */
+/* HUD panel with premium animated glow effect */
 .hud-panel {
   position: relative;
   padding: var(--hud-spacing);
   border-radius: var(--hud-radius);
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 8px 32px var(--panel-shadow);
+  background: linear-gradient(135deg, #1e1e24 10%, #050505 60%);
+  background-size: 200% 200%;
+  border: none;
+  box-shadow: none;
   -webkit-backdrop-filter: blur(var(--glass-blur));
   backdrop-filter: blur(var(--glass-blur));
   overflow: hidden;
   transition: var(--hud-transition);
+  animation: gradient-shift 5s ease-in-out infinite;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .hud-panel::before {
+  --size: 10px;
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    var(--hud-frame-orange),
-    var(--hud-frame-cyan),
-    var(--hud-frame-orange)
-  );
-  background-size: 300% 300%;
-  filter: blur(8px);
-  z-index: -1;
-  animation: hud-frame-glow 8s linear infinite;
+  top: calc(var(--size) / -2);
+  left: calc(var(--size) / -2);
+  width: calc(100% + var(--size));
+  height: calc(100% + var(--size));
+  background:
+    radial-gradient(circle at 0 0, var(--color-accent), transparent),
+    radial-gradient(circle at 100% 0, var(--color-neon), transparent),
+    radial-gradient(circle at 0 100%, var(--color-purple), transparent),
+    radial-gradient(circle at 100% 100%, var(--color-info), transparent);
+  z-index: -2;
+  filter: blur(2vmin);
+  animation: blur-animation 3s ease-in-out alternate infinite;
 }
 
-@keyframes hud-frame-glow {
+.hud-panel::after {
+  --size: 2px;
+  content: '';
+  position: absolute;
+  top: calc(var(--size) / -2);
+  left: calc(var(--size) / -2);
+  width: calc(100% + var(--size));
+  height: calc(100% + var(--size));
+  background:
+    radial-gradient(circle at 0 0, var(--color-accent), transparent),
+    radial-gradient(circle at 100% 0, var(--color-neon), transparent),
+    radial-gradient(circle at 0 100%, var(--color-purple), transparent),
+    radial-gradient(circle at 100% 100%, var(--color-info), transparent);
+  z-index: -1;
+}
+
+@keyframes blur-animation {
+  to {
+    filter: blur(3vmin);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }

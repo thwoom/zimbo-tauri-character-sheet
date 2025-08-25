@@ -18,6 +18,7 @@ function makeCharacter(overrides = {}) {
     xpNeeded: 10,
     level: 1,
     levelUpPending: false,
+    alignment: 'Neutral',
     resources: {
       chronoUses: 0,
       paradoxPoints: 0,
@@ -102,5 +103,18 @@ describe('CharacterStats', () => {
     updateFn = setCharacter.mock.calls[setCharacter.mock.calls.length - 1][0];
     state = updateFn(state);
     expect(state.resources.chronoUses).toBe(0);
+  });
+
+  it('updates alignment when edited', async () => {
+    const user = userEvent.setup();
+    const setCharacter = vi.fn();
+    const character = makeCharacter({ alignment: 'Neutral' });
+    renderComponent({ character, setCharacter });
+
+    const input = screen.getByLabelText(/alignment\/drive/i);
+    await user.clear(input);
+    await user.type(input, 'Chaotic');
+
+    expect(setCharacter).toHaveBeenCalled();
   });
 });

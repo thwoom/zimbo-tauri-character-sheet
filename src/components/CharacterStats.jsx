@@ -29,6 +29,18 @@ const CharacterStats = ({
       transition={transition}
     >
       <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
+      <div className={styles.alignmentRow}>
+        <label htmlFor="alignment-input" className={styles.alignmentLabel}>
+          Alignment/Drive:
+        </label>
+        <input
+          id="alignment-input"
+          type="text"
+          value={character.alignment ?? ''}
+          onChange={(e) => setCharacter((prev) => ({ ...prev, alignment: e.target.value }))}
+          className={styles.alignmentInput}
+        />
+      </div>
       <div className={styles.statsGrid}>
         {Object.entries(character.stats).map(([stat, data]) => (
           <div key={stat} className={styles.statItem}>
@@ -268,6 +280,7 @@ CharacterStats.propTypes = {
     xpNeeded: PropTypes.number.isRequired,
     level: PropTypes.number.isRequired,
     resources: PropTypes.object.isRequired,
+    alignment: PropTypes.string,
   }).isRequired,
   setCharacter: PropTypes.func.isRequired,
   saveToHistory: PropTypes.func.isRequired,

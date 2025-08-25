@@ -43,6 +43,19 @@
   color: var(--color-accent);
 }
 
+.alignmentRow {
+  margin-bottom: var(--space-md);
+}
+
+.alignmentLabel {
+  font-weight: bold;
+  margin-right: var(--space-sm);
+}
+
+.alignmentInput {
+  width: 100%;
+}
+
 .hpBarContainer {
   width: 100%;
   height: 25px;

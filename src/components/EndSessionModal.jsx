@@ -147,7 +147,9 @@ export default function EndSessionModal({ isOpen, onClose }) {
                   checked={answers.alignment}
                   onChange={() => toggleAnswer('alignment')}
                 />{' '}
-                Did you fulfill your alignment/drive?
+                {`Did you fulfill your alignment/drive${
+                  character.alignment ? ` (${character.alignment})` : ''
+                }?`}
               </label>
             </div>
 

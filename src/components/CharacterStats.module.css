@@ -1,9 +1,4 @@
-.modal {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: var(--hud-spacing);
-}
+/* Modal styling removed - now using Panel component for glass morphism */
 
 .title {
   color: var(--color-accent);

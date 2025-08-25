@@ -1,0 +1,106 @@
+name: 🤖 Auto Process All PRs (Scheduled)
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run even if no PRs'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  auto-process-all-prs:
+    name: 🤖 Complete Auto Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get open PRs
+        id: get-prs
+        run: |
+          prs=$(gh pr list --state open --json number,title --jq '.[].number' | tr '\n' ' ')
+          echo "prs=$prs" >> $GITHUB_OUTPUT
+          echo "Found PRs: $prs"
+          if [ -z "$prs" ]; then
+            echo "no-prs=true" >> $GITHUB_OUTPUT
+          else
+            echo "no-prs=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip if no PRs (unless forced)
+        if: steps.get-prs.outputs.no-prs == 'true' && github.event.inputs.force_run != 'true'
+        run: |
+          echo "No open PRs found. Skipping automation."
+          exit 0
+
+      - name: Step 1 - Run Analysis on All PRs
+        run: |
+          echo "📊 Step 1: Running analysis on all PRs..."
+          prs="${{ steps.get-prs.outputs.prs }}"
+          for pr in $prs; do
+            if [ -n "$pr" ]; then
+              echo "  📊 Analyzing PR #$pr..."
+              gh workflow run centralized-pr-automation.yml --field action=analyze --field pr_number=$pr
+              sleep 3
+            fi
+          done
+
+      - name: Step 2 - Apply Auto-Fixes on All PRs
+        run: |
+          echo "🔧 Step 2: Applying auto-fixes to all PRs..."
+          prs="${{ steps.get-prs.outputs.prs }}"
+          for pr in $prs; do
+            if [ -n "$pr" ]; then
+              echo "  🔧 Fixing PR #$pr..."
+              gh workflow run centralized-pr-automation.yml --field action=fix --field pr_number=$pr
+              sleep 3
+            fi
+          done
+
+      - name: Step 3 - Resolve Conflicts
+        run: |
+          echo "🔀 Step 3: Resolving conflicts and merging all PRs..."
+          gh workflow run "Resolve ALL PRs (policy merge)" --field dry_run=false
+
+      - name: Step 4 - Wait for Conflict Resolution
+        run: |
+          echo "⏳ Step 4: Waiting for conflict resolution to complete..."
+          sleep 60
+
+      - name: Step 5 - Auto-Merge All PRs
+        run: |
+          echo "🚀 Step 5: Running auto-merge pipeline on all PRs..."
+          prs="${{ steps.get-prs.outputs.prs }}"
+          for pr in $prs; do
+            if [ -n "$pr" ]; then
+              echo "  🚀 Auto-merging PR #$pr..."
+              gh workflow run "🤖 Auto Pipeline" --field pr_number=$pr --field auto_merge=true
+              sleep 3
+            fi
+          done
+
+      - name: Summary
+        run: |
+          echo "🎉 Complete Auto Pipeline finished!"
+          echo "📊 Check the GitHub Actions tab to see results"
+          echo "🔍 Monitor PRs for auto-merging..."

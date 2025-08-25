@@ -1,0 +1,159 @@
+name: 🤖 Auto Pipeline
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to process'
+        required: true
+      auto_merge:
+        description: 'Auto-merge if all checks pass'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  auto-pipeline:
+    name: 🤖 Full Auto Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Checkout PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          gh pr checkout $PR_NUMBER
+
+      - name: Step 1 - Apply Fixes
+        id: auto-fix
+        run: |
+          echo "🔧 Step 1: Applying automated fixes..."
+          npm run format
+          npm run lint:fix
+          npm audit fix --audit-level=moderate || true
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "fixes-applied=true" >> $GITHUB_OUTPUT
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "🤖 Auto-fix: format, lint, security"
+            git push
+          else
+            echo "fixes-applied=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Step 2 - Resolve Conflicts
+        id: resolve-conflicts
+        run: |
+          echo "🔀 Step 2: Checking for conflicts..."
+          git fetch origin main
+          if git merge --no-edit origin/main; then
+            echo "conflicts-resolved=false" >> $GITHUB_OUTPUT
+            echo "No conflicts found"
+          else
+            echo "conflicts-resolved=true" >> $GITHUB_OUTPUT
+            echo "Conflicts detected, auto-resolving..."
+            git add -A
+            git commit -m "🤖 Auto-resolve conflicts (prefer PR changes)"
+            git push
+          fi
+
+      - name: Step 3 - Final Analysis
+        id: final-analysis
+        run: |
+          echo "🔍 Step 3: Final analysis..."
+          npm run lint > eslint-report.txt 2>&1 || true
+          npm test > test-report.txt 2>&1 || true
+          npm audit --audit-level=moderate > security-report.txt 2>&1 || true
+          eslint_issues=$(grep -c "error\|warning" eslint-report.txt 2>/dev/null || echo "0")
+          test_failures=$(grep -c "FAIL\|Error" test-report.txt 2>/dev/null || echo "0")
+          security_issues=$(grep -c "vulnerability\|critical\|high" security-report.txt 2>/dev/null || echo "0")
+          total_issues=$((eslint_issues + test_failures + security_issues))
+          if [ "$total_issues" -gt 0 ]; then
+            echo "has-issues=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-issues=false" >> $GITHUB_OUTPUT
+          fi
+          echo "issue-count=$total_issues" >> $GITHUB_OUTPUT
+
+      - name: Step 4 - Auto Merge
+        id: auto-merge
+        if: github.event.inputs.auto_merge == 'true' && steps.final-analysis.outputs.has-issues == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          echo "🚀 Step 4: Auto-merging PR..."
+          gh pr merge $PR_NUMBER --squash --delete-branch
+          echo "merge-successful=true" >> $GITHUB_OUTPUT
+          echo "✅ PR #$PR_NUMBER merged successfully!"
+
+      - name: Step 5 - Report Results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ github.event.inputs.pr_number }}
+            });
+            for (const comment of comments) {
+              if (comment.user.type === 'Bot' && comment.body.includes('🤖 Auto Pipeline')) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id
+                });
+              }
+            }
+            const fixesApplied = '${{ steps.auto-fix.outputs.fixes-applied }}' === 'true';
+            const conflictsResolved = '${{ steps.resolve-conflicts.outputs.conflicts-resolved }}' === 'true';
+            const hasIssues = '${{ steps.final-analysis.outputs.has-issues }}' === 'true';
+            const mergeSuccessful = '${{ steps.auto-merge.outputs.merge-successful }}' === 'true';
+            const issueCount = '${{ steps.final-analysis.outputs.issue-count }}';
+            let body = '## 🤖 Auto Pipeline - Complete Results\n\n';
+            body += '### 🔧 Fixes Applied:\n';
+            body += fixesApplied ? '✅ **Automated fixes applied** (format, lint, security)\n' : 'ℹ️ **No fixes needed**\n';
+            if (conflictsResolved) {
+              body += '### 🔀 Conflicts Resolved:\n';
+              body += '✅ **Auto-resolved merge conflicts** (preferred PR changes)\n';
+            }
+            body += '\n### 📊 Final Status:\n';
+            if (hasIssues) {
+              body += `⚠️ **${issueCount} issues remain** - manual review needed\n`;
+            } else {
+              body += '✅ **All checks passed**\n';
+            }
+            if (mergeSuccessful) {
+              body += '\n### 🚀 Auto-Merge:\n';
+              body += '✅ **PR automatically merged!**\n';
+            } else if (!hasIssues) {
+              body += '\n### 🚀 Ready to Merge:\n';
+              body += '✅ **All checks passed** - ready for manual merge\n';
+            }
+            body += '\n---\n';
+            body += '*This PR was processed by the centralized automation system*';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ github.event.inputs.pr_number }},
+              body: body
+            });

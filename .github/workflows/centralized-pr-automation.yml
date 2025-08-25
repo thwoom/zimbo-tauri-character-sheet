@@ -211,4 +211,16 @@ jobs:
           CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
 
           echo "🚀 Attempting to merge PR #$CLEAN_PR_NUMBER"
-          gh pr merge $CLEAN_PR_NUMBER --auto --squash || true
+
+          # Check if PR is mergeable
+          PR_STATUS=$(gh pr view $CLEAN_PR_NUMBER --json mergeable,mergeStateStatus --jq '.mergeable + ":" + .mergeStateStatus')
+          echo "PR Status: $PR_STATUS"
+
+          if [[ "$PR_STATUS" == "MERGEABLE:CLEAN" ]]; then
+            echo "✅ PR is mergeable, attempting merge..."
+            gh pr merge $CLEAN_PR_NUMBER --squash --delete-branch
+            echo "✅ PR #$CLEAN_PR_NUMBER merged successfully!"
+          else
+            echo "⚠️ PR #$CLEAN_PR_NUMBER is not in a mergeable state: $PR_STATUS"
+            echo "This PR needs manual attention or additional fixes."
+          fi

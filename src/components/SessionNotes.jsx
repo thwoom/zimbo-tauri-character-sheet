@@ -73,6 +73,7 @@ const SessionNotes = ({ sessionNotes, setSessionNotes, compactMode, setCompactMo
   return (
     <>
       <Panel
+        glow="notes"
         className={`${styles.container} ${
           compactMode ? styles.collapsed : styles.expanded
         } ${compactMode ? '' : styles.fullWidth}`}

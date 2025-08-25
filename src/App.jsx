@@ -430,7 +430,11 @@ function App() {
         <div className={styles.grid}>
           {/* Avatar Panel */}
           <div className={`${styles.tile} ${styles.hud}`}>
-            <CharacterHUD onMountChange={setHudMounted} />
+            <CharacterHUD
+              onMountChange={setHudMounted}
+              rollDie={rollDie}
+              setRollResult={setRollResult}
+            />
           </div>
 
           {/* Stats Panel */}

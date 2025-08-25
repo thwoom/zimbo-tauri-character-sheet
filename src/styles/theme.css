@@ -369,38 +369,58 @@ body::after {
 
 /* Typography */
 
-/* HUD panel with animated gradient frame */
+/* HUD panel with premium animated glow effect */
 .hud-panel {
   position: relative;
   padding: var(--hud-spacing);
   border-radius: var(--hud-radius);
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 8px 32px var(--panel-shadow);
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  backdrop-filter: blur(var(--glass-blur));
-  overflow: hidden;
-  transition: var(--hud-transition);
+  background: linear-gradient(135deg, #1e1e24 10%, #050505 60%);
+  background-size: 200% 200%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  -webkit-user-select: none;
+  user-select: none;
+  animation: gradient-shift 5s ease-in-out infinite;
+}
+
+.hud-panel::before,
+.hud-panel::after {
+  --size: 5px;
+  content: '';
+  position: absolute;
+  top: calc(var(--size) / -2);
+  left: calc(var(--size) / -2);
+  width: calc(100% + var(--size));
+  height: calc(100% + var(--size));
+  background:
+    radial-gradient(circle at 0 0, hsl(27deg 93% 60%) 0%, transparent 30%),
+    radial-gradient(circle at 100% 0, #00a6ff 0%, transparent 30%),
+    radial-gradient(circle at 0 100%, transparent 0%, transparent 30%),
+    radial-gradient(circle at 100% 100%, #6500ff 0%, transparent 30%);
+}
+
+.hud-panel::after {
+  --size: 2px;
+  z-index: -1;
 }
 
 .hud-panel::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    var(--hud-frame-orange),
-    var(--hud-frame-cyan),
-    var(--hud-frame-orange)
-  );
-  background-size: 300% 300%;
+  --size: 10px;
+  z-index: -2;
   filter: blur(8px);
-  z-index: -1;
-  animation: hud-frame-glow 8s linear infinite;
+  animation: blur-animation 3s ease-in-out alternate infinite;
 }
 
-@keyframes hud-frame-glow {
+@keyframes blur-animation {
+  to {
+    filter: blur(12px);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }
@@ -410,6 +430,58 @@ body::after {
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Panel Glow Variations */
+
+/* Hero/Character HUD - Vibrant multi-corner glow */
+.hud-panel.glow-hero::before,
+.hud-panel.glow-hero::after {
+  background:
+    radial-gradient(circle at 0 0, #ff6b6b 0%, transparent 40%),
+    radial-gradient(circle at 100% 0, #00a6ff 0%, transparent 40%),
+    radial-gradient(circle at 0 100%, #ff0056 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, #6500ff 0%, transparent 40%);
+}
+
+/* Stats Panel - Technical cyan/blue glow */
+.hud-panel.glow-stats::before,
+.hud-panel.glow-stats::after {
+  background:
+    radial-gradient(circle at 0 0, var(--color-neon) 0%, transparent 35%),
+    radial-gradient(circle at 100% 0, var(--color-info) 0%, transparent 35%),
+    radial-gradient(circle at 0 100%, transparent 0%, transparent 35%),
+    radial-gradient(circle at 100% 100%, var(--color-accent) 0%, transparent 35%);
+}
+
+/* Equipment Panel - Orange/red combat glow */
+.hud-panel.glow-equipment::before,
+.hud-panel.glow-equipment::after {
+  background:
+    radial-gradient(circle at 0 0, hsl(27deg 93% 60%) 0%, transparent 30%),
+    radial-gradient(circle at 100% 0, transparent 0%, transparent 30%),
+    radial-gradient(circle at 0 100%, transparent 0%, transparent 30%),
+    radial-gradient(circle at 100% 100%, var(--color-danger) 0%, transparent 30%);
+}
+
+/* Inventory Panel - Purple/pink mystical glow */
+.hud-panel.glow-inventory::before,
+.hud-panel.glow-inventory::after {
+  background:
+    radial-gradient(circle at 0 0, transparent 0%, transparent 35%),
+    radial-gradient(circle at 100% 0, var(--color-purple-500) 0%, transparent 35%),
+    radial-gradient(circle at 0 100%, #ff0056 0%, transparent 35%),
+    radial-gradient(circle at 100% 100%, transparent 0%, transparent 35%);
+}
+
+/* Notes Panel - Subtle single corner accent */
+.hud-panel.glow-notes::before,
+.hud-panel.glow-notes::after {
+  background:
+    radial-gradient(circle at 0 0, var(--color-accent) 0%, transparent 25%),
+    radial-gradient(circle at 100% 0, transparent 0%, transparent 25%),
+    radial-gradient(circle at 0 100%, transparent 0%, transparent 25%),
+    radial-gradient(circle at 100% 100%, transparent 0%, transparent 25%);
 }
 h1,
 h2,

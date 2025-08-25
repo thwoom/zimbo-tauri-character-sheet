@@ -6,6 +6,8 @@ import InventoryPanel from './InventoryPanel.jsx';
 
 const characterTemplate = {
   inventory: [],
+  baseLoad: 0,
+  stats: { STR: { mod: 0 } },
 };
 
 function setup(custom = {}) {
@@ -27,7 +29,7 @@ function setup(custom = {}) {
 describe('InventoryPanel', () => {
   it('calls setShowAddItemModal when Add Item clicked', async () => {
     const user = userEvent.setup();
-    const { setShowAddItemModal } = setup({ inventory: [], maxLoad: 12 });
+    const { setShowAddItemModal } = setup({ inventory: [], baseLoad: 12 });
     await user.click(screen.getByText(/add item/i));
     expect(setShowAddItemModal).toHaveBeenCalledWith(true);
   });

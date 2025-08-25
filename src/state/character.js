@@ -13,6 +13,7 @@ import {
   FaBrain,
   FaFaceFrownOpen,
 } from 'react-icons/fa6';
+import { CLASS_DATA } from '../data/classData.js';
 
 export const RULEBOOK = 'Dungeon World';
 
@@ -27,6 +28,8 @@ export const INITIAL_CHARACTER_DATA = {
   armor: 0,
   secondaryResource: 0,
   maxSecondaryResource: 0,
+  class: 'Fighter',
+  baseLoad: CLASS_DATA.Fighter.baseLoad,
 
   // Attributes
   stats: {

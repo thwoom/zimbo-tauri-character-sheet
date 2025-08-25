@@ -24,6 +24,7 @@ function makeCharacter(overrides = {}) {
       bandages: 1,
       rations: 1,
       advGear: 1,
+      ammo: 1,
     },
     ...overrides,
   };

@@ -607,6 +607,8 @@ function App() {
         rollModal={rollModal}
         rollModalData={rollModalData}
         aidModal={aidModal}
+        setCharacter={setCharacter}
+        saveToHistory={saveToHistory}
       />
 
       {PerformanceHud && (

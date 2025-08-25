@@ -193,6 +193,7 @@ const CharacterStats = ({
         { key: 'bandages', label: 'Bandages', max: 3 },
         { key: 'rations', label: 'Rations', max: 5 },
         { key: 'advGear', label: 'Adventuring Gear', max: 5 },
+        { key: 'ammo', label: 'Ammo', max: 99 },
       ].map(({ key, label, max }) => (
         <div key={key} className={styles.resourceRow}>
           <div className={styles.resourceHeader}>
@@ -246,6 +247,7 @@ const CharacterStats = ({
               bandages: 3,
               rations: 5,
               advGear: 5,
+              ammo: 3,
             },
           }));
           setSessionNotes('');

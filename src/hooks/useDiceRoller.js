@@ -148,7 +148,7 @@ export default function useDiceRoller(
     return 'Things go badly';
   };
 
-  const rollDice = async (formula, description = '') => {
+  const rollDice = async (formula, description = '', extraData = {}) => {
     const desc = description.toLowerCase();
     const xpOnMiss = autoXpOnMiss;
     let result = '';
@@ -289,6 +289,7 @@ export default function useDiceRoller(
       modifier: totalModifier,
       timestamp: Date.now(),
       ...(initialResult && { initialResult }),
+      ...extraData,
     };
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);

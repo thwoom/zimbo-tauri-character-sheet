@@ -28,6 +28,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
 
@@ -53,6 +55,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
     expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
@@ -72,6 +76,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
     expect(screen.getByText('d20: 9 = 9')).toHaveAttribute('aria-live', 'polite');
@@ -89,6 +95,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
     expect(screen.getByText('d20: 9 = 9')).toBeInTheDocument();
@@ -102,6 +110,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
     expect(screen.getByText('d20: 10 = 10')).toBeInTheDocument();
@@ -120,6 +130,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
 
@@ -135,6 +147,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
 
@@ -157,6 +171,8 @@ describe('DiceRoller', () => {
         rollModal={{ isOpen: false, close: vi.fn() }}
         rollModalData={{}}
         aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={vi.fn()}
+        saveToHistory={vi.fn()}
       />,
     );
 
@@ -167,5 +183,33 @@ describe('DiceRoller', () => {
     // Use preset
     await user.click(screen.getByRole('button', { name: /roll preset volley/i }));
     expect(rollDice).toHaveBeenCalledWith('2d6+1', 'Volley');
+  });
+
+  it('provides ammo spend callback for volley', async () => {
+    const user = userEvent.setup();
+    const rollDice = vi.fn();
+    const setCharacter = vi.fn();
+    render(
+      <DiceRoller
+        character={minimalCharacter}
+        rollDice={rollDice}
+        equippedWeaponDamage="d8"
+        rollResult=""
+        rollHistory={[]}
+        rollModal={{ isOpen: false, close: vi.fn() }}
+        rollModalData={{}}
+        aidModal={{ isOpen: false, onConfirm: vi.fn(), onCancel: vi.fn() }}
+        setCharacter={setCharacter}
+        saveToHistory={vi.fn()}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Roll Volley' }));
+    const volleyCall = rollDice.mock.calls.find((c) => c[1] === 'Volley');
+    expect(volleyCall[0]).toBe('2d6+0');
+    expect(typeof volleyCall[2].onSpendAmmo).toBe('function');
+    volleyCall[2].onSpendAmmo();
+    const updateFn = setCharacter.mock.calls[0][0];
+    const newState = updateFn({ resources: { ammo: 2 } });
+    expect(newState.resources.ammo).toBe(1);
   });
 });

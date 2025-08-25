@@ -12,6 +12,16 @@ export const TAG_DEFINITIONS = {
   '+1 forward': 'Take +1 on your next relevant roll',
   melee: 'Effective at close range',
   forceful: 'Can push your enemy back',
+  close: "Effective within arm's reach",
+  reach: 'Has extended reach like a spear',
+  near: 'Effective at short range',
+  far: 'Effective at long range',
+  reload: 'Requires time to reload after use',
+  piercing: 'Ignores armor equal to its rating',
+  thrown: 'Can be thrown as a ranged attack',
+  slow: 'Takes more time to use',
+  area: 'Affects multiple targets',
+  stun: 'Can briefly incapacitate a target',
 };
 
 export function getTagDescription(tag) {

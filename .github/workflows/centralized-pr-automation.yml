@@ -37,6 +37,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Checkout PR (if specified)
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          gh pr checkout $PR_NUMBER
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -188,6 +196,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+
+      - name: Checkout PR (if specified)
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          gh pr checkout $PR_NUMBER
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

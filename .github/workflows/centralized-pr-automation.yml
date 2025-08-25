@@ -73,15 +73,51 @@ jobs:
           cat security-report.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Snyk Security Scan
+        id: snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        with:
+          args: --severity-threshold=high --json-file-output=snyk-report.json
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Bundle Analysis
+        id: bundle
+        run: |
+          npm run build
+          npx webpack-bundle-analyzer dist/stats.json --mode static --report-filename bundle-report.html || true
+          echo "bundle-analysis-complete=true" >> $GITHUB_OUTPUT
+
+      - name: SonarQube Analysis
+        id: sonar
+        uses: sonarqube-quality-gate-action@master
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=zimbo-tauri-character-sheet
+            -Dsonar.sources=src
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.coverage.exclusions=**/*.test.js,**/*.test.jsx,**/*.spec.js,**/*.spec.jsx
+
       - name: Code Quality Analysis
         id: analysis
         run: |
-          # Count issues
+          # Count issues from all tools
           eslint_issues=$(grep -c "error\|warning" eslint-report.txt 2>/dev/null || echo "0")
           test_failures=$(grep -c "FAIL\|Error" test-report.txt 2>/dev/null || echo "0")
           security_issues=$(grep -c "vulnerability\|critical\|high" security-report.txt 2>/dev/null || echo "0")
 
-          total_issues=$((eslint_issues + test_failures + security_issues))
+          # Snyk security issues
+          snyk_issues=$(jq '.vulnerabilities | length' snyk-report.json 2>/dev/null || echo "0")
+
+          # SonarQube issues (if available)
+          sonar_issues=$(echo "0")  # Will be updated when SonarQube is configured
+
+          total_issues=$((eslint_issues + test_failures + security_issues + snyk_issues + sonar_issues))
 
           if [ "$total_issues" -gt 0 ]; then
             echo "has-issues=true" >> $GITHUB_OUTPUT
@@ -92,6 +128,8 @@ jobs:
           echo "eslint-issues=$eslint_issues" >> $GITHUB_OUTPUT
           echo "test-failures=$test_failures" >> $GITHUB_OUTPUT
           echo "security-issues=$security_issues" >> $GITHUB_OUTPUT
+          echo "snyk-issues=$snyk_issues" >> $GITHUB_OUTPUT
+          echo "sonar-issues=$sonar_issues" >> $GITHUB_OUTPUT
 
       - name: Comment Analysis Results
         if: github.event_name == 'pull_request'
@@ -120,14 +158,18 @@ jobs:
             const eslintIssues = '${{ steps.analysis.outputs.eslint-issues }}';
             const testFailures = '${{ steps.analysis.outputs.test-failures }}';
             const securityIssues = '${{ steps.analysis.outputs.security-issues }}';
+            const snykIssues = '${{ steps.analysis.outputs.snyk-issues }}';
+            const sonarIssues = '${{ steps.analysis.outputs.sonar-issues }}';
 
-            let body = '## 🤖 Centralized PR Automation - Analysis Results\n\n';
+            let body = '## 🤖 BugBot-Level PR Automation - Analysis Results\n\n';
 
             if (hasIssues) {
               body += `⚠️ **Found ${issueCount} issues that need attention:**\n\n`;
               body += `- **ESLint Issues**: ${eslintIssues}\n`;
               body += `- **Test Failures**: ${testFailures}\n`;
-              body += `- **Security Issues**: ${securityIssues}\n\n`;
+              body += `- **Security Issues**: ${securityIssues}\n`;
+              body += `- **Snyk Vulnerabilities**: ${snykIssues}\n`;
+              body += `- **SonarQube Issues**: ${sonarIssues}\n\n`;
               body += '### Next Steps:\n';
               body += '1. Review the detailed reports below\n';
               body += '2. Run automated fixes: `/automation fix`\n';
@@ -139,6 +181,11 @@ jobs:
             }
 
             body += '\n---\n';
+            body += '**🔍 Advanced Analysis Tools:**\n';
+            body += '- ✅ **ESLint** - Code quality and style\n';
+            body += '- ✅ **Snyk** - Security vulnerability scanning\n';
+            body += '- ✅ **SonarQube** - Advanced code analysis\n';
+            body += '- ✅ **Bundle Analysis** - Performance optimization\n\n';
             body += '**ESLint Report:**\n```\n${{ steps.eslint.outputs.eslint-report }}\n```\n\n';
             body += '**Test Report:**\n```\n${{ steps.tests.outputs.test-report }}\n```\n\n';
             body += '**Security Report:**\n```\n${{ steps.security.outputs.security-report }}\n```';

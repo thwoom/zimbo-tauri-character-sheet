@@ -47,9 +47,14 @@ jobs:
 
             choose_side() {
               f="$1"
-              if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then echo "theirs"; return; fi
-              if echo "$f" | grep -Eq '^src/|package\.json$'; then echo "ours"; return; fi
-              if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
+              # For your own PRs, prefer PR changes for everything
+              # Only use base for lockfiles if explicitly configured to prefer-base
+              if echo "$f" | grep -Eq 'package-lock\.json$|pnpm-lock\.yaml$|yarn\.lock$'; then
+                if [ "${STRATEGY:-prefer-pr}" = "prefer-base" ]; then echo "theirs"; else echo "ours"; fi
+                return
+              fi
+              # Default to PR changes (ours) for everything else
+              echo "ours"
             }
 
             union_ignore() {
@@ -104,7 +109,7 @@ jobs:
                     ;;
                 esac
               done
-              git commit -m "autofix(#$num): policy resolve (${STRATEGY:-prefer-pr}; src/** & package.json from PR; lockfiles from base)"
+              git commit -m "autofix(#$num): policy resolve (${STRATEGY:-prefer-pr}; prefer PR changes for everything)"
             fi
 
             if [[ "${DRY_RUN}" = "true" ]]; then
@@ -119,7 +124,7 @@ jobs:
             else
               git push -u origin "autofix/pr-$num"
               gh pr create --title "Takeover: resolve conflicts for #$num" \
-                --body "Supersedes #$num. Merged $base and resolved conflicts (src/** & package.json from PR; lockfiles from base)." \
+                --body "Supersedes #$num. Merged $base and resolved conflicts (prefer PR changes for everything)." \
                 --base "$base" --head "autofix/pr-$num" || true
             fi
 

@@ -60,8 +60,8 @@ The centralized automation system provides comprehensive PR management including
 **Strategy**:
 
 - Uses existing conflict resolution logic
-- Prefers PR changes for source files
-- Prefers base changes for lockfiles
+- **Prefers PR changes for everything** (since these are your own PRs)
+- Only uses base changes for lockfiles if explicitly configured with `prefer-base` strategy
 - Creates union merges for ignore files
 
 #### 4. Merge Job

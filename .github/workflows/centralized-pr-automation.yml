@@ -77,13 +77,17 @@ jobs:
         id: analysis
         run: |
           # Count issues
-          eslint_issues=$(grep -c "error\|warning" eslint-report.txt || echo "0")
-          test_failures=$(grep -c "FAIL\|Error" test-report.txt || echo "0")
-          security_issues=$(grep -c "vulnerability\|critical\|high" security-report.txt || echo "0")
+          eslint_issues=$(grep -c "error\|warning" eslint-report.txt 2>/dev/null || echo "0")
+          test_failures=$(grep -c "FAIL\|Error" test-report.txt 2>/dev/null || echo "0")
+          security_issues=$(grep -c "vulnerability\|critical\|high" security-report.txt 2>/dev/null || echo "0")
 
           total_issues=$((eslint_issues + test_failures + security_issues))
 
-          echo "has-issues=$([ $total_issues -gt 0 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          if [ "$total_issues" -gt 0 ]; then
+            echo "has-issues=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-issues=false" >> $GITHUB_OUTPUT
+          fi
           echo "issue-count=$total_issues" >> $GITHUB_OUTPUT
           echo "eslint-issues=$eslint_issues" >> $GITHUB_OUTPUT
           echo "test-failures=$test_failures" >> $GITHUB_OUTPUT

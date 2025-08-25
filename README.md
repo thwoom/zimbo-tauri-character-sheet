@@ -25,6 +25,10 @@ Not just a sheet. A mate.
 - **Theme Switching** – Select from cosmic, classic, or moebius themes, each with distinct fonts, spacing, and motion.
 - **Cross-Platform Packaging** – Create native binaries via Tauri.
 
+## House-rule Resources
+
+The sheet includes optional fields for common table variants such as Chrono-Retcon uses and Paradox Points. These are marked with a "House Rule" tooltip in the UI. Disable them via **Settings → Show house-rule resources** if you prefer a rules-as-written experience.
+
 ## Inventory Item Schema
 
 Inventory items are objects with the following fields:
@@ -51,6 +55,7 @@ Open the Settings panel from the toolbar to customize your experience:
 
 - **Theme** – Switch between cosmic, classic, or moebius. The choice is saved for future sessions.
 - **Auto XP on miss** – Enable this checkbox to automatically gain XP when a roll misses. Uncheck to track XP manually.
+- **Show house-rule resources** – Toggle Chrono-Retcon uses and Paradox Points if your table doesn't use these extras.
 
 ## Performance HUD (development only)
 

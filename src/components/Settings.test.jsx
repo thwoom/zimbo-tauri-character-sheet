@@ -12,6 +12,7 @@ describe('Settings', () => {
     const setTheme = vi.fn();
     const setAutoXpOnMiss = vi.fn();
     const setShowDiagnostics = vi.fn();
+    const setShowHouseRules = vi.fn();
 
     import.meta.env.DEV = 'true';
 
@@ -23,6 +24,8 @@ describe('Settings', () => {
             setAutoXpOnMiss,
             showDiagnostics: false,
             setShowDiagnostics,
+            showHouseRules: true,
+            setShowHouseRules,
           }}
         >
           <Settings />
@@ -35,6 +38,9 @@ describe('Settings', () => {
 
     await user.click(screen.getByLabelText(/Auto XP on miss/i));
     expect(setAutoXpOnMiss).toHaveBeenCalledWith(true);
+
+    await user.click(screen.getByLabelText(/Show house-rule resources/i));
+    expect(setShowHouseRules).toHaveBeenCalledWith(false);
 
     await user.click(screen.getByLabelText(/Show diagnostics overlay/i));
     expect(setShowDiagnostics).toHaveBeenCalledWith(true);

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { advancedMoves } from '../data/advancedMoves.js';
+import { SettingsProvider } from '../state/SettingsContext';
 import CharacterStats from './CharacterStats';
 import LevelUpModal from './LevelUpModal';
 import styles from './LevelUpModal.module.css';
@@ -283,7 +284,7 @@ describe('LevelUpModal visibility and closing', () => {
     function Wrapper() {
       const [showLevelUpModal, setShowLevelUpModal] = useState(false);
       return (
-        <>
+        <SettingsProvider>
           <CharacterStats
             character={character}
             setCharacter={() => {}}
@@ -303,7 +304,7 @@ describe('LevelUpModal visibility and closing', () => {
               setRollResult={() => {}}
             />
           )}
-        </>
+        </SettingsProvider>
       );
     }
 

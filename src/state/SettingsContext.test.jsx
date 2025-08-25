@@ -6,6 +6,7 @@ describe('SettingsContext', () => {
   afterEach(() => {
     delete import.meta.env.VITE_AUTO_XP_ON_MISS;
     delete import.meta.env.VITE_SHOW_DIAGNOSTICS;
+    delete import.meta.env.VITE_SHOW_HOUSE_RULES;
   });
 
   it('uses env default when initialAutoXpOnMiss is omitted', () => {
@@ -53,5 +54,28 @@ describe('SettingsContext', () => {
       result.current.setShowDiagnostics(true);
     });
     expect(result.current.showDiagnostics).toBe(true);
+  });
+
+  it('handles showHouseRules defaults and updates', () => {
+    import.meta.env.VITE_SHOW_HOUSE_RULES = 'false';
+    const wrapper = ({ children }) => <SettingsProvider>{children}</SettingsProvider>;
+    const { result } = renderHook(() => useSettings(), { wrapper });
+    expect(result.current.showHouseRules).toBe(false);
+    act(() => {
+      result.current.setShowHouseRules(true);
+    });
+    expect(result.current.showHouseRules).toBe(true);
+  });
+
+  it('honors initialShowHouseRules prop', () => {
+    const wrapper = ({ children }) => (
+      <SettingsProvider initialShowHouseRules={false}>{children}</SettingsProvider>
+    );
+    const { result } = renderHook(() => useSettings(), { wrapper });
+    expect(result.current.showHouseRules).toBe(false);
+    act(() => {
+      result.current.setShowHouseRules(true);
+    });
+    expect(result.current.showHouseRules).toBe(true);
   });
 });

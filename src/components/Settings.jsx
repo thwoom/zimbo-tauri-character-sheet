@@ -4,7 +4,14 @@ import { useSettings } from '../state/SettingsContext';
 
 const Settings = () => {
   const { theme, setTheme, themes } = useTheme();
-  const { autoXpOnMiss, setAutoXpOnMiss, showDiagnostics, setShowDiagnostics } = useSettings();
+  const {
+    autoXpOnMiss,
+    setAutoXpOnMiss,
+    showDiagnostics,
+    setShowDiagnostics,
+    showHouseRules,
+    setShowHouseRules,
+  } = useSettings();
   const themeLabels = {
     legacy: 'Legacy',
     'cosmic-v2': 'Cosmic v2',
@@ -36,6 +43,15 @@ const Settings = () => {
           onChange={(e) => setAutoXpOnMiss(e.target.checked)}
         />{' '}
         Auto XP on miss
+      </label>
+      <label htmlFor="show-house-rules">
+        <input
+          id="show-house-rules"
+          type="checkbox"
+          checked={showHouseRules}
+          onChange={(e) => setShowHouseRules(e.target.checked)}
+        />{' '}
+        Show house-rule resources
       </label>
       {import.meta.env.DEV && (
         <label htmlFor="show-diagnostics">

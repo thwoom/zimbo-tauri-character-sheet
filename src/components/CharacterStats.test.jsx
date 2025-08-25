@@ -1,8 +1,9 @@
 /* eslint-env jest */
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
+import { SettingsProvider } from '../state/SettingsContext';
 import CharacterStats from './CharacterStats';
 
 function makeCharacter(overrides = {}) {
@@ -30,7 +31,7 @@ function makeCharacter(overrides = {}) {
 }
 
 describe('CharacterStats', () => {
-  function renderComponent(propOverrides = {}) {
+  function renderComponent(propOverrides = {}, settingsOverrides = {}) {
     const defaultProps = {
       character: makeCharacter(),
       setCharacter: vi.fn(),
@@ -41,7 +42,11 @@ describe('CharacterStats', () => {
       ...propOverrides,
     };
     return {
-      ...render(<CharacterStats {...defaultProps} />),
+      ...render(
+        <SettingsProvider {...settingsOverrides}>
+          <CharacterStats {...defaultProps} />
+        </SettingsProvider>,
+      ),
       props: defaultProps,
     };
   }
@@ -59,6 +64,17 @@ describe('CharacterStats', () => {
     renderComponent();
     const chronoButton = screen.getByRole('button', { name: /Use Chrono-Retcon/i });
     expect(chronoButton).toBeDisabled();
+  });
+
+  it('annotates and hides house-rule resources', () => {
+    renderComponent();
+    expect(screen.getByText(/Chrono-Retcon Uses/i)).toHaveAttribute('title', 'House Rule');
+    expect(screen.getByText('Paradox Points:')).toHaveAttribute('title', 'House Rule');
+
+    cleanup();
+    renderComponent({}, { initialShowHouseRules: false });
+    expect(screen.queryByText(/Chrono-Retcon Uses/i)).toBeNull();
+    expect(screen.queryByText('Paradox Points:')).toBeNull();
   });
 
   it('adjusts chrono-retcon uses with clamping', async () => {

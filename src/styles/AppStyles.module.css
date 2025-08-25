@@ -12,6 +12,12 @@
   overflow-x: hidden;
 }
 
+@media (min-width: 1600px) {
+  .container {
+    padding: var(--hud-spacing) calc(var(--hud-spacing) * 2);
+  }
+}
+
 /* Space HUD Background Effect */
 .container::before {
   content: '';
@@ -291,6 +297,7 @@
 
 .innerContainer {
   width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -409,10 +416,11 @@
   grid-template-areas:
     'hud stats equipment'
     'hud notes inventory';
-  grid-template-columns: 320px 1fr 320px;
+  grid-template-columns: 320px minmax(400px, 600px) 320px;
   grid-template-rows: auto auto;
   gap: var(--hud-spacing);
   margin-bottom: var(--hud-spacing);
+  justify-content: center;
 }
 
 .tile {
@@ -454,6 +462,13 @@
 
 .notes:hover {
   transform: translateY(-1px);
+}
+
+/* Ultra-wide screen optimization */
+@media (min-width: 1600px) {
+  .grid {
+    grid-template-columns: 360px minmax(500px, 700px) 360px;
+  }
 }
 
 @media (max-width: 1199px) {

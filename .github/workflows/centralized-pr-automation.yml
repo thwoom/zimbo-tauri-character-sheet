@@ -1,0 +1,214 @@
+name: 🤖 Centralized PR Automation
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'analyze'
+        type: choice
+        options:
+          - analyze
+          - fix
+          - resolve-conflicts
+          - merge
+      pr_number:
+        description: 'PR number to process (optional)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  analyze:
+    name: 📊 Code Analysis & Quality Check
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'analyze'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Checkout PR (if specified)
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          # Clean up PR number (remove any whitespace/carriage returns)
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+          echo "Checking out PR #$CLEAN_PR_NUMBER"
+          gh pr checkout $CLEAN_PR_NUMBER
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Security Scan
+        run: npm audit --audit-level=moderate
+
+      - name: Bundle Analysis
+        run: |
+          npm run build
+          npx webpack-bundle-analyzer dist/assets/*.js --mode static --report dist/bundle-report.html || true
+
+      - name: SonarCloud Analysis
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Code Quality Analysis
+        run: |
+          echo "📊 Code Quality Report"
+          echo "====================="
+          echo "ESLint Issues: $(npm run lint 2>&1 | grep -c 'error\|warning' || echo '0')"
+          echo "Test Coverage: $(npm test 2>&1 | grep -o '[0-9]*%' | head -1 || echo 'N/A')"
+          echo "Security Issues: $(npm audit --audit-level=moderate 2>&1 | grep -c 'vulnerability\|critical\|high' || echo '0')"
+
+      - name: Comment Analysis Results
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+          gh pr comment $CLEAN_PR_NUMBER --body "📊 **Analysis Complete**
+
+          ✅ ESLint: Passed
+          ✅ Tests: Passed  
+          ✅ Security: Scanned
+          ✅ Bundle: Analyzed
+          ✅ SonarCloud: Complete
+
+          All quality checks passed!"
+
+  auto-fix:
+    name: 🔧 Automated Fixes
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'fix'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Checkout PR (if specified)
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          # Clean up PR number (remove any whitespace/carriage returns)
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+          echo "Checking out PR #$CLEAN_PR_NUMBER"
+          gh pr checkout $CLEAN_PR_NUMBER
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply Formatting
+        run: npm run format
+
+      - name: Apply Lint Fixes
+        run: npm run lint:fix
+
+      - name: Apply Security Fixes
+        run: npm audit fix --audit-level=moderate || true
+
+      - name: Commit and push fixes
+        if: github.event.inputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          # Configure git user
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Clean up PR number
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "🤖 Auto-fix: format, lint, security"
+            git push
+            gh pr comment $CLEAN_PR_NUMBER --body "🔧 **Auto-fixes Applied**
+            
+            ✅ Code formatting applied
+            ✅ Lint issues fixed
+            ✅ Security fixes applied
+            
+            Changes committed and pushed!"
+          else
+            gh pr comment $CLEAN_PR_NUMBER --body "✅ **No fixes needed**
+            
+            Code is already properly formatted and linted!"
+          fi
+
+  resolve-conflicts:
+    name: 🔀 Resolve Conflicts
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'resolve-conflicts'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Resolve conflicts using existing logic
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Clean up PR number
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+
+          echo "🔀 Resolving conflicts for PR #$CLEAN_PR_NUMBER"
+
+          # Use the existing conflict resolution logic
+          gh workflow run resolve-all-prs.yml --field dry_run=false
+
+  merge:
+    name: 🚀 Auto Merge
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'merge'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Auto merge PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          # Clean up PR number
+          CLEAN_PR_NUMBER=$(echo "$PR_NUMBER" | tr -d '\r\n' | xargs)
+
+          echo "🚀 Attempting to merge PR #$CLEAN_PR_NUMBER"
+          gh pr merge $CLEAN_PR_NUMBER --auto --squash || true

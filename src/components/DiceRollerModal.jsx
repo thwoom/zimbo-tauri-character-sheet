@@ -120,11 +120,12 @@ const DiceRollerModal = ({
                   Weapon ({equippedWeaponDamage})
                 </button>
                 <button
-                  onClick={() => rollDice('2d6+3', 'Hack & Slash')}
+                  onClick={() => rollDice(`2d6+${character.stats.STR.mod}`, 'Hack & Slash')}
                   className={`${styles.button} ${styles.purple} ${styles.small}`}
                   aria-label="Roll Hack & Slash"
                 >
-                  Hack & Slash
+                  Hack & Slash ({character.stats.STR.mod >= 0 ? '+' : ''}
+                  {character.stats.STR.mod})
                 </button>
                 <button
                   onClick={() =>

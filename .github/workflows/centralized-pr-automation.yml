@@ -80,19 +80,21 @@ jobs:
           npx webpack-bundle-analyzer dist/stats.json --mode static --report-filename bundle-report.html || true
           echo "bundle-analysis-complete=true" >> $GITHUB_OUTPUT
 
-      - name: SonarQube Analysis
+      - name: SonarCloud Analysis
         id: sonar
         uses: sonarqube-quality-gate-action@master
         continue-on-error: true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_HOST_URL: https://sonarcloud.io
         with:
           args: >
-            -Dsonar.projectKey=zimbo-tauri-character-sheet
+            -Dsonar.projectKey=thwoom_zimbo-tauri-character-sheet
+            -Dsonar.organization=thwoom
             -Dsonar.sources=src
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.coverage.exclusions=**/*.test.js,**/*.test.jsx,**/*.spec.js,**/*.spec.jsx
+            -Dsonar.host.url=https://sonarcloud.io
 
       - name: Code Quality Analysis
         id: analysis
@@ -104,8 +106,8 @@ jobs:
 
 
 
-          # SonarQube issues (if available)
-          sonar_issues=$(echo "0")  # Will be updated when SonarQube is configured
+          # SonarCloud issues (if available)
+          sonar_issues=$(echo "0")  # Will be updated when SonarCloud is configured
 
           total_issues=$((eslint_issues + test_failures + security_issues + sonar_issues))
 
@@ -159,7 +161,7 @@ jobs:
               body += `- **Test Failures**: ${testFailures}\n`;
               body += `- **Security Issues**: ${securityIssues}\n`;
 
-              body += `- **SonarQube Issues**: ${sonarIssues}\n\n`;
+              body += `- **SonarCloud Issues**: ${sonarIssues}\n\n`;
               body += '### Next Steps:\n';
               body += '1. Review the detailed reports below\n';
               body += '2. Run automated fixes: `/automation fix`\n';
@@ -174,7 +176,7 @@ jobs:
             body += '**🔍 Advanced Analysis Tools:**\n';
             body += '- ✅ **ESLint** - Code quality and style\n';
             body += '- ✅ **npm audit** - Security vulnerability scanning\n';
-            body += '- ✅ **SonarQube** - Advanced code analysis\n';
+            body += '- ✅ **SonarCloud** - Advanced code analysis\n';
             body += '- ✅ **Bundle Analysis** - Performance optimization\n\n';
             body += '**ESLint Report:**\n```\n${{ steps.eslint.outputs.eslint-report }}\n```\n\n';
             body += '**Test Report:**\n```\n${{ steps.tests.outputs.test-report }}\n```\n\n';

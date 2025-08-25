@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useMotionTransition, useMotionVariants } from '../motion/reduced';
 import { durations, easings, fadeScale } from '../motion/tokens';
+import { useSettings } from '../state/SettingsContext';
 import styles from './CharacterStats.module.css';
 import Button from './common/Button';
 import ButtonGroup from './common/ButtonGroup';
@@ -18,6 +19,7 @@ const CharacterStats = ({
 }) => {
   const transition = useMotionTransition(durations.md, easings.standard);
   const variants = useMotionVariants(fadeScale);
+  const { showHouseRules } = useSettings();
 
   return (
     <motion.div
@@ -133,95 +135,32 @@ const CharacterStats = ({
       {character.xp >= character.xpNeeded && (
         <Button onClick={() => setShowLevelUpModal(true)}>🎉 LEVEL UP AVAILABLE!</Button>
       )}
-      <div className={styles.chronoContainer}>
-        <ButtonGroup>
-          <Button
-            aria-label="Decrease Chrono-Retcon"
-            onClick={() =>
-              setCharacter((prev) => ({
-                ...prev,
-                resources: {
-                  ...prev.resources,
-                  chronoUses: Math.max(0, prev.resources.chronoUses - 1),
-                },
-              }))
-            }
-          >
-            -1
-          </Button>
-          <span>Chrono-Retcon Uses: {character.resources.chronoUses}</span>
-          <Button
-            aria-label="Increase Chrono-Retcon"
-            onClick={() =>
-              setCharacter((prev) => ({
-                ...prev,
-                resources: {
-                  ...prev.resources,
-                  chronoUses: Math.min(2, prev.resources.chronoUses + 1),
-                },
-              }))
-            }
-          >
-            +1
-          </Button>
-        </ButtonGroup>
-        <Button
-          onClick={() => {
-            if (character.resources.chronoUses > 0) {
-              setCharacter((prev) => ({
-                ...prev,
-                resources: {
-                  ...prev.resources,
-                  chronoUses: Math.max(0, prev.resources.chronoUses - 1),
-                },
-              }));
-              setRollResult('⏰ Chrono-Retcon activated - rewrite any recent action!');
-              setTimeout(() => setRollResult('Ready to roll!'), 3000);
-            } else {
-              setRollResult('❌ No uses remaining!');
-              setTimeout(() => setRollResult('Ready to roll!'), 2000);
-            }
-          }}
-          disabled={character.resources.chronoUses === 0}
-        >
-          ⏰ Use Chrono-Retcon
-        </Button>
-      </div>
-      {[
-        { key: 'coin', label: 'Coin', max: 999 },
-        { key: 'paradoxPoints', label: 'Paradox Points', max: 3 },
-        { key: 'bandages', label: 'Bandages', max: 3 },
-        { key: 'rations', label: 'Rations', max: 5 },
-        { key: 'advGear', label: 'Adventuring Gear', max: 5 },
-      ].map(({ key, label, max }) => (
-        <div key={key} className={styles.resourceRow}>
-          <div className={styles.resourceHeader}>
-            <span className={styles.resourceLabel}>{label}:</span>
-            <span className={styles.resourceValue}>
-              {character.resources[key]}/{max}
-            </span>
-          </div>
+      {showHouseRules && (
+        <div className={styles.chronoContainer}>
           <ButtonGroup>
             <Button
+              aria-label="Decrease Chrono-Retcon"
               onClick={() =>
                 setCharacter((prev) => ({
                   ...prev,
                   resources: {
                     ...prev.resources,
-                    [key]: Math.max(0, prev.resources[key] - 1),
+                    chronoUses: Math.max(0, prev.resources.chronoUses - 1),
                   },
                 }))
               }
             >
               -1
             </Button>
+            <span title="House Rule">Chrono-Retcon Uses: {character.resources.chronoUses}</span>
             <Button
+              aria-label="Increase Chrono-Retcon"
               onClick={() =>
                 setCharacter((prev) => ({
                   ...prev,
                   resources: {
                     ...prev.resources,
-                    [key]: Math.min(max, prev.resources[key] + 1),
+                    chronoUses: Math.min(2, prev.resources.chronoUses + 1),
                   },
                 }))
               }
@@ -229,8 +168,77 @@ const CharacterStats = ({
               +1
             </Button>
           </ButtonGroup>
+          <Button
+            onClick={() => {
+              if (character.resources.chronoUses > 0) {
+                setCharacter((prev) => ({
+                  ...prev,
+                  resources: {
+                    ...prev.resources,
+                    chronoUses: Math.max(0, prev.resources.chronoUses - 1),
+                  },
+                }));
+                setRollResult('⏰ Chrono-Retcon activated - rewrite any recent action!');
+                setTimeout(() => setRollResult('Ready to roll!'), 3000);
+              } else {
+                setRollResult('❌ No uses remaining!');
+                setTimeout(() => setRollResult('Ready to roll!'), 2000);
+              }
+            }}
+            disabled={character.resources.chronoUses === 0}
+          >
+            ⏰ Use Chrono-Retcon
+          </Button>
         </div>
-      ))}
+      )}
+      {[
+        { key: 'coin', label: 'Coin', max: 999 },
+        { key: 'paradoxPoints', label: 'Paradox Points', max: 3, houseRule: true },
+        { key: 'bandages', label: 'Bandages', max: 3 },
+        { key: 'rations', label: 'Rations', max: 5 },
+        { key: 'advGear', label: 'Adventuring Gear', max: 5 },
+      ]
+        .filter(({ houseRule }) => showHouseRules || !houseRule)
+        .map(({ key, label, max, houseRule }) => (
+          <div key={key} className={styles.resourceRow}>
+            <div className={styles.resourceHeader}>
+              <span className={styles.resourceLabel} title={houseRule ? 'House Rule' : undefined}>
+                {label}:
+              </span>
+              <span className={styles.resourceValue}>
+                {character.resources[key]}/{max}
+              </span>
+            </div>
+            <ButtonGroup>
+              <Button
+                onClick={() =>
+                  setCharacter((prev) => ({
+                    ...prev,
+                    resources: {
+                      ...prev.resources,
+                      [key]: Math.max(0, prev.resources[key] - 1),
+                    },
+                  }))
+                }
+              >
+                -1
+              </Button>
+              <Button
+                onClick={() =>
+                  setCharacter((prev) => ({
+                    ...prev,
+                    resources: {
+                      ...prev.resources,
+                      [key]: Math.min(max, prev.resources[key] + 1),
+                    },
+                  }))
+                }
+              >
+                +1
+              </Button>
+            </ButtonGroup>
+          </div>
+        ))}
       {character.resources.paradoxPoints >= 3 && (
         <div className={styles.warningBox}>
           <div className={styles.warningText}>⚠️ REALITY UNSTABLE! ⚠️</div>

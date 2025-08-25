@@ -40,9 +40,12 @@ describe('useDiceRoller help modal cleanup', () => {
       wrapper,
     });
 
-    let rollPromise;
     act(() => {
-      rollPromise = result.current.rollDice('2d6', 'test');
+      result.current.rollDice('2d6', 'test');
+    });
+    let resolvePromise;
+    act(() => {
+      resolvePromise = result.current.resolveAidOrInterfere();
     });
 
     expect(aidModal.isOpen).toBe(true);
@@ -51,7 +54,7 @@ describe('useDiceRoller help modal cleanup', () => {
       unmount();
     });
 
-    await rollPromise;
+    await resolvePromise;
 
     expect(aidModal.close).toHaveBeenCalledTimes(1);
     expect(aidModal.isOpen).toBe(false);

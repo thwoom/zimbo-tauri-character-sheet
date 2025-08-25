@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { debilityTypes } from '../state/character';
 import { useSettings } from '../state/SettingsContext';
 import * as diceUtils from '../utils/dice.js';
@@ -27,6 +27,7 @@ export default function useDiceRoller(
   const aidModalState = useModal();
   const closeAidModal = aidModalState.close;
   const aidResolverRef = useRef(null);
+  const lastRollRef = useRef(null);
 
   const openAidModal = () =>
     new Promise((resolve) => {
@@ -148,6 +149,18 @@ export default function useDiceRoller(
     return 'Things go badly';
   };
 
+  const buildResultString = (mods, totalValue, notes = [], dicePart, rolls) => {
+    let str = `${dicePart}: ${rolls.join(' + ')}`;
+    mods.forEach((m) => {
+      if (m !== 0) str += ` ${m >= 0 ? '+' : ''}${m}`;
+    });
+    str += ` = ${totalValue}`;
+    if (notes.length > 0) {
+      str += ` (${notes.join(', ')})`;
+    }
+    return str;
+  };
+
   const rollDice = async (formula, description = '') => {
     const desc = description.toLowerCase();
     const xpOnMiss = autoXpOnMiss;
@@ -187,50 +200,9 @@ export default function useDiceRoller(
     }
     total = rolls.reduce((sum, r) => sum + r, 0) + totalModifier;
 
-    const buildResultString = (mods, totalValue, notes = []) => {
-      let str = `${dicePart}: ${rolls.join(' + ')}`;
-      mods.forEach((m) => {
-        if (m !== 0) str += ` ${m >= 0 ? '+' : ''}${m}`;
-      });
-      str += ` = ${totalValue}`;
-      if (notes.length > 0) {
-        str += ` (${notes.join(', ')})`;
-      }
-      return str;
-    };
-
     const mods = [baseModifier, statusMods.modifier];
     let notes = [...statusMods.notes];
-
-    const initialTotal = total;
-    let initialInterpretation = '';
-    let initialResult;
-
-    const resolveAidOrInterfere = async () => {
-      const response = await openAidModal();
-      if (!response) return null;
-      const { action, bond } = response;
-      const isAid = action === 'aid';
-      const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
-      const helperTotal = helperRoll + bond;
-      let modifier = 0;
-      let consequence = false;
-      if (helperTotal >= 10) {
-        modifier = isAid ? 1 : -2;
-      } else if (helperTotal >= 7) {
-        modifier = isAid ? 1 : -2;
-        consequence = true;
-      } else {
-        consequence = true;
-      }
-      if (consequence) {
-        window.alert('Helper exposes themselves to danger, retribution, or cost!');
-      }
-      return { modifier, consequence };
-    };
-
     if (dicePart === '2d6') {
-      const isAidMove = desc.includes('aid') || desc.includes('interfere');
       if (total >= 10) {
         interpretation = ' ✅ Success!';
         context = getSuccessContext(desc);
@@ -242,9 +214,7 @@ export default function useDiceRoller(
         context = getFailureContext(desc);
       }
 
-      initialInterpretation = interpretation;
-
-      if (initialTotal < 7 && xpOnMiss) {
+      if (total < 7 && xpOnMiss) {
         saveToHistoryRef.current('XP Change');
         setCharacter((prev) => ({
           ...prev,
@@ -252,33 +222,9 @@ export default function useDiceRoller(
           xpNeeded: prev.level + 7,
         }));
       }
-
-      if (!isAidMove) {
-        const aid = await resolveAidOrInterfere();
-        if (aid) {
-          initialResult = buildResultString(mods, initialTotal, notes) + initialInterpretation;
-          if (aid.modifier !== 0) {
-            mods.push(aid.modifier);
-            total += aid.modifier;
-          }
-          if (aid.consequence) {
-            notes = [...notes, 'Helper Consequences'];
-          }
-          if (total >= 10) {
-            interpretation = ' ✅ Success!';
-            context = getSuccessContext(desc);
-          } else if (total >= 7) {
-            interpretation = ' ⚠️ Partial Success';
-            context = getPartialContext(desc);
-          } else {
-            interpretation = ' ❌ Failure';
-            context = getFailureContext(desc);
-          }
-        }
-      }
     }
-
-    result = buildResultString(mods, total, notes);
+    const timestamp = Date.now();
+    result = buildResultString(mods, total, notes, dicePart, rolls);
 
     const rollData = {
       result: result + interpretation,
@@ -287,14 +233,99 @@ export default function useDiceRoller(
       total,
       rolls,
       modifier: totalModifier,
-      timestamp: Date.now(),
-      ...(initialResult && { initialResult }),
+      timestamp,
     };
 
     setRollHistory((prev) => [rollData, ...prev.slice(0, 9)]);
     setRollModalData(rollData);
     setRollResult(rollData.result);
     rollModal.open();
+
+    lastRollRef.current = {
+      mods,
+      notes,
+      total,
+      dicePart,
+      desc,
+      interpretation,
+      context,
+      rolls,
+      description,
+      totalModifier,
+      timestamp,
+    };
+  };
+
+  const resolveAidOrInterfere = async () => {
+    const ctx = lastRollRef.current;
+    if (!ctx || ctx.dicePart !== '2d6') return null;
+    const isAidMove = ctx.desc.includes('aid') || ctx.desc.includes('interfere');
+    if (isAidMove) return null;
+
+    const response = await openAidModal();
+    if (!response) return null;
+    const { action, bond } = response;
+    const isAid = action === 'aid';
+    const helperRoll = diceUtils.rollDie(6) + diceUtils.rollDie(6);
+    const helperTotal = helperRoll + bond;
+    let modifier = 0;
+    let consequence = false;
+    if (helperTotal >= 10) {
+      modifier = isAid ? 1 : -2;
+    } else if (helperTotal >= 7) {
+      modifier = isAid ? 1 : -2;
+      consequence = true;
+    } else {
+      consequence = true;
+    }
+    if (consequence) {
+      window.alert('Helper exposes themselves to danger, retribution, or cost!');
+    }
+
+    const updatedMods = [...ctx.mods];
+    let notes = [...ctx.notes];
+    let total = ctx.total;
+    let interpretation = ctx.interpretation;
+    let context = ctx.context;
+    if (modifier !== 0) {
+      updatedMods.push(modifier);
+      total += modifier;
+    }
+    if (consequence) {
+      notes = [...notes, 'Helper Consequences'];
+    }
+    if (total >= 10) {
+      interpretation = ' ✅ Success!';
+      context = getSuccessContext(ctx.desc);
+    } else if (total >= 7) {
+      interpretation = ' ⚠️ Partial Success';
+      context = getPartialContext(ctx.desc);
+    } else {
+      interpretation = ' ❌ Failure';
+      context = getFailureContext(ctx.desc);
+    }
+
+    const initialResult =
+      buildResultString(ctx.mods, ctx.total, ctx.notes, ctx.dicePart, ctx.rolls) +
+      ctx.interpretation;
+    const result =
+      buildResultString(updatedMods, total, notes, ctx.dicePart, ctx.rolls) + interpretation;
+
+    const rollData = {
+      result,
+      description: ctx.description,
+      context,
+      total,
+      rolls: ctx.rolls,
+      modifier: ctx.totalModifier + modifier,
+      timestamp: ctx.timestamp,
+      initialResult,
+    };
+
+    setRollHistory((prev) => [rollData, ...prev.slice(1, 10)]);
+    setRollModalData(rollData);
+    setRollResult(rollData.result);
+    return { modifier, consequence };
   };
 
   return {
@@ -304,6 +335,7 @@ export default function useDiceRoller(
     rollDice,
     rollModal,
     rollModalData,
+    resolveAidOrInterfere,
     aidModal: {
       isOpen: aidModalState.isOpen,
       onConfirm: handleAidConfirm,

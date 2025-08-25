@@ -39,10 +39,7 @@ describe('useDiceRoller contexts', () => {
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     await act(async () => {
-      const p = result.current.rollDice('2d6', desc);
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', desc);
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe(expected);
@@ -54,10 +51,7 @@ describe('useDiceRoller contexts', () => {
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'HaCk');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'HaCk');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('Hit them, but they hit you back!');
@@ -69,10 +63,7 @@ describe('useDiceRoller contexts', () => {
     const randomSpy = vi.spyOn(Math, 'random');
     randomSpy.mockReturnValueOnce(0.35).mockReturnValueOnce(0.55);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'upper hand');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'upper hand');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('Deal damage, but lose the upper hand!');
@@ -83,10 +74,7 @@ describe('useDiceRoller contexts', () => {
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'taunt');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'taunt');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('They ignore you completely');
@@ -97,10 +85,7 @@ describe('useDiceRoller contexts', () => {
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'upper hand');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'upper hand');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.context).toBe('Upper hand slips away completely!');
@@ -111,10 +96,7 @@ describe('useDiceRoller contexts', () => {
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     await act(async () => {
-      const p = result.current.rollDice('d4', 'test');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('d4', 'test');
     });
     randomSpy.mockRestore();
     expect(result.current.rollResult).toBe('d4: 1 = 1');
@@ -125,10 +107,7 @@ describe('useDiceRoller contexts', () => {
     const { result } = renderHook(() => useDiceRoller(baseCharacter, setCharacter), { wrapper });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.999);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'Upper Hand');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'Upper Hand');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.description).toBe('Upper Hand');
@@ -152,7 +131,10 @@ describe('useDiceRoller aid/interfere', () => {
       wrapper,
     });
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'test');
+      await result.current.rollDice('2d6', 'test');
+    });
+    await act(async () => {
+      const p = result.current.resolveAidOrInterfere();
       await Promise.resolve();
       result.current.aidModal.onConfirm({ action: 'aid', bond: 2 });
       await p;
@@ -180,7 +162,10 @@ describe('useDiceRoller aid/interfere', () => {
       { wrapper },
     );
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'test');
+      await result.current.rollDice('2d6', 'test');
+    });
+    await act(async () => {
+      const p = result.current.resolveAidOrInterfere();
       await Promise.resolve();
       result.current.aidModal.onConfirm({ action: 'aid', bond: 2 });
       await p;
@@ -225,19 +210,13 @@ describe('useDiceRoller mixed-case status modifiers', () => {
 
     randomSpy.mockReturnValueOnce(0.4).mockReturnValueOnce(0.4);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'dEx test');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'dEx test');
     });
     expect(result.current.rollModalData.result).toMatch(/Shocked \(-2 DEX\)/);
 
     randomSpy.mockReturnValueOnce(0.25);
     await act(async () => {
-      const p = result.current.rollDice('d4', 'DaMaGe roll');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('d4', 'DaMaGe roll');
     });
     randomSpy.mockRestore();
     expect(result.current.rollModalData.result).toMatch(/Weakened \(-1 damage\)/);
@@ -288,10 +267,7 @@ describe('useDiceRoller XP on miss handling', () => {
     });
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     await act(async () => {
-      const p = result.current.rollDice('2d6', 'test');
-      await Promise.resolve();
-      result.current.aidModal.onCancel();
-      await p;
+      await result.current.rollDice('2d6', 'test');
     });
     randomSpy.mockRestore();
     expect(setCharacter).not.toHaveBeenCalled();

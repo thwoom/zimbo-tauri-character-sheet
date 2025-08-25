@@ -81,20 +81,9 @@ jobs:
           echo "bundle-analysis-complete=true" >> $GITHUB_OUTPUT
 
       - name: SonarCloud Analysis
-        id: sonar
-        uses: sonarqube-quality-gate-action@master
-        continue-on-error: true
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-        with:
-          args: >
-            -Dsonar.projectKey=thwoom_zimbo-tauri-character-sheet
-            -Dsonar.organization=thwoom
-            -Dsonar.sources=src
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.coverage.exclusions=**/*.test.js,**/*.test.jsx,**/*.spec.js,**/*.spec.jsx
-            -Dsonar.host.url=https://sonarcloud.io
 
       - name: Code Quality Analysis
         id: analysis

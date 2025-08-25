@@ -27,6 +27,7 @@ export const INITIAL_CHARACTER_DATA = {
   armor: 0,
   secondaryResource: 0,
   maxSecondaryResource: 0,
+  alignment: 'Protect the timeline from paradoxes',
 
   // Attributes
   stats: {

@@ -80,6 +80,23 @@ describe('EndSessionModal', () => {
     });
   });
 
+  it('shows stored alignment in the checkbox label', () => {
+    const onClose = vi.fn();
+    const initial = {
+      xp: 0,
+      level: 1,
+      xpNeeded: 8,
+      bonds: [],
+      inventory: [],
+      resources: {},
+      statusEffects: [],
+      debilities: [],
+      alignment: 'Protect the timeline',
+    };
+    renderWithCharacter(<EndSessionModal isOpen onClose={onClose} />, initial);
+    expect(screen.getByLabelText(/Protect the timeline/i)).toBeInTheDocument();
+  });
+
   it('uses xpNeeded to trigger level up', async () => {
     const user = userEvent.setup();
     const onLevelUp = vi.fn();

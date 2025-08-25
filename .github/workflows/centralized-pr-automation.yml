@@ -227,6 +227,7 @@ jobs:
 
       - name: Commit and push fixes
         run: |
+          # Configure git user
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -259,6 +260,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.issue.number }}
         run: |
+          # Configure git user
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           # Use your existing conflict resolution logic
           gh pr checkout $PR_NUMBER
           git fetch origin main

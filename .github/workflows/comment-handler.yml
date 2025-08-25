@@ -1,0 +1,72 @@
+name: Comment Command Handler
+on:
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  handle-command:
+    name: Process Comment Commands
+    runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, '/automation')
+    steps:
+      - name: Parse command
+        id: parse
+        run: |
+          comment="${{ github.event.comment.body }}"
+
+          # Extract command
+          if echo "$comment" | grep -q "/automation fix"; then
+            echo "action=fix" >> $GITHUB_OUTPUT
+          elif echo "$comment" | grep -q "/automation merge"; then
+            echo "action=merge" >> $GITHUB_OUTPUT
+          elif echo "$comment" | grep -q "/automation resolve-conflicts"; then
+            echo "action=resolve-conflicts" >> $GITHUB_OUTPUT
+          elif echo "$comment" | grep -q "/automation analyze"; then
+            echo "action=analyze" >> $GITHUB_OUTPUT
+          else
+            echo "action=none" >> $GITHUB_OUTPUT
+          fi
+
+          # Extract PR number
+          if [[ "${{ github.event.issue.pull_request }}" ]]; then
+            echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Trigger automation workflow
+        if: steps.parse.outputs.action != 'none'
+        run: |
+          gh workflow run centralized-pr-automation.yml \
+            --field action="${{ steps.parse.outputs.action }}" \
+            --field pr_number="${{ steps.parse.outputs.pr_number }}"
+
+      - name: Acknowledge command
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const action = '${{ steps.parse.outputs.action }}';
+            const prNumber = '${{ steps.parse.outputs.pr_number }}';
+
+            if (action === 'none') {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `🤖 **Unknown command**. Available commands:
+                - \`/automation analyze\` - Run code analysis
+                - \`/automation fix\` - Apply automated fixes
+                - \`/automation resolve-conflicts\` - Resolve merge conflicts
+                - \`/automation merge\` - Merge PR (if checks pass)`
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `🤖 **Command received**: \`${action}\` for PR #${prNumber}\n\nProcessing...`
+              });
+            }

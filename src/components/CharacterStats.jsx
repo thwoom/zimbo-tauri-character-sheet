@@ -247,6 +247,7 @@ const CharacterStats = ({
               rations: 5,
               advGear: 5,
             },
+            spells: prev.spells.map((s) => ({ ...s, expended: false })),
           }));
           setSessionNotes('');
           clearRollHistory();

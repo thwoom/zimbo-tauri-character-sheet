@@ -22,6 +22,7 @@ import EquipmentPanel from './components/EquipmentPanel';
 import FloatingDiceButton from './components/FloatingDiceButton';
 import GameModals from './components/GameModals';
 import InventoryPanel from './components/InventoryPanel';
+import SpellsPanel from './components/SpellsPanel';
 import PrintableSheet from './components/PrintableSheet.jsx';
 import SessionNotes from './components/SessionNotes';
 import Settings from './components/Settings';
@@ -449,6 +450,15 @@ function App() {
           {/* Equipment Panel */}
           <div className={`${styles.tile} ${styles.equipment}`}>
             <EquipmentPanel character={character} setCharacter={setCharacter} />
+          </div>
+
+          {/* Spells Panel */}
+          <div className={`${styles.tile} ${styles.spells}`}>
+            <SpellsPanel
+              character={character}
+              setCharacter={setCharacter}
+              saveToHistory={saveToHistory}
+            />
           </div>
 
           {/* Inventory Panel */}

@@ -46,7 +46,7 @@ function EquipmentPanel({ character, setCharacter }) {
   const loadWarn = totalWeight > maxLoad;
 
   return (
-    <Panel>
+    <Panel glow="equipment">
       <h3
         style={{
           color: 'var(--color-accent)',

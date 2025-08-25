@@ -55,6 +55,7 @@ export default function CharacterHUD({
 
   return (
     <Panel
+      glow="hero"
       style={{
         display: 'flex',
         flexDirection: 'column',

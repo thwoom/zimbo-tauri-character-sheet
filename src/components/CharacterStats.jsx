@@ -28,7 +28,7 @@ const CharacterStats = ({
       exit="exit"
       transition={transition}
     >
-      <Panel>
+      <Panel glow="stats">
         <h3 className={styles.title}>⚡ Stats &amp; Health</h3>
         <div className={styles.statsGrid}>
           {Object.entries(character.stats).map(([stat, data]) => (

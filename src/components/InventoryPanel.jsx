@@ -43,7 +43,7 @@ function InventoryPanel({ character, setCharacter, saveToHistory, setShowAddItem
   const loadWarn = totalWeight > maxLoad;
 
   return (
-    <Panel>
+    <Panel glow="inventory">
       <h3
         style={{
           color: 'var(--color-accent)',

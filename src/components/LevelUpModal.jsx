@@ -149,6 +149,7 @@ const LevelUpModal = ({
       xpNeeded: levelUpState.newLevel + 7,
       selectedMoves: [...prev.selectedMoves, levelUpState.selectedMove],
       levelUpPending: false,
+      spells: prev.spells.map((s) => ({ ...s, expended: false })),
       actionHistory: [
         ...prev.actionHistory.slice(-4), // Keep last 4 actions
         {

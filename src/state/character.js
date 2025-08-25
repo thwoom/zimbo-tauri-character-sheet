@@ -48,6 +48,12 @@ export const INITIAL_CHARACTER_DATA = {
     advGear: 5, // Rope, torches, chalk, etc.
   },
 
+  // Spells
+  spells: [
+    { id: 1, name: 'Magic Missile', prepared: false, expended: false },
+    { id: 2, name: 'Fireball', prepared: false, expended: false },
+  ],
+
   // Character Relationships
   bonds: [
     { name: 'Sar', relationship: 'I will teach Sar about the future', resolved: false },

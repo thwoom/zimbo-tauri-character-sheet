@@ -25,6 +25,7 @@ function makeCharacter(overrides = {}) {
       rations: 1,
       advGear: 1,
     },
+    spells: [],
     ...overrides,
   };
 }

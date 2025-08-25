@@ -26,6 +26,7 @@ describe('LevelUpModal advanced moves', () => {
         CHA: { score: 10, mod: 0 },
       },
       selectedMoves: [],
+      spells: [],
     };
 
     const levelUpState = {
@@ -72,6 +73,7 @@ describe('LevelUpModal XP calculation', () => {
       selectedMoves: [],
       actionHistory: [],
       levelUpPending: true,
+      spells: [],
     };
 
     const levelUpState = {
@@ -125,6 +127,7 @@ describe('LevelUpModal stat modifier', () => {
       selectedMoves: [],
       actionHistory: [],
       levelUpPending: true,
+      spells: [],
     };
 
     const levelUpState = {
@@ -270,6 +273,7 @@ describe('LevelUpModal visibility and closing', () => {
       xpNeeded: 8,
       resources: { chronoUses: 0 },
       selectedMoves: [],
+      spells: [],
     };
 
     const levelUpState = {

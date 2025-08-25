@@ -408,9 +408,10 @@
   display: grid;
   grid-template-areas:
     'hud stats equipment'
+    'hud spells inventory'
     'hud notes inventory';
   grid-template-columns: 320px 1fr 320px;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   gap: var(--hud-spacing);
   margin-bottom: var(--hud-spacing);
 }
@@ -444,6 +445,14 @@
   grid-area: equipment;
 }
 
+.spells {
+  grid-area: spells;
+}
+
+.spells:hover {
+  transform: translateY(-1px);
+}
+
 .inventory:hover {
   transform: translateY(-1px);
 }
@@ -460,10 +469,11 @@
   .grid {
     grid-template-areas:
       'hud stats'
-      'equipment inventory'
+      'spells equipment'
+      'inventory inventory'
       'notes notes';
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
   }
 }
 
@@ -473,10 +483,11 @@
       'hud'
       'stats'
       'equipment'
+      'spells'
       'inventory'
       'notes';
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(6, auto);
   }
 }
 

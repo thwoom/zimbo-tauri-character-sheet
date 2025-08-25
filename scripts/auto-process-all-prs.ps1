@@ -45,7 +45,7 @@ Write-Host "🚀 Step 6: Running auto-merge pipeline on all PRs..." -ForegroundC
 foreach ($pr in $prArray) {
     if ([string]::IsNullOrWhiteSpace($pr)) { continue }
                 Write-Host "  🚀 Auto-merging PR #$pr..." -ForegroundColor Yellow
-            gh workflow run "auto-pipeline.yml" --field pr_number=$pr --field auto_merge=true
+            gh workflow run "centralized-pr-automation.yml" --field action=merge --field pr_number=$pr
     Start-Sleep -Seconds 3
 }
 

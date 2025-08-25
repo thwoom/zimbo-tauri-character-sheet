@@ -95,4 +95,31 @@ describe('DiceRollerModal', () => {
     expect(screen.getByText('Recent Rolls:')).toBeInTheDocument();
     expect(screen.getByText(/Previous roll: 10/)).toBeInTheDocument();
   });
+
+  it('uses STR modifier for Hack & Slash roll', () => {
+    render(<DiceRollerModal {...mockProps} />);
+
+    const hackButton = screen.getByRole('button', { name: 'Roll Hack & Slash' });
+    fireEvent.click(hackButton);
+
+    expect(mockProps.rollDice).toHaveBeenCalledWith('2d6+1', 'Hack & Slash');
+  });
+
+  it('updates Hack & Slash modifier when STR mod changes', () => {
+    const { rerender } = render(<DiceRollerModal {...mockProps} />);
+
+    expect(screen.getByText(/Hack & Slash/)).toHaveTextContent('Hack & Slash (+1)');
+
+    rerender(
+      <DiceRollerModal
+        {...mockProps}
+        character={{
+          ...mockProps.character,
+          stats: { ...mockProps.character.stats, STR: { mod: 2 } },
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/Hack & Slash/)).toHaveTextContent('Hack & Slash (+2)');
+  });
 });

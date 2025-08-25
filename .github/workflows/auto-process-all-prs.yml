@@ -94,7 +94,7 @@ jobs:
           for pr in $prs; do
             if [ -n "$pr" ]; then
               echo "  🚀 Auto-merging PR #$pr..."
-              gh workflow run "🤖 Auto Pipeline" --field pr_number=$pr --field auto_merge=true
+              gh workflow run "auto-pipeline.yml" --field pr_number=$pr --field auto_merge=true
               sleep 3
             fi
           done

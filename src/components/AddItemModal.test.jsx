@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import AddItemModal from './AddItemModal';
 
 describe('AddItemModal', () => {
@@ -29,7 +28,7 @@ describe('AddItemModal', () => {
         name: 'Sword',
         type: 'weapon',
         description: 'A sharp blade',
-        effects: '+1 dmg',
+        effect: '+1 dmg',
       }),
     );
   });

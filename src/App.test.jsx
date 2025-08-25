@@ -1,7 +1,7 @@
-import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import Settings from './components/Settings';
 import { INITIAL_CHARACTER_DATA } from './state/character.js';
@@ -218,7 +218,7 @@ describe('Command palette', () => {
     await user.click(screen.getByRole('option', { name: /open inventory/i }));
 
     // Inventory modal appears
-    expect(await screen.findByRole('heading', { name: /inventory/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /🎒 Inventory/i })).toBeInTheDocument();
   });
 });
 
@@ -411,7 +411,7 @@ describe('Theme switching', () => {
     const select = screen.getByLabelText(/Theme:/i);
 
     return waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
     }).then(() => {
       fireEvent.change(select, { target: { value: 'classic' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('classic');
@@ -430,7 +430,7 @@ describe('Theme switching', () => {
     const select = screen.getByLabelText(/Theme:/i);
 
     return waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
     }).then(() => {
       fireEvent.change(select, { target: { value: 'moebius' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
@@ -449,7 +449,7 @@ describe('Theme switching', () => {
     const select = screen.getByLabelText(/Theme:/i);
 
     return waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('cosmic-v2');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('moebius');
     }).then(() => {
       fireEvent.change(select, { target: { value: 'arwes' } });
       expect(document.documentElement.getAttribute('data-theme')).toBe('arwes');

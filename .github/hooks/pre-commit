@@ -1,0 +1,45 @@
+#!/bin/bash
+# 🛡️ Pre-commit hook to protect critical automation files
+
+echo "🛡️ Checking for critical automation files..."
+
+# List of critical automation files that should never be deleted
+CRITICAL_FILES=(
+    ".github/workflows/centralized-pr-automation.yml"
+    ".github/workflows/resolve-all-prs.yml"
+    ".github/workflows/auto-pipeline.yml"
+    ".github/workflows/auto-process-all-prs.yml"
+    "sonar-project.properties"
+    "scripts/auto-process-all-prs.ps1"
+)
+
+# Check if any critical files are staged for deletion
+STAGED_DELETIONS=$(git diff --cached --name-status | grep "^D" | cut -f2)
+
+for file in $STAGED_DELETIONS; do
+    for critical in "${CRITICAL_FILES[@]}"; do
+        if [ "$file" = "$critical" ]; then
+            echo "🚨 ERROR: Critical automation file '$file' is staged for deletion!"
+            echo "This file is essential for the automation system and should not be deleted."
+            echo ""
+            echo "To unstage this deletion:"
+            echo "  git reset HEAD $file"
+            echo ""
+            echo "If you need to modify this file, please do so carefully."
+            exit 1
+        fi
+    done
+done
+
+# Check if critical files exist
+for file in "${CRITICAL_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        echo "🚨 ERROR: Critical automation file '$file' is missing!"
+        echo "This file is essential for the automation system."
+        echo "Please restore it before committing."
+        exit 1
+    fi
+done
+
+echo "✅ All critical automation files are protected"
+exit 0
